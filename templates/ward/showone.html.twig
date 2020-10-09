@@ -1,0 +1,125 @@
+{# views/ward/showone.html.twig #}
+
+{% extends 'master.html.twig' %}
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/ward.css') }}" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+{% endblock %}
+
+{% block js %}
+   {{ parent() }}
+      <script src="{{asset('js/maps.js')}}"></script>
+   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+   <script src="{{asset('js/L.KML.js')}}"></script>
+ <script>
+     var popup = L.popup();
+     function onMapClick(e)
+     {
+       popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(mymap);
+        lat = e.latlng.lat;
+        lng = e.latlng.lng;
+        document.getElementById("street_form_Latitude").value=lat;
+        document.getElementById("street_form_Longitude").value=lng;
+      }
+ </script>
+{% endblock %}
+
+
+{% block middle %}
+<div class="heading  row">
+  <div class="label"> Ward: </div>
+  <div class="value"> {{ward.ward}}</div>
+  <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+</div>
+
+{% if message %}
+<H1> No wards found </H1>
+{% else %}
+
+<div class="wards">
+       {% for subward in subwards %}
+                    <div class="ward row" >
+                      <div class="subwardid" id="{{subward.Subwardid}}">{{subward.Subwardid}}</div>
+                       <div class="name" >{{subward.Subward}}</div>
+                       <a class="button" href = "/subward/show/{{subward.subwardid}}" >VIEW</a>
+                        <a class="button" href = "/subward/edit/{{subward.subwardid}}" >EDIT</a>
+                     </div>
+       {% endfor %}
+</div>
+  <a class="button" href = "/subward/new/{{ward.wardid}}" >ADD SUB WARD</a>
+{% if streets|length >0 %}
+<div class="heading  row">
+  <div class="label"> Streets in {{ward.ward}} not in a subward</div>
+</div>
+  <div class="streetlist">
+       {% for street in streets %}
+       <div class="street row">
+                 <div class="name" >{{street.name}}</div>
+                 <div class="PD" >{{street.PD}}</div>
+                 <a class="button" href = "/street/edit/{{street.streetid}}" >VIEW</a>
+        </div>
+       {% endfor %}
+   </div>
+   {% else %}
+   <div class="subheading  row">
+  <div class="label"> No un-allocated streets found</div>
+</div>
+   {% endif %}
+{% endif %}
+  <div class="map" >
+      <div id="wmapid" ></div>
+  </div>
+ {% set jslocation = ward.getjson() %}
+
+  <script >
+
+    var mymap = myWMap("{{jslocation}}");
+    var i=0;
+    var bounds = null;
+    var path = "http://lerot.org/RoadGroups/maps/{{ward.wardid}}.kml";
+    if(CheckUrl(path))
+     {
+       var style = {"color":  "#ffFFFF" , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
+         makeKMLLayer(mymap, path,style);
+     }
+
+     var jsrglist = {{roadgrouplist|json_encode|raw}};
+    for ( var swdid in jsrglist)
+    {
+    var countsgs = 0;
+     var rgtracks = jsrglist[swdid];
+      if( rgtracks.length > 0)
+      {
+
+         for( var rgid in rgtracks)
+         {
+             rg =rgtracks[rgid];
+             var path = "http://lerot.org/RoadGroups/maps/"+rg+".kml";
+             if(CheckUrl(path))
+             {
+                countsgs = countsgs+1;
+                var abound =  addMyKML(mymap,path,getColor(i), bounds);
+
+                 }
+
+             }
+
+      }
+      if(countsgs > 0)
+      {
+         var h2s = document.getElementById(swdid);
+         h2s.style.backgroundColor = getColor(i);
+          i=i+1;
+       }
+
+    }
+
+
+    mymap.on('click', onMapClick);
+   </script>
+{% endblock %}

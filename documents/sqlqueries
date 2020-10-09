@@ -1,0 +1,5 @@
+select sr.roadgroupid , count(*) from (SELECT r.roadgroupid, s.pd , count(*) FROM `roadgroup` as r,street as s WHERE r.`roadgroupid`=s.roadgroupid   group by s.pd  order by r.roadgroupid) as sr  group by sr.roadgroupid
+
+
+
+SELECT rgid, count(rgid) FROM rgpds WHERE 1 group by rgid having count(rgid) > 1 order by count(rgid) desc

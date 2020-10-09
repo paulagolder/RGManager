@@ -1,0 +1,37 @@
+{# views/street/edit.html.twig #}
+
+{% extends 'master.html.twig' %}
+
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/street.css') }}" rel="stylesheet" />
+
+{% endblock %}
+
+
+
+
+
+{% block middle %}
+<div id="middle" >
+<div id="subwardedit"  >
+<div>
+ <div class="heading  row" >
+ <div class="label">{{'New subward' }}:</div>
+ <div class="button  right"> <a class="button" href = {{returnlink}} >{{'back'}} </a> </div>
+</div>
+<div class="formmap">
+<div  class="form" >
+    {{ form_start(form) }}
+    {{ form_row(form.SubwardId) }}
+    {{ form_row(form.Subward) }}
+    {{ form_row(form.WardId) }}
+    <button type="submit">{{'Register!'}}</button>
+    {{ form_end(form) }}
+</div>
+
+</div>
+</div>
+</div>
+{% endblock %}

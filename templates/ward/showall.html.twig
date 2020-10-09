@@ -1,0 +1,70 @@
+{% extends 'master.html.twig' %}
+
+{% block stylesheets %}
+      {{ parent() }}
+    <link href="{{ asset('/css/ward.css') }}" rel="stylesheet" />
+    <link href="{{ asset('/css/street.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block middle %}
+<div class="heading  row">
+  <div class="label"> All Wards</div>
+  <div class="button  right"> <a class="button" href = "/" >{{'back'}} </a> </div>
+</div>
+
+
+{% if message %}
+<H1> No wards found </H1>
+
+{% else %}
+<div class="wardlist">
+    <div id="wards" >
+       {% for ward in wards %}
+                    <div class="ward row" >
+                       <div class="wardid" >{{ward.wardid}}</div>
+                        <div class="name" >{{ward.ward}}</div>
+                        <a class="button" href = "/ward/show/{{ward.wardid}}" >VIEW</a>
+                     </div>
+       {% endfor %}
+    </div>
+</div>
+ <a class="button" href = "/ward/new" >ADD NEW WARD</a>
+{% if streets|length >0 %}
+<div class="subheading  row">
+  <div class="label"> Streets not in a ward</div>
+</div>
+  <div class="streetlist">
+       {% for street in streets %}
+       <div class="street row">
+                 <div class="name" >{{street.name}}</div>
+                 <div class="PD" >{{street.PD}}</div>
+                 <a class="button" href = "/street/edit/{{street.streetid}}" >VIEW</a>
+        </div>
+       {% endfor %}
+   </div>
+   {% else %}
+   <div class="subheading  row">
+  <div class="label"> No un-allocated streets found</div>
+</div>
+   {% endif %}
+   {% if roadgroups|length >0 %}
+<div class="subheading  row">
+  <div class="label"> Roadgroups not in a ward</div>
+</div>
+  <div class="list">
+       {% for roadgroup in roadgroups %}
+       <div class=" row">
+                 <div class="rgid" >{{roadgroup.roadgroupid}}</div>
+                 <div class="name" >{{roadgroup.name}}</div>
+                 <a class="button" href = "/roadgroup/edit/{{roadgroup.roadgroupid}}" >VIEW</a>
+        </div>
+       {% endfor %}
+   </div>
+   {% else %}
+   <div class="subheading  row">
+  <div class="label"> No un-allocated roadgroups found</div>
+</div>
+   {% endif %}
+{% endif %}
+</div>
+{% endblock %}

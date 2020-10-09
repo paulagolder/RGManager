@@ -1,0 +1,86 @@
+{# views/street/showroadgroup.html.twig #}
+
+{% extends 'master.html.twig' %}
+
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/roadgroup.css') }}" rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+/>
+{% endblock %}
+{% block js %}
+ {{ parent() }}
+   <script src="{{asset('js/maps.js')}}"></script>
+   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+   <script src="{{asset('js/L.KML.js')}}"></script>
+   <script>
+     var popup = L.popup();
+     function onMapClick(e)
+     {
+       popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(mymap);
+
+        lat = e.latlng.lat;
+        lng = e.latlng.lng;
+        document.getElementById("street_form_Latitude").value=lat;
+        document.getElementById("street_form_Longitude").value=lng;
+      }
+    </script>
+{% endblock %}
+
+
+{% block middle %}
+<div class="roadgroup">
+{% if message %}
+<H1> No streets found </H1>
+
+{% else %}
+    <div class="heading row">
+       <div class="label"> Road Group </div>
+       <div class="roadgroupid"> {{roadgroup.RoadgroupId}} </div>
+       <div class="name"> {{roadgroup.Name }}</div>
+       <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+    </div>
+
+     <div class="street header  row">
+        <div class="name" >Name/part</div>
+        <div class="pd" >PD</div>
+        <div  class="num" >House-holds</div>
+        <div  class="num" >Electors</div>
+        <div  class="text" >Note</div>
+    </div>
+    <div class="streets" >
+       {% for street in streets %}
+                    <div class="street row" >
+                      <div class="name" >{{street.name}}
+                      {% if street.part %}
+                      /{{street.part}}
+                      {% endif %}
+                      </div>
+                       <div class="pd" >{{street.pd}}</div>
+                      <div  class="num" >{{street.households}}</div>
+                       <div  class="num" >{{street.electors}}</div>
+                       <div class="button"> <a class="button" href = "/street/edit/{{street.streetid}}/{{roadgroup.RoadgroupId}}" >Edit</a> </div>
+                         <div  class="text" > {{street.note}}</div>
+                     </div>
+       {% endfor %}
+    </div>
+ <div class="map" >
+      <div id="mapid"></div>
+ </div>
+ <div class="row">
+   <div class="button"> <a class="button" href = "/roadgroup/newstreet/{{roadgroup.RoadgroupId}}" >New Street</a> </div>
+ </div>
+     {% set jslocation = roadgroup.getjson() %}
+      <script  type="text/javascript" >
+         var mymap = myMapper4("{{jslocation}}");
+         mymap.on('click', onMapClick);
+      </script>
+{% endif %}
+</div>
+{% endblock %}

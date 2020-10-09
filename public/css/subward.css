@@ -1,0 +1,32 @@
+
+
+
+
+
+
+
+div#swmapid
+{
+  height : 400px;
+}
+
+
+div#streetedit div.form form div label {
+  width: 10em;
+  color: green;
+  display: inline-block;
+}
+
+div#subwardedit div.form div label.required
+{
+  width: 10em;
+  color: red;
+  display: inline-block;
+}
+
+div#subwardedit div.form div label
+{
+  width: 10em;
+  color: green;
+  display: inline-block;
+}

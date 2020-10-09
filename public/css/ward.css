@@ -1,0 +1,32 @@
+
+
+
+
+
+div.ward.row div.wardid
+{
+  width: 3em;
+
+}
+
+div.ward div.subwardid
+{
+  width: 5em;
+
+}
+
+div.ward div.name
+{
+  width: 9em;
+}
+
+
+div#wmapid
+{
+  height : 400px;
+}
+
+div#swmapid
+{
+  height : 400px;
+}

@@ -1,3 +1,87 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+index:
+  path: /
+  controller: App\Controller\MainController::mainmenu
+
+wards_all:
+    path: /ward/showall
+    controller: App\Controller\WardController::showall
+
+wards_new:
+    path: /ward/new
+    controller: App\Controller\WardController::newward
+
+wards_show_one:
+    path: /ward/show/{wdid}
+    controller: App\Controller\WardController::showone
+
+subwards_show_one:
+    path: /subward/show/{swdid}
+    controller: App\Controller\WardController::showsubward
+
+subwards_new:
+    path: /subward/new/{wdid}
+    controller: App\Controller\WardController::newsubward
+
+subwards_edit:
+    path: /subward/edit/{swdid}
+    controller: App\Controller\WardController::editsubward
+
+subwards_delete:
+    path: /subward/delete/{swdid}
+    controller: App\Controller\WardController::deletesubward
+
+roadgroups_show_all:
+    path: /roadgroup/showall
+    controller: App\Controller\RoadgroupController::showall
+
+roadgroups_show_one:
+    path: /roadgroup/show/{rgid}
+    controller: App\Controller\RoadgroupController::showone
+
+roadgroups_new:
+    path: /roadgroup/new/{wdid}/{swdid}
+    controller: App\Controller\RoadgroupController::new
+
+roadgroups_edit:
+    path: /roadgroup/edit/{rgid}
+    controller: App\Controller\RoadgroupController::edit
+
+roadgroups_delete:
+    path: /roadgroup/delete/{rgid}
+    controller: App\Controller\RoadgroupController::delete
+
+roadgroups_newstreet:
+    path: /roadgroup/newstreet/{rgid}
+    controller: App\Controller\RoadgroupController::newstreet
+
+roadgroups_upload:
+    path: /roadgroup/upload
+    controller: App\Controller\RoadgroupController::upload
+
+streets_all:
+    path: /street/showall
+    controller: App\Controller\StreetController::showall
+
+streets_problems:
+    path: /street/problems
+    controller: App\Controller\StreetController::showproblems
+
+streets_problem:
+    path: /street/problem/{problemtype}
+    controller: App\Controller\StreetController::showproblems
+
+street_edit:
+    path: /street/edit/{rdid}/{returnid}
+    controller: App\Controller\StreetController::streetedit
+    defaults:
+        returnid: /
+
+street_editgroup:
+    path: /street/editgroup/{name}
+    controller: App\Controller\StreetController::streeteditgroup
+
+street_deleterg:
+    path: /street/deleterg/{rdid}
+    controller: App\Controller\StreetController::streetdeleterg
+
+

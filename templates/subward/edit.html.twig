@@ -1,0 +1,42 @@
+{# views/subward/edit.html.twig #}
+
+{% extends 'master.html.twig' %}
+
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/subward.css') }}" rel="stylesheet" />
+
+{% endblock %}
+
+
+
+
+{% block middle %}
+<div id="middle" >
+<div id="subwardedit"  >
+<div>
+ <div class="heading  row" >
+ <div class="label">{{'edit subward' }}:</div>
+ <div class="title" > {{subward.subward}}</div>
+ <div class="button  right"> <a class="button" href ="/ward/show/{{subward.wardid}}" >{{'back'}} </a> </div>
+</div>
+<div class="formmap">
+<div  class="form" >
+    {{ form_start(form) }}
+    {{ form_row(form.SubwardId) }}
+    {{ form_row(form.Subward) }}
+    {{ form_row(form.WardId) }}
+    {{ form_row(form.Households) }}
+    {{ form_row(form.Electors) }}
+    <button type="submit">{{'Register!'}}</button>
+    {{ form_end(form) }}
+</div>
+
+</div>
+      <div class ="row">
+     <div class="deletebutton right "> <a class="button  red" href ="/subward/delete/{{subward.subwardid}}" >{{'DELETE SUBWARD'}} </a> </div>
+     </div>
+</div>
+</div>
+{% endblock %}

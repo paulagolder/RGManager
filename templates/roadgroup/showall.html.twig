@@ -1,0 +1,52 @@
+{# views/roadgroup/showall.html.twig #}
+
+{% extends 'master.html.twig' %}
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/roadgroup.css') }}" rel="stylesheet" />
+{% endblock %}
+
+
+{% block middle %}
+<div class="roadgroup">
+{% if message %}
+<H1>{{message}} </H1>
+
+{% else %}
+    <div class="heading row">
+    <div class="label">Roadgroups</div>
+     <div class="message"> Select a subward to create a new RoadGroup </div>
+    <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+    </div>
+
+     <div class="roadgroup header  list row">
+
+                         <div class="rgid" >Road group Id</div>
+                           <div class="name" >Name</div>
+                       <div class="wardid" >Ward Id</div>
+                      <div  class="num" >House-holds</div>
+                       <div  class="num" >Electors</div>
+                       <div  class="button" ></div>
+                     <div  class="text" >Note</div>
+   </div>
+    <div  class="pagescroll list" >
+       {% for roadgroup in roadgroups %}
+                    <div class="roadgroup row" >
+                       <div  class="rgid" >{{roadgroup.roadgroupid}}</div>
+                      <div class="name" >{{roadgroup.name}}..etc</div>
+
+                      <div  class="wardid" >{{roadgroup.wardid}}</div>
+
+                      <div  class="num" >{{roadgroup.households}}</div>
+                       <div  class="num" >{{roadgroup.electors}}</div>
+                        <div class="button"> <a class="button" href = "/roadgroup/show/{{roadgroup.roadgroupid}}" >View</a> </div>
+                         <div class="button"> <a class="button" href = "/roadgroup/edit/{{roadgroup.roadgroupid}}" >Edit</a> </div>
+                     <div  class="text" > {{roadgroup.note}}</div>
+                     </div>
+       {% endfor %}
+    </div>
+{% endif %}
+
+</div>
+{% endblock %}

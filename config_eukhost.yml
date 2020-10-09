@@ -1,0 +1,97 @@
+imports:
+    - { resource: parameters_eukhost.yml }
+    - { resource: security.yml }
+    - { resource: services.yml }
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: fr
+    httpProtocol: http
+
+framework:
+    translator: { fallbacks: [fr] }
+    secret: '%secret%'
+    router:
+        resource: '%kernel.project_dir%/app/config/routing.yml'
+        strict_requirements: ~
+    form: ~
+    csrf_protection: ~
+    validation: { enable_annotations: true }
+    #serializer: { enable_annotations: true }
+    default_locale: '%locale%'
+    trusted_hosts: ~
+    session:
+        # https://symfony.com/doc/current/reference/configuration/framework.html#handler-id
+        handler_id: session.handler.native_file
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+    fragments: ~
+    http_method_override: true
+    assets: ~
+    php_errors:
+        log: true
+
+# Twig Configuration
+twig:
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    globals:
+        pathToWeb: "%kernel.project_dir%/web"
+        pdffunction: '%pdf-function%'
+        locationpath: '%location-path%'
+        recaptcha_key: '%recaptcha_key%'
+        recaptcha_secret: '%recaptcha_secret%'
+        maxlistuser: '%maxlistuser%'
+        maxlistadmin: '%maxlistadmin%'
+        versionname: '%version-name%'
+        maxrecentchanges: '%maxrecentchanges%'
+        defaultcontent: '%defaultcontent%'
+        adminstratorsemails: '%administratorsemails%'
+        baseurl: '%base-url%'
+    paths:
+        '%kernel.project_dir%/web': pathToWeb
+
+# Doctrine Configuration
+doctrine:
+    dbal:
+        driver: pdo_mysql
+        host: '%database_host%'
+        port: '%database_port%'
+        dbname: '%database_name%'
+        user: '%database_user%'
+        password: '%database_password%'
+
+        charset: UTF8
+
+    orm:
+        auto_generate_proxy_classes: '%kernel.debug%'
+        naming_strategy: doctrine.orm.naming_strategy.underscore
+        auto_mapping: true
+
+# Swiftmailer Configuration
+swiftmailer:
+    #delivery_addresses: ['paul.a.golder@lerot.org']
+    transport:   '%email-transport%'
+    encryption:  '%email-encryption%'
+    auth_mode:   '%email-auth_mode%'
+    host:  '%email-host%'
+    port:  '%email-port%'
+    username:   '%email-username%'
+    password:   '%email-password%'
+    spool: { type: memory }
+
+#
+#fos_ck_editor:
+#    default_config: my_config
+#    configs:
+#        my_config:
+#            toolbar: [ ["Source", "Image", "Styles", "Cleanup" ] ]
+#            uiColor:                "#dddddd"
+#            stylesSet: "default"
+#        styles:
+#            default:
+#              - { name: "Blue Title", element: "h2", styles: { color: "Blue" }}
+#              - { name: "CSS Style", element: "span", attributes: { class: "my_style" }}
+#              - { name: "Widget Style", type: widget, widget: "my_widget", attributes: { class: "my_widget_style" }}
+            # ...
+

@@ -1,0 +1,60 @@
+# parameters for use on lerot.org server
+parameters:
+    database_host:  '127.0.0.1'
+    database_port: '3306'
+    database_name: 'lerot_fflsas75'
+    database_user: 'lerot_fflsas75'
+    database_password: 'ch#75_eilly'
+
+
+ #database_host:  '127.0.0.1'
+ ## remote :109.234.164.65
+ #database_port: '3306'
+ #database_name: 'gopa9677_fflsas75'
+ #database_user: 'gopa9677_fflsas75'
+ #database_password: 'bo70uligney'
+
+
+
+    email-transport: 'smtp'
+    email-encryption: ssl
+    email-auth_mode: login
+    email-host: mail.fflsas.org
+    email-port: 465
+    email-username:  'admin75@fflsas.org'
+    email-password:  'savannah_1944'
+    #spool: { type: memory }
+    secret: 56f1c6ae2e2bea4288f04e3c1e67795d5890d3e0
+
+    version-name: "FFLSAS-75"
+    admin-name: "ADMIN75"
+    admin-email: "admin75@fflsas.org"
+    testemail: "paul.a.golder@gmail.com"
+    administratorsemails: "'admin75@fflsas.org','infofflsas@gmail.com'"
+
+
+    new-images-path: '/newimages/'
+    new-images-folder: '%kernel.project_dir%/web/newimages/'
+    old-images-path: "/oldimages/"
+    old-images-folder: "%kernel.project_dir%/web/oldimages/"
+
+    kml-folder-long: '%kernel.project_dir%/web/kml/'
+    kml-folder: '/kml/'
+
+    location-path: "https://fflsas.org/fr/location/"
+
+    base-url: "https://fflsas.org/"
+    kernel.cache_dir: '%kernel.project_dir%/var/pdf'
+
+    recaptcha_key: "6LdtX-cSAAAAANW6GeK-VC6kYI2V-5B9Rn0Tcfz8"
+    recaptcha_secret: "6LdtX-cSAAAAABwF-fKO7F6tlDetv-B1Dbyaw-yy"
+
+    maxlistuser: 20
+    maxlistadmin: 100
+    maxrecentchanges: 20
+    defaultcontent: 203
+
+
+    pdf-function: false
+
+

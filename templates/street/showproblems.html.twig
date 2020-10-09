@@ -1,0 +1,42 @@
+{# views/street/showproblems.html.twig #}
+
+{% extends 'master.html.twig' %}
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/street.css') }}" rel="stylesheet" />
+
+{% endblock %}
+
+{% block middle %}
+<div class="problemheader  row">
+  <div class="button " >
+    <a class="button" href = "/street/problem/rg/" >Missing Road Group</a>
+    </div>
+     <div class="button  right"> <a class="button" href = "/" >{{'back'}} </a> </div>
+  </div>
+<div class="streetlist">
+{% if message %}
+<H1> No streets found </H1>
+
+{% else %}
+    <div id="streets" >
+       {% for street in streets %}
+                    <div class="street row" >
+                      <div class="name" >{{street.name}}</div>
+                       <div class="pd" >{{street.pd}}</div>
+                      <div  class="wardid" >{{street.wardid}}</div>
+                      <div  class="rgid" >{{street.roadgroupid}}</div>
+                      <div  class="num" >{{street.households}}</div>
+                       <div  class="num" >{{street.electors}}</div>
+                        <a class="button" href = "/street/edit/{{street.StreetId}}" >EDIT</a>
+                     </div>
+       {% endfor %}
+    </div>
+
+       </div>
+
+</div>
+{% endif %}
+</div>
+{% endblock %}
