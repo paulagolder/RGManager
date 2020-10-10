@@ -21,7 +21,7 @@ function getColor(i)
 
 
 
-function myMapper4(location)
+function xxmyMapper4(location)
 {
   var location_dc =redecode(location);
   var mylocation = JSON.parse(location_dc);
@@ -232,12 +232,12 @@ function addMyKML(mymap,kmlfilepath,color, cumbounds)
   mymap.addLayer(track);
 
   const bounds = track.getBounds();
-  if( cumbounds == null)
+  if( cumbounds[0] == null)
   {
-    cumbounds = bounds;
+    cumbounds[0] = bounds;
   }else
   {
-    cumbounds.extendby(bounds);
+    cumbounds[0].extend(bounds);
   }
 
 });
@@ -253,7 +253,7 @@ function makeKMLLayer(amap,kmlfilepath,style)
 
     const kml = parser.parseFromString(kmltext, 'text/xml');
     track = new L.KML(kml);
-    track.setStyle();
+    track.setStyle(style);
     amap.addLayer(track);
 
     const bounds = track.getBounds();
@@ -261,7 +261,23 @@ function makeKMLLayer(amap,kmlfilepath,style)
   });
 }
 
-function addMyKMLtracks(mymap,tracks,color)
+
+
+function addKMLLayer(layergroup,kmlfilepath,style)
+{
+
+  fetch(kmlfilepath).then(res => res.text()).then(kmltext =>
+  {
+    const parser = new DOMParser();
+
+    const kml = parser.parseFromString(kmltext, 'text/xml');
+    track = new L.KML(kml);
+    track.setStyle(style);
+    layergroup.addLayer(track);
+  });
+}
+
+function xxaddMyKMLtracks(mymap,tracks,color)
 {
   var track;
 

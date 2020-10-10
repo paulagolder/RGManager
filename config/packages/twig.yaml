@@ -1,3 +1,10 @@
+ # config/packages/twig.yaml
+
+
 twig:
     default_path: '%kernel.project_dir%/templates'
     cache:  false
+
+    globals:
+       xmappath: "http://127.0.0.1:8000/maps/"
+       mappath : "http://lerot.org/RoadGroups/maps/"

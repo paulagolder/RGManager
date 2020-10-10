@@ -315,7 +315,7 @@ class Roadgroup
    }
    else
    {
-      $kml = "http://lerot.org/RoadGroups/maps/".$this->RoadgroupId.".kml";
+      //$kml = "mappath".$this->RoadgroupId.".kml";
    }
 
 

@@ -81,45 +81,41 @@
     var mymap = myWMap("{{jslocation}}");
     var i=0;
     var bounds = null;
-    var path = "http://lerot.org/RoadGroups/maps/{{ward.wardid}}.kml";
+    var fgroup =  new L.featureGroup();
+    var path = "{{mappath}}{{ward.wardid}}.kml";
     if(CheckUrl(path))
-     {
-       var style = {"color":  "#ffFFFF" , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
-         makeKMLLayer(mymap, path,style);
-     }
+    {
+       var style = {"color":  "#0000FF" , "weight": 5 ,  "clickable": true ,"opacity": 0.5, "fillOpacity": 0.5 };
+       makeKMLLayer(mymap, path,style);
+    }
 
-     var jsrglist = {{roadgrouplist|json_encode|raw}};
+    var jsrglist = {{roadgrouplist|json_encode|raw}};
     for ( var swdid in jsrglist)
     {
-    var countsgs = 0;
-     var rgtracks = jsrglist[swdid];
+      var countsgs = 0;
+      var rgtracks = jsrglist[swdid];
       if( rgtracks.length > 0)
       {
-
-         for( var rgid in rgtracks)
-         {
-             rg =rgtracks[rgid];
-             var path = "http://lerot.org/RoadGroups/maps/"+rg+".kml";
-             if(CheckUrl(path))
-             {
-                countsgs = countsgs+1;
-                var abound =  addMyKML(mymap,path,getColor(i), bounds);
-
-                 }
-
-             }
-
+        var style = {"color":  getColor(i) , "weight": 4 ,  "clickable": true ,"opacity": 1.0, "fillOpacity": 1.0 };
+        for( var rgid in rgtracks)
+        {
+          rg =rgtracks[rgid];
+          var path = "{{mappath}}"+rg+".kml";
+          if(CheckUrl(path))
+          {
+            countsgs = countsgs+1;
+            makeKMLLayer(mymap,path,style);
+          }
+        }
       }
       if(countsgs > 0)
       {
          var h2s = document.getElementById(swdid);
          h2s.style.backgroundColor = getColor(i);
-          i=i+1;
+         i=i+1;
        }
-
     }
-
-
+    mymap.fitBounds(fgroup.getBounds());
     mymap.on('click', onMapClick);
    </script>
 {% endblock %}

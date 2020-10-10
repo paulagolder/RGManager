@@ -55,7 +55,7 @@
   {% set tracks = tracks|merge([aroadgroup.roadgroupid]) %}
      <div class="roadgroup row "  >
        <div class="roadgroupid" id="{{aroadgroup.roadgroupid}}" >{{aroadgroup.roadgroupid}}</div>
-       <div class="name" >{{aroadgroup.name}}</div>
+       <div class="name" >{{aroadgroup.name}}..etc</div>
        <div class="button" ><a class="button" href = "/roadgroup/show/{{aroadgroup.roadgroupid}}" >VIEW</a>   </div>
        <div class="button" ><a class="button" href = "/roadgroup/edit/{{aroadgroup.roadgroupid}}" >EDIT</a>   </div>
      </div>
@@ -73,27 +73,25 @@
     var mymap = mySwMap("{{jslocation}}");
     var tracks = {{tracks|json_encode|raw}};
     var i=0;
-    var bounds = null;
+    var fgroup =  new L.featureGroup();
     for (track of tracks)
     {
-      var path = "http://lerot.org/RoadGroups/maps/"+track+".kml";
+      var path = "{{mappath}}"+track+".kml";
       if(CheckUrl(path))
       {
          var h2s = document.getElementById(track);
          h2s.style.backgroundColor = getColor(i);
-         var abound =  addMyKML(mymap,path,getColor(i));
-         if(bounds == null)
-         {
-            bounds = abound;
-         }else
-         {
-            bounds.extends(abound);
-         }
-         i=i+1;
+         var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
+       //  addKMLLayer(fgroup,path,style);
+          makeKMLLayer(mymap,path,style)
+            i=i+1;
+      }
       }
 
-    }
-    mymap.fitBounds(bounds);
-    mymap.on('click', onMapClick);
+      mymap.fitBounds(fgroup.getBounds());
+      mymap.on('click', onMapClick);
+
+
+
    </script>
 {% endblock %}

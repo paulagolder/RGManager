@@ -187,8 +187,6 @@ class Subward
    public function getjson()
    {
 
-
-  // $kml = "http://lerot.org/RoadGroups/maps/".$this->RoadgroupId.".kml";
    $kml="";
 
    $str ="{";

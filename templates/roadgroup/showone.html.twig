@@ -71,7 +71,7 @@
   <div class="row">
     <div class="button"> <a class="button" href = "/roadgroup/newstreet/{{roadgroup.RoadgroupId}}" >New Street</a> </div>
     <div class="button"> <a class="button" href = "http://www.bikehike.co.uk/mapview.php" target = "_blank"  >Create Route</a> </div>
-
+  </div>
 
 
 
@@ -86,7 +86,6 @@
       </div>
     </div>
   </div>
-</div>
 <div class="map" >
   <div id="rgmapid"></div>
 </div>
@@ -94,10 +93,10 @@
 <script  type="text/javascript" >
 
   var mymap = myRgMap("{{jslocation}}");
-  var path = "http://lerot.org/RoadGroups/maps/{{roadgroup.RoadgroupId}}.kml";
+  var path = "{{mappath}}{{roadgroup.RoadgroupId}}.kml";
   if(CheckUrl(path))
   {
-  var style = {"color":  "#ffFFFF" , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
+  var style = {"color":  "#0000FF" , "weight": 14 ,  "clickable": true ,"opacity": 0.3, "fillOpacity": 0.1 };
   makeKMLLayer(mymap, path,style);
   }
   mymap.on('click', onMapClick);
