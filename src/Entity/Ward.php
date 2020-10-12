@@ -170,5 +170,18 @@ class Ward
    $str .="}";
    return  $str;
    }
+
+   public function makexml()
+   {
+     $subwards=$this->subwards;
+     $xmlout = "";
+     $xmlout .= "  <ward WardId='$this->WardId' Name='$this->Ward' Households='$this->Households' >\n  ";
+     foreach ($subwards as $asubward )
+     {
+     $xmlout .= $asubward->makexml();
+     }
+     $xmlout .= "  </ward>\n";
+     return $xmlout;
+   }
 }
 

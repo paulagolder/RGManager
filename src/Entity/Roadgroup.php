@@ -330,4 +330,17 @@ class Roadgroup
    $str .="}";
    return  $str;
    }
+
+   public function makexml()
+   {
+    $streets =$this->streets;
+     $xmlout = "";
+     $xmlout .= "      <roadgroup RoadgroupId='$this->RoadgroupId' Name='$this->Name' Households='$this->Households' >\n  ";
+     foreach ($streets as $astreet )
+      {
+        $xmlout .= $astreet->makexml();
+      }
+     $xmlout .= "      </roadgroup>\n";
+     return $xmlout;
+   }
 }

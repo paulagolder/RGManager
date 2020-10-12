@@ -271,6 +271,55 @@ class WardController extends AbstractController
 
     }
 
+    public function Export()
+    {
+            $file = "maps/lichfielddc.rgml";
+            $xmlout = "";
+            $xmlout .= "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+            $xmlout .= "<?xml-stylesheet type='text/xsl' href='./Stylesheets/rgml.xsl' ?>\n";
+            $xmlout .= "<roadgroups name=\"Lichfield District\" >\n";
+            $xmlout .= $this->makexml();
+            $xmlout .= "</roadgroups>\n";
+            $handle = fopen($file, "w") or die("ERROR: Cannot open the file.");
+            fwrite($handle, $xmlout) or die ("ERROR: Cannot write the file.");
+            fclose($handle);
+               $this->addFlash(
+            'notice',
+            'xml file saved' );
+             return $this->redirect("/");
+    }
 
+
+    public function makexml()
+    {
+         $xmlout = "";
+         $wards = $this->getDoctrine()->getRepository("App:Ward")->findAll();
+        if (!$wards) {
+            return "";
+        }
+        foreach (  $wards as $award )
+        {
+           $subwards =   $this->getDoctrine()->getRepository("App:Subward")->findChildren($award->getWardId());
+           $award->{'subwards'} = $subwards;
+           foreach($subwards as $asubward)
+           {
+              $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($asubward->getSubwardId());
+              $asubward->{'roadgrouplist'}=$roadgroups;
+              foreach($roadgroups as $aroadgroup)
+              {
+                $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($aroadgroup->getRoadgroupid());
+
+                $aroadgroup->{'streets'}= $streets;
+              }
+           }
+        }
+
+        foreach (  $wards as $award )
+        {
+           $xmlout .= $award->makexml();
+           $xmlout .= "\n";
+        }
+      return $xmlout;;
+      }
 
 }

@@ -10,194 +10,204 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Subward
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(name="subwardid",type="string")
-     */
-    private $SubwardId;
+  /**
+   * @ORM\Id
+   * @ORM\Column(name="subwardid",type="string")
+   */
+  private $SubwardId;
 
 
 
-    /**
-     * @ORM\Column(name="subward",type="string", length=50)
-     */
-    private $Subward;
+  /**
+   * @ORM\Column(name="subward",type="string", length=50)
+   */
+  private $Subward;
 
 
- /**
-     * @ORM\Column(name="wardid",type="string")
-     */
-    private $WardId;
+  /**
+   * @ORM\Column(name="wardid",type="string")
+   */
+  private $WardId;
 
-    /**
-     * @ORM\Column(name="households",type="integer",  nullable=true)
-     */
-    private $Households;
-
-
-    /**
-     * @ORM\Column(name="electors",type="integer",  nullable=true)
-     */
-    private $Electors;
+  /**
+   * @ORM\Column(name="households",type="integer",  nullable=true)
+   */
+  private $Households;
 
 
-    /**
-     * @ORM\Column(name="roads",type="integer",  nullable=true)
-     */
-    private $Roads;
+  /**
+   * @ORM\Column(name="electors",type="integer",  nullable=true)
+   */
+  private $Electors;
 
 
-    /**
-     * @ORM\Column(name="roadgroups",type="integer",  nullable=true)
-     */
-    private $roadgroups;
+  /**
+   * @ORM\Column(name="roads",type="integer",  nullable=true)
+   */
+  private $Roads;
+
+
+  /**
+   * @ORM\Column(name="roadgroups",type="integer",  nullable=true)
+   */
+  private $roadgroups;
 
 
 
-        /**
-     * @ORM\Column(name="latitude",type="string", length=20,  nullable=true)
-     */
-    private $Latitude;
+  /**
+   * @ORM\Column(name="latitude",type="string", length=20,  nullable=true)
+   */
+  private $Latitude;
 
-          /**
-     * @ORM\Column(name="longitude",type="string", length=20,   nullable=true)
-     */
-    private $Longitude;
+  /**
+   * @ORM\Column(name="longitude",type="string", length=20,   nullable=true)
+   */
+  private $Longitude;
 
-    public function getSubwardId()
-    {
-        return $this->SubwardId;
-    }
+  public function getSubwardId()
+   {
+     return $this->SubwardId;
+   }
 
-    public function setSubwardId($ID): self
-    {
-        $this->SubwardId = $ID;
+   public function setSubwardId($ID): self
+   {
+     $this->SubwardId = $ID;
 
-        return $this;
-    }
+     return $this;
+   }
 
-      public function getSubward()
-    {
-        return $this->Subward;
-    }
+   public function getSubward()
+   {
+     return $this->Subward;
+   }
 
-    public function setSubward($ID): self
-    {
-        $this->Subward = $ID;
+   public function setSubward($ID): self
+   {
+     $this->Subward = $ID;
 
-        return $this;
-    }
+     return $this;
+   }
 
-      public function getWardId()
-    {
-        return $this->WardId;
-    }
+   public function getWardId()
+   {
+     return $this->WardId;
+   }
 
-    public function setWardId($ID): self
-    {
-        $this->WardId = $ID;
+   public function setWardId($ID): self
+   {
+     $this->WardId = $ID;
 
-        return $this;
-    }
+     return $this;
+   }
 
-    public function getHouseholds()
-    {
-        return $this->Households;
-    }
+   public function getHouseholds()
+   {
+     return $this->Households;
+   }
 
-    public function setHouseholds($number): self
-    {
-        $this->Households = $number;
+   public function setHouseholds($number): self
+   {
+     $this->Households = $number;
 
-        return $this;
-    }
+     return $this;
+   }
 
-     public function getElectors()
-    {
-        return $this->Electors;
-    }
+   public function getElectors()
+   {
+     return $this->Electors;
+   }
 
-    public function setElectors($number): self
-    {
-        $this->Electors = $number;
+   public function setElectors($number): self
+   {
+     $this->Electors = $number;
 
-        return $this;
-    }
+     return $this;
+   }
 
-       public function getRoads()
-    {
-        return $this->Roads;
-    }
+   public function getRoads()
+   {
+     return $this->Roads;
+   }
 
-    public function setRoads($number): self
-    {
-        $this->Roads = $number;
+   public function setRoads($number): self
+   {
+     $this->Roads = $number;
 
-        return $this;
-    }
+     return $this;
+   }
 
-    public function getRoadgroups()
-    {
-        return $this->Roadgroups;
-    }
+   public function getRoadgroups()
+   {
+     return $this->Roadgroups;
+   }
 
-    public function setRoadgroups($number): self
-    {
-        $this->Roadgroups = $number;
+   public function setRoadgroups($number): self
+   {
+     $this->Roadgroups = $number;
 
-        return $this;
-    }
+     return $this;
+   }
 
-    public function getLatitude()
-    {
-        return $this->Latitude;
-    }
+   public function getLatitude()
+   {
+     return $this->Latitude;
+   }
 
-    public function setLatitude(?string $number): self
-    {
-        $this->Latitude = $number;
+   public function setLatitude(?string $number): self
+   {
+     $this->Latitude = $number;
 
-        return $this;
-    }
+     return $this;
+   }
 
-      public function getLongitude()
-    {
-        return $this->Longitude;
-    }
+   public function getLongitude()
+   {
+     return $this->Longitude;
+   }
 
-    public function setLongitude(?string $number): self
-    {
-        $this->Longitude = $number;
+   public function setLongitude(?string $number): self
+   {
+     $this->Longitude = $number;
+     return $this;
+   }
 
-        return $this;
-    }
+   public function setRoadgrouplist($list): self
+   {
+     $this->Roadgrouplist = $list;
+     return $this;
+   }
 
-    public function setRoadgrouplist($list): self
-    {
-        $this->Roadgrouplist = $list;
-        return $this;
-    }
-
-    public function getRoadgrouplist()
-    {
-        return $this->Roadgrouplist;
-    }
+   public function getRoadgrouplist()
+   {
+     return $this->Roadgrouplist;
+   }
 
 
    public function getjson()
    {
+     $kml="";
+     $str ="{";
+     $str .=  '"name":"'.$this->Subward.'",';
+     $str .=  '"wardid":"'.$this->WardId.'",';
+     $str .=  '"subwardid":"'.$this->SubwardId.'",';
+     $str .=  '"kml":"'.$kml.'",';
+     $str .=  '"longitude":"'.$this->Longitude.'",';
+     $str .=  '"latitude":"'.$this->Latitude.'"';
+     $str .="}";
+     return  $str;
+   }
 
-   $kml="";
-
-   $str ="{";
-   $str .=  '"name":"'.$this->Subward.'",';
-   $str .=  '"wardid":"'.$this->WardId.'",';
-   $str .=  '"subwardid":"'.$this->SubwardId.'",';
-   $str .=  '"kml":"'.$kml.'",';
-   $str .=  '"longitude":"'.$this->Longitude.'",';
-   $str .=  '"latitude":"'.$this->Latitude.'"';
-   $str .="}";
-   return  $str;
+   public function makexml()
+   {
+     $roadgroups =$this->roadgrouplist;
+     $xmlout = "";
+     $xmlout .= "    <subward SubwardId='$this->SubwardId' Name='$this->Subward' Households='$this->Households' >\n  ";
+     foreach ($roadgroups as $aroadgroup )
+      {
+        $xmlout .= $aroadgroup->makexml();
+      }
+   $xmlout .= "    </subward>\n";
+   return $xmlout;
    }
 }
 

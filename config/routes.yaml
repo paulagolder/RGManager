@@ -14,6 +14,11 @@ wards_show_one:
     path: /ward/show/{wdid}
     controller: App\Controller\WardController::showone
 
+
+wards_export:
+    path: /ward/export
+    controller: App\Controller\WardController::export
+
 subwards_show_one:
     path: /subward/show/{swdid}
     controller: App\Controller\WardController::showsubward

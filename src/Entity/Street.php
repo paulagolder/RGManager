@@ -270,5 +270,13 @@ class Street
   $str .="}";
     return  $str;
     }
+
+
+     public function makexml()
+   {
+
+     $xmlout = "<street Name='$this->Name' Households='$this->Households' />\n  ";
+     return $xmlout;
+   }
 }
 
