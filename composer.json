@@ -9,6 +9,8 @@
         "doctrine/doctrine-bundle": "^2.1",
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.7",
+        "dompdf/dompdf": "^0.8.6",
+        "fpdf/fpdf": "^1.82",
         "laminas/laminas-code": "^3.4",
         "laminas/laminas-eventmanager": "^3.2",
         "symfony/apache-pack": "^1.0",

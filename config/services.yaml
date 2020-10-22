@@ -5,7 +5,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
   new-maps-folder: '%kernel.project_dir%/public/maps/'
-  mappath: '%kernel.project_dir%/public/maps/'
+  mappath: '%env(resolve:MAPPATH)%'
 
 #new-maps-folder: 'http://lerot.org/RoadGroups/maps'
 # mappath : "http://lerot.org/RoadGroups/maps/"
@@ -48,3 +48,6 @@ services:
             - { name: doctrine.event_listener, event: prePersist }
             - { name: doctrine.event_listener, event: preUpdate }
 
+    App\Service\PDF:
+        arguments:
+           $pdfpath : '%MAPPATH%'

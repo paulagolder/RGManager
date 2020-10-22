@@ -19,6 +19,10 @@ wards_export:
     path: /ward/export
     controller: App\Controller\WardController::export
 
+wards_print:
+    path: /ward/print
+    controller: App\Controller\WardController::topdf
+
 subwards_show_one:
     path: /subward/show/{swdid}
     controller: App\Controller\WardController::showsubward
@@ -67,6 +71,15 @@ streets_all:
     path: /street/showall
     controller: App\Controller\StreetController::showall
 
+streets_filters:
+    path: /street/filters
+    controller: App\Controller\StreetController::filters
+
+streets_search:
+    path: /street/search
+    controller: App\Controller\StreetController::search
+
+
 streets_problems:
     path: /street/problems
     controller: App\Controller\StreetController::showproblems
@@ -81,12 +94,29 @@ street_edit:
     defaults:
         returnid: /
 
+street_remove:
+     path: /street/remove/{stid}
+     controller: App\Controller\StreetController::streetremove
+
+street_add:
+     path: /street/add/{rgid}
+     controller: App\Controller\StreetController::streetadd
+
 street_editgroup:
     path: /street/editgroup/{name}
     controller: App\Controller\StreetController::streeteditgroup
 
-street_deleterg:
-    path: /street/deleterg/{rdid}
-    controller: App\Controller\StreetController::streetdeleterg
 
+
+street_delete:
+    path: /street/delete/{rdid}
+    controller: App\Controller\StreetController::streetdelete
+
+street_replicate:
+    path: /street/replicate/{stid}
+    controller: App\Controller\StreetController::streetreplicate
+
+street_merge:
+    path: /street/groupops
+    controller: App\Controller\StreetController::streetgroupops
 

@@ -10,6 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 
 class RoadgroupForm extends AbstractType
@@ -23,6 +24,7 @@ class RoadgroupForm extends AbstractType
         $builder ->add('SubwardId', TextType::class,['label' => 'SubwardId','required' => false,]);
         $builder ->add('Households', IntegerType::class,['label' => 'Households','required' => false,]);
         $builder ->add('Electors', IntegerType::class,['label' => 'Electors','required' => false,]);
+        $builder ->add('Distance', NumberType::class,['label' => 'Distance(mls)','required' => false,]);
 
     }
 

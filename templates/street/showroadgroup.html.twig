@@ -71,14 +71,14 @@
        {% endfor %}
     </div>
  <div class="map" >
-      <div id="mapid"></div>
+      <div id="stmapid"></div>
  </div>
  <div class="row">
    <div class="button"> <a class="button" href = "/roadgroup/newstreet/{{roadgroup.RoadgroupId}}" >New Street</a> </div>
  </div>
      {% set jslocation = roadgroup.getjson() %}
       <script  type="text/javascript" >
-         var mymap = myMapper4("{{jslocation}}");
+         var mymap = myStMap("{{jslocation}}");
          mymap.on('click', onMapClick);
       </script>
 {% endif %}

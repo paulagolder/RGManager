@@ -1,0 +1,85 @@
+
+SELECT s.name FROM `street` as s  left join roadgroup as r on s.roadgroupid = r.roadgroupid where r.roadgroupid is null
+
+SELECT s.name FROM `street` as s left join roadgroup as r on s.roadgroupid = r.roadgroupid left join ward as w on r.wardid = w.wardid where w.wardid is null
+
+
+
+ ward 	sum(Properties)
+BOLEY PARK 	1815
+CHADSMEAD 	2010
+CURBOROUGH 	1871
+LEOMANSLEY 	2941
+ST JOHNS 	2431
+STOWE 	3086
+
+
+
+
+
+
+
+https://mapit.mysociety.org/area/2434.html
+
+
+
+public_html/rgmanager
+composer require fpdf/fpdf
+
+https://packagist.org/packages/fpdf/fpdf
+
+
+ roadgroupid 	name 	rh 	sh
+STW_W1 	Close 	114 	563
+CUR_S3 	Oakley 	159 	402
+CUR_E4 	Dimbles Lane 	158 	265
+LEO_C5 	Blakeman Way 	132 	237
+STJ_C6 	Bham Rd 	121 	215
+STJ_E7 	Manor Rise 	107 	173
+STW_N4 	Fecknam Way 	168 	219
+STJ_W1 	Chesterfield Rd 	164 	212
+STW_W3 	Wade Street 	130 	173
+STW_S1 	Maxwell Close 	139 	173
+STW_C3 	Wissage Rd 	100 	128
+LEO_W3 	Lower Sandford St 	237 	260
+CHD_C2 	Swallow Croft 	166 	186
+CHD_S3 	Anson Ave 	119 	137
+STW_S3 	BORW 	188 	204
+CHD_N1 	Garrick Road 	154 	170
+STW_C1 	Stowe St 	140 	155
+STJ_E8 	Longbridge 	148 	162
+BLY_E5 	Bracken Cl 	88 	100
+BLY_E1 	Birchwood Rd 	153 	161
+CUR_C1 	Curborough 	171 	179
+STJ_C5 	Shortbutts Lane 	183 	190
+STW_E2 	Rocklands Cres 	140 	144
+LEO_C4 	Whithouse Dr 	163 	166
+STJ_C3 	Dovehouse Fields 	102 	104
+
+
+
+Dimbles Lane 	4
+Wissage Road 	4
+Birmingham Road 	3
+Stafford Road 	3
+Church Street 	2
+Dimbles Hill 	2
+Kean Close 	2
+Longstaff Croft 	2
+Shortbutts Lane 	2
+The Windings 	2
+Bird Street 	2
+Borrowcop Lane 	2
+Chesterfield Road 	2
+St Chads Road 	2
+Rotten Row 	2
+Fosseway Lane 	2
+The Mill Pond 	2
+Shaw Lane 	2
+The Charters 	2
+Wheel Lane 	2
+Brownsfield Road 	2
+Sturgeons Hill 	2
+Walsall Road 	2
+Manor Rise 	2
+Deykin Road 	2

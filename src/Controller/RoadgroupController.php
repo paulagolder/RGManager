@@ -65,15 +65,30 @@ class RoadgroupController extends AbstractController
   public function Showone($rgid)
   {
     $roadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid);
-
+    $swdid = $roadgroup->getSubwardId();
+    $wdid = $roadgroup->getWardId();
+    $stlist = [];
     $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($rgid);
+    foreach($streets as $astreet)
+    {
+        $stlist[]= $astreet->getStreetId();
+    }
+    if($swdid)
+       $back = "/subward/show/".$swdid;
+    else if($wdid)
+       $back =  "/ward/show/".$wdid;
+    else
+       $back =  "/ward/showall/";
+    $extrastreets =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreets();
+
 
     return $this->render('roadgroup/showone.html.twig',
     [
     'message' =>  '' ,
     'roadgroup' => $roadgroup ,
     'streets'=> $streets,
-    'back'=>'/subward/show/'.$roadgroup->getSubwardId(),
+    'sparestreets'=>$extrastreets,
+    'back'=>$back,
     ]);
 
   }
@@ -84,7 +99,8 @@ class RoadgroupController extends AbstractController
     if($rgid)
     {
       $roadgroup = $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($rgid);
-      $swdid = $roadgroup->getSubwardId();
+       $swdid = $roadgroup->getSubwardId();
+       $wdid = $roadgroup->getWardId();
     }
     if(! isset($roadgroup ))
     {
@@ -96,18 +112,31 @@ class RoadgroupController extends AbstractController
       $form->handleRequest($request);
       if ($form->isValid())
       {
+       $swdid = $roadgroup->getSubwardId();
+       $wdid = $roadgroup->getWardId();
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($roadgroup );
         $entityManager->flush();
         $rgid = $roadgroup->getRoadgroupId();
-        return $this->redirect("/subward/show/".$swdid);
+        if($swdid)
+           return $this->redirect("/subward/show/".$swdid);
+        else if($wdid)
+           return $this->redirect("/ward/show/".$wdid);
+         else
+            return   $this->redirect("/ward/showall/");
       }
     }
 
+    if($swdid)
+           $back = "/subward/show/".$swdid;
+        else if($wdid)
+            $back =  "/ward/show/".$wdid;
+         else
+             $back =  "/ward/showall/";
     return $this->render('roadgroup/edit.html.twig', array(
       'form' => $form->createView(),
       'roadgroup'=>$roadgroup,
-      'back'=>'/subward/show/'.$swdid,
+      'back'=>$back,
       ));
   }
 
@@ -118,6 +147,7 @@ class RoadgroupController extends AbstractController
     $roadgroup  = new Roadgroup ();
     $roadgroup-> setSubwardId($swdid);
     $roadgroup-> setWardId($wdid);
+    // $roadgroup-> setStreetcount (0);
     $form = $this->createForm(RoadgroupForm::class, $roadgroup );
     if ($request->getMethod() == 'POST')
     {
@@ -212,12 +242,17 @@ class RoadgroupController extends AbstractController
 
     $roadgroup = $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($rgid);
     $swdid = $roadgroup->getSubwardId();
-
+       $wdid = $roadgroup->getWardId();
     $entityManager = $this->getDoctrine()->getManager();
     $entityManager->remove($roadgroup);
     $entityManager->flush();
-
-    return $this->redirect("/subward/show/".$swdid);
+    if($swdid)
+           $back = "/subward/show/".$swdid;
+        else if($wdid)
+            $back =  "/ward/show/".$wdid;
+         else
+             $back =  "/ward/showall/";
+    return $this->redirect($back);
 
   }
 

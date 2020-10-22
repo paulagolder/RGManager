@@ -9,4 +9,7 @@
 /var/
 /vendor/
 /*/*/*.rgml
+/*.lock
+/*.tar.gz
+
 ###< symfony/framework-bundle ###

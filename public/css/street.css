@@ -1,40 +1,16 @@
 
-div.streets
+
+#streetedit div.heading div.label
 {
-  margin: 4px;
-  padding: 4px;
-  xbackground-color: silver;
-  xwidth: 500px;
-  height: 600px;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  text-align: justify;
-  xborder: 4px solid blue;
+  color: green;
 }
 
-
-
-div.heading.row div.countwarning
+#streetedit div.heading.row div.countwarning
 {
   font-size: 0.5em;
   color: red;
   width: 12em;
   margin-left: 2em;
-}
-
-
-xdiv.header.row {
-  font-size: 1em;
-  color: black;
-  background-color: #9cd29c;
-}
-
-
-
-
-#streetedit div.heading div.label
-{
-  color: green;
 }
 
 #streetedit  div.button.right
@@ -43,55 +19,54 @@ xdiv.header.row {
   margin-left: auto;
 }
 
-div#streetedit div div.formmap div.form
+#streetedit div div.formmap div.form
 {
   min-width : 25em;
 }
 
 
-div#streetedit div.form form div label.required
+#streetedit div.form form div label.required
 {
   width: 10em;
   color: red;
   display: inline-block;
 }
 
-div#streetedit div.form form div label
+#streetedit div.form form div label
 {
   width: 10em;
   color: green;
   display: inline-block;
 }
 
-div#streetedit div div.formmap
+#streetedit div.formmap
 {
   display: flex;
 }
 
-div#streetedit div.map
+#streetedit div.map
 {
+ height: 400px;
  width: 100%;
 }
-
-
-
 
 input#street_form_Note
 {
   width: 60em;
 }
 
-div#streetedit div.xform div label
- {
-   width: 10em;
-   color: green;
-   display: inline-block;
- }
 
-
-
-
-div#mapid
+#streetedit  div.map div#stmapid
 {
   height: 400px;
+  width: 100%;
 }
+
+#streetedit div.map
+{
+  height: 400px;
+  width: 100%;
+}
+
+
+

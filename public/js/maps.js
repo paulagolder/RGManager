@@ -21,54 +21,6 @@ function getColor(i)
 
 
 
-function xxmyMapper4(location)
-{
-  var location_dc =redecode(location);
-  var mylocation = JSON.parse(location_dc);
-  var lat = mylocation.latitude;
-  var long = mylocation.longitude;
-  var zoom = 18;
-  if( lat < 40)
-  {
-    long =-1.8304;
-    lat = 52.6854 ;
-    zoom = 12;
-  }
-
-  if(zoom <1 ) zoom = 1;
-
-  var mymap = L.map('mapid').setView([ lat , long], zoom);
-  mapLink =
-  '<a href="http://openstreetmap.org">OpenStreetMap</a>';
-  L.tileLayer(
-    'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; ' + mapLink + ' Contributors',
-      maxZoom: 20,
-    }).addTo(mymap);
- // var marker = L.marker([lat , long]).addTo(mymap);
-
-  var kmlfilepath = mylocation.kml;
-  if(CheckUrl(mylocation.kml))
-  {
-    kmlfilepath = mylocation.kml;
-  }
-  else if(CheckUrl("http://lerot.org/RoadGroups/maps/"+mylocation.RoadgroupId+".kml"))
-  {
-    kmlfilepath =  "http://lerot.org/RoadGroups/maps/"+mylocation.RoadgroupId+".kml";
-  }
-  else if(CheckUrl("http://lerot.org/RoadGroups/maps/"+mylocation.WardId+".kml"))
-  {
-    kmlfilepath =  "http://lerot.org/RoadGroups/maps/"+mylocation.WardId+".kml";
-  }
-  else
-  {
-    kmlfilepath = "http://lerot.org/RoadGroups/maps/LDC.kml";
-  }
-  addMyKML(mymap,kmlfilepath,'#0000FF');
-
-  return mymap;
-}
-
 
   function mySwMap(location)
   {
@@ -164,7 +116,39 @@ function myWMap(location)
     return mymap;
 }
 
-function myMapper6(mapid,location)
+
+
+function myStMap(location)
+{
+  var location_dc =redecode(location);
+  var mylocation = JSON.parse(location_dc);
+  var lat = mylocation.latitude;
+  var long = mylocation.longitude;
+  var zoom = 18;
+  if( lat < 40)
+  {
+    long =-1.8304;
+    lat = 52.6854 ;
+    zoom = 12;
+  }
+
+  if(zoom <1 ) zoom = 1;
+
+  var mymap = L.map('stmapid').setView([ lat , long], zoom);
+  mapLink =
+  '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+  L.tileLayer(
+    'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; ' + mapLink + ' Contributors',
+      maxZoom: 20,
+    }).addTo(mymap);
+
+
+    return mymap;
+}
+
+
+function xxmyMapper6(mapid,location)
 {
   var location_dc =redecode(location);
   var mylocation = JSON.parse(location_dc);
@@ -250,15 +234,14 @@ function makeKMLLayer(amap,kmlfilepath,style)
   fetch(kmlfilepath).then(res => res.text()).then(kmltext =>
   {
     const parser = new DOMParser();
-
     const kml = parser.parseFromString(kmltext, 'text/xml');
     track = new L.KML(kml);
     track.setStyle(style);
     amap.addLayer(track);
-
     const bounds = track.getBounds();
-   amap.fitBounds(bounds);
+    amap.fitBounds(bounds);
   });
+  return track;
 }
 
 
@@ -277,20 +260,7 @@ function addKMLLayer(layergroup,kmlfilepath,style)
   });
 }
 
-function xxaddMyKMLtracks(mymap,tracks,color)
-{
-  var track;
 
-  for (track of tracks)
-  {
-    var path = "http://lerot.org/RoadGroups/maps/"+track+".kml";
-    if(CheckUrl(path))
-    {
-      addMyKML(mymap,path,color);
-    }
-  }
-
-}
 
 
 
@@ -302,7 +272,7 @@ function addMyKMLLayer(mymap,kmllayer,color)
     kmllayer.on("loaded", function(e)
     {
       kmllayer.setStyle({color: color , weight: 14});
-      mymap.fitBounds(e.target.getBounds(), {padding: [50,50]});
+     // mymap.fitBounds(e.target.getBounds(), {padding: [50,50]});
     });
     mymap.addLayer(kmllayer);
     return kmllayer

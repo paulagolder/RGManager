@@ -36,27 +36,18 @@ class RoadgroupRepository extends EntityRepository
        return $roadgroups;
     }
 
-     public function findNotInWardList($wardlist)
+
+
+
+
+      public function findLooseRoadgroups()
      {
-         $qb = $this->createQueryBuilder("p");
-         $qb->Where("p.WardId NOT IN ( :wl ) "); // NOT EMPTY
-         $qb->setParameter('wl', $wardlist);
-         $qb->orderBy("p.Name", "ASC");
-         $streets =  $qb->getQuery()->getResult();
-       return $streets;
-
-     }
-
-     public function findNotInSubList($wardid, $subwardlist)
-     {
-         $qb = $this->createQueryBuilder("p");
-         $qb->Where("p.WardId = :wdid  ");
-         $qb->andWhere("p.SubwardId NOT IN ( :swl ) "); // NOT EMPTY
-         $qb->setParameter('swl', $subwardlist);
-         $qb->setParameter('wdid', $wardid);
-         $qb->orderBy("p.Name", "ASC");
-         $streets =  $qb->getQuery()->getResult();
-       return $streets;
-
+        $conn = $this->getEntityManager()
+            ->getConnection();
+        $sql = 'SELECT r.roadgroupid,r.name  FROM roadgroup as r left join ward as w on r.wardid = w.wardid where w.wardid is null';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $roadgroups= $stmt->fetchAll();
+        return $roadgroups;
      }
 }

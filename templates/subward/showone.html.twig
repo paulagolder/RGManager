@@ -32,9 +32,9 @@
 {% block middle %}
 <div class="heading  row">
   <div class="label">SubWard: </div>
-  <div class="value">{{subward.subward}}</div>
-  <div class="label">Ward: </div>
+  <div class="value">{{subward.subwardid}}</div>
   <div class="value">{{ward.ward}}</div>
+  <div class="value">{{subward.subward}}</div>
   <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
 </div>
 
@@ -56,6 +56,8 @@
      <div class="roadgroup row "  >
        <div class="roadgroupid" id="{{aroadgroup.roadgroupid}}" >{{aroadgroup.roadgroupid}}</div>
        <div class="name" >{{aroadgroup.name}}..etc</div>
+       <div class="num" >{{aroadgroup.households}}</div>
+       <div class="num" >{{aroadgroup.distance}}</div>
        <div class="button" ><a class="button" href = "/roadgroup/show/{{aroadgroup.roadgroupid}}" >VIEW</a>   </div>
        <div class="button" ><a class="button" href = "/roadgroup/edit/{{aroadgroup.roadgroupid}}" >EDIT</a>   </div>
      </div>
@@ -63,9 +65,32 @@
   </div>
 {% endif %}
   <div><a class="button" href = "/roadgroup/new/{{subward.wardid}}/{{subward.subwardid}}" >ADD NEW ROADGROUP</a></div>
-  <div class="map" >
-      <div id="swmapid"   ></div>
+
+  {% if streets|length >0 %}
+<div class="subheading  row">
+  <div class="label red"> Streets in {{ward.ward}}:{{subward.subward}} not in a Roadgroup</div>
+</div>
+<div class="streetlist">
+  {% for street in streets %}
+  <div class="street row indent">
+     <div class="name" >{{street.name}}
+        {% if street.part %}
+        /{{street.part}}
+        {% endif %}
+        </div>
+    <div class="PD" >{{street.PD}}</div>
+    <a class="button" href = "/street/edit/{{street.streetid}}" >VIEW</a>
   </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="subheading  row">
+  <div class="label"> No un-allocated streets found</div>
+</div>
+{% endif %}
+<div class="map" >
+  <div id="swmapid" ></div>
+</div>
 
   {% set jslocation = subward.getjson() %}
 
@@ -88,7 +113,7 @@
       }
       }
 
-      mymap.fitBounds(fgroup.getBounds());
+      //mymap.fitBounds(fgroup.getBounds());
       mymap.on('click', onMapClick);
 
 

@@ -32,6 +32,20 @@ class StreetRepository  extends EntityRepository
        return $streets;
     }
 
+    public function findDuplicates()
+    {
+        $qb = $this->createQueryBuilder("s");
+        $qb->select(['s.Name', 's.Part', 'count(s) as Count']);
+       // $qb->from('App:Street', 's');
+         $qb->groupBy('s.Name');
+        $qb->addGroupBy('s.Part');
+         $qb->Having('count(s)  > 1');
+
+       $qb->orderBy("count(s)", "DESC");
+       $streets =  $qb->getQuery()->getResult();
+       return $streets;
+    }
+
     public function findOne($streetid)
     {
        $qb = $this->createQueryBuilder("p");
@@ -41,31 +55,30 @@ class StreetRepository  extends EntityRepository
        return $street;
     }
 
-     public function findSearch($sfield)
-    {
-       $qb = $this->createQueryBuilder("p");
-       $qb->andWhere('p.surname LIKE :pid or p.forename LIKE :pid   or p.alias LIKE :pid   ');
-       $qb->setParameter('pid', $sfield);
-       $qb->orderBy("p.surname", "ASC");
-       $people =  $qb->getQuery()->getResult();
-       foreach( $people as $person)
-       {
-          $person->fixperson();
-       }
-       return $people;
-    }
 
-         public function findnamed($streetname)
+
+    public function findnamed($streetname)
     {
        $qb = $this->createQueryBuilder("p");
        $qb->andWhere('p.Name = :stnm ');
        $qb->setParameter('stnm', $streetname);
-       $qb->orderBy("p.Name", "ASC");
+       $qb->orderBy("p.PD", "ASC");
        $streets =  $qb->getQuery()->getResult();
        return $streets;
     }
 
-       public function findgroup($roadgroupid)
+    public function namesearch($streetname)
+    {
+       $streettoken = "%".$streetname."%";
+       $qb = $this->createQueryBuilder("p");
+       $qb->andWhere('p.Name like :stnm ');
+       $qb->setParameter('stnm', $streettoken);
+       $qb->orderBy("p.PD", "ASC");
+       $streets =  $qb->getQuery()->getResult();
+       return $streets;
+    }
+
+    public function findgroup($roadgroupid)
     {
        $qb = $this->createQueryBuilder("p");
        $qb->andWhere('p.RoadgroupId = :rgid ');
@@ -75,42 +88,19 @@ class StreetRepository  extends EntityRepository
        return $streets;
     }
 
-     public function findNotInWardList($wardlist)
+     public function findLooseStreets()
      {
-         $qb = $this->createQueryBuilder("p");
-         $qb->Where("p.WardId NOT IN ( :wl ) "); // NOT EMPTY
-         $qb->setParameter('wl', $wardlist);
-         $qb->orderBy("p.Name", "ASC");
-         $streets =  $qb->getQuery()->getResult();
-       return $streets;
-
+        $conn = $this->getEntityManager()
+            ->getConnection();
+        $sql = 'SELECT s.streetid, s.name, s.part, s.PD FROM street as s left join roadgroup as r on s.roadgroupid = r.roadgroupid left join ward as w on r.wardid = w.wardid where w.wardid is null';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $streets= $stmt->fetchAll();
+        return $streets;
      }
 
-     public function findNotInSubList($wardid, $subwardlist)
-     {
-         $qb = $this->createQueryBuilder("p");
-         $qb->Where("p.WardId = :wdid  ");
-         $qb->andWhere("p.SubwardId NOT IN ( :swl ) "); // NOT EMPTY
-         $qb->setParameter('swl', $subwardlist);
-         $qb->setParameter('wdid', $wardid);
-         $qb->orderBy("p.Name", "ASC");
-         $streets =  $qb->getQuery()->getResult();
-       return $streets;
 
-     }
 
-       public function findNotInRoadgroupList($swdid, $roadgrouplist)
-     {
-         $qb = $this->createQueryBuilder("p");
-         $qb->Where("p.SubwardId = :swdid  ");
-         $qb->andWhere("p.RoadgroupId NOT IN ( :rgl ) "); // NOT EMPTY
-         $qb->setParameter('rgl', $roadgouplist);
-         $qb->setParameter('swdid', $subwardid);
-         $qb->orderBy("p.Name", "ASC");
-         $streets =  $qb->getQuery()->getResult();
-       return $streets;
-
-     }
 
 
 }

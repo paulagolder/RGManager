@@ -48,6 +48,11 @@ class Roadgroup
    */
   private $Electors;
 
+    /**
+   * @ORM\Column(name="distance",type="float", nullable=true)
+   */
+  private $Distance;
+
   /**
    * @ORM\Column(name="kml",type="string", length=20, nullable=true)
    */
@@ -185,6 +190,19 @@ class Roadgroup
      return $this;
    }
 
+    public function getDistance(): ?float
+   {
+     return $this->Distance;
+   }
+
+   public function setDistance(?float $miles): self
+   {
+     $this->Distance = $miles;
+
+     return $this;
+   }
+
+
    public function getKML(): ?string
    {
      return $this->KML;
@@ -315,7 +333,7 @@ class Roadgroup
    }
    else
    {
-      //$kml = "mappath".$this->RoadgroupId.".kml";
+
    }
 
 

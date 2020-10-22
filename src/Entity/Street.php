@@ -24,7 +24,7 @@ class Street
      */
     private $Name;
 
-        /**
+    /**
      * @ORM\Column(name="qualifier",type="string", length=4, nullable=true)
      */
     private $Qualifier;
@@ -41,18 +41,18 @@ class Street
      */
     private $WardId;
 
- /**
+    /**
      * @ORM\Column(name="subwardid",type="string", length=10, nullable=true)
      */
     private $SubwardId;
 
 
-      /**
+    /**
      * @ORM\Column(name="roadgroupid",type="string", length=10, nullable=true)
      */
     private $RoadgroupId;
 
-       /**
+    /**
      * @ORM\Column(name="pd",type="string", length=10, nullable=true)
      */
     private $PD;
@@ -76,12 +76,12 @@ class Street
 
 
 
-        /**
+    /**
      * @ORM\Column(name="latitude",type="string", length=20,  nullable=true)
      */
     private $Latitude;
 
-          /**
+    /**
      * @ORM\Column(name="longitude",type="string", length=20,   nullable=true)
      */
     private $Longitude;
@@ -94,7 +94,6 @@ class Street
     public function setStreetId(int $ID): self
     {
         $this->StreetId = $ID;
-
         return $this;
     }
 
@@ -118,7 +117,6 @@ class Street
     public function setPart(?string $part): self
     {
         $this->Part = $part;
-
         return $this;
     }
 
@@ -131,7 +129,6 @@ class Street
     public function setQualifier(?string $part): self
     {
         $this->Qualifier= $part;
-
         return $this;
     }
 
@@ -143,7 +140,6 @@ class Street
     public function setPriority(?float $priority): self
     {
         $this->priority = $priority;
-
         return $this;
     }
 
@@ -155,11 +151,10 @@ class Street
     public function setWardId(?string $ward): self
     {
         $this->WardId = $ward;
-
         return $this;
     }
 
-      public function getSubwardId(): ?string
+    public function getSubwardId(): ?string
     {
         return $this->SubwardId;
     }
@@ -167,7 +162,6 @@ class Street
     public function setSubwardId(?string $ward): self
     {
         $this->SubwardId = $ward;
-
         return $this;
     }
 
@@ -179,7 +173,6 @@ class Street
     public function setRoadgroupId(?string $roadgroupid): self
     {
         $this->RoadgroupId = $roadgroupid;
-
         return $this;
     }
 
@@ -191,7 +184,6 @@ class Street
     public function setPD(?string $text): self
     {
         $this->PD = $text;
-
         return $this;
     }
 
@@ -203,7 +195,6 @@ class Street
     public function setNote($text): self
     {
         $this->Note = $text;
-
         return $this;
     }
 
@@ -216,7 +207,6 @@ class Street
     public function setHouseholds($number): self
     {
         $this->Households = $number;
-
         return $this;
     }
 
@@ -228,7 +218,6 @@ class Street
     public function setElectors($number): self
     {
         $this->Electors = $number;
-
         return $this;
     }
 
@@ -240,11 +229,10 @@ class Street
     public function setLatitude(?string $number): self
     {
         $this->Latitude = $number;
-
         return $this;
     }
 
-      public function getLongitude()
+    public function getLongitude()
     {
         return $this->Longitude;
     }
@@ -252,25 +240,49 @@ class Street
     public function setLongitude(?string $number): self
     {
         $this->Longitude = $number;
-
         return $this;
     }
 
-        public function getjson()
+    public function getjson()
     {
-      $str ="{";
+       $str ="{";
        $str .=  '"streetid":"'.$this->StreetId.'",';
-  $str .=  '"roadgroupid":"'.$this->RoadgroupId.'",';
-  $str .=  '"name":"'.$this->Name.'",';
-  $str .=  '"wardid":"'.$this->WardId.'",';
-  $str .=  '"subwardid":"'.$this->SubwardId.'",';
-  $str .=  '"part":"'.$this->Part.'",';
-  $str .=  '"longitude":"'.$this->Longitude.'",';
-  $str .=  '"latitude":"'.$this->Latitude.'"';
-  $str .="}";
-    return  $str;
+       $str .=  '"roadgroupid":"'.$this->RoadgroupId.'",';
+       $str .=  '"name":"'.$this->Name.'",';
+       $str .=  '"wardid":"'.$this->WardId.'",';
+       $str .=  '"subwardid":"'.$this->SubwardId.'",';
+       $str .=  '"part":"'.$this->Part.'",';
+       $str .=  '"longitude":"'.$this->Longitude.'",';
+       $str .=  '"latitude":"'.$this->Latitude.'"';
+       $str .="}";
+       return  $str;
     }
 
+
+    public function merge( $astreet)
+    {
+     if($this->Name == null) $this->Name = $astreet->Name;
+     if($this->Part == null) $this->Part = $astreet->Part;
+     if($this->RoadgroupId == null) $this->RoadgroupId = $astreet->RoadgroupId;
+     if($this->WardId == null) $this->WardId = $astreet->WardId;
+     if($this->SubwardId == null) $this->SubwardId = $astreet->SubwardId;
+     if($this->Households == null) $this->Households = $astreet->Households;
+     if($this->Electors == null) $this->Electors  = $astreet->Electors ;
+     if($this->PD == null) $this->PD  = $astreet->PD ;
+     if($this->Longitude == null) $this->Longitude  = $astreet->Longitude ;
+     if($this->Latitude == null) $this->Latitude  = $astreet->Latitude ;
+     if($this->Note)
+     {
+     if(!(str_contains($this->Note,$astreet->Note)))
+     {
+        $this->Note .= " ".$astreet->Note ;
+     }
+     }
+     else
+     {
+        $this->Note = $astreet->Note ;
+     }
+    }
 
      public function makexml()
    {

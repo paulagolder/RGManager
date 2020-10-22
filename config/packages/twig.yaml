@@ -7,4 +7,5 @@ twig:
 
     globals:
        xmappath: "http://127.0.0.1:8000/maps/"
-       mappath : "http://lerot.org/RoadGroups/maps/"
+       xxmappath: "http://lerot.org/RoadGroups/maps/"
+       mappath: '%env(MAPPATH)%'

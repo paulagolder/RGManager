@@ -13,10 +13,9 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\Translator;
 use Symfony\Contracts\Translation\TranslatorInterface;
-;
 
 use Symfony\Component\HttpFoundation\Response;
-
+//use Dompdf\Dompdf;
 
 use App\Form\Type\WardForm;
 use App\Form\Type\NewSubwardForm;
@@ -25,13 +24,17 @@ use App\Entity\Ward;
 use App\Entity\Subward;
 use App\Entity\Roadgroup;
 
+//use App\Service\PDF;
+//use Fpdf\Fpdf;
+//use Dompdf\Exception;
 
-
+//require('fpdf.php');
 
 class WardController extends AbstractController
 {
 
-
+    private $A4w = 210;
+    private $A4h = 297;
 
     private $requestStack ;
 
@@ -55,8 +58,8 @@ class WardController extends AbstractController
         {
            $wardlist[] = $award->getWardId();
         }
-        $extrastreets =  $this->getDoctrine()->getRepository("App:Street")->findNotInWardList($wardlist);
-         $extraroadgroups =  $this->getDoctrine()->getRepository("App:Roadgroup")->findNotInWardList($wardlist);
+        $extrastreets =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreets();
+        $extraroadgroups =  $this->getDoctrine()->getRepository("App:Roadgroup")->findLooseRoadgroups();
         return $this->render('ward/showall.html.twig',
                               [
                                 'message' =>  '' ,
@@ -71,11 +74,11 @@ class WardController extends AbstractController
     public function showone($wdid)
     {
         $ward = $this->getDoctrine()->getRepository("App:Ward")->findOne($wdid);
-        if (!$ward) {
+        if (!$ward)
+        {
             return $this->render('ward/showone.html.twig', [ 'message' =>  'ward not Found',]);
         }
         $subwards = $this->getDoctrine()->getRepository("App:Subward")->findChildren($wdid);
-
         $sublist = array();
         $swlist = array();
         foreach ($subwards as $asubward)
@@ -85,46 +88,25 @@ class WardController extends AbstractController
            $rglist= array();
            foreach ($roadgroups as $aroadgroup)
            {
-           $rglist[]=$aroadgroup->getRoadgroupid();
+             $rglist[]=$aroadgroup->getRoadgroupid();
            }
            $swlist[$swid]=$rglist;
            $sublist[] = $swid;
-
         }
-      //      dump($swlist);
-     //   $findChar =strrpos($sublist,"'");
-     //   $sublist[$findChar]=")";
-      $extrastreets =  $this->getDoctrine()->getRepository("App:Street")->findNotInSubList($wdid,$sublist);
+        $extrastreets =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreets();
+        $extraroadgroups =  $this->getDoctrine()->getRepository("App:Roadgroup")->findLooseRoadgroups();
         return $this->render('ward/showone.html.twig',
             [
                 'message' =>  '' ,
                 'ward'=> $ward,
                 'subwards'=> $subwards,
                 'streets'=>$extrastreets,
-                 'roadgrouplist'=>$swlist,
+                'roadgroups'=>$extraroadgroups,
+                'roadgrouplist'=>$swlist,
                 'back'=>"/ward/showall"
             ]);
     }
 
-     public function showsubward($swdid)
-    {
-        $subward = $this->getDoctrine()->getRepository("App:Subward")->findOne($swdid);
-        if (!$subward) {
-            return $this->render('subward/showone.html.twig', [ 'message' =>  'subward not Found',]);
-        }
-
-        $wardid =  $subward->getWardId();
-        $ward = $this->getDoctrine()->getRepository("App:Ward")->findOne($wardid);
-        $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($swdid);
-        return $this->render('subward/showone.html.twig',
-                              [
-                                'message' =>  '' ,
-                                'ward'=>$ward,
-                                'subward'=>$subward,
-                                'roadgroups'=> $roadgroups,
-                                 'back'=>"/ward/show/".$wardid,
-                                ]);
-    }
 
 
      public function wardEdit($pid)
@@ -192,6 +174,41 @@ class WardController extends AbstractController
             'returnlink'=>'/ward/showall',
             ));
     }
+
+    public function showsubward($swdid)
+    {
+        $subward = $this->getDoctrine()->getRepository("App:Subward")->findOne($swdid);
+        if (!$subward) {
+            return $this->render('subward/showone.html.twig', [ 'message' =>  'subward not Found',]);
+        }
+
+        $wardid =  $subward->getWardId();
+        $ward = $this->getDoctrine()->getRepository("App:Ward")->findOne($wardid);
+        $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($swdid);
+       // $sublist = array();
+        $stlist = array();
+        foreach ($roadgroups as $aroadgroup)
+        {
+           $rgid =  $aroadgroup->getRoadgroupId();
+           $streets = $this->getDoctrine()->getRepository("App:Street")->findGroup($rgid);
+           $rglist= array();
+           foreach ($streets as $astreet)
+           {
+             $stlist[]=$astreet->getStreetId();
+           }
+        }
+        $extrastreets =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreets();
+        return $this->render('subward/showone.html.twig',
+                              [
+                                'message' =>  '' ,
+                                'ward'=>$ward,
+                                'subward'=>$subward,
+                                'roadgroups'=> $roadgroups,
+                                 'streets'=>$extrastreets,
+                                 'back'=>"/ward/show/".$wardid,
+                                ]);
+    }
+
 
      public function NewSubward($wdid)
     {
@@ -277,19 +294,63 @@ class WardController extends AbstractController
             $xmlout = "";
             $xmlout .= "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
             $xmlout .= "<?xml-stylesheet type='text/xsl' href='./Stylesheets/rgml.xsl' ?>\n";
-            $xmlout .= "<roadgroups name=\"Lichfield District\" >\n";
+            $xmlout .= "<electiondistrict Name='Lichfield City' >\n";
             $xmlout .= $this->makexml();
-            $xmlout .= "</roadgroups>\n";
+            $xmlout .= "</electiondistrict>\n";
             $handle = fopen($file, "w") or die("ERROR: Cannot open the file.");
             fwrite($handle, $xmlout) or die ("ERROR: Cannot write the file.");
             fclose($handle);
-               $this->addFlash(
-            'notice',
-            'xml file saved' );
-             return $this->redirect("/");
+            $this->addFlash('notice','xml file saved' );
+            return $this->redirect("/");
     }
 
 
+/*      public function topdf($list)
+    {
+     $image = "./maps/BLY_C2.png";
+     $file = "./maps/lichfielddc.pdf";
+// Instanciation of inherited class
+$pdf = new FPDF();
+$pdf->AddPage();
+$pdf->SetMargins(5, 5 , 5, 5);
+$pdf->SetFont('Helvetica','',12);
+$cellw =($this->A4w-(5+5+5))/2-4;
+$cellh =($this->A4h-(5+5+5))/2-8;
+$p=0;
+while($p < count($list))
+{
+for($i=0;$i<=1;$i++)
+{
+  for($j=0;$j<=1;$j++)
+  {
+   $x = 5+$j*(5+$cellw);
+   $y = 5+$i*(5+$cellh);
+    $image = "./maps/".$list[p].".png";
+   $pdf->setXY($x,$y);
+    $pdf->Image($image,$x,$y,$cellw,$cellh);
+   $pdf->Cell($cellw,$cellh,'',1,1,'C');
+   $p++;
+   $ip++;
+  }
+}
+ if($p<count($list))
+   {
+   $pdf->AddPage();
+   }
+}
+//$pdf->Output();
+
+
+
+             $pdf->Output($file,'F');
+            // file_put_contents($file, $output);
+          //  $handle = fopen($file, "w") or die("ERROR: Cannot open the file.");
+           // fwrite($handle, $xmlout) or die ("ERROR: Cannot write the file.");
+          //  fclose($handle);
+            $this->addFlash('notice','PDF file saved..' );
+            return $this->redirect("/");
+    }
+*/
     public function makexml()
     {
          $xmlout = "";

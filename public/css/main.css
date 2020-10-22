@@ -66,6 +66,20 @@ div.subheading.row div.label {
   padding-right : 1em;
 }
 
+div.subheading.row div.label.red
+{
+  color: red;
+}
+
+
+div.row div.indent
+{
+  padding-left : 2em;
+}
+
+
+
+
 div.message
 {
   background-color :#a1e697;
@@ -274,3 +288,4 @@ div.map div.#mapdiv
   height:400px;
   width: 100%;
 }
+

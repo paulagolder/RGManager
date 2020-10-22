@@ -24,7 +24,6 @@ class UploadController extends AbstractController
     {
         $token = $request->get("token");
         $rgid = $request->get("rgid");
-
         if (!$this->isCsrfTokenValid('upload', $token))
         {
             $logger->info("CSRF failure");
@@ -32,23 +31,31 @@ class UploadController extends AbstractController
             return new Response("Operation not allowed",  Response::HTTP_BAD_REQUEST,
                 ['content-type' => 'text/plain']);
         }
-
         $file = $request->files->get('fileToUpload');
-
         if (empty($file))
         {
             return new Response("No file specified",
                Response::HTTP_UNPROCESSABLE_ENTITY, ['content-type' => 'text/plain']);
         }
-
         $filename = $file->getClientOriginalName();
         $uploader->upload($uploadDir, $file, $filename);
+        $dist =  $request->get("distance");
         $this->addFlash(
             'notice',
-            'Map '.$filename.' uploaded!'
+            'Map '.$filename." dist:".$dist.' uploaded!'
         );
-             return $this->redirect("/roadgroup/show/".$rgid);
-      //  return new Response("File uploaded",  Response::HTTP_OK,
-       //     ['content-type' => 'text/plain']);
+        $roadgroup = $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($rgid);
+        if($dist !=="")
+        {
+            $fdist = floatval($dist);
+            if($fdist>0.1)
+            {
+               $roadgroup->setDistance($fdist);
+               $entityManager = $this->getDoctrine()->getManager();
+               $entityManager->persist($roadgroup );
+               $entityManager->flush();
+            }
+        }
+       return $this->redirect("/roadgroup/show/".$rgid);
     }
 }
