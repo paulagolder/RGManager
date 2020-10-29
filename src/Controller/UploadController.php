@@ -56,6 +56,9 @@ class UploadController extends AbstractController
                $entityManager->flush();
             }
         }
-       return $this->redirect("/roadgroup/show/".$rgid);
+        if(!$rgid )
+           return $this->redirect("/");
+        else
+           return $this->redirect("/roadgroup/showone/".$rgid);
     }
 }

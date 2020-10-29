@@ -3,7 +3,7 @@ SELECT s.name FROM `street` as s  left join roadgroup as r on s.roadgroupid = r.
 
 SELECT s.name FROM `street` as s left join roadgroup as r on s.roadgroupid = r.roadgroupid left join ward as w on r.wardid = w.wardid where w.wardid is null
 
-
+select w.*, sum(rg.households) as total from ward as w left join roadgroup as rg on rg.wardid= w.wardid group by w.wardid
 
  ward 	sum(Properties)
 BOLEY PARK 	1815

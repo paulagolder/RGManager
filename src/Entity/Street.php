@@ -120,6 +120,13 @@ class Street
         return $this;
     }
 
+    public function getFullname()
+    {
+    if( is_Null($this->Part) or $this->Part =="")
+    return $this->Name;
+    else
+      return $this->Name."/".$this->Part;
+    }
 
      public function getQualifier(): ?string
     {

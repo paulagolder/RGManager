@@ -1,0 +1,132 @@
+{# views/seat/showone.html.twig #}
+
+{% extends 'master.html.twig' %}
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/seat.css') }}" rel="stylesheet" />
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+{% endblock %}
+
+{% block js %}
+   {{ parent() }}
+   <script src="{{asset('js/maps.js')}}"></script>
+   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+   <script src="{{asset('js/L.KML.js')}}"></script>
+   <script>
+     var popup = L.popup();
+     function onMapClick(e)
+     {
+       popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(mymap);
+        lat = e.latlng.lat;
+        lng = e.latlng.lng;
+        document.getElementById("street_form_Latitude").value=lat;
+        document.getElementById("street_form_Longitude").value=lng;
+      }
+    </script>
+{% endblock %}
+
+{% block middle %}
+
+
+{% if message %}
+<H1> Seat not found </H1>
+{% else %}
+<div id="seat" >
+<div class="heading  row">
+  <div class="label">Seat: </div>
+  <div class="value">{{seat.seatid}}</div>
+  <div class="value">{{seat.name}}</div>
+  <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+</div>
+  <div><a class="button" href = "/roadgroup/new/{{district.districtid}}/{{seat.seatid}}" >ADD ROADGROUP</a></div>
+    {% set rglist = "{ " %}
+
+
+   {% for key,value in roadgrouplist %}
+    {% for key2,value2 in value %}
+      {% set rglist = rglist ~'"'~key2 ~ '": ['  %}
+     <div  class="row indent id">
+        <div  id="{{key2}}" class="id" >  {{ key2 }}</div>
+           <div  class="row">
+
+          {% for key3,value3 in value2 %}
+            {% set rglist = rglist ~ '{ "roadgroupid":"'~value3.roadgroupid~'","name":"'~value3.name~'"},'%}
+             <div class="name" >
+             <a class="routebutton" href ="/roadgroup/showone/{{ value3.RoadgroupId}}" >{{ value3.RoadgroupId}}</a>
+             :{{ value3.Name }}  </div>
+          {% endfor %}
+           {% set rglist = rglist ~ '] ,'%}
+      </div>
+     </div>
+    {% endfor %}
+    {% set rglist = rglist ~ '}  '%}
+   {% endfor %}
+    {% set rglist = rglist|replace({',]': ']', ',}': "}"})  %}
+
+<div class="map" >
+  <div id="swmapid" ></div>
+</div>
+
+  {% set jslocation = seat.getjson() %}
+  {% set rgl = roadgrouplist  %}
+
+  <script  type="text/javascript" >
+      var mymap = mySwMap("{{jslocation}}");
+      var location_dc =redecode("{{jslocation}}");
+      var mylocation = JSON.parse(location_dc);
+      var arglist = redecode("{{rglist}}");
+      var myrglist = JSON.parse(arglist);
+      var did = "{{seat.districtid}}";
+      var apath = "{{mappath}}"+did+"_"+mylocation.seatid+".kml";
+      if(CheckUrl(apath))
+      {
+         path = apath;
+      }
+      else
+      {
+         apath = "{{mappath}}"+mylocation.seatid+".kml";
+         if(CheckUrl(apath))
+             path = apath;
+      }
+      if(path)
+      {
+         var style = {"color":  "#000000" , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.2};
+         makeKMLLayer(mymap,path,style)
+         mymap.on('click', onMapClick);
+      }
+
+       var i=0;
+       for(const key  in myrglist)
+       {
+         value = myrglist[key];
+              console.log("*"+value);
+        for (key2  in value )
+        {
+           var rg = value[key2];
+           var rgid = rg.roadgroupid;
+           var h2s = document.getElementById(rgid);
+          // h2s.style.backgroundColor = getColor(i);
+
+              var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1};
+              var apath = "{{mappath}}"+rgid+".kml";
+              if(CheckUrl(apath))
+              {
+                var  path = apath;
+                makeKMLLayer(mymap,path,style);
+                  i=i+1;
+              }
+          }
+
+       }
+
+
+
+
+   </script>
+   {% endif %}
+   </div>
+{% endblock %}

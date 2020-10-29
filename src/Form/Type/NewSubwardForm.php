@@ -16,9 +16,9 @@ class NewSubwardForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder ->add('SubwardId', TextType::class ,['label' => 'SubwardId',]);
-        $builder ->add('Subward', TextType::class ,['label' => 'Subward Name',]);
-        $builder ->add('WardId', TextType::class,['label' => 'WardId','required' => false,]);
+        $builder ->add('SubwardId', TextType::class ,['label' => 'RG-SubgroupId',]);
+        $builder ->add('Subward', TextType::class ,['label' => 'Subgroup Name',]);
+        $builder ->add('WardId', TextType::class,['label' => 'RG-GroupId','required' => false,]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

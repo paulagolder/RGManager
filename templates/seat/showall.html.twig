@@ -1,0 +1,98 @@
+{# views/seat/showone.html.twig #}
+
+{% extends 'master.html.twig' %}
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/subward.css') }}" rel="stylesheet" />
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+{% endblock %}
+
+{% block js %}
+   {{ parent() }}
+   <script src="{{asset('js/maps.js')}}"></script>
+   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+   <script src="{{asset('js/L.KML.js')}}"></script>
+   <script>
+     var popup = L.popup();
+     function onMapClick(e)
+     {
+       popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(mymap);
+        lat = e.latlng.lat;
+        lng = e.latlng.lng;
+        document.getElementById("street_form_Latitude").value=lat;
+        document.getElementById("street_form_Longitude").value=lng;
+      }
+    </script>
+{% endblock %}
+
+{% block middle %}
+<div class="heading  row">
+  <div class="label">Seat: </div>
+  <div class="value">{{seat.seatid}}</div>
+  <div class="value">{{seat.name}}</div>
+  <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+</div>
+
+
+{% if message %}
+<H1> No Seats found </H1>
+{% else %}
+<div class="header  list row">
+      <div class="rgid" >SeatId</div>
+      <div class="name" >Name</div>
+      <div class="button" ></div>
+      <div class="button" ></div>
+</div>
+  {% set tracks = [] %}
+
+  <div class="list">
+  {% for aseat in seats %}
+     <div class="seat row "  >
+       <div class="seatid" id="{{aseat.seatid}}" >{{aseat.seatid}}</div>
+       <div class="name" >{{aseat.name}}..etc</div>
+
+       <div class="button" ><a class="button" href = "/seat/show/{{aseat.seatid}}" >VIEW</a>   </div>
+       <div class="button" ><a class="button" href = "/seat/edit/{{aseat.seatid}}" >EDIT</a>   </div>
+     </div>
+  {% endfor %}
+  </div>
+{% endif %}
+  <div><a class="button" href = "/roadgroup/new/{{subward.wardid}}/{{subward.subwardid}}" >ADD NEW ROADGROUP</a></div>
+
+
+<div class="map" >
+  <div id="swmapid" ></div>
+</div>
+
+  {% set jslocation = subward.getjson() %}
+
+  <script  type="text/javascript" >
+    var mymap = mySwMap("{{jslocation}}");
+    var tracks = {{tracks|json_encode|raw}};
+    var i=0;
+    var fgroup =  new L.featureGroup();
+    for (track of tracks)
+    {
+      var path = "{{mappath}}"+track+".kml";
+      if(CheckUrl(path))
+      {
+         var h2s = document.getElementById(track);
+         h2s.style.backgroundColor = getColor(i);
+         var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
+       //  addKMLLayer(fgroup,path,style);
+          makeKMLLayer(mymap,path,style)
+            i=i+1;
+      }
+      }
+
+      //mymap.fitBounds(fgroup.getBounds());
+      mymap.on('click', onMapClick);
+
+
+
+   </script>
+{% endblock %}

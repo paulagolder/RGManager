@@ -37,24 +37,27 @@
    <H1> {{message}} </H1>
 {% else %}
       <div class="heading  row">
+        <div class="label"> RG-Groups:</div>
         <div class="value"> {{ward.wardid}}:</div>
         <div class="value"> {{ward.ward}}</div>
+        <div class="value"> {{ward.households}}</div>
         <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
       </div>
       <div class="wards">
       {% for subward in subwards %}
          <div class="ward row" >
-           <div class="subwardid" id="{{subward.Subwardid}}">{{subward.Subwardid}}</div>
-           <div class="name" >{{subward.Subward}}</div>
+           <div class="subwardid" id="{{subward.subwardid}}">{{subward.subwardid}}</div>
+           <div class="name" >{{subward.subward}}</div>
+           <div class="num" >{{subward.total}}</div>
            <a class="button" href = "/subward/show/{{subward.subwardid}}" >VIEW</a>
            <a class="button" href = "/subward/edit/{{subward.subwardid}}" >EDIT</a>
         </div>
       {% endfor %}
       </div>
-      <a class="button" href = "/subward/new/{{ward.wardid}}" >ADD SUB WARD</a>
+      <a class="button" href = "/subward/new/{{ward.wardid}}" >MAKE RG-Subgroup</a>
       {% if streets|length >0 %}
          <div class="subheading  row">
-           <div class="label red"> Streets in {{ward.ward}} not in a subward</div>
+           <div class="label red"> Spare Streets</div>
          </div>
          <div class="streetlist">
   {% for street in streets %}
@@ -72,7 +75,7 @@
 {% endif %}
 {% if roadgroups|length >0 %}
 <div class="subheading  row">
-  <div class="label red"> Roadgroups allocated to {{ward.ward}} but not in a Subward</div>
+  <div class="label red"> Roadgroups unallocated</div>
 </div>
 <div class="list">
   {% for roadgroup in roadgroups %}

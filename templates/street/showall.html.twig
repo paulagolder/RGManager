@@ -16,7 +16,7 @@
 {% else %}
     <div class="heading row">
     <div class="label"> Streets </div>
-     <div class="message"> Select a ward  to create a new Street </div>
+     <div class="message"> Streets or part streets belong to a Roadgroup and a Polling District </div>
     <div class="button  right"> <a class="button" href = "/" >{{'back'}} </a> </div>
     </div>
        <form action="/street/filters" method="post">
@@ -37,7 +37,6 @@
      <div class="street header  list row">
      <div class="name" >Name/part</div>
      <div class="pd" >PD</div>
-     <div  class="wardid" >Ward Id</div>
      <div  class="rgid" >Road group Id</div>
      <div  class="num" >House-holds</div>
      <div  class="num" >Electors</div>
@@ -47,10 +46,12 @@
     <div class="list  pagescroll" >
        {% for street in streets %}
        <div class="row" >
-         <div class="name" >{{street.name}}</div>
+         <div class="name" >{{street.fullname}}</div>
          <div class="pd" >{{street.pd}}</div>
-          <div  class="wardid" >{{street.wardid}}</div>
-          <div  class="rgid" >{{street.roadgroupid}}</div>
+          <div  class="rgid" >
+          <a class="routebutton" href="/roadgroup/showone/{{street.roadgroupid}}" >{{street.roadgroupid}}</a>
+          </div>
+
           <div  class="num" >{{street.households}}</div>
            <div  class="num" >{{street.electors}}</div>
          <div class="button"> <a class="button" href = "/street/edit/{{street.streetid}}" >Edit </a> </div>

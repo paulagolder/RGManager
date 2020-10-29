@@ -64,14 +64,17 @@ class RoadgroupController extends AbstractController
 
   public function Showone($rgid)
   {
+    $seats = $this->getDoctrine()->getRepository("App:Seat")->findSeatsForRoadgroup($rgid);
     $roadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid);
     $swdid = $roadgroup->getSubwardId();
     $wdid = $roadgroup->getWardId();
     $stlist = [];
     $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($rgid);
+    $totalhouseholds = 0;
     foreach($streets as $astreet)
     {
         $stlist[]= $astreet->getStreetId();
+         $totalhouseholds += $astreet->getHouseholds();
     }
     if($swdid)
        $back = "/subward/show/".$swdid;
@@ -85,6 +88,44 @@ class RoadgroupController extends AbstractController
     return $this->render('roadgroup/showone.html.twig',
     [
     'message' =>  '' ,
+    'seats'=>$seats,
+    'total'=>$totalhouseholds,
+    'roadgroup' => $roadgroup ,
+    'streets'=> $streets,
+    'sparestreets'=>$extrastreets,
+    'back'=>$back,
+    ]);
+
+  }
+
+  public function Showoneb($rgid)
+  {
+
+    $roadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid);
+    $swdid = $roadgroup->getSubwardId();
+    $wdid = $roadgroup->getWardId();
+    $stlist = [];
+    $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($rgid);
+       $totalhouseholds = 0;
+    foreach($streets as $astreet)
+    {
+        $stlist[]= $astreet->getStreetId();
+        $totalhouseholds += $astreet->getHouseholds();
+    }
+    if($swdid)
+       $back = "/subward/show/".$swdid;
+    else if($wdid)
+       $back =  "/ward/show/".$wdid;
+    else
+       $back =  "/ward/showall/";
+    $extrastreets =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreets();
+
+
+    return $this->render('roadgroup/showone.html.twig',
+    [
+    'message' =>  '' ,
+    'seat'=> null,
+     'total'=>$totalhouseholds,
     'roadgroup' => $roadgroup ,
     'streets'=> $streets,
     'sparestreets'=>$extrastreets,
@@ -123,7 +164,7 @@ class RoadgroupController extends AbstractController
         else if($wdid)
            return $this->redirect("/ward/show/".$wdid);
          else
-            return   $this->redirect("/ward/showall/");
+            return   $this->redirect("/");
       }
     }
 
@@ -132,7 +173,7 @@ class RoadgroupController extends AbstractController
         else if($wdid)
             $back =  "/ward/show/".$wdid;
          else
-             $back =  "/ward/showall/";
+             $back =  "/";
     return $this->render('roadgroup/edit.html.twig', array(
       'form' => $form->createView(),
       'roadgroup'=>$roadgroup,
@@ -140,32 +181,33 @@ class RoadgroupController extends AbstractController
       ));
   }
 
-  public function New($wdid, $swdid)
+  public function New()
   {
     $request = $this->requestStack->getCurrentRequest();
 
     $roadgroup  = new Roadgroup ();
-    $roadgroup-> setSubwardId($swdid);
-    $roadgroup-> setWardId($wdid);
-    // $roadgroup-> setStreetcount (0);
     $form = $this->createForm(RoadgroupForm::class, $roadgroup );
     if ($request->getMethod() == 'POST')
     {
       $form->handleRequest($request);
       if ($form->isValid())
       {
+        $wdid = $roadgroup->getWardId();
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($roadgroup );
         $entityManager->flush();
         $rdid = $roadgroup->getRoadgroupId();
-        return $this->redirect("/subward/show/".$swdid);
+        if($wdid == "")
+          return $this->redirect("/roadgroup/showall");
+        else
+          return $this->redirect("/ward/show/".$wdid);
       }
     }
 
     return $this->render('roadgroup/edit.html.twig', array(
       'form' => $form->createView(),
       'roadgroup'=>$roadgroup,
-      'back'=>'/subward/show/'.$swdid,
+      'back'=>'/roadgroup/showall/',
       ));
   }
 
@@ -226,14 +268,14 @@ class RoadgroupController extends AbstractController
         $entityManager->persist($astreet);
         $entityManager->flush();
         $pid = $astreet->getStreetId();
-        return $this->redirect("/roadgroup/show/".$rgid);
+        return $this->redirect("/roadgroup/showone/".$rgid);
       }
     }
 
     return $this->render('street/edit.html.twig', array(
       'form' => $form->createView(),
       'street'=>$astreet,
-      'back'=>'/roadgroup/show/'.$rgid,
+      'back'=>'/roadgroup/showone/'.$rgid,
       ));
   }
 

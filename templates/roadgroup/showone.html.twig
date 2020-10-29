@@ -42,6 +42,8 @@
     <div class="label"> Road Group </div>
     <div class="value"> {{roadgroup.RoadgroupId}}:</div>
     <div class="value"> {{roadgroup.Name }}</div>
+   <div class="value small"> H:{{roadgroup.Households }}</div>
+     <div class="value small"> T:{{total }}</div>
     <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
   </div>
 
@@ -66,7 +68,7 @@
     </div>
     {% endfor %}
   </div>
-  <div class="row">
+  <div class="buttonrow row">
   <form action="/street/add/{{roadgroup.RoadgroupId}}"  method="post" enctype="multipart/form-data">
       <button type="submit">Add Street</button>
     <select name="selstreet">
@@ -79,7 +81,7 @@
 
   </div>
 
-    <div  class="row"  >
+    <div  class="altbutton row"  >
        <div class="button"> <a class="button" href = "http://www.bikehike.co.uk/mapview.php" target = "_blank"  >Create Route</a> </div>
       <form action="{{ path('do-upload') }}" method="post" enctype="multipart/form-data">
         <input type="hidden" name="token" value="{{ csrf_token('upload') }}" />

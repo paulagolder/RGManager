@@ -31,8 +31,8 @@
 
 {% block middle %}
 <div class="heading  row">
-  <div class="label">SubWard: </div>
-  <div class="value">{{subward.subwardid}}</div>
+  <div class="label">RG-Subgroup: </div>
+  <div class="value">{{subward.subwardid}}:</div>
   <div class="value">{{ward.ward}}</div>
   <div class="value">{{subward.subward}}</div>
   <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
@@ -58,17 +58,17 @@
        <div class="name" >{{aroadgroup.name}}..etc</div>
        <div class="num" >{{aroadgroup.households}}</div>
        <div class="num" >{{aroadgroup.distance}}</div>
-       <div class="button" ><a class="button" href = "/roadgroup/show/{{aroadgroup.roadgroupid}}" >VIEW</a>   </div>
+       <div class="button" ><a class="button" href = "/roadgroup/showone/{{aroadgroup.roadgroupid}}" >VIEW</a>   </div>
        <div class="button" ><a class="button" href = "/roadgroup/edit/{{aroadgroup.roadgroupid}}" >EDIT</a>   </div>
      </div>
   {% endfor %}
   </div>
 {% endif %}
-  <div><a class="button" href = "/roadgroup/new/{{subward.wardid}}/{{subward.subwardid}}" >ADD NEW ROADGROUP</a></div>
+
 
   {% if streets|length >0 %}
 <div class="subheading  row">
-  <div class="label red"> Streets in {{ward.ward}}:{{subward.subward}} not in a Roadgroup</div>
+  <div class="label red"> Spare Streets</div>
 </div>
 <div class="streetlist">
   {% for street in streets %}

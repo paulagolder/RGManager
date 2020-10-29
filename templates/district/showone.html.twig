@@ -1,0 +1,107 @@
+{# views/d/showone.html.twig #}
+
+{% extends 'master.html.twig' %}
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/subward.css') }}" rel="stylesheet" />
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+{% endblock %}
+
+{% block js %}
+   {{ parent() }}
+   <script src="{{asset('js/maps.js')}}"></script>
+   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+   <script src="{{asset('js/L.KML.js')}}"></script>
+   <script>
+     var popup = L.popup();
+     function onMapClick(e)
+     {
+       popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(mymap);
+        lat = e.latlng.lat;
+        lng = e.latlng.lng;
+        document.getElementById("street_form_Latitude").value=lat;
+        document.getElementById("street_form_Longitude").value=lng;
+      }
+    </script>
+{% endblock %}
+
+{% block middle %}
+<div id="seat">
+<div class="heading  row">
+  <div class="label">Election District: </div>
+  <div class="value">{{district.districtid}}</div>
+  <div class="value">{{district.name}}</div>
+  <div class="button  right"> <a class="button" href = "{{back}}" >Back</a> </div>
+</div>
+
+
+{% if message %}
+<H1> No Seats found </H1>
+{% else %}
+<div class="header  list row">
+      <div class="rgid" >SeatId</div>
+      <div class="name" >Name</div>
+      <div  class="button" ></div>
+      <div  class="button" ></div>
+</div>
+
+<div class="list">
+  {% set seatlist = [] %}
+  {% for aseat in seats %}
+    {% set seatlist = seatlist|merge([aseat.seatid]) %}
+     <div class="seat row "  >
+       <div class="seatid  id" id="{{aseat.seatid}}" >{{aseat.seatid}}</div>
+       <div class="name" >{{aseat.name}}</div>
+       <div class="button" ><a class="button" href = "/seat/show/{{district.districtid}}/{{aseat.seatid}}" >VIEW</a>   </div>
+       <div class="button" ><a class="button" href = "/seat/edit/{{district.districtid}}/{{aseat.seatid}}" >EDIT</a>   </div>
+     </div>
+  {% endfor %}
+  </div>
+{% endif %}
+
+
+<div class="map" >
+  <div id="swmapid" ></div>
+</div>
+
+  {% set jslocation = district.getjson() %}
+
+
+  <script  type="text/javascript" >
+    var mymap = mySwMap("{{jslocation}}");
+     var seats = {{seatlist|json_encode|raw}};
+
+    var i=0;
+    var did = "{{district.districtid}}";
+    var fgroup =  new L.featureGroup();
+    for (var aseat of seats )
+    {
+      var path = null;
+      var apath = "http://rgmanager.lerot.org/maps/"+did+"_"+aseat+".kml";
+      if(CheckUrl(apath))
+      {
+         path = apath;
+      }
+      else
+      {
+         apath = "http://rgmanager.lerot.org/maps/"+aseat+".kml";
+         if(CheckUrl(apath))
+             path = apath;
+      }
+      if(path)
+      {
+         var h2s = document.getElementById(aseat);
+         h2s.style.backgroundColor = getColor(i);
+         var style = {"color":  getColor(i) ,"fillColor":  getColor(i) , "weight": 6 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.5 };
+         makeKMLLayer(mymap,path,style)
+         i=i+1;
+      }
+    }
+      mymap.on('click', onMapClick);
+   </script>
+   </div>
+{% endblock %}

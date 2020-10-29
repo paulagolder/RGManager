@@ -6,15 +6,30 @@ div.roadgroup
   font-size: 1em;
 }
 
-
-div#rgmapid
+div.roadgroup div.buttonrow.row form
 {
-  height: 400px;
-  width: 100%;
+  padding-top:11px;
 }
+
+div.roadgroup div.buttonrow.row
+{
+  background-color: #9cd29c;
+}
+
+div.roadgroup div.altbutton.row
+{
+  background-color: #a1e697;
+}
+
+div.roadgroup div.altbutton.row form
+{
+  padding-top:11px;
+}
+
+
 
 div.map div#rgmapid
 {
-  height: 400px;
+  height: 500px;
   width: 100%;
 }

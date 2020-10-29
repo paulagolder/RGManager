@@ -29,7 +29,7 @@ function onMapClick(e)
 
 {% block middle %}
 <div class="heading  row">
-  <div class="label"> All Wards</div>
+  <div class="label"> All RG-Groups</div>
   <div class="button  right"> <a class="button" href = "/" >{{'back'}} </a> </div>
 </div>
 
@@ -44,15 +44,17 @@ function onMapClick(e)
                     <div class="ward row" >
                        <div class="wardid" >{{ward.wardid}}</div>
                         <div class="name" >{{ward.ward}}</div>
+                         <div class="num" >{{ward.households}}</div>
+                         <div class="num" >({{ward.total}})</div>
                         <a class="button" href = "/ward/show/{{ward.wardid}}" >VIEW</a>
                      </div>
        {% endfor %}
     </div>
 </div>
- <a class="button" href = "/ward/new" >ADD NEW WARD</a>
+ <a class="button" href = "/ward/new" >ADD NEW RG-Group</a>
 {% if streets|length >0 %}
 <div class="subheading  row">
-  <div class="label"> Streets not in a ward</div>
+  <div class="label"> Spare Streets</div>
 </div>
   <div class="streetlist">
        {% for street in streets %}
@@ -70,7 +72,7 @@ function onMapClick(e)
    {% endif %}
    {% if roadgroups|length >0 %}
 <div class="subheading  row">
-  <div class="label"> Roadgroups not in a ward</div>
+  <div class="label">Spare Roadgroups</div>
 </div>
   <div class="list">
        {% for roadgroup in roadgroups %}
@@ -108,7 +110,7 @@ if(CheckUrl(path))
 }
 
 
-mymap.fitBounds(wardlayer.getBounds());
+//mymap.fitBounds(wardlayer.getBounds());
 mymap.on('click', onMapClick);
 </script>
 {% endblock %}

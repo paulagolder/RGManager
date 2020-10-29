@@ -1,5 +1,17 @@
 
 
+div.streetlist div.street.row.indent div.name
+{
+   width: 15em;
+   margin-left: 3em;
+}
+
+div.streetlist div.street.row.indent div.PD
+{
+   width : 5em;
+}
+
+
 div#swmapid
 {
   height : 500px;

@@ -31,35 +31,33 @@ use App\Entity\Street;
 class MainController extends AbstractController
 {
 
-
-
     private $requestStack ;
 
     public function __construct( RequestStack $request_stack)
     {
-
         $this->requestStack = $request_stack;
-
     }
 
 
     public function mainmenu()
     {
         $message = "";
+        $districts = $this->getDoctrine()->getRepository("App:District")->findAll();
         $streets = $this->getDoctrine()->getRepository("App:Street")->findAll();
+        $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findAll();
         if (!$streets)
         {
             $message .= 'Streets not Found\n';
         }else
         {
-             $message .= count( $streets). " Streets found\n ";
+            $message .= count( $streets). " Streets found\n ";
         }
 
         return $this->render('mainmenu.html.twig',
-                              [
-
-                                'message' =>  '' ,
-                                ]);
+          [
+            'message' =>  '' ,
+            'districts'=> $districts,
+          ]);
 
     }
 

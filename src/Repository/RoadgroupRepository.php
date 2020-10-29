@@ -17,7 +17,6 @@ class RoadgroupRepository extends EntityRepository
        return $roadgroups;
     }
 
-
      public function findOne($rgid)
     {
        $qb = $this->createQueryBuilder("p");
@@ -36,15 +35,11 @@ class RoadgroupRepository extends EntityRepository
        return $roadgroups;
     }
 
-
-
-
-
       public function findLooseRoadgroups()
      {
         $conn = $this->getEntityManager()
             ->getConnection();
-        $sql = 'SELECT r.roadgroupid,r.name  FROM roadgroup as r left join ward as w on r.wardid = w.wardid where w.wardid is null';
+        $sql = 'SELECT r.roadgroupid,r.name  FROM roadgroup as r left join ward as w on r.wardid = w.wardid where w.wardid is null or r.subwardid is null';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $roadgroups= $stmt->fetchAll();

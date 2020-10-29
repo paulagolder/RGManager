@@ -1,0 +1,40 @@
+{# views/seat/edit.html.twig #}
+
+{% extends 'master.html.twig' %}
+
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/seat.css') }}" rel="stylesheet" />
+
+{% endblock %}
+
+
+
+
+{% block middle %}
+<div id="middle" >
+<div id="wardedit"  >
+<div>
+ <div class="heading  row" >
+ <div class="label">Edit Seat:</div>
+ <div class="title" > {{seat.name}}</div>
+ <div class="button  right"> <a class="button" href ="/district/show/{{seat.districtid}}" >{{'back'}} </a> </div>
+</div>
+<div class="formmap">
+<div  class="form" >
+    {{ form_start(form) }}
+    {{ form_row(form.DistrictId) }}
+    {{ form_row(form.SeatId) }}
+     {{ form_row(form.Name) }}
+    {{ form_row(form.Households) }}
+    {{ form_row(form.Electors) }}
+    {{ form_row(form.Seats) }}
+    <button type="submit">{{'Register!'}}</button>
+    {{ form_end(form) }}
+</div>
+
+</div>
+</div>
+</div>
+{% endblock %}

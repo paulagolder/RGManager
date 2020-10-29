@@ -19,9 +19,9 @@ class RoadgroupForm extends AbstractType
     {
 
         $builder ->add('RoadGroupId', TextType::class,['label' => 'RoadGroupId',]);
-        $builder ->add('Name', TextType::class,['label' => 'Name of Group',]);
-        $builder ->add('WardId', TextType::class,['label' => 'WardId','required' => false,]);
-        $builder ->add('SubwardId', TextType::class,['label' => 'SubwardId','required' => false,]);
+        $builder ->add('Name', TextType::class,['label' => 'Name of Roadgroup',]);
+        $builder ->add('WardId', TextType::class,['label' => 'RG-Group','required' => false,]);
+        $builder ->add('SubwardId', TextType::class,['label' => 'RG-Subgroup','required' => false,]);
         $builder ->add('Households', IntegerType::class,['label' => 'Households','required' => false,]);
         $builder ->add('Electors', IntegerType::class,['label' => 'Electors','required' => false,]);
         $builder ->add('Distance', NumberType::class,['label' => 'Distance(mls)','required' => false,]);

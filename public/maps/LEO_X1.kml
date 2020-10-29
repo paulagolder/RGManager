@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>LEO_X1</name>
+	<Style id="blueLine">
+      <LineStyle>
+        <color>7fff0000</color>
+        <width>4</width>
+      </LineStyle>
+    </Style>
+    <Placemark>
+      <styleUrl>#blueLine</styleUrl>
+      <LineString>
+        <coordinates>
+-1.852770,52.675448,95.96 
+-1.853199,52.675799,96.68 
+-1.854701,52.675110,97.87 
+        </coordinates>
+      </LineString>
+    </Placemark>
+  </Document>
+</kml>

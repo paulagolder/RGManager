@@ -22,7 +22,7 @@ div.footer {
 
 div.row {
   display: flex;
- xjustify-content: center;
+  flex-wrap: wrap;
   align-items: center;
 }
 
@@ -62,7 +62,7 @@ div.subheading.row
 
 div.subheading.row div.label {
   color : green;
-  //font-size : 1.2em;
+  xfont-size : 1.2em;
   padding-right : 1em;
 }
 
@@ -77,7 +77,10 @@ div.row div.indent
   padding-left : 2em;
 }
 
-
+div.row div.name
+{
+  xflex: 1 1 16em;
+}
 
 
 div.message
@@ -206,10 +209,18 @@ div.header.list.row  div.roadgroupid
 
 div.header.list.row  div.rgid
 {
-
   width: 5em;
 }
 
+ div.menu div.row div.name
+ {
+   width: 14em;
+ }
+
+ div.menu div.row div.id
+ {
+   width: 4em;
+ }
 
 div.header.list.row   div.num
 {
@@ -217,10 +228,20 @@ div.header.list.row   div.num
   text-align: right;
 }
 
+ div.list div.row div.id
+ {
+   width: 3em;
+   text-align: left;
+ }
+
+ div.list div.row div.indent
+ {
+   margin-left:5em;
+ }
 
 div.header.list.row   div.text
 {
-  width: 14em;
+  width: 18em;
 }
 
 div.header.list.row  div.button

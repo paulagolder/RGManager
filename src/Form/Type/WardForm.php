@@ -16,9 +16,8 @@ class WardForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder ->add('WardId', TextType::class,['label' => 'WardId']);
-        $builder ->add('Ward', TextType::class ,['label' => 'Ward Name',]);
-        $builder ->add('Roads', IntegerType::class,['label' => 'Roads','required' => false,]);
+        $builder ->add('WardId', TextType::class,['label' => 'RG-GroupId']);
+        $builder ->add('Ward', TextType::class ,['label' => 'Group Name',]);
         $builder ->add('Households', IntegerType::class,['label' => 'Households','required' => false,]);
         $builder ->add('Electors', IntegerType::class,['label' => 'Electors','required' => false,]);
         $builder ->add('Latitude', TextType::class,['label' =>  'Latitude','required' => false,]);

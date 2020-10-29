@@ -10,14 +10,16 @@ use Doctrine\ORM\EntityRepository;
 class WardRepository  extends EntityRepository
 {
 
-    public function findAll()
-    {
-       $qb = $this->createQueryBuilder("p");
-       $qb->orderBy("p.Ward", "ASC");
-       $wards =  $qb->getQuery()->getResult();
-       return $wards;
-    }
-
+     public function findAll()
+     {
+        $conn = $this->getEntityManager()
+            ->getConnection();
+        $sql = 'select w.*, sum(rg.households) as total from ward as w left join roadgroup as rg on rg.wardid= w.wardid group by w.wardid';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $wards= $stmt->fetchAll();
+        return $wards;
+     }
 
 
     public function findone($wdid)
@@ -29,7 +31,6 @@ class WardRepository  extends EntityRepository
        $ward =  $qb->getQuery()->getOneOrNullResult();
        return $ward;
     }
-
 
 
 

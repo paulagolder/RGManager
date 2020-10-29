@@ -290,5 +290,5 @@ function redecode(mystr)
     return instr;
 }
 
-//mymappera(mymapwards,52.6854, -1.8304,12);
+
 

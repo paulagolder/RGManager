@@ -16,15 +16,15 @@
 {% else %}
     <div class="heading row">
     <div class="label">Roadgroups</div>
-     <div class="message"> Select a subward to create a new RoadGroup </div>
+     <div class="message"> For convenience Roadgroups are collected into RG-Groups and RG-Subgroups</div>
     <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
     </div>
-
+<div><a class="button" href = "/roadgroup/new/" >ADD NEW ROADGROUP</a></div>
      <div class="roadgroup header  list row">
 
                          <div class="rgid" >Road group Id</div>
                            <div class="name" >Name</div>
-                       <div class="wardid" >Ward Id</div>
+                       <div class="wardid" >RG-Group</div>
                       <div  class="num" >House-holds</div>
                        <div  class="num" >Electors</div>
                        <div  class="button" ></div>
@@ -40,7 +40,7 @@
 
                       <div  class="num" >{{roadgroup.households}}</div>
                        <div  class="num" >{{roadgroup.electors}}</div>
-                        <div class="button"> <a class="button" href = "/roadgroup/show/{{roadgroup.roadgroupid}}" >View</a> </div>
+                        <div class="button"> <a class="button" href = "/roadgroup/showone/{{roadgroup.roadgroupid}}" >View</a> </div>
                          <div class="button"> <a class="button" href = "/roadgroup/edit/{{roadgroup.roadgroupid}}" >Edit</a> </div>
                      <div  class="text" > {{roadgroup.note}}</div>
                      </div>

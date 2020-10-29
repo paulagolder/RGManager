@@ -169,9 +169,7 @@ class StreetController extends AbstractController
     $request = $this->requestStack->getCurrentRequest();
     if($rdid ==0)
       return $this->redirect("/ward/showall");
-
-     $street = $this->getDoctrine()->getRepository('App:Street')->findOne($rdid);
-
+    $street = $this->getDoctrine()->getRepository('App:Street')->findOne($rdid);
     $streets = $this->getDoctrine()->getRepository('App:Street')->findNamed($street->getName());
     $streetcount = sizeof($streets);
     if(! isset($street))
@@ -198,7 +196,7 @@ class StreetController extends AbstractController
       $returnpath = "/ward/showall";
     }
     else
-      $returnpath = "/roadgroup/show/$returnid";
+      $returnpath = "/roadgroup/showone/$returnid";
     return $this->render('street/edit.html.twig', array(
       'form' => $form->createView(),
       'streetcount'=>$streetcount,
@@ -219,7 +217,7 @@ class StreetController extends AbstractController
     $swdid = $street->getSubwardId();
     $wdid = $street->getWardId();
     if($rgid)
-      $back = "/roadgroup/show/".$rgid;
+      $back = "/roadgroup/showone/".$rgid;
     else  if($swdid)
       $back = "/subward/show/".$swdid;
     else if($wdid)
@@ -268,7 +266,7 @@ class StreetController extends AbstractController
     $entityManager = $this->getDoctrine()->getManager();
     $entityManager->persist($street);
     $entityManager->flush();
-    return $this->redirect("/roadgroup/show/".$rgid);
+    return $this->redirect("/roadgroup/showone/".$rgid);
   }
 
   public function StreetAdd($rgid)
@@ -285,6 +283,6 @@ class StreetController extends AbstractController
     $entityManager = $this->getDoctrine()->getManager();
     $entityManager->persist($street);
     $entityManager->flush();
-    return $this->redirect("/roadgroup/show/".$rgid);
+    return $this->redirect("/roadgroup/showone/".$rgid);
   }
 }

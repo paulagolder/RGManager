@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+ 
+<gpx xmlns="http://www.topografix.com/GPX/1/1" creator="bikehike.co.uk" version="1.1" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+
+  <metadata>
+    <time>2020-10-22T03:23:33Z</time>
+    <bounds minlat="52.675110" minlon="-1.854701" maxlat="52.675799" maxlon="-1.852770" /> 
+  </metadata>
+
+
+  
+  <rte>
+    <name>LEO_X1</name>
+    <number>1</number>
+    <rtept lat="52.675448" lon="-1.852770">
+      <ele>95.96</ele>
+      <time>2020-10-22T03:23:33Z</time>
+      <name>pt0</name>
+    </rtept>
+    <rtept lat="52.675799" lon="-1.853199">
+      <ele>96.68</ele>
+      <time>2020-10-22T03:24:09Z</time>
+      <name>pt1</name>
+    </rtept>
+    <rtept lat="52.675110" lon="-1.854701">
+      <ele>97.87</ele>
+      <time>2020-10-22T03:25:43Z</time>
+      <name>pt2</name>
+    </rtept>
+  </rte>
+</gpx>

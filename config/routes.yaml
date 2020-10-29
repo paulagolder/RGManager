@@ -2,6 +2,20 @@ index:
   path: /
   controller: App\Controller\MainController::mainmenu
 
+
+district_showone:
+   path: /district/show/{drid}
+   controller: App\Controller\DistrictController::showone
+
+
+seats_showone:
+   path: /seat/show/{dtid}/{stid}
+   controller: App\Controller\SeatController::showone
+
+seats_edit:
+   path: /seat/edit/{dtid}/{stid}
+   controller: App\Controller\SeatController::edit
+
 wards_all:
     path: /ward/showall
     controller: App\Controller\WardController::showall
@@ -44,11 +58,16 @@ roadgroups_show_all:
     controller: App\Controller\RoadgroupController::showall
 
 roadgroups_show_one:
-    path: /roadgroup/show/{rgid}
+    path: /roadgroup/show/{stid}/{rgid}
     controller: App\Controller\RoadgroupController::showone
 
+
+roadgroups_show_oneb:
+    path: /roadgroup/showone/{rgid}
+    controller: App\Controller\RoadgroupController::showoneb
+
 roadgroups_new:
-    path: /roadgroup/new/{wdid}/{swdid}
+    path: /roadgroup/new
     controller: App\Controller\RoadgroupController::new
 
 roadgroups_edit:

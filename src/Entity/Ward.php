@@ -39,16 +39,8 @@ class Ward
     private $Electors;
 
 
-    /**
-     * @ORM\Column(name="roads",type="integer",  nullable=true)
-     */
-    private $Roads;
 
 
-    /**
-     * @ORM\Column(name="roadgroups",type="integer",  nullable=true)
-     */
-    private $roadgroups;
 
 
 
@@ -109,29 +101,8 @@ class Ward
         return $this;
     }
 
-       public function getRoads()
-    {
-        return $this->Roads;
-    }
 
-    public function setRoads($number): self
-    {
-        $this->Roads = $number;
 
-        return $this;
-    }
-
-         public function getRoadgroups()
-    {
-        return $this->Roadgroups;
-    }
-
-    public function setRoadgroups($number): self
-    {
-        $this->Roadgroups = $number;
-
-        return $this;
-    }
 
     public function getLatitude()
     {

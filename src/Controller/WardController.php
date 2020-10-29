@@ -40,24 +40,18 @@ class WardController extends AbstractController
 
     public function __construct( RequestStack $request_stack)
     {
-
         $this->requestStack = $request_stack;
-
     }
 
 
     public function showall()
     {
-
         $wards = $this->getDoctrine()->getRepository("App:Ward")->findAll();
-        if (!$wards) {
+        if (!$wards)
+        {
             return $this->render('ward/showall.html.twig', [ 'message' =>  'wards not Found',]);
         }
-        $wardlist = array();
-        foreach (  $wards as $award )
-        {
-           $wardlist[] = $award->getWardId();
-        }
+
         $extrastreets =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreets();
         $extraroadgroups =  $this->getDoctrine()->getRepository("App:Roadgroup")->findLooseRoadgroups();
         return $this->render('ward/showall.html.twig',
@@ -79,11 +73,11 @@ class WardController extends AbstractController
             return $this->render('ward/showone.html.twig', [ 'message' =>  'ward not Found',]);
         }
         $subwards = $this->getDoctrine()->getRepository("App:Subward")->findChildren($wdid);
-        $sublist = array();
+
         $swlist = array();
         foreach ($subwards as $asubward)
         {
-           $swid =  $asubward->getSubwardId();
+           $swid =  $asubward['subwardid'];
            $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($swid);
            $rglist= array();
            foreach ($roadgroups as $aroadgroup)
@@ -91,7 +85,6 @@ class WardController extends AbstractController
              $rglist[]=$aroadgroup->getRoadgroupid();
            }
            $swlist[$swid]=$rglist;
-           $sublist[] = $swid;
         }
         $extrastreets =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreets();
         $extraroadgroups =  $this->getDoctrine()->getRepository("App:Roadgroup")->findLooseRoadgroups();
@@ -112,8 +105,6 @@ class WardController extends AbstractController
      public function wardEdit($pid)
     {
         $request = $this->requestStack->getCurrentRequest();
-        //$user = $this->getUser();
-       // $time = new \DateTime();
         if($pid>0)
         {
             $ward = $this->getDoctrine()->getRepository('App:ward')->findOne($pid);
@@ -128,8 +119,6 @@ class WardController extends AbstractController
             $form->handleRequest($request);
             if ($form->isValid())
             {
-               // $person->setContributor($user->getUsername());
-               // $person->setUpdateDt($time);
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($ward);
                 $entityManager->flush();
@@ -149,9 +138,7 @@ class WardController extends AbstractController
    public function newward()
     {
         $request = $this->requestStack->getCurrentRequest();
-
-            $ward = new ward();
-
+        $ward = new ward();
         $form = $this->createForm(WardForm::class, $ward);
         if ($request->getMethod() == 'POST')
         {
@@ -181,22 +168,9 @@ class WardController extends AbstractController
         if (!$subward) {
             return $this->render('subward/showone.html.twig', [ 'message' =>  'subward not Found',]);
         }
-
         $wardid =  $subward->getWardId();
         $ward = $this->getDoctrine()->getRepository("App:Ward")->findOne($wardid);
         $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($swdid);
-       // $sublist = array();
-        $stlist = array();
-        foreach ($roadgroups as $aroadgroup)
-        {
-           $rgid =  $aroadgroup->getRoadgroupId();
-           $streets = $this->getDoctrine()->getRepository("App:Street")->findGroup($rgid);
-           $rglist= array();
-           foreach ($streets as $astreet)
-           {
-             $stlist[]=$astreet->getStreetId();
-           }
-        }
         $extrastreets =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreets();
         return $this->render('subward/showone.html.twig',
                               [

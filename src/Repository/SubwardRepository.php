@@ -31,7 +31,7 @@ class SubwardRepository  extends EntityRepository
 
 
 
-    public function findChildren($wdid)
+    public function xfindChildren($wdid)
     {
        $qb = $this->createQueryBuilder("p");
        $qb->where("p.WardId = :wdid");
@@ -40,6 +40,18 @@ class SubwardRepository  extends EntityRepository
        $subwards =  $qb->getQuery()->getResult();
        return $subwards;
     }
+
+       public function findChildren($wdid)
+     {
+        $conn = $this->getEntityManager()
+            ->getConnection();
+        $sql = 'select sw.*, sum(rg.households) as total from subward as sw left join roadgroup as rg on rg.subwardid = sw.subwardid where sw.wardid ="'.$wdid.'" group by sw.subwardid';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $subwards= $stmt->fetchAll();
+        return $subwards;
+     }
+
 
 
 }

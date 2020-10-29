@@ -20,6 +20,23 @@ div.ward div.name
   width: 9em;
 }
 
+div.ward.row div.num
+{
+  width: 4em;
+}
+
+div.street.row div.name
+{
+  width: 12em;
+}
+
+div.street.row div.pd
+{
+  width: 6em;
+}
+
+
+
 
 div#wmapid
 {

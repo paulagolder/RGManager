@@ -1,0 +1,40 @@
+
+
+
+
+
+
+
+div#seat div.row div.row div.name
+{
+  max-width: 15em;
+  width: 15em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+div#seat div.row.indent.id div.row
+{
+   margin-bottom: 5px;
+}
+
+ div#swmapid.leaflet-container.leaflet-touch.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom
+ {
+   width: 100%;
+   height : 500px;
+}
+
+
+div#seat div.row.indent.id
+{
+
+  flex-wrap: nowrap;
+
+}
+
+
+div#seat div.row.indent.id div.id
+{
+   min-width : 8em;
+}
