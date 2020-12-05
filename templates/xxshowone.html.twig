@@ -1,0 +1,121 @@
+{# views/rgsubgroup/showone.html.twig #}
+
+{% extends 'master.html.twig' %}
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/subward.css') }}" rel="stylesheet" />
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+{% endblock %}
+
+{% block js %}
+   {{ parent() }}
+   <script src="{{asset('js/maps.js')}}"></script>
+   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+   <script src="{{asset('js/L.KML.js')}}"></script>
+   <script>
+     var popup = L.popup();
+     function onMapClick(e)
+     {
+       popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(mymap);
+        lat = e.latlng.lat;
+        lng = e.latlng.lng;
+        document.getElementById("street_form_Latitude").value=lat;
+        document.getElementById("street_form_Longitude").value=lng;
+      }
+    </script>
+{% endblock %}
+
+{% block middle %}
+<div class="heading  row">
+  <div class="label">SubWard: </div>
+  <div class="value">{{subward.rgsubgroupid}}</div>
+  <div class="value">{{ward.name}}</div>
+  <div class="value">{{subward.name}}</div>
+  <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+</div>
+
+
+{% if message %}
+<H1> No Roadgroups found </H1>
+{% else %}
+<div class="subheading row">
+      <div class="rgid" >Road group Id</div>
+      <div class="name" >Name</div>
+      <div  class="button" ></div>
+      <div  class="button" ></div>
+   </div>
+  {% set tracks = [] %}
+
+  <div class="list">
+  {% for aroadgroup in roadgroups %}
+  {% set tracks = tracks|merge([aroadgroup.roadgroupid]) %}
+     <div class="roadgroup row "  >
+       <div class="roadgroupid" id="{{aroadgroup.roadgroupid}}" >{{aroadgroup.roadgroupid}}</div>
+       <div class="name" >{{aroadgroup.name}}..etc</div>
+       <div class="num" >{{aroadgroup.households}}</div>
+       <div class="num" >{{aroadgroup.distance}}</div>
+       <div class="button" ><a class="button" href = "/roadgroup/showone/{{aroadgroup.roadgroupid}}" >VIEW</a>   </div>
+       <div class="button" ><a class="button" href = "/roadgroup/edit/{{aroadgroup.roadgroupid}}" >EDIT</a>   </div>
+     </div>
+  {% endfor %}
+  </div>
+{% endif %}
+  <div><a class="button" href = "/roadgroup/new/{{subward.rggroupid}}/{{subward.rgsubgroupid}}" >ADD NEW ROADGROUP</a></div>
+
+  {% if streets|length >0 %}
+<div class="subheading  row">
+  <div class="label red"> Spare Streets</div>
+</div>
+<div class="streetlist">
+  {% for street in streets %}
+  <div class="street row indent">
+     <div class="name" >{{street.name}}
+        {% if street.part %}
+        /{{street.part}}
+        {% endif %}
+        </div>
+    <div class="PD" >{{street.PD}}</div>
+    <a class="button" href = "/street/edit/{{street.streetid}}" >VIEW</a>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="subheading  row">
+  <div class="label"> No un-allocated streets found</div>
+</div>
+{% endif %}
+<div class="map" >
+  <div id="swmapid" ></div>
+</div>
+
+  {% set jslocation = subward.getjson() %}
+
+  <script  type="text/javascript" >
+    var mymap = mySwMap("{{jslocation}}");
+    var tracks = {{tracks|json_encode|raw}};
+    var i=0;
+    var fgroup =  new L.featureGroup();
+    for (track of tracks)
+    {
+      var path = "{{mappath}}"+track+".kml";
+      if(CheckUrl(path))
+      {
+         var h2s = document.getElementById(track);
+         h2s.style.backgroundColor = getColor(i);
+         var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
+          makeKMLLayer(mymap,path,style)
+            i=i+1;
+      }
+      }
+
+      //mymap.fitBounds(fgroup.getBounds());
+      mymap.on('click', onMapClick);
+
+
+
+   </script>
+{% endblock %}

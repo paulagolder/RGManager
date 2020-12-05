@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+ 
+<gpx xmlns="http://www.topografix.com/GPX/1/1" creator="bikehike.co.uk" version="1.1" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+
+  <metadata>
+    <time>2020-11-05T12:49:23Z</time>
+    <bounds minlat="52.675870" minlon="-1.829140" maxlat="52.678130" maxlon="-1.825070" /> 
+  </metadata>
+
+
+  
+  <rte>
+    <name>STJ_C1</name>
+    <number>1</number>
+    <rtept lat="52.676420" lon="-1.827450">
+      <ele>89.34</ele>
+      <time>2020-11-05T12:49:23Z</time>
+      <name>pt0</name>
+    </rtept>
+    <rtept lat="52.676520" lon="-1.827240">
+      <ele>89.49</ele>
+      <time>2020-11-05T12:49:25Z</time>
+      <name>pt1</name>
+    </rtept>
+    <rtept lat="52.676650" lon="-1.826870">
+      <ele>89.78</ele>
+      <time>2020-11-05T12:49:29Z</time>
+      <name>pt2</name>
+    </rtept>
+    <rtept lat="52.676710" lon="-1.826800">
+      <ele>89.78</ele>
+      <time>2020-11-05T12:49:31Z</time>
+      <name>pt3</name>
+    </rtept>
+    <rtept lat="52.676760" lon="-1.826790">
+      <ele>89.72</ele>
+      <time>2020-11-05T12:49:32Z</time>
+      <name>pt4</name>
+    </rtept>
+    <rtept lat="52.677050" lon="-1.827110">
+      <ele>88.76</ele>
+      <time>2020-11-05T12:49:37Z</time>
+      <name>pt5</name>
+    </rtept>
+    <rtept lat="52.677280" lon="-1.827510">
+      <ele>87.52</ele>
+      <time>2020-11-05T12:49:43Z</time>
+      <name>pt6</name>
+    </rtept>
+    <rtept lat="52.677660" lon="-1.828050">
+      <ele>86.53</ele>
+      <time>2020-11-05T12:49:51Z</time>
+      <name>pt7</name>
+    </rtept>
+    <rtept lat="52.677569" lon="-1.828486">
+      <ele>86.24</ele>
+      <time>2020-11-05T12:49:56Z</time>
+      <name>pt8</name>
+    </rtept>
+    <rtept lat="52.678076" lon="-1.827478">
+      <ele>87.73</ele>
+      <time>2020-11-05T12:50:09Z</time>
+      <name>pt9</name>
+    </rtept>
+    <rtept lat="52.677686" lon="-1.828078">
+      <ele>86.53</ele>
+      <time>2020-11-05T12:50:18Z</time>
+      <name>pt10</name>
+    </rtept>
+    <rtept lat="52.677280" lon="-1.827510">
+      <ele>87.52</ele>
+      <time>2020-11-05T12:50:27Z</time>
+      <name>pt11</name>
+    </rtept>
+    <rtept lat="52.677760" lon="-1.826420">
+      <ele>89.5</ele>
+      <time>2020-11-05T12:50:40Z</time>
+      <name>pt12</name>
+    </rtept>
+    <rtept lat="52.677280" lon="-1.827510">
+      <ele>87.52</ele>
+      <time>2020-11-05T12:50:54Z</time>
+      <name>pt13</name>
+    </rtept>
+    <rtept lat="52.677050" lon="-1.827110">
+      <ele>88.76</ele>
+      <time>2020-11-05T12:50:59Z</time>
+      <name>pt14</name>
+    </rtept>
+    <rtept lat="52.677290" lon="-1.826520">
+      <ele>89.56</ele>
+      <time>2020-11-05T12:51:06Z</time>
+      <name>pt15</name>
+    </rtept>
+    <rtept lat="52.677280" lon="-1.826380">
+      <ele>89.86</ele>
+      <time>2020-11-05T12:51:08Z</time>
+      <name>pt16</name>
+    </rtept>
+    <rtept lat="52.677230" lon="-1.826220">
+      <ele>90.22</ele>
+      <time>2020-11-05T12:51:10Z</time>
+      <name>pt17</name>
+    </rtept>
+    <rtept lat="52.677160" lon="-1.826120">
+      <ele>90.45</ele>
+      <time>2020-11-05T12:51:11Z</time>
+      <name>pt18</name>
+    </rtept>
+    <rtept lat="52.676890" lon="-1.825820">
+      <ele>91.03</ele>
+      <time>2020-11-05T12:51:17Z</time>
+      <name>pt19</name>
+    </rtept>
+    <rtept lat="52.676437" lon="-1.826877">
+      <ele>90.02</ele>
+      <time>2020-11-05T12:51:30Z</time>
+      <name>pt20</name>
+    </rtept>
+    <rtept lat="52.676918" lon="-1.825804">
+      <ele>91.07</ele>
+      <time>2020-11-05T12:51:43Z</time>
+      <name>pt21</name>
+    </rtept>
+    <rtept lat="52.677160" lon="-1.826120">
+      <ele>90.45</ele>
+      <time>2020-11-05T12:51:48Z</time>
+      <name>pt22</name>
+    </rtept>
+    <rtept lat="52.677230" lon="-1.826220">
+      <ele>90.22</ele>
+      <time>2020-11-05T12:51:50Z</time>
+      <name>pt23</name>
+    </rtept>
+    <rtept lat="52.677280" lon="-1.826380">
+      <ele>89.86</ele>
+      <time>2020-11-05T12:51:52Z</time>
+      <name>pt24</name>
+    </rtept>
+    <rtept lat="52.677290" lon="-1.826520">
+      <ele>89.56</ele>
+      <time>2020-11-05T12:51:53Z</time>
+      <name>pt25</name>
+    </rtept>
+    <rtept lat="52.677490" lon="-1.826010">
+      <ele>90.58</ele>
+      <time>2020-11-05T12:51:59Z</time>
+      <name>pt26</name>
+    </rtept>
+    <rtept lat="52.677621" lon="-1.825707">
+      <ele>91.16</ele>
+      <time>2020-11-05T12:52:03Z</time>
+      <name>pt27</name>
+    </rtept>
+    <rtept lat="52.678130" lon="-1.826150">
+      <ele>89.77</ele>
+      <time>2020-11-05T12:52:12Z</time>
+      <name>pt28</name>
+    </rtept>
+    <rtept lat="52.677490" lon="-1.825620">
+      <ele>91.51</ele>
+      <time>2020-11-05T12:52:24Z</time>
+      <name>pt29</name>
+    </rtept>
+    <rtept lat="52.677420" lon="-1.825420">
+      <ele>91.99</ele>
+      <time>2020-11-05T12:52:27Z</time>
+      <name>pt30</name>
+    </rtept>
+    <rtept lat="52.677490" lon="-1.825070">
+      <ele>92.83</ele>
+      <time>2020-11-05T12:52:30Z</time>
+      <name>pt31</name>
+    </rtept>
+    <rtept lat="52.677420" lon="-1.825440">
+      <ele>91.94</ele>
+      <time>2020-11-05T12:52:34Z</time>
+      <name>pt32</name>
+    </rtept>
+    <rtept lat="52.677296" lon="-1.825493">
+      <ele>91.82</ele>
+      <time>2020-11-05T12:52:36Z</time>
+      <name>pt33</name>
+    </rtept>
+    <rtept lat="52.677049" lon="-1.825278">
+      <ele>92.33</ele>
+      <time>2020-11-05T12:52:41Z</time>
+      <name>pt34</name>
+    </rtept>
+    <rtept lat="52.676970" lon="-1.825225">
+      <ele>92.46</ele>
+      <time>2020-11-05T12:52:42Z</time>
+      <name>pt35</name>
+    </rtept>
+    <rtept lat="52.677276" lon="-1.825482">
+      <ele>91.84</ele>
+      <time>2020-11-05T12:52:48Z</time>
+      <name>pt36</name>
+    </rtept>
+    <rtept lat="52.677445" lon="-1.825461">
+      <ele>91.89</ele>
+      <time>2020-11-05T12:52:51Z</time>
+      <name>pt37</name>
+    </rtept>
+    <rtept lat="52.677490" lon="-1.825620">
+      <ele>91.51</ele>
+      <time>2020-11-05T12:52:53Z</time>
+      <name>pt38</name>
+    </rtept>
+    <rtept lat="52.677610" lon="-1.825720">
+      <ele>91.14</ele>
+      <time>2020-11-05T12:52:55Z</time>
+      <name>pt39</name>
+    </rtept>
+    <rtept lat="52.677491" lon="-1.826104">
+      <ele>90.35</ele>
+      <time>2020-11-05T12:52:59Z</time>
+      <name>pt40</name>
+    </rtept>
+    <rtept lat="52.677050" lon="-1.827110">
+      <ele>88.76</ele>
+      <time>2020-11-05T12:53:12Z</time>
+      <name>pt41</name>
+    </rtept>
+    <rtept lat="52.676760" lon="-1.826790">
+      <ele>89.72</ele>
+      <time>2020-11-05T12:53:17Z</time>
+      <name>pt42</name>
+    </rtept>
+    <rtept lat="52.676710" lon="-1.826800">
+      <ele>89.78</ele>
+      <time>2020-11-05T12:53:18Z</time>
+      <name>pt43</name>
+    </rtept>
+    <rtept lat="52.676650" lon="-1.826870">
+      <ele>89.78</ele>
+      <time>2020-11-05T12:53:19Z</time>
+      <name>pt44</name>
+    </rtept>
+    <rtept lat="52.676520" lon="-1.827240">
+      <ele>89.49</ele>
+      <time>2020-11-05T12:53:24Z</time>
+      <name>pt45</name>
+    </rtept>
+    <rtept lat="52.676440" lon="-1.827410">
+      <ele>89.38</ele>
+      <time>2020-11-05T12:53:26Z</time>
+      <name>pt46</name>
+    </rtept>
+    <rtept lat="52.676410" lon="-1.827480">
+      <ele>89.33</ele>
+      <time>2020-11-05T12:53:27Z</time>
+      <name>pt47</name>
+    </rtept>
+    <rtept lat="52.675870" lon="-1.826770">
+      <ele>90.83</ele>
+      <time>2020-11-05T12:53:38Z</time>
+      <name>pt48</name>
+    </rtept>
+    <rtept lat="52.676410" lon="-1.827480">
+      <ele>89.33</ele>
+      <time>2020-11-05T12:53:50Z</time>
+      <name>pt49</name>
+    </rtept>
+    <rtept lat="52.676540" lon="-1.827760">
+      <ele>88.84</ele>
+      <time>2020-11-05T12:53:53Z</time>
+      <name>pt50</name>
+    </rtept>
+    <rtept lat="52.677070" lon="-1.829140">
+      <ele>87.5</ele>
+      <time>2020-11-05T12:54:10Z</time>
+      <name>pt51</name>
+    </rtept>
+    <rtept lat="52.676540" lon="-1.827760">
+      <ele>88.84</ele>
+      <time>2020-11-05T12:54:26Z</time>
+      <name>pt52</name>
+    </rtept>
+    <rtept lat="52.676410" lon="-1.827480">
+      <ele>89.33</ele>
+      <time>2020-11-05T12:54:30Z</time>
+      <name>pt53</name>
+    </rtept>
+    <rtept lat="52.676420" lon="-1.827450">
+      <ele>89.36</ele>
+      <time>2020-11-05T12:54:30Z</time>
+      <name>pt54</name>
+    </rtept>
+  </rte>
+</gpx>

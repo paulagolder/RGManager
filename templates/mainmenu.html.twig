@@ -6,7 +6,7 @@
 {% block middle %}
 <div id="streetedit"  >
      <div class="heading  row" >
-        <div class="label">{{' Main Menu' }}:</div>
+        <div class="label">Main Menu:</div>
       </div>
 
        <div  class="menu" >
@@ -18,20 +18,27 @@
              <div class="name">{{district.name}}</div>
              <div class="button"> <a class="button" href = "district/show/{{district.DistrictId}}" >View</a> </div>
           </div>
-          {% endfor %}
-          </div>
+        {% endfor %}
+        </div>
         <div class="subheading">Browser</div>
-        <div class="button  right"> <a class="button" href = "roadgroup/showall" >Road Groups</a> </div>
-        <div class="button  right"> <a class="button" href = "street/showall" >Streets</a> </div>
+
+        <div class="button"> <a class="button" href = "rggroup/showall" >Browse Road Groups</a></div>
+        <div class="button"> <a class="button" href = "roadgroup/showall" >Search Road Groups</a></div>
+        <div class="button"> <a class="button" href = "pollingdistrict/showall" >Polling Districts</a></div>
+        <div class="button"> <a class="button" href = "/street/showall" >Streets</a> </div>
         <div class="subheading">Management Tools</div>
-        <div class="button  right"> <a class="button" href = "ward/export" >Export XML</a> </div>
-        <div class="button  right"> <a class="button" href = "ward/print" >Export PDF</a> </div>
+         <div class="button"> Years Available</div>
+         {% for year in years %}
+          <div class="button"> <a class="button" href = "selectyear/{{year["year"]}}" >{{year["year"]}}</a> </div>
+          {% endfor %}
+        <div class="button"> <a class="button" href = "rggroup/export" >Export XML</a> </div>
+        <div class="button"> <a class="button" href = "rggroup/print" >Export PDF</a> </div>
       </div>
         <div/>
-        <div>Uploading maps to server</div>
+        <div  class="subheading" >Uploading maps to server</div>
         <div>
          <div  class="altbutton row"  >
-       <div class="button"> <a class="button" href = "http://www.bikehike.co.uk/mapview.php" target = "_blank"  >Create Route</a> </div>
+       <div class="button"> <a class="small button" href = "http://www.bikehike.co.uk/mapview.php" target = "_blank"  >Create Route</a> </div>
       <form action="{{ path('do-upload') }}" method="post" enctype="multipart/form-data">
         <input type="hidden" name="token" value="{{ csrf_token('upload') }}" />
 
@@ -43,7 +50,7 @@
     </div>
 
         </div
-        <div>Some useful links</div>
+        <div  class="subheading" >Some useful links</div>
          <div class="button  "> <a class="routebutton" href = "https://mapit.mysociety.org/area/2434.html"  target="_blank">Mapit Mysociety for administrative borders</a> </div>
            <div class="button  "> <a class="routebutton" href = " https://lichfielddc.maps.arcgis.com/apps/webappviewer/index.html?id=f15c49e001cd48239abf6571b5d3f68d"  target="_blank">LDC Polling District map</a> </div>
             <div class="button  "> <a class="routebutton" href = "https://www.doogal.co.uk/polylines.php"  target="_blank">Tool for drawing outlines</a> </div>

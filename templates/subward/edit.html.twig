@@ -1,4 +1,4 @@
-{# views/subward/edit.html.twig #}
+{# views/rgsubgroup/edit.html.twig #}
 
 {% extends 'master.html.twig' %}
 
@@ -18,15 +18,15 @@
 <div>
  <div class="heading  row" >
  <div class="label">{{'edit subward' }}:</div>
- <div class="title" > {{subward.subward}}</div>
- <div class="button  right"> <a class="button" href ="/ward/show/{{subward.wardid}}" >{{'back'}} </a> </div>
+ <div class="title" > {{subward.name}}</div>
+ <div class="button  right"> <a class="button" href ="/rggroup/show/{{subward.rggroupid}}" >{{'back'}} </a> </div>
 </div>
 <div class="formmap">
 <div  class="form" >
     {{ form_start(form) }}
-    {{ form_row(form.SubwardId) }}
-    {{ form_row(form.Subward) }}
-    {{ form_row(form.WardId) }}
+    {{ form_row(form.Rgsubgroupid) }}
+    {{ form_row(form.Name) }}
+    {{ form_row(form.Rggroupid) }}
     {{ form_row(form.Households) }}
     {{ form_row(form.Electors) }}
     <button type="submit">{{'Register!'}}</button>
@@ -35,7 +35,7 @@
 
 </div>
       <div class ="row">
-     <div class="deletebutton right "> <a class="button  red" href ="/subward/delete/{{subward.subwardid}}" >{{'DELETE SUBWARD'}} </a> </div>
+     <div class="deletebutton right "> <a class="button  red" href ="/rgsubgroup/delete/{{subward.rgsubgroupid}}" >{{'DELETE SUBWARD'}} </a> </div>
      </div>
 </div>
 </div>

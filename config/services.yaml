@@ -6,6 +6,8 @@
 parameters:
   new-maps-folder: '%kernel.project_dir%/public/maps/'
   mappath: '%env(resolve:MAPPATH)%'
+  maproot: '%env(resolve:MAPROOT)%'
+  topmap: '%env(resolve:TOPMAP)%'
 
 #new-maps-folder: 'http://lerot.org/RoadGroups/maps'
 # mappath : "http://lerot.org/RoadGroups/maps/"
@@ -51,3 +53,11 @@ services:
     App\Service\PDF:
         arguments:
            $pdfpath : '%MAPPATH%'
+
+    App\Service\MapServer:
+       public: true
+      #tags: ['twig.extension']
+#       arguments:
+#         $mappath : '%MAPPATH%'
+
+

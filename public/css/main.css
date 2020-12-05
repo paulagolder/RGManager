@@ -26,6 +26,17 @@ div.row {
   align-items: center;
 }
 
+div.topheader.row div.button.right
+{
+  margin-left : auto;
+  width: unset;
+}
+
+
+div.topheader.row div.button
+{
+  width: unset;
+}
 
 div.heading
 {
@@ -53,8 +64,8 @@ div.heading div.value
 
 div.subheading.row
 {
-  background-color :#a1e697;
-  height :1em;
+  xbackground-color :#a1e697;
+  xheight :1em;
   font-size: 0.8em;
   padding:0.1em;
 }
@@ -65,6 +76,13 @@ div.subheading.row div.label {
   xfont-size : 1.2em;
   padding-right : 1em;
 }
+
+
+div.subheading.row div.text
+{
+  width: 12em;
+}
+
 
 div.subheading.row div.label.red
 {
@@ -87,11 +105,18 @@ div.message
 {
   background-color :#a1e697;
   height :1em;
-  font-size: 0.8em;
+  font-size: 0.5em;
   padding:0.1em;
   color: red;
+  width : 25em;
 }
 
+
+
+a:visited
+{
+  color: blue;
+}
 
 a.button {
   background-color : white;
@@ -112,11 +137,20 @@ div.button> a.button.small
 {
   font-size : 0.8em;
   border : pink solid 1px;
+  width: max-content;
 }
+
+ div.altbutton.row div.button
+ {
+   width: 10em;
+   margin-left: 1em;
+ }
+
 
 div.button.right {
   margin-left : auto;
 }
+
 div.deletebutton.right {
   margin-left : auto;
 }
@@ -125,6 +159,8 @@ a.button.red
 {
   color: red;
 }
+
+
 button.button {
   background-color : white;
   font-size : 1em;
@@ -139,7 +175,9 @@ button.button {
   color : black;
   text-decoration : none;
 }
-div.mypage {
+
+div.mypage
+{
   height : calc(100% - 5em);
 }
 
@@ -147,7 +185,7 @@ div.mypage {
 div.pagescroll
 {
   overflow-y: auto;
-  height: 500px;
+  height: 600px;
 }
 
 
@@ -171,7 +209,7 @@ div.form form div label
   display: inline-block;
 }
 
-div.header.list.row
+div.header div.row
 {
     font-style: italic;
       color: black;
@@ -179,42 +217,42 @@ div.header.list.row
     font-size: 1em;
 }
 
-div.header.list.row   div.checkbox
+div.header div.row div.checkbox
 {
   width: 3em;
 }
 
-div.header.list.row  div.name
+div.header div.row div.name
 {
   width: 14em;
 }
 
-div.header.list.row   div.pd
+div.header div.row div.pd
 {
 
   width: 5em;
 }
 
-div.header.list.row  div.wardid
+div.header div.row div.wardid
 {
 
   width: 4em;
 }
 
-div.header.list.row  div.roadgroupid
+div.header div.row div.roadgroupid
 {
 
   width: 5em;
 }
 
-div.header.list.row  div.rgid
+div.header div.row div.rgid
 {
   width: 5em;
 }
 
  div.menu div.row div.name
  {
-   width: 14em;
+   width: 19em;
  }
 
  div.menu div.row div.id
@@ -222,89 +260,135 @@ div.header.list.row  div.rgid
    width: 4em;
  }
 
-div.header.list.row   div.num
+div.header div.row div.num
 {
   width: 5em;
   text-align: right;
 }
 
- div.list div.row div.id
+ div.row div.id
  {
    width: 3em;
    text-align: left;
  }
 
- div.list div.row div.indent
+ div.row div.indent
  {
    margin-left:5em;
  }
 
-div.header.list.row   div.text
+div.header div.row div.text
 {
   width: 18em;
 }
 
-div.header.list.row  div.button
+div.header div.row div.button
 {
   width: 5em;
   margin-left: 1em;
 }
 
-div.list div.row   div.checkbox
+
+div.subheading
+{
+  font-size: 1.1em;
+  background-color:  #9cd29c;
+
+}
+
+
+div.row div.rgid
+{
+  width: 8em;
+}
+
+
+div.row div.checkbox
 {
   width: 3em;
 }
 
-div.list  div.row div.name
+div.subheading.row div.name
 {
-  width: 14em;
+  width: 220px;
 }
 
-div.list  div.row  div.pd
+div.row div.name
+{
+  width: 220px;
+}
+
+div.row div.pd
 {
 
   width: 5em;
 }
 
-div.list  div.row  div.wardid
+div.row div.wardid
 {
-
   width: 4em;
 }
 
-div.list  div.row div.rgid
+div.subheading.row div.rgid
 {
+  width: 130px;
+}
 
+div.row div.rgid
+{
+  width: 130px;
+}
+
+div.row div.roadgroupid
+{
   width: 5em;
 }
 
-div.list  div.row div.roadgroupid
+
+div.subheading.row div.num
 {
-  width: 5em;
+  width: 60px;
+  text-align: right;
 }
 
-div.list  div.row   div.num
+div.row div.num
 {
-  width: 5em;
+  width: 60px;
   text-align: right;
 }
 
 
-div.list  div.row   div.text
+div.row div.text
 {
-  width: 20em;
+  width: 40em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-div.list  div.row   div.button
+div.row div.shorttext
+{
+  width: 10em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+
+div.row div.button
 {
   width: 5em;
   margin-left: 1em;
 }
 
-div.map div.#mapdiv
+div.row div.button.wide
+{
+  width: unset;
+  margin-left: 1em;
+}
+
+div.map div.mapdiv
 {
   height:400px;
   width: 100%;

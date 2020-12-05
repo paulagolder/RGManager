@@ -46,25 +46,47 @@ class StreetRepository  extends EntityRepository
        return $streets;
     }
 
-    public function findOne($streetid)
+    public function findOne($stname,$stpart)
     {
+      $sn= $stname;
+      $sp = $stpart;
        $qb = $this->createQueryBuilder("p");
-       $qb->andWhere('p.StreetId = :pid');
-       $qb->setParameter('pid', $streetid);
+       $qb->Where('p.Name = :sn');
+       $qb->andWhere('p.Part = :sp  or p.Part is null  ');
+       $qb->setParameter('sn', $sn);
+        $qb->setParameter('sp', $sp);
        $street =  $qb->getQuery()->getOneOrNullResult();
        return $street;
     }
 
-
-
-    public function findnamed($streetname)
+ public function findOnebyStreetId($streetid)
     {
+      $sname = explode("/",$streetid);
+      $sn = $sname[0];
+      if(count($sname)== 2) $sp = $sname[1];
+      else $sp = "";
        $qb = $this->createQueryBuilder("p");
-       $qb->andWhere('p.Name = :stnm ');
-       $qb->setParameter('stnm', $streetname);
-       $qb->orderBy("p.PD", "ASC");
-       $streets =  $qb->getQuery()->getResult();
-       return $streets;
+       $qb->Where('p.Name = :sn');
+       $qb->andWhere('p.Part = :sp  or p.Part is null  ');
+       $qb->setParameter('sn', $sn);
+        $qb->setParameter('sp', $sp);
+       $street =  $qb->getQuery()->getOneOrNullResult();
+       return $street;
+    }
+
+    public function findnamed($streetid,$year )
+    {
+     $sname = explode("/",$streetid);
+      $sn = $sname[0];
+      if(count($sname)== 2) $sp = $sname[1];
+      else $sp = "";
+
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT s.*,rg.roadgroupid FROM street as s left join roadgrouptostreet as rg on s.name = rg.street where s.name = "'.$sn.'" and rg.year="'.$year.'" ;';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $streets= $stmt->fetchAll();
+        return $streets;
     }
 
     public function namesearch($streetname)
@@ -78,7 +100,7 @@ class StreetRepository  extends EntityRepository
        return $streets;
     }
 
-    public function findgroup($roadgroupid)
+    public function xfindgroup($roadgroupid)
     {
        $qb = $this->createQueryBuilder("p");
        $qb->andWhere('p.RoadgroupId = :rgid ');
@@ -88,19 +110,29 @@ class StreetRepository  extends EntityRepository
        return $streets;
     }
 
-     public function findLooseStreets()
+     public function findLooseStreets($year)
      {
-        $conn = $this->getEntityManager()
-            ->getConnection();
-        $sql = 'SELECT s.streetid, s.name, s.part, s.PD FROM street as s left join roadgroup as r on s.roadgroupid = r.roadgroupid left join ward as w on r.wardid = w.wardid where w.wardid is null';
+
+        $conn = $this->getEntityManager()->getConnection();
+         $sql = 'select  st.*   from street as st  where concat (st.name,"-",st.part) not in ( SELECT concat (s.name,"-",s.part)  FROM street as s, roadgrouptostreet as rg WHERE s.name = rg.street and (s.part = rg.part or rg.part is null  or rg.part = "" ) and rg.year = "'.$year.'")  order by st.pd , st.name ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $streets= $stmt->fetchAll();
+        return $streets;
+      //  return null;
+     }
+
+
+ public function findGroup($roadgroupid, $year)
+     {
+
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT s.* FROM `street` as s JOIN roadgrouptostreet as r on s.name = r.street and (s.part= r.part or s.part is null  or s.part="" ) WHERE r.roadgroupid = "'.$roadgroupid.'" and r.year = "'.$year.'" order by s.name ; ';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $streets= $stmt->fetchAll();
         return $streets;
      }
-
-
-
 
 
 }

@@ -32,7 +32,21 @@ class Seat
      */
     private $Date;
 
+    /**
+     * @ORM\Column(name="kml",type="string", length=50)
+     */
+    private $KML;
 
+     public function getKML()
+    {
+        return $this->KML;
+    }
+
+    public function setKML( $text): self
+    {
+        $this->KML = $text;
+        return $this;
+    }
 
       /**
      * @ORM\Column(name="electorate",type="integer", length=50)
@@ -120,12 +134,12 @@ class Seat
 
    public function getjson()
    {
-   $kml="";
+
 
    $str ="{";
    $str .=  '"name":"'.$this->Name.'",';
    $str .=  '"seatid":"'.$this->SeatId.'",';
-   $str .=  '"kml":"'.$kml.'",';
+   $str .=  '"kml":"'.$this->KML.'",';
    $str .=  '"longitude":"-1.8304",';
    $str .=  '"latitude":"52.6854"';
    $str .="}";
@@ -144,5 +158,11 @@ class Seat
      $xmlout .= "  </ward>\n";
      return $xmlout;
    }
+
+   public function __toString()
+   {
+
+        return $this->Name.";".$this->KML;
+    }
 }
 

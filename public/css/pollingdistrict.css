@@ -1,0 +1,39 @@
+
+
+div.streetlist div.street.row.indent div.name
+{
+   width: 15em;
+   margin-left: 3em;
+}
+
+div.streetlist div.street.row.indent div.PD
+{
+   width : 5em;
+}
+
+
+div#swmapid
+{
+  height : 500px;
+}
+
+
+div#streetedit div.form form div label {
+  width: 10em;
+  color: green;
+  display: inline-block;
+}
+
+div#subwardedit div.form div label.required
+{
+  width: 10em;
+  color: red;
+  display: inline-block;
+}
+
+div#subwardedit div.form div label
+{
+  width: 10em;
+  color: green;
+  display: inline-block;
+}

@@ -1,0 +1,106 @@
+{# views/roadgroup/showall.html.twig #}
+
+{% extends 'master.html.twig' %}
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/pollingdistrict.css') }}" rel="stylesheet" />
+{% endblock %}
+{% block js %}
+   {{ parent() }}
+   <script src="{{asset('js/maps.js')}}"></script>
+   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+   <script src="{{asset('js/L.KML.js')}}"></script>
+   <script>
+     var popup = L.popup();
+     function onMapClick(e)
+     {
+       popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(mymap);
+        lat = e.latlng.lat;
+        lng = e.latlng.lng;
+        document.getElementById("street_form_Latitude").value=lat;
+        document.getElementById("street_form_Longitude").value=lng;
+      }
+    </script>
+{% endblock %}
+
+{% block middle %}
+<div class="roadgroup">
+{% if message %}
+<H1>{{message}} </H1>
+
+{% else %}
+    <div class="heading row">
+    <div class="label">Polling District : {{pollingdistrict.pollingdistrictid}}</div>
+     <div class="message"> All Roadgroups with streets in this Polling district</div>
+    <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+    </div>
+
+     <div class="roadgroup subheading row">
+       <div class="rgid" >Road group Id</div>
+       <div class="name" >Name</div>
+       <div class="rgid" >RG-Group</div>
+       <div  class="num" >House-holds</div>
+       <div  class="num" >Electors</div>
+       <div  class="button" ></div>
+       <div  class="button" ></div>
+       <div  class="text" >Note</div>
+     </div>
+     {% set tracks = [] %}
+     <div  class="scroll list" >
+       {% for aroadgroup in roadgroups %}
+      {% set tracks = tracks|merge([aroadgroup.roadgroupid]) %}
+
+       {% set rowstyle = '' %}
+
+                    <div class="roadgroup row  {{rowstyle}}" >
+                       <div  class="rgid" id="{{aroadgroup.roadgroupid}}" >{{aroadgroup.roadgroupid}}</div>
+                      <div class="name" >{{aroadgroup.name}}..etc</div>
+
+                      <div  class="rgid" >{{aroadgroup.rggroupid}}</div>
+
+                      <div  class="num" >{{aroadgroup.households}}</div>
+                       <div  class="num" >{{aroadgroup.electors}}</div>
+                        <div class="button"> <a class="button" href = "/roadgroup/showone/{{aroadgroup.roadgroupid}}" >View</a> </div>
+                         <div class="button"> <a class="button" href = "/roadgroup/edit/{{aroadgroup.roadgroupid}}" >Edit</a> </div>
+                     <div  class="text" > {{aroadgroup.note}}</div>
+                     </div>
+       {% endfor %}
+    </div>
+    <div class="map" >
+  <div id="swmapid" ></div>
+</div>
+
+
+  {% set jslocation = pollingdistrict.getjson() %}
+
+  <script  type="text/javascript" >
+    var mymap = mySwMap("{{jslocation}}");
+    var i=0;
+    var fgroup =  new L.featureGroup();
+    {% for aroadgroup in roadgroups %}
+    {
+      var kml = "{{aroadgroup.kml}}";
+      var path = "{{mappath}}"+kml;
+      if(kml)
+      {
+         var h2s = document.getElementById("{{aroadgroup.roadgroupid}}");
+         if(h2s)
+            h2s.style.backgroundColor = getColor(i);
+         var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
+          makeKMLLayer(mymap,path,style,false,"{{aroadgroup.roadgroupid}}");
+            i=i+1;
+
+      }
+    }
+       {% endfor %}
+      //mymap.fitBounds(fgroup.getBounds());
+      mymap.on('click', onMapClick);
+   </script>
+   {% endif %}
+
+</div>
+{% endblock %}

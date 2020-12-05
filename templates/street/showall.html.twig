@@ -34,12 +34,12 @@
     </div>
         </form>
 
-     <div class="street header  list row">
+     <div class="subheading row">
      <div class="name" >Name/part</div>
      <div class="pd" >PD</div>
-     <div  class="rgid" >Road group Id</div>
      <div  class="num" >House-holds</div>
      <div  class="num" >Electors</div>
+     <div  class="button" ></div>
      <div  class="button" ></div>
      <div  class="text" >Note</div>
    </div>
@@ -48,14 +48,12 @@
        <div class="row" >
          <div class="name" >{{street.fullname}}</div>
          <div class="pd" >{{street.pd}}</div>
-          <div  class="rgid" >
-          <a class="routebutton" href="/roadgroup/showone/{{street.roadgroupid}}" >{{street.roadgroupid}}</a>
-          </div>
 
           <div  class="num" >{{street.households}}</div>
            <div  class="num" >{{street.electors}}</div>
-         <div class="button"> <a class="button" href = "/street/edit/{{street.streetid}}" >Edit </a> </div>
-          <div  class="text" > {{street.note}}</div>
+             <div class="button"> <a class="button" href = "/street/viewgroup/{{street.name}}" >View</a> </div>
+         <div class="button"> <a class="button" href = "/street/edit/{{street.name}}/{{street.part}}" >Edit</a> </div>
+          <div  class="shorttext" > {{street.note}}</div>
       </div>
        {% endfor %}
     </div>

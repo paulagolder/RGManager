@@ -17,12 +17,9 @@ class StreetForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder ->add('name', TextType::class ,['label' => 'Street Name',]);
-           $builder ->add('Part', TextType::class,['label' => 'Part Road','required' => false,]);
-              $builder ->add('Qualifier', TextType::class,['label' => 'Description','required' => false,]);
+        $builder ->add('Part', TextType::class,['label' => 'Part Road','required' => false,]);
+        $builder ->add('Qualifier', TextType::class,['label' => 'Description','required' => false,'empty_data'    => '',]);
         $builder ->add('PD', TextType::class,['label' => 'Polling District','required' => false,]);
-        $builder ->add('RoadGroupId', TextType::class,['label' => 'RoadGroupId','required' => false,]);
-        $builder ->add('WardId', TextType::class,['label' => 'WardId','required' => false,]);
-        $builder ->add('SubwardId', TextType::class,['label' => 'SubwardId','required' => false,]);
         $builder ->add('Households', IntegerType::class,['label' => 'Households','required' => false,]);
         $builder ->add('Electors', IntegerType::class,['label' => 'Electors','required' => false,]);
         $builder ->add('Latitude', TextType::class,['label' =>  'Latitude','required' => false,]);

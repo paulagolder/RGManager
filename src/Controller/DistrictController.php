@@ -21,9 +21,11 @@ use App\Form\Type\WardForm;
 use App\Form\Type\NewSubwardForm;
 use App\Form\Type\SubwardForm;
 use App\Entity\District;
-use App\Entity\Ward;
-use App\Entity\Subward;
+use App\Entity\Rggroup;
+use App\Entity\Rgsubgroup;
 use App\Entity\Roadgroup;
+
+use App\Service\MapServer;
 
 //use App\Service\PDF;
 //use Fpdf\Fpdf;
@@ -37,27 +39,47 @@ class DistrictController extends AbstractController
     private $A4w = 210;
     private $A4h = 297;
 
-    private $requestStack ;
+    private $requestStack;
+    private $mapserver;
+    private $rgyear ;
 
-    public function __construct( RequestStack $request_stack)
+    public function __construct( RequestStack $request_stack, MapServer $mapserver)
     {
         $this->requestStack = $request_stack;
+        $this->mapserver = $mapserver;
+        $mapserver->load();
+        $this->rgyear = "2020";
     }
-
-
-
-
 
     public function showone($drid)
     {
+
         $district = $this->getDoctrine()->getRepository("App:District")->findOne($drid);
         if (!$district)
         {
             return $this->render('district/showone.html.twig', [ 'message' =>  'district not Found',]);
         }
+         $kml = $district->getKML();
+          if(!$this->mapserver->ismap($kml))
+          {
+             $district->setKML($this->mapserver->findmap($district->getDistrictId(),$this->rgyear));
+
+          }
+
         $seats = $this->getDoctrine()->getRepository("App:Seat")->findChildren($drid);
+        foreach($seats as &$seat)
+        {
+          $kml = $seat->getKML();
+          if(!$this->mapserver->ismap($kml))
+          {
+             $seat->setKML($this->mapserver->findmap($seat->getSeatId(),$this->rgyear,$district->getDistrictId()));
+
+          }
+        }
+
         return $this->render('district/showone.html.twig',
             [
+                'rgyear' => $this->rgyear,
                 'message' =>  '' ,
                 'district'=>$district,
                 'seats'=>$seats,
@@ -65,14 +87,12 @@ class DistrictController extends AbstractController
             ]);
     }
 
-
-
      public function wardEdit($pid)
     {
         $request = $this->requestStack->getCurrentRequest();
         if($pid>0)
         {
-            $ward = $this->getDoctrine()->getRepository('App:ward')->findOne($pid);
+            $ward = $this->getDoctrine()->getRepository('App:Rggroup')->findOne($pid);
         }
         if(! isset($ward))
         {
@@ -87,16 +107,16 @@ class DistrictController extends AbstractController
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($ward);
                 $entityManager->flush();
-                $pid = $ward->getwardId();
-                return $this->redirect("/ward/edit/".$pid);
+                $pid = $ward->getRggroupid();
+                return $this->redirect("/rggroup/edit/".$pid);
             }
         }
-
         return $this->render('ward/edit.html.twig', array(
+           'rgyear' => $this->rgyear,
             'form' => $form->createView(),
             'objid'=>$pid,
             'ward'=>$ward,
-            'returnlink'=>'/ward/problems',
+            'returnlink'=>'/rggroup/problems',
             ));
     }
 
@@ -115,15 +135,16 @@ class DistrictController extends AbstractController
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($ward);
                 $entityManager->flush();
-                $pid = $ward->getwardId();
-                return $this->redirect("/ward/edit/".$pid);
+                $pid = $ward->getRggroupid();
+                return $this->redirect("/rggroup/edit/".$pid);
             }
         }
 
         return $this->render('ward/edit.html.twig', array(
+           'rgyear' => $this->rgyear,
             'form' => $form->createView(),
             'ward'=>$ward,
-            'returnlink'=>'/ward/showall',
+            'returnlink'=>'/rggroup/showall',
             ));
     }
 
@@ -133,18 +154,19 @@ class DistrictController extends AbstractController
         if (!$subward) {
             return $this->render('subward/showone.html.twig', [ 'message' =>  'subward not Found',]);
         }
-        $wardid =  $subward->getWardId();
-        $ward = $this->getDoctrine()->getRepository("App:Ward")->findOne($wardid);
+        $wardid =  $subward->getRggroupid();
+        $ward = $this->getDoctrine()->getRepository("App:Rggroup")->findOne($wardid);
         $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($swdid);
         $extrastreets =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreets();
         return $this->render('subward/showone.html.twig',
                               [
+                                'rgyear' => $this->rgyear,
                                 'message' =>  '' ,
                                 'ward'=>$ward,
                                 'subward'=>$subward,
                                 'roadgroups'=> $roadgroups,
                                  'streets'=>$extrastreets,
-                                 'back'=>"/ward/show/".$wardid,
+                                 'back'=>"/rggroup/show/".$wardid,
                                 ]);
     }
 
@@ -165,16 +187,17 @@ class DistrictController extends AbstractController
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($subward);
                 $entityManager->flush();
-                $pid = $subward->getSubwardId();
-                return $this->redirect("/ward/show/".$wdid);
+                $pid = $subward->getRgsubgroupid();
+                return $this->redirect("/rggroup/show/".$wdid);
             }
         }
 
         return $this->render('subward/new.html.twig', array(
+            'rgyear' => $this->rgyear,
             'form' => $form->createView(),
             'wardid'=>$wdid,
             'subward'=>$subward,
-            'returnlink'=>'/ward/show/'.$wdid,
+            'returnlink'=>'/rggroup/show/'.$wdid,
             ));
     }
 
@@ -200,12 +223,13 @@ class DistrictController extends AbstractController
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($subward);
                 $entityManager->flush();
-                $pid = $subward->getSubwardId();
-                return $this->redirect("/ward/show/".$swdid);
+                $pid = $subward->getRgsubgroupid();
+                return $this->redirect("/rggroup/show/".$swdid);
             }
         }
 
         return $this->render('subward/edit.html.twig', array(
+           'rgyear' => $this->rgyear,
             'form' => $form->createView(),
             'subward'=>$subward,
             'returnlink'=>'/street/problems',
@@ -217,13 +241,13 @@ class DistrictController extends AbstractController
     {
 
             $subward = $this->getDoctrine()->getRepository('App:Subward')->findOne($swdid);
-            $wdid = $subward->getWardId();
+            $wdid = $subward->getRggroupid();
 
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->remove($subward);
                 $entityManager->flush();
 
-                return $this->redirect("/ward/show/".$wdid);
+                return $this->redirect("/rggroup/show/".$wdid);
 
     }
 
@@ -293,17 +317,17 @@ for($i=0;$i<=1;$i++)
     public function makexml()
     {
          $xmlout = "";
-         $wards = $this->getDoctrine()->getRepository("App:Ward")->findAll();
+         $wards = $this->getDoctrine()->getRepository("App:Rggroup")->findAll();
         if (!$wards) {
             return "";
         }
         foreach (  $wards as $award )
         {
-           $subwards =   $this->getDoctrine()->getRepository("App:Subward")->findChildren($award->getWardId());
+           $subwards =   $this->getDoctrine()->getRepository("App:Subward")->findChildren($award->getRggroupid());
            $award->{'subwards'} = $subwards;
            foreach($subwards as $asubward)
            {
-              $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($asubward->getSubwardId());
+              $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($asubward->getRgsubgroupid());
               $asubward->{'roadgrouplist'}=$roadgroups;
               foreach($roadgroups as $aroadgroup)
               {

@@ -27,12 +27,13 @@
     {{ form_start(form) }}
     {{ form_row(form.RoadGroupId) }}
     {{ form_row(form.Name) }}
-    {{ form_row(form.WardId) }}
-    {{ form_row(form.SubwardId) }}
+    {{ form_row(form.Rggroupid) }}
+    {{ form_row(form.Rgsubgroupid) }}
     {{ form_row(form.Households) }}
     {{ form_row(form.Electors) }}
     {{ form_row(form.Distance) }}
     <button type="submit">{{'Register!'}}</button>
+       {{ form_row(form.Note) }}
     {{ form_end(form) }}
 </div>
 <div class ="row">

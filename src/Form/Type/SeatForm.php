@@ -28,6 +28,7 @@ class SeatForm extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => Seat::class,
+            'csrf_field_name' => '_token',
         ));
     }
 }

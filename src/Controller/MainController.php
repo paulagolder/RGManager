@@ -11,13 +11,12 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Translation\Translator;
-use Symfony\Contracts\Translation\TranslatorInterface;
-//use Symfony\Component\OptionsResolver\Options;
+use Symfony\Component\HttpFoundation\Cookie;
+
 
 use Symfony\Component\HttpFoundation\Response;
 
-
+use App\Service\MapServer;
 use App\Form\Type\StreetForm;
 use App\Entity\Street;
 
@@ -32,15 +31,30 @@ class MainController extends AbstractController
 {
 
     private $requestStack ;
+    private $rgyear ;
 
-    public function __construct( RequestStack $request_stack)
+    public function __construct( RequestStack $request_stack,  MapServer $mapserver)
     {
         $this->requestStack = $request_stack;
+        $mapserver->load();
+         $this->rgyear  = $this->requestStack->getCurrentRequest()->cookies->get('rgyear');
+
     }
 
 
     public function mainmenu()
     {
+
+         $years = $this->getDoctrine()->getRepository("App:Roadgrouptostreet")->getYears();
+         if(!$this->rgyear)
+         {
+          $this->rgyear = '2000';
+            $cookie = new Cookie('rgyear',	$this->rgyear,	time() + ( 24 * 60 * 60));
+		        $res = new Response();
+           $res->headers->setCookie( $cookie );
+           $res->send();
+         }
+
         $message = "";
         $districts = $this->getDoctrine()->getRepository("App:District")->findAll();
         $streets = $this->getDoctrine()->getRepository("App:Street")->findAll();
@@ -53,13 +67,23 @@ class MainController extends AbstractController
             $message .= count( $streets). " Streets found\n ";
         }
 
-        return $this->render('mainmenu.html.twig',
+          return $this->render('mainmenu.html.twig',
           [
+            'rgyear'=>$this->rgyear,
             'message' =>  '' ,
             'districts'=> $districts,
+            'years'=>$years,
           ]);
-
     }
 
 
+     public function selectyear($year)
+    {
+        $cookie = new Cookie('rgyear',	$year,	time() + ( 24 * 60 * 60));
+		   $res = new Response();
+       $res->headers->setCookie( $cookie );
+       $res->send();
+        return $this->redirect("/");
     }
+
+}

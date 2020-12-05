@@ -4,7 +4,7 @@
 
 namespace App\Form\Type;
 
-use  App\Entity\Roadgroup;
+use App\Entity\Roadgroup;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -20,12 +20,12 @@ class RoadgroupForm extends AbstractType
 
         $builder ->add('RoadGroupId', TextType::class,['label' => 'RoadGroupId',]);
         $builder ->add('Name', TextType::class,['label' => 'Name of Roadgroup',]);
-        $builder ->add('WardId', TextType::class,['label' => 'RG-Group','required' => false,]);
-        $builder ->add('SubwardId', TextType::class,['label' => 'RG-Subgroup','required' => false,]);
+        $builder ->add('Rggroupid', TextType::class,['label' => 'RG-Group','required' => false,]);
+        $builder ->add('Rgsubgroupid', TextType::class,['label' => 'RG-Subgroup','required' => false,]);
         $builder ->add('Households', IntegerType::class,['label' => 'Households','required' => false,]);
         $builder ->add('Electors', IntegerType::class,['label' => 'Electors','required' => false,]);
         $builder ->add('Distance', NumberType::class,['label' => 'Distance(mls)','required' => false,]);
-
+        $builder ->add('Note', TextType::class,['label' => 'Note','required' => false,]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -21,6 +21,23 @@ class District
      */
     private $Name;
 
+     /**
+     * @ORM\Column(name="kml",type="string", length=50)
+     */
+    private $KML;
+
+     public function getKML()
+    {
+        return $this->KML;
+    }
+
+    public function setKML( $text): self
+    {
+        $this->KML = $text;
+        return $this;
+    }
+
+
     public function getDistrictId()
     {
         return $this->DistrictId;
@@ -45,12 +62,12 @@ class District
 
    public function getjson()
    {
-   $kml="";
+
 
    $str ="{";
    $str .=  '"name":"'.$this->Name.'",';
    $str .=  '"districtid":"'.$this->DistrictId.'",';
-   $str .=  '"kml":"'.$kml.'",';
+   $str .=  '"kml":"'.$this->KML.'",';
    $str .=  '"longitude":"-1.8304",';
    $str .=  '"latitude":"52.6854 "';
    $str .="}";

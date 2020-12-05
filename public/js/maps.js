@@ -228,7 +228,7 @@ function addMyKML(mymap,kmlfilepath,color, cumbounds)
 
 }
 
-function makeKMLLayer(amap,kmlfilepath,style)
+function makeKMLLayer(amap,kmlfilepath,style, fitbounds=false, label='')
 {
   var track =null;
   fetch(kmlfilepath).then(res => res.text()).then(kmltext =>
@@ -238,8 +238,12 @@ function makeKMLLayer(amap,kmlfilepath,style)
     track = new L.KML(kml);
     track.setStyle(style);
     amap.addLayer(track);
+    if(fitbounds)
+    {
     const bounds = track.getBounds();
     amap.fitBounds(bounds);
+    }
+   track.bindPopup(label);
   });
   return track;
 }

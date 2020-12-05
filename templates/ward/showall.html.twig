@@ -38,45 +38,39 @@ function onMapClick(e)
 <H1> No wards found </H1>
 
 {% else %}
-<div class="wardlist">
+  <div class="subheading row" >
+                       <div class="rgid">RG-GroupId</div>
+                       <div class="name">Name</div>
+                         <div class="num">House-holds</div>
+                         <div class="num">Totaled House-holds</div>
+                         <div class="num">No. Road-groups</div>
+                         <div class="num">No. Maps</div>
+                     </div>
+<div class="list">
     <div id="wards" >
        {% for ward in wards %}
-                    <div class="ward row" >
-                       <div class="wardid" >{{ward.wardid}}</div>
-                        <div class="name" >{{ward.ward}}</div>
+                    <div class="row" >
+                       <div class="rgid" >{{ward.rggroupid}}</div>
+                        <div class="name" >{{ward.name}}</div>
                          <div class="num" >{{ward.households}}</div>
                          <div class="num" >({{ward.total}})</div>
-                        <a class="button" href = "/ward/show/{{ward.wardid}}" >VIEW</a>
+                         <div class="num"> {{ward.rgcount}}</div>
+                         <div class="num"> {{ward.rgfound}}</div>
+                        <a class="button" href = "/rggroup/show/{{ward.rggroupid}}" >VIEW</a>
+                        <a class="button" href = "/rggroup/edit/{{ward.rggroupid}}" >EDIT</a>
                      </div>
        {% endfor %}
     </div>
 </div>
- <a class="button" href = "/ward/new" >ADD NEW RG-Group</a>
-{% if streets|length >0 %}
-<div class="subheading  row">
-  <div class="label"> Spare Streets</div>
-</div>
-  <div class="streetlist">
-       {% for street in streets %}
-       <div class="street row">
-                 <div class="name" >{{street.name}}</div>
-                 <div class="PD" >{{street.PD}}</div>
-                 <a class="button" href = "/street/edit/{{street.streetid}}" >VIEW</a>
-        </div>
-       {% endfor %}
-   </div>
-   {% else %}
-   <div class="subheading  row">
-  <div class="label"> No un-allocated streets found</div>
-</div>
-   {% endif %}
+ <a class="button" href = "/rggroup/new" >ADD NEW RG-Group</a>
+
    {% if roadgroups|length >0 %}
 <div class="subheading  row">
   <div class="label">Spare Roadgroups</div>
 </div>
   <div class="list">
        {% for roadgroup in roadgroups %}
-       <div class=" row">
+       <div class="row">
                  <div class="rgid" >{{roadgroup.roadgroupid}}</div>
                  <div class="name" >{{roadgroup.name}}</div>
                  <a class="button" href = "/roadgroup/edit/{{roadgroup.roadgroupid}}" >VIEW</a>
@@ -84,7 +78,7 @@ function onMapClick(e)
        {% endfor %}
    </div>
    {% else %}
-   <div class="subheading  row">
+   <div class="subheading row">
   <div class="label"> No un-allocated roadgroups found</div>
 </div>
    {% endif %}
@@ -98,19 +92,13 @@ function onMapClick(e)
 var jslocation = '{ "name":"LCC","longitude":"-1.8304","latitude":"52.6854" }';
 
 var mymap = myWMap(jslocation);
-var i=0;
-var bounds = null;
-var wardlayer = null;
-var fgroup =  new L.featureGroup();
-var path = "{{mappath}}LCC.kml";
-if(CheckUrl(path))
+
+var path = "{{mappath}}{{topmap}}";
 {
   var style = {"color":  "#0000FF" , "weight": 5 ,  "clickable": true ,"opacity": 0.2, "fillOpacity": 0.2 };
-  wardlayer = makeKMLLayer(mymap, path,style);
+   makeKMLLayer(mymap, path,style);
 }
 
-
-//mymap.fitBounds(wardlayer.getBounds());
 mymap.on('click', onMapClick);
 </script>
 {% endblock %}

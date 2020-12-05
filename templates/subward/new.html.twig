@@ -2,16 +2,10 @@
 
 {% extends 'master.html.twig' %}
 
-
 {% block stylesheets %}
       {{ parent() }}
    <link href="{{ asset('/css/street.css') }}" rel="stylesheet" />
-
 {% endblock %}
-
-
-
-
 
 {% block middle %}
 <div id="middle" >
@@ -24,9 +18,9 @@
 <div class="formmap">
 <div  class="form" >
     {{ form_start(form) }}
-    {{ form_row(form.SubwardId) }}
-    {{ form_row(form.Subward) }}
-    {{ form_row(form.WardId) }}
+    {{ form_row(form.Rgsubgroupid) }}
+    {{ form_row(form.Name) }}
+    {{ form_row(form.Rggroupid) }}
     <button type="submit">{{'Register!'}}</button>
     {{ form_end(form) }}
 </div>

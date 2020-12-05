@@ -1,11 +1,15 @@
 {# templates/header.html.twig #}
 
 {% block myheader %}
-    <div class='header  row'  >
-     <div class="header1">Road Group Manager</div>
-     <div class="button  right"> <a class="button" href = "/" >TOP</a> </div>
+    <div class='topheader  row'  >
+     <div class="header">Road Group Manager:</div>
+      <div class="header">{{rgyear}}</div>
+     <div class="button right"> <a class="button" href = "/roadgroup/showall" >Road Groups</a></div>
+     <div class="button"> <a class="button" href = "/pollingdistrict/showall" >Polling Districts</a></div>
+     <div class="button"> <a class="button" href = "/street/showall" >Streets</a> </div>
+     <div class="button"> <a class="button" href = "/" >TOP</a> </div>
     </div>
     {% for message in app.flashes('notice') %}
-             <div class="alert alert-notice">{{ message }}</div>
+      <div class="alert alert-notice">{{ message }}</div>
     {% endfor %}
  {% endblock %}

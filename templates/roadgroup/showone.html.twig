@@ -47,7 +47,7 @@
     <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
   </div>
 
-  <div class="header list row">
+  <div class="subheading row">
     <div class="name" >Name/part</div>
     <div class="pd" >PD</div>
     <div  class="num" >House-holds</div>
@@ -63,8 +63,9 @@
       </div>
       <div class="pd" >{{street.pd}}</div>
       <div  class="num" >{{street.households}}</div>
-      <div class="button"> <a class="button" href = "/street/edit/{{street.streetid}}/{{roadgroup.RoadgroupId}}" >Edit</a> </div>
-         <div class="button"> <a class="button" href = "/street/remove/{{street.streetid}}" >Remove</a> </div>
+      <div class="button"> <a class="button" href = "/street/edit/{{street.name }}/{{street.part}}" >Edit</a> </div>
+         <div class="button"> <a class="button" href = "/street/remove/{{roadgroup.RoadgroupId}}/{{street.name}}/{{street.part}}" >Remove</a> </div>
+         <div  class="text" >{{street.note}}</div>
     </div>
     {% endfor %}
   </div>
@@ -73,23 +74,21 @@
       <button type="submit">Add Street</button>
     <select name="selstreet">
 {% for astreet in sparestreets %}
-    <option value="{{ astreet.streetid}}">{{ astreet.name }}/{{astreet.part}}</option>
+    <option value="{{ astreet.name}}/{{astreet.part}}">{{ astreet.name }}/{{astreet.part}} {{astreet.pd}}</option>
 {% endfor %}
 </select>
   </form>
-    <div class="button"> <a class="button" href = "/roadgroup/newstreet/{{roadgroup.RoadgroupId}}" >New Street</a> </div>
+    <div class="button"> <a class="small button" href = "/roadgroup/newstreet/{{roadgroup.RoadgroupId}}" >New Street</a> </div>
 
   </div>
 
     <div  class="altbutton row"  >
-       <div class="button"> <a class="button" href = "http://www.bikehike.co.uk/mapview.php" target = "_blank"  >Create Route</a> </div>
+       <div class="button"> <a class="small button" href = "http://www.bikehike.co.uk/mapview.php" target = "_blank"  >Create Route</a> </div>
       <form action="{{ path('do-upload') }}" method="post" enctype="multipart/form-data">
         <input type="hidden" name="token" value="{{ csrf_token('upload') }}" />
         <input type="hidden" name="rgid" value="{{roadgroup.RoadgroupId}}" />
           <label for="fileToUpload">Select map to upload:</label>
           <input type="file" name="fileToUpload" id="fileToUpload">
-           <label for="distance">Distance(miles):</label>
-          <input type="text" name="distance" id="distance">
           <button type="submit">Send</button>
         </form>
       </div>
@@ -102,8 +101,8 @@
 <script  type="text/javascript" >
 
   var mymap = myRgMap("{{jslocation}}");
-  var path = "{{mappath}}{{roadgroup.RoadgroupId}}.kml";
-  if(CheckUrl(path))
+  var path = "{{mappath}}{{findmap('*',roadgroup.RoadgroupId,year)}}";
+  if(path)
   {
   var style = {"color":  "#0000FF" , "weight": 14 ,  "clickable": true ,"opacity": 0.3, "fillOpacity": 0.1 };
   makeKMLLayer(mymap, path,style);

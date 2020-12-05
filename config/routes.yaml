@@ -2,56 +2,87 @@ index:
   path: /
   controller: App\Controller\MainController::mainmenu
 
+selectyear:
+  path: /selectyear/{year}
+  controller: App\Controller\MainController::selectyear
 
 district_showone:
    path: /district/show/{drid}
    controller: App\Controller\DistrictController::showone
+
+pollingdistrict_showone:
+   path: /pollingdistrict/show/{pdid}
+   controller: App\Controller\PollingDistrictController::showone
 
 
 seats_showone:
    path: /seat/show/{dtid}/{stid}
    controller: App\Controller\SeatController::showone
 
+seats_showpds:
+   path: /seat/showpds/{dtid}/{stid}
+   controller: App\Controller\SeatController::showpds
+
+seats_showrgs:
+   path: /seat/showrgs/{dtid}/{stid}
+   controller: App\Controller\SeatController::showrgs
+
 seats_edit:
    path: /seat/edit/{dtid}/{stid}
    controller: App\Controller\SeatController::edit
 
-wards_all:
-    path: /ward/showall
-    controller: App\Controller\WardController::showall
-
-wards_new:
-    path: /ward/new
-    controller: App\Controller\WardController::newward
-
-wards_show_one:
-    path: /ward/show/{wdid}
-    controller: App\Controller\WardController::showone
+seats_showall:
+   path: /seat/showall/{dtid}
+   controller: App\Controller\SeatController::showall
 
 
-wards_export:
-    path: /ward/export
-    controller: App\Controller\WardController::export
+pd_showall:
+   path: /pollingdistrict/showall
+   controller: App\Controller\PollingDistrictController::showall
 
-wards_print:
-    path: /ward/print
-    controller: App\Controller\WardController::topdf
+rggroups_all:
+    path: /rggroup/showall
+    controller: App\Controller\RggroupController::showall
 
-subwards_show_one:
-    path: /subward/show/{swdid}
-    controller: App\Controller\WardController::showsubward
+rggroups_new:
+    path: /rggroup/new
+    controller: App\Controller\RggroupController::newward
 
-subwards_new:
-    path: /subward/new/{wdid}
-    controller: App\Controller\WardController::newsubward
+rggroups_show_one:
+    path: /rggroup/show/{wdid}
+    controller: App\Controller\RggroupController::showone
 
-subwards_edit:
-    path: /subward/edit/{swdid}
-    controller: App\Controller\WardController::editsubward
+rggroups_edit:
+    path: /rggroup/edit/{rgid}
+    controller: App\Controller\RggroupController::edit
 
-subwards_delete:
-    path: /subward/delete/{swdid}
-    controller: App\Controller\WardController::deletesubward
+rggroups_delete:
+    path: /rggroup/delete/{rgid}
+    controller: App\Controller\RggroupController::delete
+
+rggroups_export:
+    path: /rggroup/export
+    controller: App\Controller\RggroupController::export
+
+rggroups_print:
+    path: /rggroup/print
+    controller: App\Controller\RggroupController::topdf
+
+rgsubgroups_show_one:
+    path: /rgsubgroup/show/{swdid}
+    controller: App\Controller\RggroupController::showsubward
+
+rgsubgroups_new:
+    path: /rgsubgroup/new/{wdid}
+    controller: App\Controller\RggroupController::newsubward
+
+rgsubgroups_edit:
+    path: /rgsubgroup/edit/{swdid}
+    controller: App\Controller\RggroupController::editsubward
+
+rgsubgroups_delete:
+    path: /rgsubgroup/delete/{swdid}
+    controller: App\Controller\RggroupController::deletesubward
 
 roadgroups_show_all:
     path: /roadgroup/showall
@@ -61,14 +92,13 @@ roadgroups_show_one:
     path: /roadgroup/show/{stid}/{rgid}
     controller: App\Controller\RoadgroupController::showone
 
-
 roadgroups_show_oneb:
     path: /roadgroup/showone/{rgid}
-    controller: App\Controller\RoadgroupController::showoneb
+    controller: App\Controller\RoadgroupController::showone
 
 roadgroups_new:
-    path: /roadgroup/new
-    controller: App\Controller\RoadgroupController::new
+    path: /roadgroup/new/{wdid}/{swdid}
+    controller: App\Controller\RoadgroupController::newRG
 
 roadgroups_edit:
     path: /roadgroup/edit/{rgid}
@@ -86,6 +116,10 @@ roadgroups_upload:
     path: /roadgroup/upload
     controller: App\Controller\RoadgroupController::upload
 
+roadgroups_pdsd:
+    path: /roadgroup/showpds
+    controller: App\Controller\RoadgroupController::showpds
+
 streets_all:
     path: /street/showall
     controller: App\Controller\StreetController::showall
@@ -98,7 +132,6 @@ streets_search:
     path: /street/search
     controller: App\Controller\StreetController::search
 
-
 streets_problems:
     path: /street/problems
     controller: App\Controller\StreetController::showproblems
@@ -108,14 +141,20 @@ streets_problem:
     controller: App\Controller\StreetController::showproblems
 
 street_edit:
-    path: /street/edit/{rdid}/{returnid}
+    path: /street/edit/{rdname}/{rdpart}
     controller: App\Controller\StreetController::streetedit
     defaults:
-        returnid: /
+        rdpart: /
+
+street_view:
+    path: /street/viewgroup/{name}
+    controller: App\Controller\StreetController::streetviewgroup
 
 street_remove:
-     path: /street/remove/{stid}
+     path: /street/remove/{rgid}/{stname}/{stpart}
      controller: App\Controller\StreetController::streetremove
+     defaults:
+        stpart: null
 
 street_add:
      path: /street/add/{rgid}
@@ -124,8 +163,6 @@ street_add:
 street_editgroup:
     path: /street/editgroup/{name}
     controller: App\Controller\StreetController::streeteditgroup
-
-
 
 street_delete:
     path: /street/delete/{rdid}

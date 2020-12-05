@@ -22,6 +22,7 @@ class UploadController extends AbstractController
     public function index(Request $request, string $uploadDir,
                           FileUploader $uploader, LoggerInterface $logger): Response
     {
+        $rgyear  = $request->cookies->get('rgyear');
         $token = $request->get("token");
         $rgid = $request->get("rgid");
         if (!$this->isCsrfTokenValid('upload', $token))
@@ -38,24 +39,14 @@ class UploadController extends AbstractController
                Response::HTTP_UNPROCESSABLE_ENTITY, ['content-type' => 'text/plain']);
         }
         $filename = $file->getClientOriginalName();
-        $uploader->upload($uploadDir, $file, $filename);
-        $dist =  $request->get("distance");
+        $uploader->upload($uploadDir, $file, $filename."_".$rgyear);
+
         $this->addFlash(
             'notice',
             'Map '.$filename." dist:".$dist.' uploaded!'
         );
         $roadgroup = $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($rgid);
-        if($dist !=="")
-        {
-            $fdist = floatval($dist);
-            if($fdist>0.1)
-            {
-               $roadgroup->setDistance($fdist);
-               $entityManager = $this->getDoctrine()->getManager();
-               $entityManager->persist($roadgroup );
-               $entityManager->flush();
-            }
-        }
+
         if(!$rgid )
            return $this->redirect("/");
         else

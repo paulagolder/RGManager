@@ -17,9 +17,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 use Symfony\Component\HttpFoundation\Response;
 
-
+use App\Service\MapServer;
 use App\Form\Type\StreetForm;
 use App\Entity\Street;
+use App\Entity\Roadgrouptostreet;
+
 
 
 
@@ -31,28 +33,27 @@ use App\Entity\Street;
 class StreetController extends AbstractController
 {
 
+    private $requestStack ;
+    private $rgyear ;
 
-
-  private $requestStack ;
-
-  public function __construct( RequestStack $request_stack)
-  {
-
-    $this->requestStack = $request_stack;
-
-  }
-
+    public function __construct( RequestStack $request_stack,  MapServer $mapserver)
+    {
+        $this->requestStack = $request_stack;
+        $mapserver->load();
+        $this->rgyear  = $this->requestStack->getCurrentRequest()->cookies->get('rgyear');
+    }
 
   public function Showall()
   {
     $streets = $this->getDoctrine()->getRepository("App:Street")->findAll();
-    if (!$streets) {
+    if (!$streets)
+    {
       return $this->render('street/showall.html.twig', [ 'message' =>  'Streets not Found',]);
     }
 
     return $this->render('street/showall.html.twig',
     [
-
+    'rgyear'=>$this->rgyear,
     'message' =>  '' ,
     'heading' => 'The streets',
     'streets'=> $streets,
@@ -85,7 +86,7 @@ class StreetController extends AbstractController
 
     return $this->render('street/showduplicates.html.twig',
     [
-
+    'rgyear'=>$this->rgyear,
     'message' =>  $message ,
     'heading' => 'The streets',
     'streets'=> $streets,
@@ -102,6 +103,7 @@ class StreetController extends AbstractController
     }
     return $this->render('street/showproblems.html.twig',
     [
+    'rgyear'=>$this->rgyear,
     'message' =>  '' ,
     'heading' => 'Problem Streets',
     'streets'=> $streets,
@@ -112,9 +114,20 @@ class StreetController extends AbstractController
   public function StreetEditGroup($name)
   {
     $streets = $this->getDoctrine()->getRepository('App:Street')->findNamed($name);
-
-    $rg = $streets[0]->getRoadgroupid();
     return $this->render('street/editgroup.html.twig', array(
+      'rgyear'=>$this->rgyear,
+      'message'=>"",
+      'streets'=>$streets,
+      'back'=>'/street/showall',
+      ));
+  }
+
+
+  public function StreetViewGroup($name)
+  {
+    $streets = $this->getDoctrine()->getRepository('App:Street')->findNamed($name,$this->rgyear);
+    return $this->render('street/viewgroup.html.twig', array(
+      'rgyear'=>$this->rgyear,
       'message'=>"",
       'streets'=>$streets,
       'back'=>'/street/showall',
@@ -126,6 +139,7 @@ class StreetController extends AbstractController
     $searchfield = ($_POST['searchfield']);
     $streets = $this->getDoctrine()->getRepository('App:Street')->namesearch($searchfield);
     return $this->render('street/showall.html.twig', array(
+      'rgyear'=>$this->rgyear,
       'message'=>"",
       'streets'=>$streets,
       'back'=>'/street/showall',
@@ -164,13 +178,15 @@ class StreetController extends AbstractController
     return $this->redirect("/street/editgroup/".$gstreet);
   }
 
-  public function StreetEdit($rdid,$returnid)
+  public function StreetEdit($rdname,$rdpart)
   {
+    if ($rdpart=="null" or $rdpart =="/" )  $rdpart = "";
     $request = $this->requestStack->getCurrentRequest();
-    if($rdid ==0)
-      return $this->redirect("/ward/showall");
-    $street = $this->getDoctrine()->getRepository('App:Street')->findOne($rdid);
-    $streets = $this->getDoctrine()->getRepository('App:Street')->findNamed($street->getName());
+    if(!$rdname) return $this->redirect("/rggroup/showall");
+
+    $streets = $this->getDoctrine()->getRepository('App:Street')->findNamed($rdname);
+    $street = $this->getDoctrine()->getRepository('App:Street')->findOne($rdname,$rdpart);
+    //$rgarry = $this->getDoctrine()->getRepository('App:Roadgrouptostreet')->getRoadgroup($rdname,$rdpart);
     $streetcount = sizeof($streets);
     if(! isset($street))
     {
@@ -182,26 +198,21 @@ class StreetController extends AbstractController
       $form->handleRequest($request);
       if ($form->isValid())
       {
-        // $person->setContributor($user->getUsername());
-        // $person->setUpdateDt($time);
+        if($street->getPart() == null)$street->setPart("");
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($street);
         $entityManager->flush();
         $rdid = $street->getStreetId();
-        return $this->redirect("/street/edit/".$rdid."/".$returnid);
+        return $this->redirect('/street/viewgroup/'.$rdname);
       }
     }
-    if ($returnid == "" or $returnid == Null or strlen($returnid) <2)
-    {
-      $returnpath = "/ward/showall";
-    }
-    else
-      $returnpath = "/roadgroup/showone/$returnid";
+
     return $this->render('street/edit.html.twig', array(
+     'rgyear'=>$this->rgyear,
       'form' => $form->createView(),
       'streetcount'=>$streetcount,
       'street'=>$street,
-      'back'=>$returnpath,
+      'back'=>'/street/viewgroup/'.$rdname,
       ));
   }
 
@@ -214,16 +225,16 @@ class StreetController extends AbstractController
     else
       return;
     $rgid = $street->getRoadgroupId();
-    $swdid = $street->getSubwardId();
-    $wdid = $street->getWardId();
+    $swdid = $street->getRgsubgroupid();
+    $wdid = $street->getRggroupid();
     if($rgid)
       $back = "/roadgroup/showone/".$rgid;
     else  if($swdid)
-      $back = "/subward/show/".$swdid;
+      $back = "/rgsubgroup/show/".$swdid;
     else if($wdid)
-      $back =  "/ward/show/".$wdid;
+      $back =  "/rggroup/show/".$wdid;
     else
-      $back =  "/ward/showall/";
+      $back =  "/rggroup/showall/";
     $roadgroupid = $street->getRoadgroupid();
     $entityManager = $this->getDoctrine()->getManager();
     $entityManager->remove($street);
@@ -253,19 +264,11 @@ class StreetController extends AbstractController
 
 
 
-  public function StreetRemove($stid)
+  public function StreetRemove($rgid,$stname,$stpart)
   {
-    if($stid>0)
-    {
-      $street = $this->getDoctrine()->getRepository('App:Street')->findOne($stid);
-    }
-    else
-      return;
-    $rgid = $street->getRoadgroupid();
-    $street->setRoadgroupid(null);
-    $entityManager = $this->getDoctrine()->getManager();
-    $entityManager->persist($street);
-    $entityManager->flush();
+   if ($stpart=="null")  $stpart = "";
+     $this->getDoctrine()->getRepository('App:Roadgrouptostreet')->remove($rgid,$stname,$stpart,$this->rgyear);
+
     return $this->redirect("/roadgroup/showone/".$rgid);
   }
 
@@ -273,16 +276,15 @@ class StreetController extends AbstractController
   {
 
     $stid = $_POST["selstreet"];
-    if($stid>0)
+    if($stid)
     {
-      $street = $this->getDoctrine()->getRepository('App:Street')->findOne($stid);
+      $astreet = $this->getDoctrine()->getRepository('App:Street')->findOnebyStreetId($stid);
     }
     else
       return;
-    $street->setRoadgroupid($rgid);
-    $entityManager = $this->getDoctrine()->getManager();
-    $entityManager->persist($street);
-    $entityManager->flush();
+
+    $street = $this->getDoctrine()->getRepository('App:Roadgroup')->addStreet($astreet,$rgid,$this->rgyear);
+
     return $this->redirect("/roadgroup/showone/".$rgid);
   }
 }

@@ -1,0 +1,42 @@
+{# views/pollingdistrict/showall.html.twig #}
+
+{% extends 'master.html.twig' %}
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/roadgroup.css') }}" rel="stylesheet" />
+{% endblock %}
+
+
+{% block middle %}
+<div class="roadgroup">
+{% if message %}
+<H1>{{message}} </H1>
+
+{% else %}
+    <div class="heading row">
+       <div class="label">Polling Districts</div>
+       <div class="message"> All Polling Districts and Seats containing them ( a PD can only be in one seat for each level) </div>
+       <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+    </div>
+    <div class="roadgroup header  list row">
+        <div class="rgid" >PD</div>
+        <div class="rgid" >City Ward</div>
+        <div class="rgid" >District Ward</div>
+        <div class="rgid" >County Division</div>
+        <div class="rgid" >Constituency</div>
+    </div>
+    <div  class="pagescroll list" >
+       {% for key, pd in pds %}
+         <div class="roadgroup row " >
+             <div  class="rgid" > <a class="routebutton" href = "/pollingdistrict/show/{{key}}" >{{key}}</a></div>
+            <div  class="rgid" > <a class="routebutton" href = "/seat/show/LCC/{{pd["LCC"]}}" >{{pd["LCC"]}}</a></div>
+            <div  class="rgid" > <a class="routebutton" href = "/seat/show/LDC/{{pd["LDC"]}}" >{{pd["LDC"]}}</a></div>
+            <div  class="rgid" > <a class="routebutton" href = "/seat/show/SCC/{{pd["SCC"]}}" >{{pd["SCC"]}}</a></div>
+           </div>
+       {% endfor %}
+    </div>
+{% endif %}
+
+</div>
+{% endblock %}

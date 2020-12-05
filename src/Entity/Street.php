@@ -10,47 +10,28 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Street
 {
+
     /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(name="streetid",type="integer")
-     */
-    private $StreetId;
-
-
-
-    /**
-     * @ORM\Column(name="name",type="string", length=50)
+     * @ORM\Column(name="name",type="string", length=10)
      */
     private $Name;
 
-    /**
-     * @ORM\Column(name="qualifier",type="string", length=4, nullable=true)
-     */
-    private $Qualifier;
+
 
     /**
+     * @ORM\Id
      * @ORM\Column(name="part",type="string", length=40, nullable=true)
      */
     private $Part;
 
 
-
-    /**
-     * @ORM\Column(name="wardid",type="string", length=10, nullable=true)
+      /**
+     * @ORM\Column(name="qualifier",type="string", length=4)
      */
-    private $WardId;
-
-    /**
-     * @ORM\Column(name="subwardid",type="string", length=10, nullable=true)
-     */
-    private $SubwardId;
+    private $Qualifier;
 
 
-    /**
-     * @ORM\Column(name="roadgroupid",type="string", length=10, nullable=true)
-     */
-    private $RoadgroupId;
 
     /**
      * @ORM\Column(name="pd",type="string", length=10, nullable=true)
@@ -86,16 +67,17 @@ class Street
      */
     private $Longitude;
 
-    public function getStreetId(): ?int
+    public function getStreetId()
     {
-        return $this->StreetId;
+    if($this->Part)
+    {
+    return $this->Name."/".$this->Part;
+    }
+    else
+        return $this->Name;
     }
 
-    public function setStreetId(int $ID): self
-    {
-        $this->StreetId = $ID;
-        return $this;
-    }
+
 
     public function getName(): ?string
     {
@@ -150,38 +132,8 @@ class Street
         return $this;
     }
 
-    public function getWardId(): ?string
-    {
-        return $this->WardId;
-    }
 
-    public function setWardId(?string $ward): self
-    {
-        $this->WardId = $ward;
-        return $this;
-    }
 
-    public function getSubwardId(): ?string
-    {
-        return $this->SubwardId;
-    }
-
-    public function setSubwardId(?string $ward): self
-    {
-        $this->SubwardId = $ward;
-        return $this;
-    }
-
-     public function getRoadgroupId(): ?string
-    {
-        return $this->RoadgroupId;
-    }
-
-    public function setRoadgroupId(?string $roadgroupid): self
-    {
-        $this->RoadgroupId = $roadgroupid;
-        return $this;
-    }
 
     public function getPD()
     {
@@ -253,11 +205,7 @@ class Street
     public function getjson()
     {
        $str ="{";
-       $str .=  '"streetid":"'.$this->StreetId.'",';
-       $str .=  '"roadgroupid":"'.$this->RoadgroupId.'",';
        $str .=  '"name":"'.$this->Name.'",';
-       $str .=  '"wardid":"'.$this->WardId.'",';
-       $str .=  '"subwardid":"'.$this->SubwardId.'",';
        $str .=  '"part":"'.$this->Part.'",';
        $str .=  '"longitude":"'.$this->Longitude.'",';
        $str .=  '"latitude":"'.$this->Latitude.'"';
@@ -272,7 +220,7 @@ class Street
      if($this->Part == null) $this->Part = $astreet->Part;
      if($this->RoadgroupId == null) $this->RoadgroupId = $astreet->RoadgroupId;
      if($this->WardId == null) $this->WardId = $astreet->WardId;
-     if($this->SubwardId == null) $this->SubwardId = $astreet->SubwardId;
+     if($this->Rgsubgroupid == null) $this->Rgsubgroupid = $astreet->Rgsubgroupid;
      if($this->Households == null) $this->Households = $astreet->Households;
      if($this->Electors == null) $this->Electors  = $astreet->Electors ;
      if($this->PD == null) $this->PD  = $astreet->PD ;

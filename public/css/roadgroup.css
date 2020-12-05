@@ -26,6 +26,8 @@ div.roadgroup div.altbutton.row form
   padding-top:11px;
 }
 
+div.roadgroup div.roadgroup.row.red
+{ background-color : pink;}
 
 
 div.map div#rgmapid

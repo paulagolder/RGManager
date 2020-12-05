@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>empt</name>
+	<Style id="blueLine">
+      <LineStyle>
+        <color>7fff0000</color>
+        <width>4</width>
+      </LineStyle>
+    </Style>
+    <Placemark>
+      <styleUrl>#blueLine</styleUrl>
+      <LineString>
+        <coordinates>
+-1.850240,52.693880,117.05 
+-1.850090,52.693710,116.42 
+-1.849670,52.693290,114.03 
+-1.848459,52.693651,111.6 
+-1.849243,52.694301,116.02 
+-1.850283,52.693963,117.35 
+-1.850283,52.693963,117.35 
+        </coordinates>
+      </LineString>
+    </Placemark>
+  </Document>
+</kml>

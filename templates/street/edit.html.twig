@@ -46,9 +46,6 @@
       {{ form_row(form.Part) }}
       {{ form_row(form.Qualifier) }}
       {{ form_row(form.PD) }}
-      {{ form_row(form.RoadGroupId) }}
-      {{ form_row(form.WardId) }}
-      {{ form_row(form.SubwardId) }}
       {{ form_row(form.Households) }}
       {{ form_row(form.Electors) }}
       {{ form_row(form.Latitude) }}
@@ -65,7 +62,7 @@
      {{ form_end(form) }}
 </div>
 <div class ="row">
- <div class="button"> <a class="button  red" href ="/street/replicate/{{street.streetid}}" >{{'SPLIT ROAD'}} </a> </div>
+ <div class="button"> <a class="small button  red" href ="/street/replicate/{{street.streetid}}" >{{'SPLIT ROAD'}} </a> </div>
      <div class="deletebutton right "> <a class="button  red" href ="/street/delete/{{street.streetid}}" >{{'DELETE ROAD'}} </a> </div>
 </div>
          {% set jslocation = street.getjson() %}

@@ -41,7 +41,7 @@
 {% if message %}
 <H1> No Seats found </H1>
 {% else %}
-<div class="header  list row">
+<div class="subheading row">
       <div class="rgid" >SeatId</div>
       <div class="name" >Name</div>
       <div class="button" ></div>
@@ -61,7 +61,7 @@
   {% endfor %}
   </div>
 {% endif %}
-  <div><a class="button" href = "/roadgroup/new/{{subward.wardid}}/{{subward.subwardid}}" >ADD NEW ROADGROUP</a></div>
+  <div><a class="button" href = "/roadgroup/new/{{subward.rggroupid}}/{{subward.rgsubgroupid}}" >ADD NEW ROADGROUP</a></div>
 
 
 <div class="map" >

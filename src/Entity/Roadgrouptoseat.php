@@ -56,7 +56,7 @@ class Roadgrouptoseat
         return $this;
     }
 
-    public function getDate():
+    public function getDate()
     {
         return $this->Date;
     }

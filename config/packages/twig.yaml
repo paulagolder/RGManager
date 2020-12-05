@@ -6,6 +6,6 @@ twig:
     cache:  false
 
     globals:
-       xmappath: "http://127.0.0.1:8000/maps/"
-       xxmappath: "http://lerot.org/RoadGroups/maps/"
        mappath: '%env(MAPPATH)%'
+       maproot: '%env(MAPROOT)%'
+       #MapServer: "@MapServer"

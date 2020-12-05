@@ -13,7 +13,7 @@
   margin-left: 2em;
 }
 
-#streetedit  div.button.right
+#streetedit div.button.right
 {
 
   margin-left: auto;
@@ -56,7 +56,7 @@ input#street_form_Note
 }
 
 
-#streetedit  div.map div#stmapid
+#streetedit div.map div#stmapid
 {
   height: 400px;
   width: 100%;

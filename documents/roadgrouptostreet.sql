@@ -1,0 +1,85 @@
+
+
+CREATE TABLE `roadgrouptostreet` (
+  `street` varchar(21) DEFAULT NULL,
+  `part` varchar(3) DEFAULT NULL,
+  `pd` varchar(2) DEFAULT NULL,
+  `roadgroupid` varchar(6) DEFAULT NULL,
+  `year` int(4) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `roadgrouptostreet`
+--
+
+INSERT INTO `roadgrouptostreet` (`street`, `part`, `pd`, `roadgroupid`, `year`) VALUES
+('Anglesey Road', NULL, 'RH', 'CUR_E4', 2020),
+('Barratt Court', NULL, 'RJ', 'CUR_N3', 2020),
+('Bloomfield Crescent', NULL, 'RH', 'CUR_E3', 2020),
+('Cain Close', NULL, 'RJ', 'CUR_N3', 2020),
+('David Garrick Gardens', NULL, 'RH', 'CUR_E3', 2020),
+('Dimbles Hill', 'RH', 'RH', 'CUR_S1', 2020),
+('Dimbles Hill', 'RK', 'RK', 'CUR_S1', 2020),
+('Dimbles Lane', 'REa', 'RE', 'CUR_E4', 2020),
+('Dimbles Lane', 'RF', 'RF', 'CUR_E4', 2020),
+('Dimbles Lane', 'RH', 'RH', 'CUR_E4', 2020),
+('Elgar Close', NULL, 'RJ', 'CUR_S3', 2020),
+('Fallow Field', NULL, 'RJ', 'CUR_C3', 2020),
+('Field Road', NULL, 'RJ', 'CUR_E2', 2020),
+('Francis Road', NULL, 'RH', 'CUR_E1', 2020),
+('Giles Road', NULL, 'RH', 'CUR_E1', 2020),
+('Handel Walk', NULL, 'RJ', 'CUR_S2', 2020),
+('Harwood Road', NULL, 'RJ', 'CUR_C2', 2020),
+('Hawkins Close', NULL, 'RH', 'CUR_E3', 2020),
+('Hewitt Close', NULL, 'RH', 'CUR_E3', 2020),
+('Jackson Road', NULL, 'RJ', 'CUR_C2', 2020),
+('Kilby Avenue', NULL, 'RJ', 'CUR_N3', 2020),
+('Leyfields', NULL, 'RH', 'CUR_S1', 2020),
+('Lincoln Close', NULL, 'RJ', 'CUR_N2', 2020),
+('Meadowbrook Road', NULL, 'RJ', 'CUR_C2', 2020),
+('Miller Close', NULL, 'RJ', 'CUR_S1', 2020),
+('Norwich Close', NULL, 'RJ', 'CUR_N1', 2020),
+('Paget Close', NULL, 'RH', 'CUR_S1', 2020),
+('Ploughmans Walk', NULL, 'RJ', 'CUR_C3', 2020),
+('Pones Green', NULL, 'RJ', 'CUR_S2', 2020),
+('Ponesfield Road', 'RH', 'RH', 'CUR_S2', 2020),
+('Ponesfield Road', 'RJ', 'RJ', 'CUR_S2', 2020),
+('Purcell Avenue', NULL, 'RJ', 'CUR_S3', 2020),
+('Salisbury Close', NULL, 'RJ', 'CUR_N2', 2020),
+('Samuel Close', NULL, 'RJ', 'CUR_S3', 2020),
+('Shepherd Close', NULL, 'RJ', 'CUR_C3', 2020),
+('Simpson Road', NULL, 'RJ', 'CUR_C2', 2020),
+('Southwark Close', NULL, 'RJ', 'CUR_N1', 2020),
+('St. Annes Road', NULL, 'RH', 'CUR_E2', 2020),
+('St. Catherines Road', NULL, 'RH', 'CUR_E2', 2020),
+('St. Helens Road', NULL, 'RH', 'CUR_E2', 2020),
+('St. Margarets Road', NULL, 'RH', 'CUR_E2', 2020),
+('St. Marys Road', NULL, 'RH', 'CUR_E2', 2020),
+('Stychbrook Gardens', NULL, 'RJ', 'CUR_S2', 2020),
+('Thomas Lane', NULL, 'RJ', 'CUR_N3', 2020),
+('Truro Close', NULL, 'RJ', 'CUR_N1', 2020),
+('Vallentin Way', NULL, 'RJ', 'CUR_N3', 2020),
+('Wassall Lane', NULL, 'RJ', 'CUR_N3', 2020),
+('Watchman Close', NULL, 'RJ', 'CUR_N3', 2020),
+('Watery Lane', NULL, 'RJ', 'CUR_N3', 2020),
+('Weston Road', 'RE', 'RE', 'CUR_E4', 2020),
+('Weston Road', 'RG', 'RG', 'CUR_E4', 2020),
+('Willow Tree Close', NULL, 'RH', 'CUR_E4', 2020),
+('Winchester Close', NULL, 'RJ', 'CUR_N2', 2020),
+('Worcester Close', NULL, 'RJ', 'CUR_N1', 2020),
+('Curborough Road', 'RHa', 'RH', 'CUR_C1', 2020),
+('Curborough Road', 'RJ', 'RJ', 'CUR_C1', 2020),
+('Curborough Road', 'RK', 'RK', 'CUR_C1', 2020),
+('Barn Close', NULL, 'RJ', 'CUR_C3', 2020),
+('Dimbles Lane', 'REb', 'RE', 'CUR_E4', 2020),
+('Dimbles Lane', 'RG', 'RG', 'CUR_E4', 2020),
+('Dimbles Lane', 'RK', 'RK', 'CUR_E4', 2020),
+('Gloucester Close', NULL, 'RJ', 'CUR_N1', 2020),
+('Oakley Close', NULL, 'RJ', 'CUR_S3', 2020),
+('Reynolds Close', NULL, 'RH', 'CUR_E4', 2020),
+('The Garth', NULL, 'RH', 'CUR_C1', 2020),
+('Weston Road', 'RH', 'RH', 'CUR_E4', 2020);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

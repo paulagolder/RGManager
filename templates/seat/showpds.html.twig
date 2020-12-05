@@ -1,0 +1,104 @@
+{# views/seat/showone.html.twig #}
+
+{% extends 'master.html.twig' %}
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/seat.css') }}" rel="stylesheet" />
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+{% endblock %}
+
+{% block js %}
+   {{ parent() }}
+   <script src="{{asset('js/maps.js')}}"></script>
+   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+   <script src="{{asset('js/L.KML.js')}}"></script>
+   <script>
+     var popup = L.popup();
+     function onMapClick(e)
+     {
+       popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(mymap);
+        lat = e.latlng.lat;
+        lng = e.latlng.lng;
+        document.getElementById("street_form_Latitude").value=lat;
+        document.getElementById("street_form_Longitude").value=lng;
+      }
+    </script>
+{% endblock %}
+
+{% block middle %}
+
+
+{% if message %}
+<H1> Seat not found </H1>
+{% else %}
+<div id="seat" >
+<div class="heading  row">
+  <div class="label">Seat: </div>
+  <div class="value">{{seat.districtid}}-{{seat.seatid}}</div>
+  <div class="value">{{seat.name}}</div>
+  <div class="message"> All Roadgroups with streets in each Polling district</div>
+  <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+</div>
+
+
+
+   {% for key,value in pds %}
+
+
+     <div  class="row indent id">
+        <div  id="{{value.pollingdistrictid}}" class="rgid" >
+         <a class="routebutton"  href ="/pollingdistrict/show/{{value.pollingdistrictid}}" >{{value.pollingdistrictid}}</a>
+         </div>
+       </div>
+          {% endfor %}
+      </div>
+     </div>
+
+
+<div class="map" >
+  <div id="swmapid" ></div>
+</div>
+
+  {% set jslocation = seat.getjson() %}
+  <script  type="text/javascript" >
+      var mymap = mySwMap("{{jslocation}}");
+      {% if  seat.kml %}
+      var aspath = "{{mappath}}{{seat.kml}}";
+      if("{{seat.kml}}")
+      {
+         var style = {"color":  "#000000" , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.2};
+         makeKMLLayer(mymap,aspath,style,true,"{{seat.name}}")
+      }
+     {% endif %}
+      var i = 0;
+      {% for key,roadgroups in rgs %}
+      if({{key}})
+      {
+        var h2s = document.getElementById("{{key}}");
+         if(h2s)
+            h2s.style.backgroundColor = getColor(i);
+            }
+  {% for aroadgroup in roadgroups %}
+    {
+      var kml = "{{aroadgroup.kml}}";
+      var path = "{{mappath}}"+kml;
+      if(kml)
+      {
+
+         var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
+          makeKMLLayer(mymap,path,style, false,"{{aroadgroup.roadgroupid}}")
+      }
+      }
+       {% endfor %}
+           i=i+1;
+ {% endfor %}
+
+     mymap.on('click', onMapClick);
+   </script>
+   {% endif %}
+   </div>
+{% endblock %}

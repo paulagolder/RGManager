@@ -4,13 +4,9 @@ namespace App\Entity;
 
 use App\Repository\RoadgroupRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Asset\Package;
-use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
-
-
 
 /**
- * @ORM\Entity(repositoryClass=RoadGroupRepository::class)
+ * @ORM\Entity(repositoryClass=RoadgroupRepository::class)
  */
 class Roadgroup
 {
@@ -28,15 +24,15 @@ class Roadgroup
 
 
   /**
-   * @ORM\Column(name="subwardid",type="string")
+   * @ORM\Column(name="rgsubgroupid",type="string")
    */
-  private $SubwardId;
+  private $Rgsubgroupid;
 
 
   /**
-   * @ORM\Column(name="wardid",type="string")
+   * @ORM\Column(name="rggroupid",type="string")
    */
-  private $WardId;
+  private $Rggroupid;
 
   /**
    * @ORM\Column(name="households",type="integer", nullable=true)
@@ -111,33 +107,30 @@ class Roadgroup
    public function setRoadgroupId($ID): self
    {
      $this->RoadgroupId = $ID;
-
      return $this;
    }
 
-   public function getSubwardId()
+   public function getRgsubgroupid()
    {
-     return $this->SubwardId;
+     return $this->Rgsubgroupid;
    }
 
-   public function setSubwardId($ID): self
+   public function setRgsubgroupid($ID): self
    {
-     $this->SubwardId = $ID;
-
+     $this->Rgsubgroupid = $ID;
      return $this;
    }
 
 
 
-   public function getWardId()
+   public function getRggroupid()
    {
-     return $this->WardId;
+     return $this->Rggroupid;
    }
 
-   public function setWardId($ID): self
+   public function setRggroupid($ID): self
    {
-     $this->WardId = $ID;
-
+     $this->Rggroupid = $ID;
      return $this;
    }
 
@@ -150,7 +143,6 @@ class Roadgroup
    public function setName(string $name): self
    {
      $this->Name = $name;
-
      return $this;
    }
 
@@ -174,7 +166,6 @@ class Roadgroup
    public function setHouseholds(?int $Households): self
    {
      $this->Households = $Households;
-
      return $this;
    }
 
@@ -186,7 +177,6 @@ class Roadgroup
    public function setElectors(?int $Electors): self
    {
      $this->Electors = $Electors;
-
      return $this;
    }
 
@@ -198,7 +188,6 @@ class Roadgroup
    public function setDistance(?float $miles): self
    {
      $this->Distance = $miles;
-
      return $this;
    }
 
@@ -211,7 +200,6 @@ class Roadgroup
    public function setKML(?string $KML): self
    {
      $this->KML = $KML;
-
      return $this;
    }
 
@@ -223,7 +211,6 @@ class Roadgroup
    public function setMinlat(?float $minlat): self
    {
      $this->minlat = $minlat;
-
      return $this;
    }
 
@@ -235,7 +222,6 @@ class Roadgroup
    public function setMidlat(?float $midlat): self
    {
      $this->midlat = $midlat;
-
      return $this;
    }
 
@@ -247,7 +233,6 @@ class Roadgroup
    public function setMaxlat(?float $maxlat): self
    {
      $this->maxlat = $maxlat;
-
      return $this;
    }
 
@@ -259,7 +244,6 @@ class Roadgroup
    public function setMinlong(?float $minlong): self
    {
      $this->minlong = $minlong;
-
      return $this;
    }
 
@@ -271,7 +255,6 @@ class Roadgroup
    public function setMidlong(?float $midlong): self
    {
      $this->midlong = $midlong;
-
      return $this;
    }
 
@@ -283,7 +266,6 @@ class Roadgroup
    public function setMaxlong(?float $maxlong): self
    {
      $this->maxlong = $maxlong;
-
      return $this;
    }
 
@@ -295,7 +277,6 @@ class Roadgroup
    public function setPriority(?float $priority): self
    {
      $this->priority = $priority;
-
      return $this;
    }
 
@@ -307,7 +288,6 @@ class Roadgroup
    public function setPrioritygroup(?string $prioritygroup): self
    {
      $this->prioritygroup = $prioritygroup;
-
      return $this;
    }
 
@@ -319,30 +299,17 @@ class Roadgroup
    public function setNote(?string $text): self
    {
      $this->Note = $text;
-
      return $this;
    }
 
    public function getjson()
    {
-
-     $kml= null;
-   if($this->KML)
-   {
-     $kml =$this->KML;
-   }
-   else
-   {
-
-   }
-
-
    $str ="{";
    $str .=  '"roadgroupid":"'.$this->RoadgroupId.'",';
    $str .=  '"name":"'.$this->Name.'",';
-   $str .=  '"wardid":"'.$this->WardId.'",';
-   $str .=  '"subwardid":"'.$this->SubwardId.'",';
-   $str .=  '"kml":"'.$kml.'",';
+   $str .=  '"rggroupid":"'.$this->Rggroupid.'",';
+   $str .=  '"rgsubgroupid":"'.$this->Rgsubgroupid.'",';
+   $str .=  '"kml":"'.$this->KML.'",';
    $str .=  '"longitude":"'.$this->midlong.'",';
    $str .=  '"latitude":"'.$this->midlat.'"';
    $str .="}";
@@ -353,7 +320,7 @@ class Roadgroup
    {
     $streets =$this->streets;
      $xmlout = "";
-     $xmlout .= "      <roadgroup RoadgroupId='$this->RoadgroupId' Name='$this->Name' Households='$this->Households' >\n  ";
+     $xmlout .= "      <roadgroup RoadgroupId='$this->RoadgroupId' Name='$this->Name' KML='$this->KML' Households='$this->Households' >\n  ";
      foreach ($streets as $astreet )
       {
         $xmlout .= $astreet->makexml();
