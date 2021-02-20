@@ -30,9 +30,9 @@
        {% for key, pd in pds %}
          <div class="roadgroup row " >
              <div  class="rgid" > <a class="routebutton" href = "/pollingdistrict/show/{{key}}" >{{key}}</a></div>
-            <div  class="rgid" > <a class="routebutton" href = "/seat/show/LCC/{{pd["LCC"]}}" >{{pd["LCC"]}}</a></div>
-            <div  class="rgid" > <a class="routebutton" href = "/seat/show/LDC/{{pd["LDC"]}}" >{{pd["LDC"]}}</a></div>
-            <div  class="rgid" > <a class="routebutton" href = "/seat/show/SCC/{{pd["SCC"]}}" >{{pd["SCC"]}}</a></div>
+            <div  class="rgid" > <a class="routebutton" href = "/seat/showpds/LCC/{{pd["LCC"]}}" >{{pd["LCC"]}}</a></div>
+            <div  class="rgid" > <a class="routebutton" href = "/seat/showpds/LDC/{{pd["LDC"]}}" >{{pd["LDC"]}}</a></div>
+            <div  class="rgid" > <a class="routebutton" href = "/seat/showpds/SCC/{{pd["SCC"]}}" >{{pd["SCC"]}}</a></div>
            </div>
        {% endfor %}
     </div>

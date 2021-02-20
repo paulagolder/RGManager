@@ -95,8 +95,8 @@ var mymap = myWMap(jslocation);
 
 var path = "{{mappath}}{{topmap}}";
 {
-  var style = {"color":  "#0000FF" , "weight": 5 ,  "clickable": true ,"opacity": 0.2, "fillOpacity": 0.2 };
-   makeKMLLayer(mymap, path,style);
+   var style = {"color":  "#0000FF" , "weight": 5 ,  "clickable": true ,"opacity": 0.2, "fillOpacity": 0.2 };
+   makeKMLLayer(mymap, path,style,true,"All RG-Groups");
 }
 
 mymap.on('click', onMapClick);

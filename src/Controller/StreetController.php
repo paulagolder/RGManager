@@ -111,16 +111,6 @@ class StreetController extends AbstractController
     ]);
   }
 
-  public function StreetEditGroup($name)
-  {
-    $streets = $this->getDoctrine()->getRepository('App:Street')->findNamed($name);
-    return $this->render('street/editgroup.html.twig', array(
-      'rgyear'=>$this->rgyear,
-      'message'=>"",
-      'streets'=>$streets,
-      'back'=>'/street/showall',
-      ));
-  }
 
 
   public function StreetViewGroup($name)
@@ -153,9 +143,9 @@ class StreetController extends AbstractController
     {
       $streetlist = ($_POST['selectstreets']);
       $nstreet = new Street();
-      foreach($streetlist as $streetid)
+      foreach($streetlist as $seq)
       {
-        $street = $this->getDoctrine()->getRepository('App:Street')->findOne($streetid);
+        $street = $this->getDoctrine()->getRepository('App:Street')->findOneBySeq($seq);
         $nstreet->merge($street);
       }
       $entityManager = $this->getDoctrine()->getManager();
@@ -166,10 +156,12 @@ class StreetController extends AbstractController
     if (isset($_POST['Delete']))
     {
       $streetlist = ($_POST['selectstreets']);
+
       $entityManager = $this->getDoctrine()->getManager();
-      foreach($streetlist as $streetid)
+      foreach($streetlist as $seq)
       {
-        $astreet = $this->getDoctrine()->getRepository('App:Street')->findOne($streetid);
+
+        $astreet = $this->getDoctrine()->getRepository('App:Street')->findOnebySeq($seq);
         $gstreet = $astreet->getName();
         $entityManager->remove($astreet);
       }
@@ -184,8 +176,8 @@ class StreetController extends AbstractController
     $request = $this->requestStack->getCurrentRequest();
     if(!$rdname) return $this->redirect("/rggroup/showall");
 
-    $streets = $this->getDoctrine()->getRepository('App:Street')->findNamed($rdname);
-    $street = $this->getDoctrine()->getRepository('App:Street')->findOne($rdname,$rdpart);
+    $streets = $this->getDoctrine()->getRepository('App:Street')->findAllbyName($rdname);
+    $street = $this->getDoctrine()->getRepository('App:Street')->findOnebyName($rdname,$rdpart);
     //$rgarry = $this->getDoctrine()->getRepository('App:Roadgrouptostreet')->getRoadgroup($rdname,$rdpart);
     $streetcount = sizeof($streets);
     if(! isset($street))
@@ -212,15 +204,15 @@ class StreetController extends AbstractController
       'form' => $form->createView(),
       'streetcount'=>$streetcount,
       'street'=>$street,
-      'back'=>'/street/viewgroup/'.$rdname,
+      'back'=>"/street/viewgroup/$rdname",
       ));
   }
 
-  public function StreetDelete($rdid)
+  public function StreetDelete($stname,$stpart)
   {
     if($rdid>0)
     {
-      $street = $this->getDoctrine()->getRepository('App:Street')->findOne($rdid);
+      $street = $this->getDoctrine()->getRepository('App:Street')->findOnebyName($stname,$stpart);
     }
     else
       return;
@@ -242,22 +234,28 @@ class StreetController extends AbstractController
     return $this->redirect($back);
   }
 
-  public function StreetReplicate($stid)
+  public function StreetReplicate($stname,$stpart)
   {
-    if($stid>0)
+    if($stname)
     {
-      $street = $this->getDoctrine()->getRepository('App:Street')->findOne($stid);
+      $street = $this->getDoctrine()->getRepository('App:Street')->findOnebyName($stname,$stpart);
+      if(!$street) return $this->redirect("/street/showall");
     }
     else
-      return;
+      return $this->redirect("/street/editgroup/".$street->getName());
     $nstreet = new Street();
     $nstreet->merge($street);
+    $nstreet->setSeq(0);
     $street->setPart($street->getPart() ."a");
+    $street->setNote($street->getNote() ." Review Household Count");
     $nstreet->setPart($nstreet->getPart() ."b");
+    $nstreet->setNote($street->getNote() ." Review Household Count");
     $entityManager = $this->getDoctrine()->getManager();
     $entityManager->persist($street);
     $entityManager->persist($nstreet);
     $entityManager->flush();
+    //now change roadgroupto street to match
+    //
     return $this->redirect("/street/editgroup/".$street->getName());
   }
 

@@ -24,13 +24,14 @@ class StreetForm extends AbstractType
         $builder ->add('Electors', IntegerType::class,['label' => 'Electors','required' => false,]);
         $builder ->add('Latitude', TextType::class,['label' =>  'Latitude','required' => false,]);
         $builder ->add('Longitude', TextType::class,['label' => 'Longitude','required' => false,]);
-            $builder ->add('Note', TextType::class,['label' => 'Comment','required' => false,]);
+        $builder ->add('Note', TextType::class,['label' => 'Comment','required' => false,]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
             'data_class' => Street::class,
+            'csrf_protection' => false,
         ));
     }
 }

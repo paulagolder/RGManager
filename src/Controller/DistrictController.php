@@ -48,7 +48,7 @@ class DistrictController extends AbstractController
         $this->requestStack = $request_stack;
         $this->mapserver = $mapserver;
         $mapserver->load();
-        $this->rgyear = "2020";
+       $this->rgyear  = $this->requestStack->getCurrentRequest()->cookies->get('rgyear');
     }
 
     public function showone($drid)
@@ -62,7 +62,7 @@ class DistrictController extends AbstractController
          $kml = $district->getKML();
           if(!$this->mapserver->ismap($kml))
           {
-             $district->setKML($this->mapserver->findmap($district->getDistrictId(),$this->rgyear));
+             $district->setKML($this->mapserver->findmap($this->rgyear,$district->getDistrictId()));
 
           }
 

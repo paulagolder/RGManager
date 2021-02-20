@@ -99,6 +99,7 @@
          var style = {"color":  getColor(i) ,"fillColor":  getColor(i) , "weight": 6 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.5 };
          makeKMLLayer(mymap,path,style,true,"{{aseat.name}}");
          i=i+1;
+         if(i>12) i=0;
       }
     }
    {% endfor %}

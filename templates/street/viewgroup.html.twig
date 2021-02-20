@@ -35,9 +35,9 @@
     <div class="list" >
        {% for street in streets %}
        <div class="street row" >
-          <div class="checkbox" > <input type="checkbox" id="{{street.name}}/{{street.part}}" name="selectstreets[]" value="{{street.name}}/{{street.part}}"></div>
+          <div class="checkbox" > <input type="checkbox" id="{{street.seq}}" name="selectstreets[]" value="{{street.seq}}"></div>
           <div class="name">{{street.name}}/{{street.part}}</div>
-          <div class="pd">{{street.pd}}</div>
+            <div class="rgid"><a class="routebutton" href = "/pollingdistrict/show/{{street.pd}}">{{street.pd}}</a></div>
           <div class="rgid">
           <a class="routebutton" href = "/roadgroup/showone/{{street.roadgroupid}}">{{street.roadgroupid}}</a>
           </div>

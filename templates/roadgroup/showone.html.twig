@@ -85,7 +85,7 @@
     <div  class="altbutton row"  >
        <div class="button"> <a class="small button" href = "http://www.bikehike.co.uk/mapview.php" target = "_blank"  >Create Route</a> </div>
       <form action="{{ path('do-upload') }}" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="token" value="{{ csrf_token('upload') }}" />
+        <input type="hidden" name="utoken" value="{{ csrf_token('upload-map') }}" />
         <input type="hidden" name="rgid" value="{{roadgroup.RoadgroupId}}" />
           <label for="fileToUpload">Select map to upload:</label>
           <input type="file" name="fileToUpload" id="fileToUpload">
@@ -94,18 +94,19 @@
       </div>
     </div>
   </div>
+  <div>KML:{{roadgroup.kml}}</div>
 <div class="map" >
   <div id="rgmapid"></div>
 </div>
 {% set jslocation = roadgroup.getjson() %}
 <script  type="text/javascript" >
-
   var mymap = myRgMap("{{jslocation}}");
-  var path = "{{mappath}}{{findmap('*',roadgroup.RoadgroupId,year)}}";
-  if(path)
+  var kml = "{{roadgroup.kml}}";
+  var path = "{{mappath}}"+kml;
+  if(kml)
   {
   var style = {"color":  "#0000FF" , "weight": 14 ,  "clickable": true ,"opacity": 0.3, "fillOpacity": 0.1 };
-  makeKMLLayer(mymap, path,style);
+  makeKMLLayer(mymap, path,style,true,kml);
   }
   mymap.on('click', onMapClick);
 </script>

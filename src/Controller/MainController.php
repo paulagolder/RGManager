@@ -32,13 +32,14 @@ class MainController extends AbstractController
 
     private $requestStack ;
     private $rgyear ;
+    private $mapserver;
 
     public function __construct( RequestStack $request_stack,  MapServer $mapserver)
     {
         $this->requestStack = $request_stack;
-        $mapserver->load();
-         $this->rgyear  = $this->requestStack->getCurrentRequest()->cookies->get('rgyear');
-
+        $this->mapserver = $mapserver;
+        $this->mapserver->load(true);
+        $this->rgyear  = $this->requestStack->getCurrentRequest()->cookies->get('rgyear');
     }
 
 
@@ -48,17 +49,17 @@ class MainController extends AbstractController
          $years = $this->getDoctrine()->getRepository("App:Roadgrouptostreet")->getYears();
          if(!$this->rgyear)
          {
-          $this->rgyear = '2000';
+            $this->rgyear = '2000';
             $cookie = new Cookie('rgyear',	$this->rgyear,	time() + ( 24 * 60 * 60));
 		        $res = new Response();
-           $res->headers->setCookie( $cookie );
-           $res->send();
+            $res->headers->setCookie( $cookie );
+            $res->send();
          }
 
         $message = "";
         $districts = $this->getDoctrine()->getRepository("App:District")->findAll();
         $streets = $this->getDoctrine()->getRepository("App:Street")->findAll();
-        $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findAll();
+        $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findAllCurrent($this->rgyear);
         if (!$streets)
         {
             $message .= 'Streets not Found\n';
@@ -77,12 +78,12 @@ class MainController extends AbstractController
     }
 
 
-     public function selectyear($year)
+    public function selectyear($year)
     {
         $cookie = new Cookie('rgyear',	$year,	time() + ( 24 * 60 * 60));
-		   $res = new Response();
-       $res->headers->setCookie( $cookie );
-       $res->send();
+		    $res = new Response();
+        $res->headers->setCookie( $cookie );
+        $res->send();
         return $this->redirect("/");
     }
 

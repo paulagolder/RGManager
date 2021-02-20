@@ -32,6 +32,7 @@ class RoadgroupForm extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => Roadgroup::class,
+            'csrf_protection' => false,
         ));
     }
 }

@@ -118,7 +118,6 @@ class SeatController extends AbstractController
             $rglist[$wid] =  $wrglist;
           }
         }
-       //dump($rglist);
         return $this->render('seat/showone.html.twig',
             [
                 'rgyear' => $this->rgyear,
@@ -171,7 +170,6 @@ class SeatController extends AbstractController
             $rglist[$wid] =  $wrglist;
           }
         }
-       //dump($rglist);
         return $this->render('seat/showone.html.twig',
             [
                 'rgyear' => $this->rgyear,
@@ -201,7 +199,7 @@ class SeatController extends AbstractController
         foreach($pds as $pd)
         {
           $pdid = $pd["pollingdistrictid"];
-         $rglist = $this->getDoctrine()->getRepository("App:Roadgroup")->findAllinPollingDistrict($pdid);
+         $rglist = $this->getDoctrine()->getRepository("App:Roadgroup")->findAllinPollingDistrict($pdid, $this->rgyear);
          $roadgroups = [];
          foreach ($rglist as $rg)
          {
@@ -216,6 +214,8 @@ class SeatController extends AbstractController
           $rgs[$pdid]= $roadgroups;
         }
 
+        $sparepds = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findSpares($district->getDistrictId(),$this->rgyear );
+
         return $this->render('seat/showpds.html.twig',
             [
                 'rgyear' => $this->rgyear,
@@ -224,6 +224,7 @@ class SeatController extends AbstractController
                 'seat' => $seat,
                 'pds'=>$pds,
                 'rgs'=>$rgs,
+                 'sparepds' => $sparepds,
                 'back'=>"/district/show/".$dtid,
             ]);
     }
@@ -270,6 +271,24 @@ class SeatController extends AbstractController
             'returnlink'=>'/district/show/'.$dtid,
             ));
     }
+
+    public function removepd($dtid, $stid,$pdid)
+    {
+       $this->getDoctrine()->getRepository('App:Seat')->removepd($dtid,$stid,$pdid,$this->rgyear);
+       return $this->redirect('/seat/showpds/'.$dtid."/".$stid);
+    }
+
+
+
+
+     public function addpd($dtid,$stid)
+  {
+    $pdid = $_POST["selpd"];
+    $this->getDoctrine()->getRepository('App:Seat')->addpd($dtid,$stid,$pdid,$this->rgyear);
+    return $this->redirect('/seat/showpds/'.$dtid."/".$stid);
+  }
+
+
 
    public function newward()
     {

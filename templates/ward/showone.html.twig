@@ -92,7 +92,7 @@ var fgroup =  new L.featureGroup();
       if(kml)
       {
           var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.2 };
-          makeKMLLayer(mymap,path,style)
+          makeKMLLayer(mymap,path,style,true,"{{ward.name}}")
       }
 
 
@@ -106,7 +106,7 @@ var i=0;
       if(kml)
       {
         countsgs = countsgs+1;
-        makeKMLLayer(mymap,path,style);
+        makeKMLLayer(mymap,path,style,true,kml);
       }
   {% endfor %}
 
@@ -118,14 +118,9 @@ var i=0;
   }
  {% endfor %}
 
-var path = "{{mappath}}{{ward.kml}}";
-{% if ward.kml  %}
-{
-  var style = {"color":  "#0000FF" , "weight": 5 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.0 };
-  wardlayer = makeKMLLayer(mymap, path,style);
-}
+
 //mymap.fitBounds(wardlayer.getBounds());
-{% endif %}
+
 mymap.on('click', onMapClick);
 </script>
 {% endif %}

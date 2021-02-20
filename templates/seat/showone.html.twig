@@ -73,7 +73,14 @@
   <script  type="text/javascript" >
 
       var mymap = mySwMap("{{jslocation}}");
-
+ {% if  seat.kml %}
+      var aspath = "{{mappath}}{{seat.kml}}";
+      if("{{seat.kml}}")
+      {
+         var style = {"color":  "#000000" , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.2};
+         makeKMLLayer(mymap,aspath,style,true,"{{seat.name}}")
+      }
+     {% endif %}
         var i=0;
        {% for key,value in roadgrouplist %}
        {% for key2,value2 in value %}
@@ -88,20 +95,13 @@
               if(kml)
               {
                 var  path = "{{mappath}}"+kml;
-                makeKMLLayer(mymap,path,style);
+                makeKMLLayer(mymap,path,style,false,"{{value3.name}}");
               }
          {% endfor %}
            i=i+1;
       {% endfor %}
      {% endfor %}
-     {% if  seat.kml %}
-      var aspath = "{{mappath}}{{seat.kml}}";
-      if("{{seat.kml}}")
-      {
-         var style = {"color":  "#000000" , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.2};
-         makeKMLLayer(mymap,aspath,style)
-      }
-     {% endif %}
+
      mymap.on('click', onMapClick);
    </script>
    {% endif %}

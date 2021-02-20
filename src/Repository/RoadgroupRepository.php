@@ -37,12 +37,10 @@ class RoadgroupRepository extends EntityRepository
         return $roadgroups;
      }
 
-     public function findAll()
+     public function findAllCurrent($year)
      {
         $conn = $this->getEntityManager()->getConnection();
-       //  $sql = 'SELECT r.* , count(distinct(s.pd)) as pds  FROM roadgroup as r, roadgrouptostreet as rs , //`street` as s WHERE r.roadgroupid = rs.roadgroupid and  rs.street= s.name and rs.part = s.part group //by rs.roadgroupid  ORDER BY  r.roadgroupid ';
-
-        $sql = 'SELECT r.* , count(*) as nos FROM `roadgroup` as r left join roadgrouptostreet as s on r.roadgroupid = s.roadgroupid group by r.roadgroupid ORDER BY r.roadgroupid ';
+        $sql = 'SELECT r.* , count(*) as nos FROM `roadgroup` as r left join roadgrouptostreet as rs on r.roadgroupid = rs.roadgroupid where rs.year = "'.$year.'" group by r.roadgroupid ORDER BY r.roadgroupid ';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $roadgroups= $stmt->fetchAll();
@@ -69,10 +67,10 @@ class RoadgroupRepository extends EntityRepository
         return $roadgroups;
      }
 
-     public function findAllinPollingDistrict($pdid)
+     public function findAllinPollingDistrict($pdid, $year)
      {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'select r.* from roadgroup as r where r.roadgroupid in (SELECT rs.roadgroupid FROM `roadgrouptostreet` as rs  WHERE rs.pd = "'.$pdid.'")';
+        $sql = 'select r.* from roadgroup as r where r.roadgroupid in (SELECT rs.roadgroupid FROM `roadgrouptostreet` as rs  WHERE rs.pd = "'.$pdid.'"  and rs.year = "'.$year.'")';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $roadgroups= $stmt->fetchAll();

@@ -51,7 +51,7 @@ class AppExtension extends AbstractExtension
 
 
 
-    public function findMap(String $district, String $mapkey,String $year)
+    public function findMap( String $mapkey,String $year,String $district)
     {
         try
         {

@@ -55,7 +55,7 @@
   {% set tracks = tracks|merge([aroadgroup.roadgroupid]) %}
      <div class="roadgroup row "  >
        <div class="roadgroupid" id="{{aroadgroup.roadgroupid}}" >{{aroadgroup.roadgroupid}}</div>
-       <div class="name" >{{aroadgroup.name}}..etc</div>
+       <div class="name" >{{aroadgroup.name}}</div>
        <div class="num" >{{aroadgroup.households}}</div>
        <div class="num" >{{aroadgroup.distance}}</div>
        <div class="button" ><a class="button" href = "/roadgroup/showone/{{aroadgroup.roadgroupid}}" >VIEW</a>   </div>
@@ -104,7 +104,7 @@
          if(h2s)
             h2s.style.backgroundColor = getColor(i);
          var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
-         makeKMLLayer(mymap,path,style)
+         makeKMLLayer(mymap,path,style,true,"{{aroadgroup.name}}")
          i=i+1;
       }
       //mymap.fitBounds(fgroup.getBounds());

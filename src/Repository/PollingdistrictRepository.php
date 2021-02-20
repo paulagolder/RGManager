@@ -46,6 +46,15 @@ class PollingdistrictRepository  extends EntityRepository
     }
 
 
+     public function findSpares($dtid,  $year)
+     {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'select  q.pollingdistrictid  from pollingdistrict as q  where q.pollingdistrictid not in  (select  p.pollingdistrictid  from pollingdistrict  as p, seattopd as s where s.pdid =  p.pollingdistrictid and s.district = "'.$dtid.'" and year = "'.$year.'")';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $pds= $stmt->fetchAll();
+        return $pds;
+     }
 
 
 }

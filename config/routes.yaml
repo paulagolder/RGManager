@@ -23,6 +23,11 @@ seats_showpds:
    path: /seat/showpds/{dtid}/{stid}
    controller: App\Controller\SeatController::showpds
 
+
+seats_removepd:
+   path: /seat/removepd/{dtid}/{stid}/{pdid}
+   controller: App\Controller\SeatController::removepd
+
 seats_showrgs:
    path: /seat/showrgs/{dtid}/{stid}
    controller: App\Controller\SeatController::showrgs
@@ -35,6 +40,9 @@ seats_showall:
    path: /seat/showall/{dtid}
    controller: App\Controller\SeatController::showall
 
+seats_addpd:
+   path: /seat/addpollingdistrict/{dtid}/{stid}
+   controller: App\Controller\SeatController::addpd
 
 pd_showall:
    path: /pollingdistrict/showall
@@ -63,6 +71,10 @@ rggroups_delete:
 rggroups_export:
     path: /rggroup/export
     controller: App\Controller\RggroupController::export
+
+rggroups_heatmap:
+    path: /rggroup/heatmap
+    controller: App\Controller\RggroupController::heatmap
 
 rggroups_print:
     path: /rggroup/print
@@ -160,17 +172,19 @@ street_add:
      path: /street/add/{rgid}
      controller: App\Controller\StreetController::streetadd
 
-street_editgroup:
-    path: /street/editgroup/{name}
-    controller: App\Controller\StreetController::streeteditgroup
+
 
 street_delete:
-    path: /street/delete/{rdid}
+    path: /street/delete/{stname}/{stpart}
     controller: App\Controller\StreetController::streetdelete
+    defaults:
+        stpart: null
 
 street_replicate:
-    path: /street/replicate/{stid}
+    path: /street/replicate/{stname}/{stpart}
     controller: App\Controller\StreetController::streetreplicate
+    defaults:
+        stpart: null
 
 street_merge:
     path: /street/groupops

@@ -33,7 +33,7 @@ class Rggroup
         return $this->KML;
     }
 
-    public function setKML(string $text): self
+    public function setKML($text): self
     {
         $this->KML = $text;
         return $this;

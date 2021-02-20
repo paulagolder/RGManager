@@ -137,7 +137,12 @@ class Roadgroup
 
    public function getName(): ?string
    {
-     return $this->Name;
+   if($this->endsWith($this->Name,"etc"))
+   {
+      return $this->Name;
+   }
+   else
+     return $this->Name."..etc";
    }
 
    public function setName(string $name): self
@@ -192,12 +197,12 @@ class Roadgroup
    }
 
 
-   public function getKML(): ?string
+   public function getKML()
    {
      return $this->KML;
    }
 
-   public function setKML(?string $KML): self
+   public function setKML( $KML): self
    {
      $this->KML = $KML;
      return $this;
@@ -271,23 +276,23 @@ class Roadgroup
 
    public function getPriority(): ?float
    {
-     return $this->priority;
+     return $this->Priority;
    }
 
    public function setPriority(?float $priority): self
    {
-     $this->priority = $priority;
+     $this->Priority = $priority;
      return $this;
    }
 
    public function getPrioritygroup(): ?string
    {
-     return $this->prioritygroup;
+     return $this->Prioritygroup;
    }
 
    public function setPrioritygroup(?string $prioritygroup): self
    {
-     $this->prioritygroup = $prioritygroup;
+     $this->Prioritygroup = $prioritygroup;
      return $this;
    }
 
@@ -328,4 +333,15 @@ class Roadgroup
      $xmlout .= "      </roadgroup>\n";
      return $xmlout;
    }
+
+   function endsWith( $haystack, $needle )
+   {
+    $length = strlen( $needle );
+    if( !$length ) {
+        return true;
+    }
+    return substr( $haystack, -$length ) === $needle;
+    }
+
+
 }

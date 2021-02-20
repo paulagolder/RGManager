@@ -37,11 +37,13 @@ class RoadgroupController extends AbstractController
 
     private $requestStack ;
     private $rgyear ;
+    private $mapserver;
 
     public function __construct( RequestStack $request_stack,  MapServer $mapserver)
     {
         $this->requestStack = $request_stack;
-        $mapserver->load();
+        $this->mapserver = $mapserver;
+        $this->mapserver->load();
         $this->rgyear  = $this->requestStack->getCurrentRequest()->cookies->get('rgyear');
     }
 
@@ -58,15 +60,25 @@ class RoadgroupController extends AbstractController
     {
       $streets[$street["roadgroupid"]] = $street["nos"];
     }
+       $rgpds = $this->getDoctrine()->getRepository("App:Roadgrouptostreet")->countPDs($this->rgyear);
+
 
     foreach ( $roadgroups as $key=>$roadgroup)
     {
-      if(array_key_exists($roadgroup["roadgroupid"],$streets))
+
+      if(array_key_exists($roadgroup->getRoadgroupId(),$streets))
       {
-        $roadgroup["nos"] = $streets[$roadgroup["roadgroupid"]];
+        $roadgroup->nos = $streets[$roadgroup->getRoadgroupId()];
       }
       else
-         $roadgroup["nos"] =0;
+         $roadgroup->nos=0;
+
+      if(array_key_exists($roadgroup->getRoadgroupId(),$rgpds))
+      {
+        $roadgroup->pds = $rgpds[$roadgroup->getRoadgroupId()];
+      }
+      else
+         $roadgroup->pds=0;
 
       $roadgroups[$key] = $roadgroup;
     }
@@ -118,9 +130,15 @@ class RoadgroupController extends AbstractController
 
   public function Showone($rgid)
   {
-   // $seats = $this->getDoctrine()->getRepository("App:Seat")->findSeatsForRoadgroup($rgid);
-   $seats= null;
+
+    $seats= null;
     $roadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid);
+
+    if(!$this->mapserver->ismap($roadgroup->getKML()))
+    {
+           $roadgroup->setKML($this->mapserver->findmap($roadgroup->getRoadgroupid(),$this->rgyear));
+
+    }
     $swdid = $roadgroup->getRgsubgroupid();
     $wdid = $roadgroup->getRggroupid();
     $stlist = [];

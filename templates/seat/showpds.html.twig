@@ -45,7 +45,6 @@
 </div>
 
 
-
    {% for key,value in pds %}
 
 
@@ -53,8 +52,22 @@
         <div  id="{{value.pollingdistrictid}}" class="rgid" >
          <a class="routebutton"  href ="/pollingdistrict/show/{{value.pollingdistrictid}}" >{{value.pollingdistrictid}}</a>
          </div>
+           <div class="button"> <a class="button" href = "/seat/removepd/{{seat.districtid}}/{{seat.seatid}}/{{value.pollingdistrictid}}" >Remove</a> </div>
        </div>
           {% endfor %}
+
+           <div class="buttonrow row">
+  <form action="/seat/addpollingdistrict/{{seat.districtid}}/{{seat.seatid}}"  method="post" enctype="multipart/form-data">
+      <button type="submit">Add Polling District</button>
+    <select name="selpd">
+{% for apd in sparepds %}
+    <option value="{{apd.pollingdistrictid}}">{{apd.pollingdistrictid}}</option>
+{% endfor %}
+</select>
+  </form>
+
+
+  </div>
       </div>
      </div>
 
@@ -88,9 +101,9 @@
       var path = "{{mappath}}"+kml;
       if(kml)
       {
-
+         var link = "<a href='/roadgroup/showone/{{aroadgroup.roadgroupid}}'>{{aroadgroup.roadgroupid}}</a>";
          var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
-          makeKMLLayer(mymap,path,style, false,"{{aroadgroup.roadgroupid}}")
+          makeKMLLayer(mymap,path,style, false,link)
       }
       }
        {% endfor %}

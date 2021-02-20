@@ -11,6 +11,13 @@ use Doctrine\ORM\Mapping as ORM;
 class Street
 {
 
+
+ /**
+     * @ORM\Id
+     * @ORM\Column(name="seq",type="integer")
+     */
+    private $Seq;
+
     /**
      * @ORM\Id
      * @ORM\Column(name="name",type="string", length=10)
@@ -66,6 +73,17 @@ class Street
      * @ORM\Column(name="longitude",type="string", length=20,   nullable=true)
      */
     private $Longitude;
+
+     public function getSeq()
+    {
+        return $this->Seq;
+    }
+
+    public function setSeq($number): self
+    {
+        $this->Seq = $number;
+        return $this;
+    }
 
     public function getStreetId()
     {
@@ -218,9 +236,6 @@ class Street
     {
      if($this->Name == null) $this->Name = $astreet->Name;
      if($this->Part == null) $this->Part = $astreet->Part;
-     if($this->RoadgroupId == null) $this->RoadgroupId = $astreet->RoadgroupId;
-     if($this->WardId == null) $this->WardId = $astreet->WardId;
-     if($this->Rgsubgroupid == null) $this->Rgsubgroupid = $astreet->Rgsubgroupid;
      if($this->Households == null) $this->Households = $astreet->Households;
      if($this->Electors == null) $this->Electors  = $astreet->Electors ;
      if($this->PD == null) $this->PD  = $astreet->PD ;

@@ -21,6 +21,8 @@ function getColor(i)
 
 
 
+//alert(rgbToHex(0, 51, 255)); // #0033ff
+
 
   function mySwMap(location)
   {
@@ -148,38 +150,7 @@ function myStMap(location)
 }
 
 
-function xxmyMapper6(mapid,location)
-{
-  var location_dc =redecode(location);
-  var mylocation = JSON.parse(location_dc);
-  var lat = mylocation.latitude;
-  var long = mylocation.longitude;
-  var zoom = 18;
-  if( lat < 40)
-  {
-    long =-1.8304;
-    lat = 52.6854 ;
-    zoom = 12;
-  }
 
-  if(zoom <1 ) zoom = 1;
-
-  var mymap = L.map(mapid).setView([ lat , long], zoom);
-  mapLink =
-  '<a href="http://openstreetmap.org">OpenStreetMap</a>';
-  L.tileLayer(
-    'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; ' + mapLink + ' Contributors',
-      maxZoom: 20,
-    }).addTo(mymap);
-    var marker = L.marker([lat , long]).addTo(mymap);
-    var label = mylocation.name;
-    marker.bindPopup(label);
-    marker.on('mouseover',function(ev) {
-      marker.openPopup();
-    });
-    return mymap;
-}
 
 function CheckUrl(url)
 {

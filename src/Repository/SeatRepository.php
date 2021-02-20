@@ -51,7 +51,7 @@ class SeatRepository  extends EntityRepository
         $conn = $this->getEntityManager()->getConnection();
         // $sql = 'SELECT rg.* FROM seattopd as rg where rg.seatid = "' .$stid.'" and  rg.districtid ="'.$dtid.'";';
         // SELECT * FROM roadgroup WHERE `roadgroupid` IN (SELECT roadgroupid from street where pd = "RS")
-        $sql = 'select r.* from roadgroup as r where roadgroupid in (select DISTINCT roadgroupid from roadgrouptostreet as rs join street as s on (rs.street = s.name and ( rs.part = s.part or ( rs.part is null or rs.part = "" ))) where s.pd in (SELECT pdid FROM `seattopd` sp WHERE sp.seat="'.$stid.'" and sp.district ="'.$dtid.'" and rs.year = "'.$year.'"))';
+        $sql = 'select r.* from roadgroup as r where roadgroupid in (select DISTINCT roadgroupid from roadgrouptostreet as rs join street as s on (rs.street = s.name and ( rs.part = s.part or ( rs.part is null or rs.part = "" ))) where s.pd in (SELECT pdid FROM `seattopd` sp WHERE sp.seat="'.$stid.'" and sp.district ="'.$dtid.'" and sp.year = "'.$year.'"))';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $roadgroups= $stmt->fetchAll(\Doctrine\ORM\Query::HYDRATE_ARRAY);
@@ -70,16 +70,33 @@ class SeatRepository  extends EntityRepository
         return $roadgroups;
      }
 
-       public function findPollingdistricts($dtid,$stid,$year)
+     public function findPollingdistricts($dtid,$stid,$year)
      {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = 'select p.* from pollingdistrict as p where p.pollingdistrictid in (select DISTINCT sp.pdid from seattopd as sp WHERE sp.seat="'.$stid.'" and sp.district ="'.$dtid.'" and sp.year = (select max(spi.year)  from seattopd as spi where spi.seat="'.$stid.'" and spi.district ="'.$dtid.'"))';
+        $sql = 'select p.* from pollingdistrict as p where p.pollingdistrictid in (select DISTINCT sp.pdid from seattopd as sp WHERE sp.seat="'.$stid.'" and sp.district ="'.$dtid.'" and sp.year ="'.$year.'")';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $roadgroups= $stmt->fetchAll(\Doctrine\ORM\Query::HYDRATE_ARRAY);
         return $roadgroups;
      }
 
+      public function removepd($dtid,$stid,$pdid,$year)
+     {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'delete  from seattopd  WHERE seat="'.$stid.'" and district ="'.$dtid.'" and pdid="'.$pdid.'" and year ="'.$year.'"';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+     }
+
+
+       public function addpd($dtid,$stid,$pdid,$year)
+     {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'insert into seattopd (district,seat, pdid,year ) values ("'.$dtid.'", "'.$stid.'","'.$pdid.'", "'.$year.'" );';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+     }
 
 }

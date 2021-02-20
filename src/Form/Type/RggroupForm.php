@@ -28,6 +28,7 @@ class RggroupForm extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => Rggroup::class,
+            'csrf_protection' => false,
         ));
     }
 }

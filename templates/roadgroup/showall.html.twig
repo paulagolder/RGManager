@@ -27,6 +27,7 @@
                        <div class="rgid" >RG-Group</div>
                       <div  class="num" >House-holds</div>
                        <div  class="num" >Electors</div>
+                        <div  class="num" >roads</div>
                        <div  class="button" ></div>
                         <div  class="button" ></div>
                      <div  class="text" >Note</div>
@@ -36,7 +37,7 @@
 
        {% for roadgroup in roadgroups %}
            {% set rowstyle = '' %}
-       {% if "pds" in roadgroup|keys and roadgroup.pds > 10 %}
+       {% if "pds" in roadgroup|keys and roadgroup.pds > 1 %}
        {% set rowstyle = 'red' %}
        {% endif %}
        {% if "nos"  in roadgroup|keys    and roadgroup.nos < 1 %}
@@ -44,13 +45,12 @@
        {% endif %}
                     <div class="roadgroup row  {{rowstyle}}" >
                        <div  class="rgid" >{{roadgroup.roadgroupid}}</div>
-                      <div class="name" >{{roadgroup.name}}..etc</div>
-
-                      <div  class="rgid" >{{roadgroup.rggroupid}}</div>
-
-                      <div  class="num" >{{roadgroup.households}}</div>
+                       <div class="name" >{{roadgroup.name}}</div>
+                       <div  class="rgid" >{{roadgroup.rggroupid}}</div>
+                       <div  class="num" >{{roadgroup.households}}</div>
                        <div  class="num" >{{roadgroup.electors}}</div>
-                         <div  class="num" >{{roadgroup.nos}}</div>
+                       <div  class="num" >{{roadgroup.nos}}</div>
+                        <div  class="num" >{{roadgroup.pds}}</div>
                         <div class="button"> <a class="button" href = "/roadgroup/showone/{{roadgroup.roadgroupid}}" >View</a> </div>
                          <div class="button"> <a class="button" href = "/roadgroup/edit/{{roadgroup.roadgroupid}}" >Edit</a> </div>
                      <div  class="text" > {{roadgroup.note}}</div>

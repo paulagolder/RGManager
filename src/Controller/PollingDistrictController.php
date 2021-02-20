@@ -71,7 +71,7 @@ class PollingDistrictController extends AbstractController
   public function Showone($pdid)
   {
 
-    $rglist = $this->getDoctrine()->getRepository("App:Roadgroup")->findAllinPollingDistrict($pdid);
+    $rglist = $this->getDoctrine()->getRepository("App:Roadgroup")->findAllinPollingDistrict($pdid,$this->rgyear);
     $apollingdistrict = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findOne($pdid);
     $roadgroups = [];
     foreach ($rglist as $rg)
