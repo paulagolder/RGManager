@@ -74,6 +74,19 @@ class Street
      */
     private $Longitude;
 
+
+    public function load($starray)
+    {
+       $this->Name = $starray["name"];
+       $this->Households = $starray["households"];
+      $this->Qualifier = $starray["qualifier"];
+       $this->Note = $starray["note"];
+       $this->PD= $starray["pd"];
+        $this->Part= $starray["part"];
+
+    }
+
+
      public function getSeq()
     {
         return $this->Seq;
@@ -254,10 +267,11 @@ class Street
      }
     }
 
-     public function makexml()
+   public function makexml()
    {
-
-     $xmlout = "<street Name='$this->Name' Households='$this->Households' />\n  ";
+     $anote = htmlspecialchars($this->Note, ENT_QUOTES);
+      $qual = htmlspecialchars($this->Qualifier, ENT_QUOTES);
+     $xmlout = "<street Name='$this->Name' Households='$this->Households' Qualifier='$qual'  />\n  ";
      return $xmlout;
    }
 }

@@ -37,15 +37,15 @@
   <div class="value">{{subward.name}}</div>
   <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
 </div>
-
-
 {% if message %}
-<H1> No Roadgroups found </H1>
+   <H1> {{message}} </H1>
 {% else %}
    <div class="subheading row">
       <div class="rgid" >Road group Id</div>
       <div class="name" >Name</div>
-      <div class="num" >Households</div>
+      <div class="bnum" >Households</div>
+      <div class="bnum" >Calculated</div>
+      <div class="bnum" >Distance</div>
       <div class="button" ></div>
       <div class="button" ></div>
    </div>
@@ -56,8 +56,9 @@
      <div class="roadgroup row "  >
        <div class="roadgroupid" id="{{aroadgroup.roadgroupid}}" >{{aroadgroup.roadgroupid}}</div>
        <div class="name" >{{aroadgroup.name}}</div>
-       <div class="num" >{{aroadgroup.households}}</div>
-       <div class="num" >{{aroadgroup.distance}}</div>
+       <div class="bnum" >{{aroadgroup.households}}</div>
+        <div class="bnum" >{{aroadgroup.calculated}}</div>
+       <div class="bnum" >{{aroadgroup.distance | number_format(2)}}</div>
        <div class="button" ><a class="button" href = "/roadgroup/showone/{{aroadgroup.roadgroupid}}" >VIEW</a>   </div>
        <div class="button" ><a class="button" href = "/roadgroup/edit/{{aroadgroup.roadgroupid}}" >EDIT</a>   </div>
      </div>
@@ -99,13 +100,14 @@
       var kml = "{{aroadgroup.kml}}";
       if(kml)
       {
-        var path = "{{mappath}}"+kml;
+        var path = "{{mappath}}roadgroups/"+kml;
          var h2s = document.getElementById("{{aroadgroup.roadgroupid}}");
          if(h2s)
             h2s.style.backgroundColor = getColor(i);
          var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
          makeKMLLayer(mymap,path,style,true,"{{aroadgroup.name}}")
          i=i+1;
+         if(i>11) i=0;
       }
       //mymap.fitBounds(fgroup.getBounds());
       mymap.on('click', onMapClick);
@@ -113,4 +115,5 @@
 
 
    </script>
+
 {% endblock %}

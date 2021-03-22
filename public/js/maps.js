@@ -6,12 +6,12 @@ window.colors[2]="#0000FF88";
 window.colors[3]="#FFFF0088";
 window.colors[4]="#FF00FF88";
 window.colors[5]="#00FFFF88";
-window.colors[6]="#FF000088";
-window.colors[7]="#00FF0088";
-window.colors[8]="#0000FF88";
-window.colors[9]="#FFFF0088";
-window.colors[10]="#FF00FF88";
-window.colors[11]="#00FFFF88";
+window.colors[6]="#80000088";
+window.colors[7]="#00800088";
+window.colors[8]="#00008088";
+window.colors[9]="#80800088";
+window.colors[10]="#80008088";
+window.colors[11]="#00808088";
 
 function getColor(i)
 {

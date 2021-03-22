@@ -50,8 +50,9 @@
 
      <div  class="row indent id">
         <div  id="{{value.pollingdistrictid}}" class="rgid" >
-         <a class="routebutton"  href ="/pollingdistrict/show/{{value.pollingdistrictid}}" >{{value.pollingdistrictid}}</a>
-         </div>
+         <a class="routebutton"  href ="/pollingdistrict/show/{{value.pollingdistrictid}}" >{{value.pollingdistrictid}}</a> </div>
+          <div class="bnum"> H:{{value.households}}</div>
+          <div  class="button" > <a class="button"  href ="/pollingdistrict/show/{{value.pollingdistrictid}}" >View</a> </div>
            <div class="button"> <a class="button" href = "/seat/removepd/{{seat.districtid}}/{{seat.seatid}}/{{value.pollingdistrictid}}" >Remove</a> </div>
        </div>
           {% endfor %}
@@ -98,7 +99,7 @@
   {% for aroadgroup in roadgroups %}
     {
       var kml = "{{aroadgroup.kml}}";
-      var path = "{{mappath}}"+kml;
+      var path = "{{mappath}}roadgroups/"+kml;
       if(kml)
       {
          var link = "<a href='/roadgroup/showone/{{aroadgroup.roadgroupid}}'>{{aroadgroup.roadgroupid}}</a>";
@@ -108,6 +109,7 @@
       }
        {% endfor %}
            i=i+1;
+           if(i>11) i=0;
  {% endfor %}
 
      mymap.on('click', onMapClick);

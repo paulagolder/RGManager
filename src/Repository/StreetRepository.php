@@ -147,7 +147,17 @@ class StreetRepository  extends EntityRepository
         $sql = 'SELECT s.* FROM `street` as s JOIN roadgrouptostreet as r on s.name = r.street and (s.part= r.part or s.part is null  or s.part="" ) WHERE r.roadgroupid = "'.$roadgroupid.'" and r.year = "'.$year.'" order by s.name ; ';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
-        $streets= $stmt->fetchAll();
+        $streetars= $stmt->fetchAll();
+        $streets = array();
+        foreach( $streetars as $astreetar )
+        {
+
+         $astreet = new Street();
+         $astreet->load($astreetar);
+         $streets[] = $astreet;
+     //    $streets[] =  json_decode(json_encode((object) $astreetar), FALSE);
+
+        }
         return $streets;
      }
 

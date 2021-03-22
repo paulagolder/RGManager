@@ -84,7 +84,7 @@
     {% for aroadgroup in roadgroups %}
     {
       var kml = "{{aroadgroup.kml}}";
-      var path = "{{mappath}}"+kml;
+      var path = "{{mappath}}roadgroups/"+kml;
       if(kml)
       {
          var h2s = document.getElementById("{{aroadgroup.roadgroupid}}");
@@ -93,6 +93,7 @@
          var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
           makeKMLLayer(mymap,path,style,false,"{{aroadgroup.roadgroupid}}");
             i=i+1;
+            if(i>11)i=0;
 
       }
     }

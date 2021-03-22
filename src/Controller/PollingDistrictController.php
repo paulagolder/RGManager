@@ -49,7 +49,7 @@ class PollingDistrictController extends AbstractController
 
   public function Showall()
   {
-    $pds = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findAll();
+    $pds = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findAllbyYear($this->rgyear);
     if (!$pds) {
       return $this->render('pollingdistrict/showall.html.twig', [ 'message' =>  'polling districts not Found',]);
     }
@@ -62,10 +62,7 @@ class PollingDistrictController extends AbstractController
     'pds'=> $pds,
     'back'=>"/",
     ]);
-
   }
-
-
 
 
   public function Showone($pdid)
@@ -76,12 +73,13 @@ class PollingDistrictController extends AbstractController
     $roadgroups = [];
     foreach ($rglist as $rg)
     {
-      $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rg["roadgroupid"]);
+      $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rg["roadgroupid"],$this->rgyear);
       $kml = $aroadgroup->getKML();
       if(!$this->mapserver->ismap($kml))
       {
         $aroadgroup->setKML($this->mapserver->findmap($aroadgroup->getRoadgroupId(),$this->rgyear));
       }
+      $aroadgroup->setHouseholds(  $count = $this->getDoctrine()->getRepository("App:Roadgroup")->countHouseholds($aroadgroup->getRoadgroupId(), $this->rgyear));
       $roadgroups[] = $aroadgroup;
     }
     $back =  "/pollingdistrict/showall/";
@@ -103,7 +101,7 @@ class PollingDistrictController extends AbstractController
   public function Showoneb($rgid)
   {
 
-    $roadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid);
+    $roadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
     $swdid = $roadgroup->getRgsubgroupid();
     $wdid = $roadgroup->getRggroupid();
     $stlist = [];
@@ -142,7 +140,7 @@ class PollingDistrictController extends AbstractController
     $request = $this->requestStack->getCurrentRequest();
     if($rgid !== "new")
     {
-      $roadgroup = $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($rgid);
+      $roadgroup = $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($rgid,$this->rgyear);
        $swdid = $roadgroup->getRgsubgroupid();
        $wdid = $roadgroup->getRggroupid();
     }
@@ -223,7 +221,7 @@ class PollingDistrictController extends AbstractController
   public function Delete($pdid)
   {
 
-    $roadgroup = $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($rgid);
+    $roadgroup = $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($rgid,$this->rgyear);
     $swdid = $roadgroup->getRgsubgroupid();
        $wdid = $roadgroup->getRggroupid();
     $entityManager = $this->getDoctrine()->getManager();

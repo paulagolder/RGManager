@@ -21,6 +21,8 @@
     </div>
     <div class="roadgroup header  list row">
         <div class="rgid" >PD</div>
+         <div class="bnum" >Households</div>
+           <div class="bnum" >Electors</div>
         <div class="rgid" >City Ward</div>
         <div class="rgid" >District Ward</div>
         <div class="rgid" >County Division</div>
@@ -30,9 +32,23 @@
        {% for key, pd in pds %}
          <div class="roadgroup row " >
              <div  class="rgid" > <a class="routebutton" href = "/pollingdistrict/show/{{key}}" >{{key}}</a></div>
+              <div  class="bnum" >{{pd.households}}</div>
+               <div  class="bnum" >{{pd.electors}}</div>
+            {% if pd.LCC is defined %}
             <div  class="rgid" > <a class="routebutton" href = "/seat/showpds/LCC/{{pd["LCC"]}}" >{{pd["LCC"]}}</a></div>
+            {% else %}
+            <div class="rgid" >...</div>
+           {% endif %}
+            {% if pd.LDC is defined %}
             <div  class="rgid" > <a class="routebutton" href = "/seat/showpds/LDC/{{pd["LDC"]}}" >{{pd["LDC"]}}</a></div>
-            <div  class="rgid" > <a class="routebutton" href = "/seat/showpds/SCC/{{pd["SCC"]}}" >{{pd["SCC"]}}</a></div>
+            {% else %}
+              <div class="rgid" >...</div>
+            {% endif %}
+            {% if pd.SCC is defined %}
+               <div  class="rgid" > <a class="routebutton" href = "/seat/showpds/SCC/{{pd["SCC"]}}" >{{pd["SCC"]}}</a></div>
+            {% else %}
+                <div class="rgid" >...</div>
+             {% endif %}
            </div>
        {% endfor %}
     </div>

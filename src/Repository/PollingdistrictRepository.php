@@ -10,14 +10,13 @@ use Doctrine\ORM\EntityRepository;
 class PollingdistrictRepository  extends EntityRepository
 {
 
-     public function findAll()
+     public function findAllbyYear($year)
      {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'select p.pollingdistrictid, s.*  from pollingdistrict  as p, seattopd as s where s.pdid =  p.pollingdistrictid ';
+        $sql = 'select p.pollingdistrictid,p.households , p.electors,s.*  from pollingdistrict  as p, seattopd as s where s.pdid =  p.pollingdistrictid and s.year = "'.$year.'" ';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $pdseats= $stmt->fetchAll();
-
         $pds =[];
         foreach($pdseats as $pdseat)
         {
@@ -30,6 +29,8 @@ class PollingdistrictRepository  extends EntityRepository
           $district = $pdseat["district"];
           $seat = $pdseat["seat"];
           $pds[$pdid][$district] = $seat;
+          $pds[$pdid]["households"] = $pdseat["households"];
+          $pds[$pdid]["electors"] = $pdseat["electors"];
         }
         return $pds;
      }
@@ -54,6 +55,22 @@ class PollingdistrictRepository  extends EntityRepository
         $stmt->execute();
         $pds= $stmt->fetchAll();
         return $pds;
+     }
+
+     public function countHouseholds($pdid, $year)
+     {
+        $conn = $this->getEntityManager()->getConnection();
+       $sql = 'SELECT SUM(s.households) as nos  FROM `street` as s  WHERE  s.pd = "'.$pdid.'"  group by s.pdid ';
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $harray= $stmt->fetchAll();
+      if(array_key_exists(0, $harray))
+      {
+      return $harray[0]["nos"];
+      }
+      else
+        return -999;
      }
 
 

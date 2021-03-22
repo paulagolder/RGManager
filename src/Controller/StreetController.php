@@ -115,7 +115,7 @@ class StreetController extends AbstractController
 
   public function StreetViewGroup($name)
   {
-    $streets = $this->getDoctrine()->getRepository('App:Street')->findNamed($name,$this->rgyear);
+    $streets = $this->getDoctrine()->getRepository('App:Street')->findNamed($name,$this->rgyear, );
     return $this->render('street/viewgroup.html.twig', array(
       'rgyear'=>$this->rgyear,
       'message'=>"",
@@ -210,24 +210,10 @@ class StreetController extends AbstractController
 
   public function StreetDelete($stname,$stpart)
   {
-    if($rdid>0)
-    {
+
       $street = $this->getDoctrine()->getRepository('App:Street')->findOnebyName($stname,$stpart);
-    }
-    else
-      return;
-    $rgid = $street->getRoadgroupId();
-    $swdid = $street->getRgsubgroupid();
-    $wdid = $street->getRggroupid();
-    if($rgid)
-      $back = "/roadgroup/showone/".$rgid;
-    else  if($swdid)
-      $back = "/rgsubgroup/show/".$swdid;
-    else if($wdid)
-      $back =  "/rggroup/show/".$wdid;
-    else
+      if($street==null)  return;
       $back =  "/rggroup/showall/";
-    $roadgroupid = $street->getRoadgroupid();
     $entityManager = $this->getDoctrine()->getManager();
     $entityManager->remove($street);
     $entityManager->flush();

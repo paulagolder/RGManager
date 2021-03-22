@@ -94,11 +94,12 @@
               var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1};
               if(kml)
               {
-                var  path = "{{mappath}}"+kml;
+                var  path = "{{mappath}}roadgroups/"+kml;
                 makeKMLLayer(mymap,path,style,false,"{{value3.name}}");
               }
          {% endfor %}
            i=i+1;
+           if(i>11)i=0;
       {% endfor %}
      {% endfor %}
 

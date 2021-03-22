@@ -18,6 +18,7 @@ class RggroupForm extends AbstractType
     {
         $builder ->add('Rggroupid', TextType::class,['label' => 'RG-GroupId']);
         $builder ->add('Name', TextType::class ,['label' => 'Group Name',]);
+        $builder ->add('KML', TextType::class,['label' => 'KML','required' => false,]);
         $builder ->add('Households', IntegerType::class,['label' => 'Households','required' => false,]);
         $builder ->add('Electors', IntegerType::class,['label' => 'Electors','required' => false,]);
         $builder ->add('Latitude', TextType::class,['label' =>  'Latitude','required' => false,]);

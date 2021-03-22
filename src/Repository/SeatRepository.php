@@ -51,7 +51,7 @@ class SeatRepository  extends EntityRepository
         $conn = $this->getEntityManager()->getConnection();
         // $sql = 'SELECT rg.* FROM seattopd as rg where rg.seatid = "' .$stid.'" and  rg.districtid ="'.$dtid.'";';
         // SELECT * FROM roadgroup WHERE `roadgroupid` IN (SELECT roadgroupid from street where pd = "RS")
-        $sql = 'select r.* from roadgroup as r where roadgroupid in (select DISTINCT roadgroupid from roadgrouptostreet as rs join street as s on (rs.street = s.name and ( rs.part = s.part or ( rs.part is null or rs.part = "" ))) where s.pd in (SELECT pdid FROM `seattopd` sp WHERE sp.seat="'.$stid.'" and sp.district ="'.$dtid.'" and sp.year = "'.$year.'"))';
+        $sql = 'select r.* from roadgroup as r where roadgroupid in (select DISTINCT roadgroupid from roadgrouptostreet as rs join street as s on (rs.street = s.name and ( rs.part = s.part or ( rs.part is null or rs.part = "" )) and rs.year="'.$year.'" ) where s.pd in (SELECT pdid FROM `seattopd` sp WHERE sp.seat="'.$stid.'" and sp.district ="'.$dtid.'" and sp.year = "'.$year.'")) and r.year = "'.$year.'"';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $roadgroups= $stmt->fetchAll(\Doctrine\ORM\Query::HYDRATE_ARRAY);
@@ -79,6 +79,23 @@ class SeatRepository  extends EntityRepository
         $stmt->execute();
         $roadgroups= $stmt->fetchAll(\Doctrine\ORM\Query::HYDRATE_ARRAY);
         return $roadgroups;
+     }
+
+
+      public function countHouseholds($dtid,$stid,$year)
+     {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = ' Select SUM(r.households) as nos FROM `street` as r , seattopd as sp where r.pd= sp.pdid and sp.seat="'.$stid.'" and sp.district ="'.$dtid.'" and sp.year ="'.$year.'" ';
+         $stmt = $conn->prepare($sql);
+         $stmt->execute();
+         $harray= $stmt->fetchAll();
+      if(array_key_exists(0, $harray ))
+      {
+
+      return $harray[0]["nos"];
+      }
+      else
+        return -999;
      }
 
       public function removepd($dtid,$stid,$pdid,$year)

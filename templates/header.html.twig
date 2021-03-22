@@ -3,7 +3,12 @@
 {% block myheader %}
     <div class='topheader  row'  >
      <div class="header">Road Group Manager:</div>
+    {% if rgyear is defined %}
       <div class="header">{{rgyear}}</div>
+      {% else %}
+
+       <div class="header">????</div>
+       {% endif %}
      <div class="button right"> <a class="button" href = "/roadgroup/showall" >Road Groups</a></div>
      <div class="button"> <a class="button" href = "/pollingdistrict/showall" >Polling Districts</a></div>
      <div class="button"> <a class="button" href = "/street/showall" >Streets</a> </div>

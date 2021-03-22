@@ -31,20 +31,21 @@ class RgsubgroupRepository  extends EntityRepository
 
 
 
-    public function xfindChildren($wdid)
+    public function findChildren($wdid)
     {
        $qb = $this->createQueryBuilder("p");
-       $qb->where("p.WardId = :wdid");
+       $qb->where("p.Rggroupid = :wdid");
        $qb->setParameter('wdid', $wdid);
-       $qb->orderBy("p.rgsubgroupid", "ASC");
+       $qb->orderBy("p.Rgsubgroupid", "ASC");
        $subwards =  $qb->getQuery()->getResult();
        return $subwards;
     }
 
-       public function findChildren($wdid)
+       public function xfindChildren($wdid)
      {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'select sw.*, sum(rg.households) as total from rgsubgroup as sw left join roadgroup as rg on rg.rgsubgroupid = sw.rgsubgroupid where sw.rggroupid ="'.$wdid.'" group by sw.rgsubgroupid';
+     //   $sql = 'select sw.*, sum(rg.households) as total from rgsubgroup as sw left join roadgroup as rg on rg.rgsubgroupid = sw.rgsubgroupid where sw.rggroupid ="'.$wdid.'" group by sw.rgsubgroupid';
+              $sql = 'select sw.*, sum(rg.households) as total from rgsubgroup as sw left join roadgroup as rg on rg.rgsubgroupid = sw.rgsubgroupid where sw.rggroupid ="'.$wdid.'" group by sw.rgsubgroupid';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $subwards= $stmt->fetchAll();

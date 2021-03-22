@@ -31,18 +31,18 @@
 
 
 {% block middle %}
-
-
-{% if message %}
-   <H1> {{message}} </H1>
-{% else %}
-      <div class="heading  row">
+  <div class="heading  row">
         <div class="label"> RG-Groups:</div>
         <div class="value"> {{ward.rggroupid}}:</div>
         <div class="value"> {{ward.name}}</div>
         <div class="value"> {{ward.households}}</div>
         <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
       </div>
+
+{% if message %}
+   <H1> {{message}} </H1>
+{% else %}
+
       <div class="wards">
       {% for subward in subwards %}
          <div class="ward row" >
@@ -102,7 +102,7 @@ var i=0;
 {% for kml in asubgroup %}
     var style = {"color":  getColor(i) , "weight": 4 ,  "clickable": true ,"opacity": 1.0, "fillOpacity": 1.0 };
       var  kml = "{{kml}}";
-      var path = "{{mappath}}"+kml;
+      var path = "{{mappath}}roadgroups/"+kml;
       if(kml)
       {
         countsgs = countsgs+1;
@@ -115,6 +115,7 @@ var i=0;
     var h2s = document.getElementById("{{key}}");
     h2s.style.backgroundColor = getColor(i);
     i=i+1;
+    if(i>11)i=0;
   }
  {% endfor %}
 

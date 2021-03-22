@@ -247,7 +247,7 @@ div.header div.row div.roadgroupid
 
 div.header div.row div.rgid
 {
-  width: 5em;
+  width: 8em;
 }
 
  div.menu div.row div.name
@@ -266,11 +266,24 @@ div.header div.row div.num
   text-align: right;
 }
 
+div.header div.row div.bnum
+{
+  width: 20em;
+  text-align: right;
+}
+
  div.row div.id
  {
    width: 3em;
    text-align: left;
  }
+
+  div.row div.bnum
+ {
+   width: 7em;
+   text-align: right;
+ }
+
 
  div.row div.indent
  {

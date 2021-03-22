@@ -17,11 +17,12 @@ class RoadgroupForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $builder ->add('RoadGroupId', TextType::class,['label' => 'RoadGroupId',]);
         $builder ->add('Name', TextType::class,['label' => 'Name of Roadgroup',]);
         $builder ->add('Rggroupid', TextType::class,['label' => 'RG-Group','required' => false,]);
         $builder ->add('Rgsubgroupid', TextType::class,['label' => 'RG-Subgroup','required' => false,]);
+        $builder ->add('Year', TextType::class,['label' => 'Year','required' => true,]);
+        $builder ->add('KML', TextType::class,['label' => 'KML','required' => false,]);
         $builder ->add('Households', IntegerType::class,['label' => 'Households','required' => false,]);
         $builder ->add('Electors', IntegerType::class,['label' => 'Electors','required' => false,]);
         $builder ->add('Distance', NumberType::class,['label' => 'Distance(mls)','required' => false,]);

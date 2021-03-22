@@ -159,13 +159,28 @@ class Rggroup
    {
      $subwards=$this->subwards;
      $xmlout = "";
-     $xmlout .= "  <rggroup RggroupId='$this->Rggroupid' Name='$this->Name' Households='$this->Households' >\n  ";
+     $xmlout .= "  <rggroup RggroupId='$this->Rggroupid' Name='$this->Name' Households='$this->Households' KML='$this->KML' >\n  ";
      foreach ($subwards as $asubward )
      {
      $xmlout .= $asubward->makexml();
      }
      $xmlout .= "  </rggroup>\n";
      return $xmlout;
+   }
+
+    public function makecsv()
+   {
+     $subwards=$this->subwards;
+     $csvout = "";
+     $csvout  .= "$this->Rggroupid: $this->Name,,,$this->Households \n  ";
+     foreach ($subwards as $asubward )
+     {
+     $csvout  .= "\n ";
+     $csvout .= $asubward->makecsv();
+      $csvout  .= "\n ";
+     }
+     $csvout  .= "\n";
+     return $csvout;
    }
 }
 

@@ -37,6 +37,8 @@
   <div class="label">Election District: </div>
   <div class="value">{{district.districtid}}</div>
   <div class="value">{{district.name}}</div>
+  <div class="button"> <a class="button" href = "/district/exportxml/{{district.districtid}}" >Export XML</a> </div>
+  <div class="button"> <a class="button" href = "/district/exportcsv/{{district.districtid}}" >Export CSV</a> </div>
   <div class="button  right"> <a class="button" href = "{{back}}" >Back</a> </div>
 </div>
 
@@ -47,6 +49,7 @@
 <div class="subheading row">
       <div class="rgid" >SeatId</div>
       <div class="name" >Name</div>
+       <div class="bnum" >Households</div>
       <div  class="button" ></div>
       <div  class="button" ></div>
 </div>
@@ -58,6 +61,7 @@
      <div class="seat row "  >
        <div class="seatid  id" id="{{aseat.seatid}}" >{{aseat.seatid}}</div>
          <div class="name" >{{aseat.name}}</div>
+          <div class="bnum" >{{aseat.households}}</div>
        <div class="button wide" ><a class="button" href = "/seat/showrgs/{{district.districtid}}/{{aseat.seatid}}" >VIEW RoadGroups</a>   </div>
           <div class="button wide" ><a class="button" href = "/seat/showpds/{{district.districtid}}/{{aseat.seatid}}" >VIEW Polling Districts</a>   </div>
        <div class="button" ><a class="button" href = "/seat/edit/{{district.districtid}}/{{aseat.seatid}}" >EDIT</a>   </div>
@@ -99,7 +103,7 @@
          var style = {"color":  getColor(i) ,"fillColor":  getColor(i) , "weight": 6 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.5 };
          makeKMLLayer(mymap,path,style,true,"{{aseat.name}}");
          i=i+1;
-         if(i>12) i=0;
+         if(i>11) i=0;
       }
     }
    {% endfor %}

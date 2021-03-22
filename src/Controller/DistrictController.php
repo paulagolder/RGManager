@@ -59,11 +59,10 @@ class DistrictController extends AbstractController
         {
             return $this->render('district/showone.html.twig', [ 'message' =>  'district not Found',]);
         }
-         $kml = $district->getKML();
-          if(!$this->mapserver->ismap($kml))
+          $kml = $district->getKML();
+          if(!$kml)
           {
-             $district->setKML($this->mapserver->findmap($this->rgyear,$district->getDistrictId()));
-
+             $district->setKML($this->mapserver->finddistrict($district->getDistrictId(),$this->rgyear));
           }
 
         $seats = $this->getDoctrine()->getRepository("App:Seat")->findChildren($drid);
@@ -72,9 +71,12 @@ class DistrictController extends AbstractController
           $kml = $seat->getKML();
           if(!$this->mapserver->ismap($kml))
           {
-             $seat->setKML($this->mapserver->findmap($seat->getSeatId(),$this->rgyear,$district->getDistrictId()));
-
+             $seat->setKML($this->mapserver->findseat($seat->getSeatId(),$this->rgyear,$district->getDistrictId()));
           }
+           $count = $this->getDoctrine()->getRepository("App:Seat")->countHouseholds($drid, $seat->getSeatId(), $this->rgyear);
+
+           $seat->setHouseholds($count);
+
         }
 
         return $this->render('district/showone.html.twig',
@@ -251,99 +253,127 @@ class DistrictController extends AbstractController
 
     }
 
-    public function Export()
+    public function Exportxml($drid)
     {
-            $file = "maps/lichfielddc.rgml";
+            $district = $this->getDoctrine()->getRepository("App:District")->findOne($drid);
+             $kml = $district->getKML();
+          if(!$kml)
+          {
+             $district->setKML($this->mapserver->finddistrict($district->getDistrictId(),$this->rgyear));
+          }
+           // $file = "maps/".$drid."_".$this->rgyear.".rgml";
+              $file = "rgml/roadgroups.rgml";
             $xmlout = "";
             $xmlout .= "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
             $xmlout .= "<?xml-stylesheet type='text/xsl' href='./Stylesheets/rgml.xsl' ?>\n";
-            $xmlout .= "<electiondistrict Name='Lichfield City' >\n";
+            $xmlout .= "<electiondistrict Name='Lichfield City Labour Party' DistrictId='".$drid."' KML='".$district->getKML()."' >\n";
+
             $xmlout .= $this->makexml();
             $xmlout .= "</electiondistrict>\n";
             $handle = fopen($file, "w") or die("ERROR: Cannot open the file.");
             fwrite($handle, $xmlout) or die ("ERROR: Cannot write the file.");
             fclose($handle);
-            $this->addFlash('notice','xml file saved' );
+            $this->addFlash('notice','xml file saved'.$file );
             return $this->redirect("/");
     }
 
-
-/*      public function topdf($list)
+      public function Exportcsv($drid)
     {
-     $image = "./maps/BLY_C2.png";
-     $file = "./maps/lichfielddc.pdf";
-// Instanciation of inherited class
-$pdf = new FPDF();
-$pdf->AddPage();
-$pdf->SetMargins(5, 5 , 5, 5);
-$pdf->SetFont('Helvetica','',12);
-$cellw =($this->A4w-(5+5+5))/2-4;
-$cellh =($this->A4h-(5+5+5))/2-8;
-$p=0;
-while($p < count($list))
-{
-for($i=0;$i<=1;$i++)
-{
-  for($j=0;$j<=1;$j++)
-  {
-   $x = 5+$j*(5+$cellw);
-   $y = 5+$i*(5+$cellh);
-    $image = "./maps/".$list[p].".png";
-   $pdf->setXY($x,$y);
-    $pdf->Image($image,$x,$y,$cellw,$cellh);
-   $pdf->Cell($cellw,$cellh,'',1,1,'C');
-   $p++;
-   $ip++;
-  }
-}
- if($p<count($list))
-   {
-   $pdf->AddPage();
-   }
-}
-//$pdf->Output();
+            $district = $this->getDoctrine()->getRepository("App:District")->findOne($drid);
+            $file = "documents/".$drid."_".$this->rgyear.".csv";
+            $csvout = "";
 
+            $csvout .= "RD-Groups, RD-Sugroups, Roadgroups, Households \n\n";
 
+            $csvout .= $this->makecsv();
 
-             $pdf->Output($file,'F');
-            // file_put_contents($file, $output);
-          //  $handle = fopen($file, "w") or die("ERROR: Cannot open the file.");
-           // fwrite($handle, $xmlout) or die ("ERROR: Cannot write the file.");
-          //  fclose($handle);
-            $this->addFlash('notice','PDF file saved..' );
+            $handle = fopen($file, "w") or die("ERROR: Cannot open the file.");
+            fwrite($handle, $csvout) or die ("ERROR: Cannot write the file.");
+            fclose($handle);
+            $this->addFlash('notice','csv file saved'.$file );
             return $this->redirect("/");
     }
-*/
+
+
     public function makexml()
     {
          $xmlout = "";
-         $wards = $this->getDoctrine()->getRepository("App:Rggroup")->findAll();
-        if (!$wards) {
+         $rggroups = $this->getDoctrine()->getRepository("App:Rggroup")->findAll();
+        if (!$rggroups) {
             return "";
         }
-        foreach (  $wards as $award )
+        foreach (  $rggroups as $arggroup )
         {
-           $subwards =   $this->getDoctrine()->getRepository("App:Subward")->findChildren($award->getRggroupid());
-           $award->{'subwards'} = $subwards;
+           $subwards =   $this->getDoctrine()->getRepository("App:Rgsubgroup")->findChildren($arggroup->getRggroupid());
+           $arggroup->{'subwards'} = $subwards;
            foreach($subwards as $asubward)
            {
-              $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($asubward->getRgsubgroupid());
+              $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($asubward->getRgsubgroupid(),$this->rgyear);
               $asubward->{'roadgrouplist'}=$roadgroups;
               foreach($roadgroups as $aroadgroup)
               {
-                $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($aroadgroup->getRoadgroupid());
+                $streetlist = [];
+                $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($aroadgroup->getRoadgroupid(),$this->rgyear);
+                foreach($streets as $astreet )
+                {
+                if(array_key_exists($astreet->getName(), $streetlist))
+                {
+                  $sstreet = $streetlist[$astreet->getName()];
 
-                $aroadgroup->{'streets'}= $streets;
+
+                 $sstreet->setQualifier($sstreet->getQualifier()." ".$astreet->getQualifier());
+
+                  $streetlist[$astreet->getName()]= $sstreet;
+                }else
+                  $streetlist[$astreet->getName()] = $astreet;
+
+                }
+                $aroadgroup->{'streets'}= $streetlist;
+                //dump($aroadgroup);
               }
            }
         }
 
-        foreach (  $wards as $award )
+        foreach (  $rggroups as $arggroup )
         {
-           $xmlout .= $award->makexml();
+           $xmlout .= $arggroup->makexml();
            $xmlout .= "\n";
         }
       return $xmlout;;
+      }
+
+
+        public function makecsv()
+    {
+         $csvout = "";
+         $rggroups = $this->getDoctrine()->getRepository("App:Rggroup")->findAll();
+        if (!$rggroups) {
+            return "";
+        }
+        foreach (  $rggroups as $arggroup )
+        {
+
+           $subwards =   $this->getDoctrine()->getRepository("App:Rgsubgroup")->findChildren($arggroup->getRggroupid());
+           $arggroup->{'subwards'} = $subwards;
+           foreach($subwards as $asubward)
+           {
+              $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($asubward->getRgsubgroupid(),$this->rgyear);
+              $asubward->{'roadgrouplist'}=$roadgroups;
+              foreach($roadgroups as $aroadgroup)
+              {
+                $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($aroadgroup->getRoadgroupid(),$this->rgyear);
+
+                $aroadgroup->{'streets'}= $streets;
+                //dump($aroadgroup);
+              }
+           }
+        }
+
+        foreach (  $rggroups as $arggroup )
+        {
+           $csvout .= $arggroup->makecsv();
+        }
+      return $csvout;
       }
 
 }

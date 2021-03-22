@@ -1,0 +1,23 @@
+SELECT r.roadgroupid, r.year, SUM(r.households) as nos FROM `roadgroup` as r left join roadgrouptostreet as rs on r.roadgroupid = rs.roadgroupid where rs.year = "2020" group by r.roadgroupid ORDER BY r.roadgroupid
+
+
+
+Select rs.roadgroupid, SUM(s.households) as nos from  roadgrouptostreet rs left join street s on rs.street = s.name and (s.part = rs.part or (rs.part is null  and s.part = "" ) or (s.part is null  and rs.part = "" ) ) WHERE year = "2020" group by rs.roadgroupid  order by rs.roadgroupid
+
+
+Select rs.roadgroupid, rs.year, SUM(s.households) as hh from  roadgrouptostreet rs left join street s on rs.street = s.name and (s.part = rs.part or (rs.part is null  and s.part = "" ) or (s.part is null  and rs.part = "" ) ) WHERE 1 group by rs.roadgroupid , rs.year order by rs.roadgroupid
+
+Select rs.roadgroupid, rs.year, SUM(s.households) as nhh, count(*) as nst from  roadgrouptostreet rs left join street s on rs.street = s.name and (s.part = rs.part or (rs.part is null  and s.part = "" ) or (s.part is null  and rs.part = "" ) ) WHERE 1 group by rs.roadgroupid , rs.year order by rs.roadgroupid
+
+
+SELECT * FROM `roadgroup` as r join (  select rs.* from roadgrouptostreet as rs ) as tt  on r.roadgroupid = tt.roadgroupid
+
+update `roadgroup` as r join (  select rs.roadgroupid as rsrgid, count(*) as nr from roadgrouptostreet as rs group by rs.roadgroupid) as tt  on r.roadgroupid = tt.rsrgid  set r.streets = tt.nr
+
+update `roadgroup`
+as r join (
+Select rs.roadgroupid, rs.year, SUM(s.households) as nhh, count(*) as nst from  roadgrouptostreet rs left join street s on rs.street = s.name and (s.part = rs.part or (rs.part is null  and s.part = "" ) or (s.part is null  and rs.part = "" ) ) WHERE 1 group by rs.roadgroupid , rs.year order by rs.roadgroupid
+) as tt
+on r.roadgroupid = tt.rsrgid
+
+set r.streets = tt.nr, r.households = tt.nhh

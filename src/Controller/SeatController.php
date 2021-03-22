@@ -51,7 +51,7 @@ class SeatController extends AbstractController
         $this->requestStack = $request_stack;
         $this->mapserver = $mapserver;
         $mapserver->load();
-         $this->rgyear  = $this->requestStack->getCurrentRequest()->cookies->get('rgyear');
+        $this->rgyear  = $this->requestStack->getCurrentRequest()->cookies->get('rgyear');
     }
 
 
@@ -88,14 +88,14 @@ class SeatController extends AbstractController
         }
         if(!$this->mapserver->ismap($seat->getKML()))
            {
-             $seat->setKML($this->mapserver->findmap($seat->getSeatId(),$this->rgyear,$district->getDistrictId()));
+             $seat->setKML($this->mapserver->findseat($seat->getSeatId(),$this->rgyear,$district->getDistrictId()));
            }
         $roadgrouplinks = $this->getDoctrine()->getRepository("App:Seat")->findRoadgroups($dtid,$stid,$this->rgyear);
         $rglist = array();
 
         foreach ($roadgrouplinks as $aroadgrouplink)
         {
-           $aroadgroup =  $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($aroadgrouplink["roadgroupid"]);
+           $aroadgroup =  $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($aroadgrouplink["roadgroupid"],$this->rgyear);
            $kml = $aroadgroup->getKML();
            if($aroadgroup)
            {
@@ -138,16 +138,18 @@ class SeatController extends AbstractController
         {
             return $this->render('seat/showone.html.twig', [ 'message' =>  'seat not Found',]);
         }
-        if(!$this->mapserver->ismap($seat->getKML()))
-           {
-             $seat->setKML($this->mapserver->findmap($seat->getSeatId(),$this->rgyear,$district->getDistrictId()));
-           }
+        if(!$seat->getKML())
+        {
+             $seat->setKML($this->mapserver->findseat($seat->getSeatId(),$this->rgyear,$district->getDistrictId()));
+
+         }
         $roadgrouplinks = $this->getDoctrine()->getRepository("App:Seat")->findRoadgroups($dtid,$stid,$this->rgyear);
+
         $rglist = array();
 
         foreach ($roadgrouplinks as $aroadgrouplink)
         {
-           $aroadgroup =  $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($aroadgrouplink["roadgroupid"]);
+           $aroadgroup =  $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($aroadgrouplink["roadgroupid"],$this->rgyear);
            $kml = $aroadgroup->getKML();
            if($aroadgroup)
            {
@@ -190,28 +192,34 @@ class SeatController extends AbstractController
         {
             return $this->render('seat/showone.html.twig', [ 'message' =>  'seat not Found',]);
         }
-        if(!$this->mapserver->ismap($seat->getKML()))
+        if(!$seat->getKML())
         {
-             $seat->setKML($this->mapserver->findmap($seat->getSeatId(),$this->rgyear,$district->getDistrictId()));
+             $seat->setKML($this->mapserver->findseat($seat->getSeatId(),$this->rgyear,$district->getDistrictId()));
+
         }
         $pds = $this->getDoctrine()->getRepository("App:Seat")->findPollingdistricts($dtid,$stid,$this->rgyear);
         $rgs = [];
-        foreach($pds as $pd)
+        foreach($pds as $key =>  $pd)
         {
+           $thh = 0;
           $pdid = $pd["pollingdistrictid"];
          $rglist = $this->getDoctrine()->getRepository("App:Roadgroup")->findAllinPollingDistrict($pdid, $this->rgyear);
          $roadgroups = [];
          foreach ($rglist as $rg)
          {
-            $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rg["roadgroupid"]);
+            $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rg["roadgroupid"],$this->rgyear);
             $kml = $aroadgroup->getKML();
             if(!$this->mapserver->ismap($kml))
             {
                $aroadgroup->setKML($this->mapserver->findmap($aroadgroup->getRoadgroupId(),$this->rgyear));
             }
             $roadgroups[] = $aroadgroup;
+            $sum=  $this->getDoctrine()->getRepository("App:Roadgroup")->countHouseholds($rg["roadgroupid"],$this->rgyear);
+            $thh+= $sum;
           }
           $rgs[$pdid]= $roadgroups;
+          $pd["households"] = $thh;
+          $pds[$key]=$pd;
         }
 
         $sparepds = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findSpares($district->getDistrictId(),$this->rgyear );
@@ -225,7 +233,7 @@ class SeatController extends AbstractController
                 'pds'=>$pds,
                 'rgs'=>$rgs,
                  'sparepds' => $sparepds,
-                'back'=>"/district/show/".$dtid,
+                 'back'=>"/district/show/".$dtid,
             ]);
     }
 
@@ -252,7 +260,7 @@ class SeatController extends AbstractController
       //  $form = $formFactory->createBuilder(SeatForm::class, $seat, ['csrf_protection' => false])->getForm();
         if ($request->getMethod() == 'POST')
         {
-            $form->handleRequest($request);
+           $form->handleRequest($request);
             if ($form->isValid())
             {
                 $entityManager = $this->getDoctrine()->getManager();

@@ -17,6 +17,14 @@ class Roadgroup
    */
   private $RoadgroupId;
 
+
+  /**
+   * @ORM\Id
+   * @ORM\Column(name="year",type="integer")
+   */
+  private $Year;
+
+
   /**
    * @ORM\Column(name="name",type="string", length=20)
    */
@@ -38,6 +46,13 @@ class Roadgroup
    * @ORM\Column(name="households",type="integer", nullable=true)
    */
   private $Households;
+
+
+  /**
+   * @ORM\Column(name="streets",type="integer", nullable=true)
+   */
+  private $Streets;
+
 
   /**
    * @ORM\Column(name="electors",type="integer", nullable=true)
@@ -121,8 +136,6 @@ class Roadgroup
      return $this;
    }
 
-
-
    public function getRggroupid()
    {
      return $this->Rggroupid;
@@ -131,6 +144,17 @@ class Roadgroup
    public function setRggroupid($ID): self
    {
      $this->Rggroupid = $ID;
+     return $this;
+   }
+
+    public function getYear()
+   {
+     return $this->Year;
+   }
+
+   public function setYear($yr): self
+   {
+     $this->Year = $yr;
      return $this;
    }
 
@@ -159,7 +183,6 @@ class Roadgroup
    public function setPrincipalRoad(?string $principalRoad): self
    {
      $this->principalRoad = $principalRoad;
-
      return $this;
    }
 
@@ -168,9 +191,20 @@ class Roadgroup
      return $this->Households;
    }
 
-   public function setHouseholds(?int $Households): self
+   public function setHouseholds(?int $number): self
    {
-     $this->Households = $Households;
+     $this->Households = $number;
+     return $this;
+   }
+
+    public function getStreets(): ?int
+   {
+     return $this->Streets;
+   }
+
+   public function setStreets(?int $number): self
+   {
+     $this->Streets = $number;
      return $this;
    }
 
@@ -185,7 +219,7 @@ class Roadgroup
      return $this;
    }
 
-    public function getDistance(): ?float
+   public function getDistance(): ?float
    {
      return $this->Distance;
    }
@@ -195,7 +229,6 @@ class Roadgroup
      $this->Distance = $miles;
      return $this;
    }
-
 
    public function getKML()
    {
@@ -311,7 +344,7 @@ class Roadgroup
    {
    $str ="{";
    $str .=  '"roadgroupid":"'.$this->RoadgroupId.'",';
-   $str .=  '"name":"'.$this->Name.'",';
+   $str .=  '"name":"'.$this->getName().'",';
    $str .=  '"rggroupid":"'.$this->Rggroupid.'",';
    $str .=  '"rgsubgroupid":"'.$this->Rgsubgroupid.'",';
    $str .=  '"kml":"'.$this->KML.'",';
@@ -323,13 +356,14 @@ class Roadgroup
 
    public function makexml()
    {
-    $streets =$this->streets;
+     $streets =$this->streets;
      $xmlout = "";
-     $xmlout .= "      <roadgroup RoadgroupId='$this->RoadgroupId' Name='$this->Name' KML='$this->KML' Households='$this->Households' >\n  ";
+     $xmlout .= "      <roadgroup RoadgroupId='$this->RoadgroupId' Name='".$this->getName()."' KML='$this->KML' Households='$this->Households' >\n  ";
      foreach ($streets as $astreet )
-      {
-        $xmlout .= $astreet->makexml();
-      }
+     {
+    // dump($astreet);
+        $xmlout .="        ".$astreet->makexml();
+     }
      $xmlout .= "      </roadgroup>\n";
      return $xmlout;
    }
@@ -337,11 +371,25 @@ class Roadgroup
    function endsWith( $haystack, $needle )
    {
     $length = strlen( $needle );
-    if( !$length ) {
+    if( !$length )
+    {
         return true;
     }
     return substr( $haystack, -$length ) === $needle;
-    }
+   }
 
+    public function makecsv()
+   {
+     $streets =$this->streets;
+     $csvout = "";
+      $csvout .= "   ,,$this->RoadgroupId:".$this->getName()." , $this->Households \n  ";
+     foreach ($streets as $astreet )
+     {
+    // dump($astreet);
+    //    $xmlout .="        ".$astreet->makexml();
+     }
+
+     return  $csvout;
+   }
 
 }

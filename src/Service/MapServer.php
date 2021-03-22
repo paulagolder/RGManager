@@ -16,7 +16,8 @@ class MapServer
     public function __construct(ParameterBagInterface $params)
     {
         $this->params = $params;
-        $this->mappath =  $this->params->get('maproot');
+        $this->mappath =  $this->params->get('mappath');
+        $this->maproot =  $this->params->get('maproot');
     }
 
     public function load($reload = false)
@@ -28,7 +29,8 @@ class MapServer
            $rmaps = $session->get('maps');
            if(!$rmaps or $reload)
            {
-              $maps = scandir($this->mappath);
+              $maps = scandir($this->maproot."/roadgroups");
+
               $session->set('maps', $maps);
            }
            $this->rmaps= $rmaps;
@@ -44,18 +46,88 @@ class MapServer
     }
 
 
-    public function findmap($mapkey,$year="",$districtid="*")
+    public function findmap($mapkey,$year="",$seatid="")
     {
-        $key = $districtid."_".$mapkey."_".$year.".kml";
-        if($this->ismap($key) )  return $key;
-        $key = $districtid."_".$mapkey.".kml";
-        if($this->ismap($key) )  return $key;
-        $key = $mapkey."_".$year.".kml";
-        if($this->ismap($key) )  return $key;
-        $key = $mapkey.".kml";
-        if($this->ismap($key) )  return $key;
+        $rdroot = "roadgroups/";
+        $key1 = $this->maproot.$rdroot.$seatid."_".$mapkey."_".$year.".kml";
+        $key = $seatid."_".$mapkey."_".$year.".kml";
+        if(!file_exists($key1))
+        {
+          $key1 = $this->maproot.$rdroot.$mapkey."_".$year.".kml";
+          $key = $mapkey."_".$year.".kml";
+        }
+        if(!file_exists($key1))
+        {
+           $key1 = $this->maproot.$rdroot.$mapkey."_".$year.".kml";
+           $key =  $mapkey."_".$year.".kml";
+        }
+        if(!file_exists($key1))
+        {
+           $key1 = $this->maproot.$rdroot.$mapkey.".kml";
+           $key =  $mapkey.".kml";
+        }
+        if(file_exists($key1))  return trim($key);
         else
+        {
+          echo '<script>console.log(" Not Found rg : '.$key1.'")</script>';
           return null;
+        }
+
+    }
+
+      public function findseat($mapkey,$year="",$districtid="*")
+    {
+
+        $key1 = $this->maproot.$districtid."/".$districtid."_".$mapkey."_".$year.".kml";
+        $key = $districtid."/".$districtid."_".$mapkey."_".$year.".kml";
+        if(!file_exists($key1))
+        {
+           $key1 = $this->maproot.$districtid."/".$mapkey."_".$year.".kml";
+           $key = $districtid."/".$mapkey."_".$year.".kml";
+        }
+        if(!file_exists($key1))
+        {
+           $key1 = $this->maproot.$districtid."/".$districtid."_".$mapkey.".kml";
+           $key = $districtid."/".$districtid."_".$mapkey.".kml";
+        }
+        if(!file_exists($key1))
+        {
+           $key1 = $this->maproot.$districtid."/".$mapkey.".kml";
+           $key = $districtid."/".$mapkey.".kml";
+        }
+        if(file_exists($key1))
+        {
+           echo '<script>console.log(" Found seat: '.$key.'")</script>';
+           return $key;
+        }
+        else
+        {
+           echo '<script>console.log(" Not Found seat: '.$key.'")</script>';
+          return null;
+          }
+    }
+
+
+    public function finddistrict($districtid,$year="")
+    {
+
+        $key1 = $this->maproot.$districtid."/".$districtid."_".$year.".kml";
+        $key = $districtid."/".$districtid."_".$year.".kml";
+        if(!file_exists($key1))
+        {
+         $key1 = $this->maproot.$districtid."/".$districtid.".kml";
+         $key = $districtid."/".$districtid.".kml";
+        }
+        if(file_exists($key1))
+        {
+           echo '<script>console.log(" Found district : '.$key.'")</script>';
+          return $key;
+        }
+        else
+        {
+           echo '<script>console.log(" Not Found district : '.$key.'")</script>';
+          return null;
+          }
     }
 
 

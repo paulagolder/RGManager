@@ -33,12 +33,17 @@
 
 {% block middle %}
 <div class="roadgroup">
+
+
   {% if message %}
+  <div class="heading row">
+    <div class="label"> Road Group </div>
+  </div>
   <H1> No streets found </H1>
 
   {% else %}
 
-  <div class="heading row">
+<div class="heading row">
     <div class="label"> Road Group </div>
     <div class="value"> {{roadgroup.RoadgroupId}}:</div>
     <div class="value"> {{roadgroup.Name }}</div>
@@ -46,7 +51,6 @@
      <div class="value small"> T:{{total }}</div>
     <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
   </div>
-
   <div class="subheading row">
     <div class="name" >Name/part</div>
     <div class="pd" >PD</div>
@@ -61,7 +65,7 @@
         /{{street.part}}
         {% endif %}
       </div>
-      <div class="pd" >{{street.pd}}</div>
+      <div class="pd" ><a class="button" href = "/pollingdistrict/show/{{street.pd}}" >{{street.pd}}</a></div>
       <div  class="num" >{{street.households}}</div>
       <div class="button"> <a class="button" href = "/street/edit/{{street.name }}/{{street.part}}" >Edit</a> </div>
          <div class="button"> <a class="button" href = "/street/remove/{{roadgroup.RoadgroupId}}/{{street.name}}/{{street.part}}" >Remove</a> </div>
@@ -102,7 +106,7 @@
 <script  type="text/javascript" >
   var mymap = myRgMap("{{jslocation}}");
   var kml = "{{roadgroup.kml}}";
-  var path = "{{mappath}}"+kml;
+  var path = "{{mappath}}roadgroups/"+kml;
   if(kml)
   {
   var style = {"color":  "#0000FF" , "weight": 14 ,  "clickable": true ,"opacity": 0.3, "fillOpacity": 0.1 };

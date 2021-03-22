@@ -18,7 +18,7 @@ class UploadController extends AbstractController
 {
 
     private $mapserver;
-
+    private $rgyear;
 
 
     /**
@@ -33,7 +33,7 @@ class UploadController extends AbstractController
                           FileUploader $uploader, LoggerInterface $logger, MapServer $mapserver): Response
     {
 
-        $rgyear  = $request->cookies->get('rgyear');
+        $this->rgyear  = $request->cookies->get('rgyear');
         $token = $request->get("utoken");
         $rgid = $request->get("rgid");
          $this->mapserver = $mapserver;
@@ -52,15 +52,22 @@ class UploadController extends AbstractController
          $filename = $file->getClientOriginalName();
          if(!str_contains($filename, "_20"))
          {
-           $filename = str_replace( ".kml", "_".$rgyear.".kml",$filename);
+            $filename = $rgid."_".$this->rgyear.".kml";
          }
         $uploader->upload($uploadDir, $file, $filename);
-
+        $roadgroup = $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($rgid,$this->rgyear);
+        if($roadgroup)
+        {
+        $roadgroup->setKML($filename);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($roadgroup );
+        $entityManager->flush();
+        }
         $this->addFlash(
             'notice',
             'Map '.$filename.' uploaded!'.$token
         );
-        $roadgroup = $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($rgid);
+      //  $roadgroup = $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($rgid,$this->rgyear);
         $this->mapserver = $mapserver->load();
         if(!$rgid )
            return $this->redirect("/");

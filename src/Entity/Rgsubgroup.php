@@ -201,13 +201,32 @@ class Rgsubgroup
    {
      $roadgroups =$this->roadgrouplist;
      $xmlout = "";
-     $xmlout .= "    <rgsubgroup RgsubgroupId='$this->Rgsubgroupid' Name='$this->Name Households='$this->Households' >\n  ";
+     $xmlout .= "    <rgsubgroup RgsubgroupId='$this->Rgsubgroupid' Name='$this->Name' Households='$this->Households' >\n  ";
      foreach ($roadgroups as $aroadgroup )
-      {
+     {
         $xmlout .= $aroadgroup->makexml();
-      }
-   $xmlout .= "    </rgsubgroup>\n";
-   return $xmlout;
+     }
+     $xmlout .= "    </rgsubgroup>\n";
+     return $xmlout;
+   }
+
+
+    public function makecsv()
+   {
+     $roadgroups =$this->roadgrouplist;
+     $csvout = "";
+      $subgrouplabel = "$this->Rgsubgroupid: $this->Name";
+      $c =0;
+     foreach ($roadgroups as $aroadgroup )
+     {
+     if($c==0)
+         $csvout .= "   ,$subgrouplabel,".$aroadgroup->getRoadgroupId().": ".$aroadgroup->getName()." , ".$aroadgroup->getHouseholds()."\n  ";
+     else
+         $csvout .= "   ,,".$aroadgroup->getRoadgroupId().": ".$aroadgroup->getName()." ,". $aroadgroup->getHouseholds()." \n  ";
+       $c++;
+     }
+
+     return  $csvout;
    }
 }
 

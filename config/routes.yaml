@@ -10,6 +10,14 @@ district_showone:
    path: /district/show/{drid}
    controller: App\Controller\DistrictController::showone
 
+district_exportxml:
+    path: /district/exportxml/{drid}
+    controller: App\Controller\DistrictController::exportxml
+
+district_exportcsv:
+    path: /district/exportcsv/{drid}
+    controller: App\Controller\DistrictController::exportcsv
+
 pollingdistrict_showone:
    path: /pollingdistrict/show/{pdid}
    controller: App\Controller\PollingDistrictController::showone
@@ -70,7 +78,7 @@ rggroups_delete:
 
 rggroups_export:
     path: /rggroup/export
-    controller: App\Controller\RggroupController::export
+    controller: App\Controller\DistrictController::export
 
 rggroups_heatmap:
     path: /rggroup/heatmap
@@ -158,7 +166,12 @@ street_edit:
     defaults:
         rdpart: /
 
-street_view:
+street_editgroup:
+    path: /street/editgroup/{name}
+    controller: App\Controller\StreetController::streetviewgroup
+
+
+street_viewgroup:
     path: /street/viewgroup/{name}
     controller: App\Controller\StreetController::streetviewgroup
 

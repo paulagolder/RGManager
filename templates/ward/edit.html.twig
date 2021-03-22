@@ -2,15 +2,10 @@
 
 {% extends 'master.html.twig' %}
 
-
 {% block stylesheets %}
       {{ parent() }}
    <link href="{{ asset('/css/ward.css') }}" rel="stylesheet" />
-
 {% endblock %}
-
-
-
 
 {% block middle %}
 <div id="middle" >
@@ -26,6 +21,7 @@
     {{ form_start(form) }}
     {{ form_row(form.Rggroupid) }}
     {{ form_row(form.Name) }}
+    {{ form_row(form.KML) }}
     {{ form_row(form.Households) }}
     {{ form_row(form.Electors) }}
     {{ form_row(form.Latitude) }}

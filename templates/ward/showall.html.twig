@@ -35,7 +35,7 @@ function onMapClick(e)
 
 
 {% if message %}
-<H1> No wards found </H1>
+<H1> No RG-Groups found </H1>
 
 {% else %}
   <div class="subheading row" >
@@ -48,16 +48,16 @@ function onMapClick(e)
                      </div>
 <div class="list">
     <div id="wards" >
-       {% for ward in wards %}
+       {% for rggroup in rggroups %}
                     <div class="row" >
-                       <div class="rgid" >{{ward.rggroupid}}</div>
-                        <div class="name" >{{ward.name}}</div>
-                         <div class="num" >{{ward.households}}</div>
-                         <div class="num" >({{ward.total}})</div>
-                         <div class="num"> {{ward.rgcount}}</div>
-                         <div class="num"> {{ward.rgfound}}</div>
-                        <a class="button" href = "/rggroup/show/{{ward.rggroupid}}" >VIEW</a>
-                        <a class="button" href = "/rggroup/edit/{{ward.rggroupid}}" >EDIT</a>
+                       <div class="rgid" id="{{rggroup.rggroupid}}" >{{rggroup.rggroupid}}</div>
+                        <div class="name" >{{rggroup.name}}</div>
+                         <div class="num" >{{rggroup.households}}</div>
+                         <div class="num" >({{rggroup.total}})</div>
+                         <div class="num"> {{rggroup.rgcount}}</div>
+                         <div class="num"> {{rggroup.rgfound}}</div>
+                        <a class="button" href = "/rggroup/show/{{rggroup.rggroupid}}" >VIEW</a>
+                        <a class="button" href = "/rggroup/edit/{{rggroup.rggroupid}}" >EDIT</a>
                      </div>
        {% endfor %}
     </div>
@@ -89,16 +89,43 @@ function onMapClick(e)
 </div>
 
 <script >
+
 var jslocation = '{ "name":"LCC","longitude":"-1.8304","latitude":"52.6854" }';
 
 var mymap = myWMap(jslocation);
 
-var path = "{{mappath}}{{topmap}}";
+var path = "{{mappath}}LCC/{{topmap}}";
 {
    var style = {"color":  "#0000FF" , "weight": 5 ,  "clickable": true ,"opacity": 0.2, "fillOpacity": 0.2 };
    makeKMLLayer(mymap, path,style,true,"All RG-Groups");
 }
 
+
+
+var i=0;
+
+{% for key,asubgroup in rggroups %}
+
+ var countsgs = 0;
+{% for roadgroup in asubgroup.roadgroups %}
+    var style = {"color":  getColor(i) , "weight": 4 ,  "clickable": true ,"opacity": 1.0, "fillOpacity": 1.0 };
+      var  kml = "{{roadgroup.kml}}";
+      var path = "{{mappath}}roadgroups/"+kml;
+      if(kml)
+      {
+        countsgs = countsgs+1;
+        makeKMLLayer(mymap,path,style,true,kml);
+      }
+  {% endfor %}
+
+  if(countsgs > 0)
+  {
+    var h2s = document.getElementById("{{asubgroup.rggroupid}}");
+    h2s.style.backgroundColor = getColor(i);
+    i=i+1;
+    if(i>11)i=0;
+  }
+ {% endfor %}
 mymap.on('click', onMapClick);
 </script>
 {% endblock %}
