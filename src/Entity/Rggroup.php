@@ -102,6 +102,14 @@ class Rggroup
         return $this;
     }
 
+    public function addHouseholds($number): self
+    {
+        $this->Households += $number;
+
+        return $this;
+    }
+
+
      public function getElectors()
     {
         return $this->Electors;
@@ -155,6 +163,13 @@ class Rggroup
    return  $str;
    }
 
+   public  function copy($obj)
+   {
+   $this->Name = $obj->Name;
+   $this->Rggroupid = $obj->Rggroupid;
+   $this->Households = 0;
+   }
+
    public function makexml()
    {
      $subwards=$this->subwards;
@@ -182,5 +197,7 @@ class Rggroup
      $csvout  .= "\n";
      return $csvout;
    }
+
+
 }
 

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type='text/xsl' href='./stylesheets/recipe.xsl' ?>
+<kml>
+  <Document>
+    <name>BLY_E1_new</name>
+    <author>org.lerot.KMLU.Author@40a025b2</author>
+<Style id="blueLine" >
+    <LineStyle>
+      <color>7fff0000</color>
+      <width>4</width>
+    </LineStyle>
+</Style>
+    <Placemark>
+      <name>BLY_E1</name>
+      <styleUrl>#blueLine</styleUrl>
+        <LineString>
+          <coordinates>
+          </coordinates>
+        </LineString>
+    </Placemark>
+  </Document>
+</kml>

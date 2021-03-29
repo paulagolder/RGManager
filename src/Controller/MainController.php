@@ -68,7 +68,7 @@ class MainController extends AbstractController
             $message .= count( $streets). " Streets found\n ";
         }
 
-          return $this->render('mainmenu.html.twig',
+          return $this->render('rgmenu.html.twig',
           [
             'rgyear'=>$this->rgyear,
             'message' =>  '' ,

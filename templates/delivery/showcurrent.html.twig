@@ -1,0 +1,54 @@
+{# views/seat/showone.html.twig #}
+
+{% extends 'rgmaster.html.twig' %}
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/delivery.css') }}" rel="stylesheet" />
+
+{% endblock %}
+
+{% block js %}
+   {{ parent() }}
+{% endblock %}
+
+{% block middle %}
+<div class="heading  row">
+  <div class="label">Active Deliveries </div>
+  <div class="value">{{rgyear}}</div>
+</div>
+
+
+{% if message %}
+<H1> No Deliveries found </H1>
+{% else %}
+<div class="subheading row">
+      <div class="dvyid" >SeatId</div>
+      <div class="name" >Name</div>
+      <div class="name" >target/achieved</div>
+      <div class="button" ></div>
+      <div class="button" ></div>
+</div>
+  {% set tracks = [] %}
+
+  <div class="list">
+  {% for delivery in deliveries %}
+     <div class="seat row "  >
+       <div class="rdid" id="{{delivery.deliveryid}}" >{{delivery.deliveryid}}</div>
+       <div class="name" >{{delivery.name}}</div>
+       <div class="name" >{{delivery.target}}/{{delivery.completed}}</div>
+       <div class="button" ><a class="button" href = "/delivery/manage/{{delivery.deliveryid}}" >MANAGE</a>   </div>
+       <div class="button" ><a class="button" href = "/delivery/edit/{{delivery.deliveryid}}" >EDIT</a>   </div>
+       <div class="button" ><a class="button" href = "/delivery/schedule/{{delivery.deliveryid}}" >SCHEDULE</a>   </div>
+     </div>
+  {% endfor %}
+  </div>
+{% endif %}
+  <div><a class="button" href = "/delivery/new" >ADD NEW DELIVERY</a></div>
+
+
+
+
+
+
+{% endblock %}

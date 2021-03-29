@@ -1,0 +1,35 @@
+{# views/delivery/edit.html.twig #}
+
+{% extends 'dvymaster.html.twig' %}
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/ward.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block middle %}
+<div id="middle" >
+<div id="wardedit"  >
+<div>
+ <div class="heading  row" >
+ <div class="label">Edit Delivery:</div>
+ <div class="title" > {{delivery.name}}</div>
+ <div class="button  right"> <a class="button" href ="{{returnlink}}" >back</a> </div>
+</div>
+<div class="formmap">
+<div  class="form" >
+    {{ form_start(form) }}
+    {{ form_row(form.Deliveryid) }}
+    {{ form_row(form.Name) }}
+    {{ form_row(form.District) }}
+    {{ form_row(form.Seat) }}
+    {{ form_row(form.TargetDate) }}
+    {{ form_row(form.Comment) }}
+    <button type="submit">{{'Register!'}}</button>
+    {{ form_end(form) }}
+</div>
+<div class="button  right"> <a class="deletebutton" href ="/delivery/delete/{{delivery.Deliveryid}}" >{{'delete'}} </a> </div>
+</div>
+</div>
+</div>
+{% endblock %}

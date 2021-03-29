@@ -1,0 +1,17 @@
+{# templates/rgheader.html.twig #}
+
+{% block myheader %}
+    <div class='topheader  row'  >
+     <div class="header">Deliveries Manager:</div>
+    {% if rgyear is defined %}
+      <div class="header">{{rgyear}}</div>
+      {% else %}
+       <div class="header">????</div>
+       {% endif %}
+     <div class="button right"> <a class="button" href = "/delivery/showcurrent" >Deliveries</a></div>
+     <div class="button"> <a class="button" href = "/" >Manage Roadgroups</a> </div>
+    </div>
+    {% for message in app.flashes('notice') %}
+      <div class="alert alert-notice">{{ message }}</div>
+    {% endfor %}
+ {% endblock %}

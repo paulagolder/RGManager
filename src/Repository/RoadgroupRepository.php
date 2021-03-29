@@ -9,18 +9,18 @@ use Doctrine\ORM\EntityRepository;
 class RoadgroupRepository extends EntityRepository
 {
 
-     public function findOne($rgid,$year)
+    public function findOne($rgid,$year)
     {
        $qb = $this->createQueryBuilder("p");
        $qb->where("p.RoadgroupId = :rgid");
-         $qb->andwhere("p.Year = :yr");
+       $qb->andwhere("p.Year = :yr");
        $qb->setParameter('rgid', $rgid);
        $qb->setParameter('yr', $year);
        $roadgroup =  $qb->getQuery()->getOneOrNullResult();;
        return $roadgroup;
     }
 
-       public function findAllbyYear($year)
+    public function findAllbyYear($year)
     {
        $qb = $this->createQueryBuilder("p");
        $qb->where("p.Year = :yr");
@@ -93,6 +93,34 @@ class RoadgroupRepository extends EntityRepository
      }
 
 
+     public function findDeliveryRoadgroups($delivery,$year)
+     {
+        $conn = $this->getEntityManager()->getConnection();
+            $sqlpd = 'select p.pollingdistrictid  from pollingdistrict  as p, seattopd as s where s.pdid =  p.pollingdistrictid and s.year = "'.$year.'" and s.district = "'.$delivery->district.'" ';
+        $stmt = $conn->prepare($sqlpd);
+
+        $pollingdistricts = $stmt->fetchAll();
+
+        dump($pollingdistricts);
+        $pdarry =
+          $sql = 'select r.* from roadgroup as r where r.roadgroupid in (SELECT rs.roadgroupid FROM `roadgrouptostreet` as rs  WHERE rs.pd IN(:pdlist)   and rs.year = "'.$year.'") and r.year = "'.$year.'"';
+
+          $stmt = $conn->executeQuery(
+        $sql,
+        [
+            'pdlist' => $pdarray
+        ],
+        [
+            'pdlist' => \Doctrine\DBAL\Connection::PARAM_STR_ARRAY
+        ]
+    );
+
+        $roadgroups= $stmt->fetchAll();
+
+
+
+     }
+
      public function addStreet($astreet,$roadgroupid,$year)
      {
        $street= $astreet->getName();
@@ -105,7 +133,7 @@ class RoadgroupRepository extends EntityRepository
      }
 
 
-       public function updateCounts($year)
+     public function updateCounts($year)
      {
         $conn = $this->getEntityManager()->getConnection();
         $sql = 'SELECT r.roadgroupid, count(*) as nos FROM `roadgroup` as r left join roadgrouptostreet as rs on r.roadgroupid = rs.roadgroupid where rs.year = "'.$year.'" group by r.roadgroupid ORDER BY r.roadgroupid ';
@@ -116,7 +144,7 @@ class RoadgroupRepository extends EntityRepository
         return $roadgroups;
      }
 
-        public function countHouseholds($roadgroupid, $year)
+     public function countHouseholds($roadgroupid, $year)
      {
         $conn = $this->getEntityManager()->getConnection();
        $sql = 'SELECT SUM(s.households) as nos  FROM `street` as s JOIN roadgrouptostreet as rs on s.name = rs.street and (s.part= rs.part or s.part is null  or s.part="" ) WHERE rs.year = "'.$year.'" and rs.roadgroupid = "'.$roadgroupid.'"  group by rs.roadgroupid ';
@@ -124,11 +152,11 @@ class RoadgroupRepository extends EntityRepository
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $harray= $stmt->fetchAll();
-      if(array_key_exists(0, $harray))
-      {
-      return $harray[0]["nos"];
-      }
-      else
-        return -999;
+        if(array_key_exists(0, $harray))
+        {
+           return $harray[0]["nos"];
+        }
+        else
+          return -999;
      }
 }

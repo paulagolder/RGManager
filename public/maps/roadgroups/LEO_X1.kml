@@ -1,22 +1,25 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<kml xmlns="http://www.opengis.net/kml/2.2">
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type='text/xsl' href='./stylesheets/recipe.xsl' ?>
+<kml>
   <Document>
     <name>LEO_X1</name>
-	<Style id="blueLine">
-      <LineStyle>
-        <color>7fff0000</color>
-        <width>4</width>
-      </LineStyle>
-    </Style>
+    <author>org.lerot.KMLU.Author@24ea669c</author>
+<Style id="blueLine" >
+    <LineStyle>
+      <color>7fff0000</color>
+      <width>4</width>
+    </LineStyle>
+</Style>
     <Placemark>
+      <name>LEO_X1</name>
       <styleUrl>#blueLine</styleUrl>
-      <LineString>
-        <coordinates>
--1.852770,52.675448,95.96 
--1.853199,52.675799,96.68 
--1.854701,52.675110,97.87 
-        </coordinates>
-      </LineString>
+        <LineString>
+          <coordinates>
+-1.8527699708938599,52.67544937133789,95.95999908447266
+-1.8531990051269531,52.67580032348633,96.68000030517578
+-1.854701042175293,52.67510986328125,97.87000274658203
+          </coordinates>
+        </LineString>
     </Placemark>
   </Document>
 </kml>

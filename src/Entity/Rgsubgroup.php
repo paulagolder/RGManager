@@ -197,6 +197,14 @@ class Rgsubgroup
      return  $str;
    }
 
+    public function copy($obj)
+   {
+   $this->Name = $obj->Name;
+   $this->Rggroupid = $obj->Rggroupid;
+   $this->Rgsubgroupid = $obj->Rgsubgroupid;
+   $this->Households = 0;
+   }
+
    public function makexml()
    {
      $roadgroups =$this->roadgrouplist;

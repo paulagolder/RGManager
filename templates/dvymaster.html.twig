@@ -1,0 +1,47 @@
+{# views/user.html.twig #}
+
+{# a editer pour le presentation du visiteur au site  #}
+
+<html>
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="Cache-Control" content="max-age=2000" />
+    <link rel="icon" type="image/x-icon" href="{{asset('favicon.ico')}}" />
+    <link rel="shortcut" type="image/x-icon" href="{{asset('favicon.ico')}}" />
+
+   {% block title %}
+        <title>{{'Deliveries'}}</title>
+   {% endblock %}
+
+   {% block stylesheets %}
+     <link href="{{ asset('css/main.css') }}" rel="stylesheet" />
+   {% endblock %}
+
+   {% block js %}
+   {% endblock %}
+
+</head>
+<body  >
+  <div id="page" >
+
+    {% block myheader %}
+        {% include 'dvyheader.html.twig' %}
+    {% endblock %}
+
+
+    {% block middle %}
+         <div id="middle" >
+             <div><p> middle</p></div>
+         </div>
+    {% endblock %}
+
+
+    {% block myfooter %}
+        {% include 'footer.html.twig' %}
+    {% endblock %}
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,111 @@
+{# views/delivery/showone.html.twig #}
+
+{% extends 'dvymaster.html.twig' %}
+
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="{{ asset('/css/delivery.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+{% endblock %}
+{% block js %}
+{{ parent() }}
+<script src="{{asset('js/maps.js')}}"></script>
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+<script src="{{asset('js/L.KML.js')}}"></script>
+<script>
+  var popup = L.popup();
+  function onMapClick(e)
+  {
+  popup
+  .setLatLng(e.latlng)
+  .setContent("You clicked the map at " + e.latlng.toString())
+  .openOn(mymap);
+
+  lat = e.latlng.lat;
+  lng = e.latlng.lng;
+  document.getElementById("roadgroup_form_Latitude").value=lat;
+  document.getElementById("roadgroup_form_Longitude").value=lng;
+  }
+</script>
+{% endblock %}
+
+
+{% block middle %}
+<div class="delivery">
+
+
+  {% if message %}
+  <div class="heading row">
+    <div class="label">Delivery </div>
+  </div>
+  <H1> No deliverys found </H1>
+
+  {% else %}
+
+<div class="heading row">
+    <div class="label"> Road Group </div>
+    <div class="value"> {{delivery.deliveryId}}:</div>
+    <div class="value"> {{delivery.Name }}</div>
+
+    <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+  </div>
+  <div class="subheading row">
+  <div class="rgid" >ID</div>
+    <div class="name" >Name</div>
+    <div  class="num" >House-holds</div>
+    <div  class="button" ></div>
+  </div>
+  <div class="list" >
+    {% for key ,asubgroup in rggroups %}
+          <div class="group row">
+             <div class="rgid" >{{key}}: </div>
+              <div class="name" >{{ asubgroup.group.Name}}</div>
+             <div class="num" >{{ asubgroup.group.Households}}</div>
+             <div class="button" ><a class="button" href = "/delivery/viewdetail/{{delivery.deliveryId}}/{{key}}" >View</a></div>
+             <div class="largebutton" ><a class="button" href = "/delivery/removeroadgroup/{{delivery.deliveryId}}/{{key}}" >Remove from Schedule</a></div>
+          </div>
+      {% if rgid is defined %}
+      {% if key in rgid %}
+      {% for key2 ,arggroup in asubgroup["children"] %}
+        <div class="subgroup row">
+            <div class="rgid" >{{key2}}:</div>
+            <div class="button" ><a class="button" href = "/delivery/viewdetail/{{delivery.deliveryId}}/{{key2}}" >View</a></div>
+
+        </div>
+        {% if key2 in rgid %}
+        {% for key3 ,arg in arggroup["children"] %}
+            <div class=" roadgroup row">
+              <div class="rgid" >{{key3}}: </div><div class="num" >{{arg.households }}</div>
+              <div class="button" ><a class="button" href = "/delivery/editround/{{delivery.deliveryId}}/{{key2}}" >EditRound</a></div>
+            </div>
+        {% endfor %}
+        {% endif %}
+      {% endfor %}
+      {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  <div class="subheading row">
+    <div class="name" >Unused Roadgroups</div>
+  </div>
+     <div class="group row">
+             <div class="rgid" >ALL: </div>
+             <div class="largebutton" ><a class="button" href = "/delivery/addroadgroup/{{delivery.deliveryId}}/ALL" >Add to Schedule</a></div>
+          </div>
+  {% for key ,asubgroup in rgsparegroups %}
+          <div class="group row">
+             <div class="rgid" >{{key}}: </div>
+              <div class="name" >{{ asubgroup.group.Name}}</div>
+             <div class="num" >{{ asubgroup.group.Households}}</div>
+             <div class="largebutton" ><a class="button" href = "/delivery/addroadgroup/{{delivery.deliveryId}}/{{key}}" >Add to Schedule</a></div>
+          </div>
+        {% endfor %}
+
+
+
+
+{% endif %}
+</div>
+{% endblock %}

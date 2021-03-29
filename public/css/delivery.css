@@ -1,0 +1,59 @@
+
+
+
+div.delivery
+{
+
+
+}
+
+div.delivery   div.group  div
+{
+  width: 7em;
+
+}
+
+div.delivery   div.subgroup.row
+{
+  margin-left: 5em;
+
+}
+
+div.delivery   div.roadgroup.row
+{
+  margin-left: 10em;
+
+}
+
+div.delivery   div.group  div.largebutton
+{
+  width: 15em;
+}
+
+div.delivery   div.group  div.button
+{
+  width: 5em;
+}
+
+div.delivery   div.group  div.num
+{
+  width: 5em;
+}
+
+div.delivery   div.group  div.rgid
+{
+  width: 5em;
+}
+
+ div.map
+{
+  width: 100%;
+  height: 500px;
+}
+
+
+ div#wmapid
+ {
+   width: 100%;
+   height: 500px;
+ }

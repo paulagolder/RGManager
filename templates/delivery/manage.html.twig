@@ -1,0 +1,150 @@
+{# views/delivery/showone.html.twig #}
+
+{% extends 'dvymaster.html.twig' %}
+
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="{{ asset('/css/delivery.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+{% endblock %}
+{% block js %}
+{{ parent() }}
+<script src="{{asset('js/maps.js')}}"></script>
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+<script src="{{asset('js/L.KML.js')}}"></script>
+<script>
+  var popup = L.popup();
+  function onMapClick(e)
+  {
+  popup
+  .setLatLng(e.latlng)
+  .setContent("You clicked the map at " + e.latlng.toString())
+  .openOn(mymap);
+
+  lat = e.latlng.lat;
+  lng = e.latlng.lng;
+  document.getElementById("roadgroup_form_Latitude").value=lat;
+  document.getElementById("roadgroup_form_Longitude").value=lng;
+  }
+</script>
+{% endblock %}
+
+
+{% block middle %}
+<div class="delivery">
+
+
+  {% if message %}
+  <div class="heading row">
+    <div class="label">Delivery </div>
+  </div>
+  <H1> No deliverys found </H1>
+
+  {% else %}
+
+<div class="heading row">
+    <div class="label"> Road Group </div>
+    <div class="value"> {{delivery.deliveryId}}:</div>
+    <div class="value"> {{delivery.Name }}</div>
+
+    <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+  </div>
+  <div class="subheading row">
+  <div class="rgid" >ID</div>
+    <div class="name" >Name</div>
+    <div  class="num" >House-holds</div>
+    <div  class="button" ></div>
+  </div>
+  <div class="list" >
+    {% for key ,asubgroup in rggroups %}
+          <div class="group row">
+             <div class="rgid" >{{key}}: </div>
+              <div class="name" >{{ asubgroup.group.Name}}</div>
+             <div class="num" >{{ asubgroup.group.Households}}</div>
+             <div class="button" ><a class="button" href = "/delivery/manage/{{delivery.deliveryId}}/{{key}}" >View</a></div>
+          </div>
+      {% if rgid is defined %}
+      {% if key in rgid %}
+      {% for key2 ,arggroup in asubgroup["children"] %}
+        <div class="subgroup row">
+            <div class="rgid" >{{key2}}:</div>
+            <div class="button" ><a class="button" href = "/delivery/manage/{{delivery.deliveryId}}/{{key2}}" >View</a></div>
+
+        </div>
+
+        {% if key2 in rgid %}
+          <form class="form1" name="form1" method="post"  action="/delivery/update/{{delivery.deliveryId}}/{{key2}}">
+        {% for key3 ,arg in arggroup["children"] %}
+            <div class=" roadgroup row">
+              <div class="rgid" >{{key3}}: </div><div class="num" >{{arg.households }}</div>
+               <div class="hidden" > <input type="hidden" name="rgid[]" value = "{{key3 }}"/></div>
+              <div class="num" > <input type="text" name="issued[]" value = "{{arg.issuedate }}"/></div>
+              <div class="rgid" > <input type="text" name="agent[]" value = "{{arg.agent }}"/></div>
+               <div class="rgid" > <input type="text" name="achieved[]" value = "{{arg.completed }}"/></div>
+            </div>
+        {% endfor %}
+        {% endif %}
+      {% endfor %}
+  <input type="submit" name="deliveries" value="Submit" />
+</form>
+      {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}
+</div>
+<div class="map" >
+  <div id="wmapid" ></div>
+</div>
+{% set jslocation = district.getjson() %}
+
+<script >
+
+var mymap = myWMap("{{jslocation}}");
+
+var bounds = null;
+var wardlayer = null;
+var fgroup =  new L.featureGroup();
+      var kml = "{{district.kml}}";
+      var path = "{{mappath}}"+kml;
+      if(kml)
+      {
+          var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.2 };
+          makeKMLLayer(mymap,path,style,true,"{{district.name}}")
+      }
+
+
+
+{% for key,arg in dgs %}
+var i=0;
+ var countsgs = 0;
+{% if arg.kml  %}
+
+ {% if arg.issuedate|length %}
+    i=2;
+ {%   endif %}
+  {% if arg.completed|length  %}
+    i=1;
+  {% endif %}
+    var style = {"color":  getColor(i) , "weight": 4 ,  "clickable": true ,"opacity": 1.0, "fillOpacity": 1.0 };
+
+      var  kml = "{{arg.kml}}";
+      var path = "{{mappath}}roadgroups/"+kml;
+      if(kml)
+      {
+        countsgs = countsgs+1;
+        makeKMLLayer(mymap,path,style,true,kml);
+      }
+  {% endif %}
+
+
+ {% endfor %}
+
+
+//mymap.fitBounds(wardlayer.getBounds());
+
+mymap.on('click', onMapClick);
+</script>
+
+{% endblock %}

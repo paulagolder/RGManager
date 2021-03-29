@@ -22,6 +22,47 @@ pollingdistrict_showone:
    path: /pollingdistrict/show/{pdid}
    controller: App\Controller\PollingDistrictController::showone
 
+delivery_showone:
+   path: /delivery/schedule/{dvyid}
+   controller: App\Controller\DeliveryController::schedule
+
+delivery_viewdetail:
+   path: /delivery/viewdetail/{dvyid}/{rgsel}
+   controller: App\Controller\DeliveryController::viewdetail
+
+delivery_manage:
+   path: /delivery/manage/{dvyid}/{rgsel}
+   controller: App\Controller\DeliveryController::manage
+   defaults:
+        rgsel: ALL
+
+delivery_update:
+   path: /delivery/update/{dvyid}/{rgsel}
+   controller: App\Controller\DeliveryController::update
+   defaults:
+        rgsel: ALL
+
+
+
+delivery_edit:
+   path: /delivery/edit/{dvyid}
+   controller: App\Controller\DeliveryController::edit
+
+delivery_new:
+   path: /delivery/new/
+   controller: App\Controller\DeliveryController::newdelivery
+
+delivery_showcurrent:
+   path: /delivery/showcurrent
+   controller: App\Controller\DeliveryController::showcurrent
+
+delivery_removeroadgroup:
+   path: /delivery/removeroadgroup/{dvyid}/{rgsel}
+   controller: App\Controller\DeliveryController::removeroadgroup
+
+delivery_addroadgroups:
+   path: /delivery/addroadgroup/{dvyid}/{rgsel}
+   controller: App\Controller\DeliveryController::addroadgroup
 
 seats_showone:
    path: /seat/show/{dtid}/{stid}
