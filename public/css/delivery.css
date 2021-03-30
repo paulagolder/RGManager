@@ -7,43 +7,62 @@ div.delivery
 
 }
 
-div.delivery   div.group  div
-{
-  width: 7em;
-
-}
-
-div.delivery   div.subgroup.row
-{
-  margin-left: 5em;
-
-}
-
-div.delivery   div.roadgroup.row
-{
-  margin-left: 10em;
-
-}
-
-div.delivery   div.group  div.largebutton
+div.delivery   div  div.largebutton
 {
   width: 15em;
 }
 
-div.delivery   div.group  div.button
+div.delivery   div.group  div
+{
+  xwidth: 7em;
+}
+
+div.delivery   div div.name
+{
+  width: 10em;;
+}
+
+div.delivery   div  div.button
 {
   width: 5em;
 }
 
-div.delivery   div.group  div.num
+div.delivery   div  div.num
 {
   width: 5em;
 }
 
-div.delivery   div.group  div.rgid
+div.delivery   div  div.rgid
 {
   width: 5em;
 }
+
+div.delivery   div.subgroup.row  div.name
+{
+  text-indent: 2em;
+}
+
+
+
+
+
+div.delivery   div.subgroup.row  div.num
+{
+  xwidth: 5em;
+}
+
+div.delivery   div.roadgroup.row
+{
+  xmargin-left: 5em;
+}
+
+div.delivery   div.roadgroup.row div.name
+{
+  xwidth: 15em;
+  text-align:right;
+}
+
+
 
  div.map
 {

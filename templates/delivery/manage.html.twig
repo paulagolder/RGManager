@@ -68,7 +68,9 @@
       {% if key in rgid %}
       {% for key2 ,arggroup in asubgroup["children"] %}
         <div class="subgroup row">
-            <div class="rgid" >{{key2}}:</div>
+            <div class="rgid" ></div>
+            <div class="name" >{{arggroup.group.name}}</div>
+             <div class="num" ></div>
             <div class="button" ><a class="button" href = "/delivery/manage/{{delivery.deliveryId}}/{{key2}}" >View</a></div>
 
         </div>
@@ -77,7 +79,10 @@
           <form class="form1" name="form1" method="post"  action="/delivery/update/{{delivery.deliveryId}}/{{key2}}">
         {% for key3 ,arg in arggroup["children"] %}
             <div class=" roadgroup row">
-              <div class="rgid" >{{key3}}: </div><div class="num" >{{arg.households }}</div>
+            <div class="rgid" > </div>
+              <div class="name" >{{key3}}: </div>
+              <div class="num" >{{arg.households }}</div>
+               <div class="button" ></div>
                <div class="hidden" > <input type="hidden" name="rgid[]" value = "{{key3 }}"/></div>
               <div class="num" > <input type="text" name="issued[]" value = "{{arg.issuedate }}"/></div>
               <div class="rgid" > <input type="text" name="agent[]" value = "{{arg.agent }}"/></div>

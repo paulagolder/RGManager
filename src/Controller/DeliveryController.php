@@ -342,6 +342,18 @@ class DeliveryController extends AbstractController
             ));
     }
 
+    public function delete($dvyid)
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        $delivery = $this->getDoctrine()->getRepository("App:Delivery")->findOne($dvyid);
+
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->remove($delivery);
+                $entityManager->flush();
+
+                return $this->redirect("/delivery/showcurrent/");
+
+    }
 
 
 

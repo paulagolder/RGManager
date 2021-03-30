@@ -42,7 +42,9 @@ delivery_update:
    defaults:
         rgsel: ALL
 
-
+delivery_delete:
+   path: /delivery/delete/{dvyid}
+   controller: App\Controller\DeliveryController::delete
 
 delivery_edit:
    path: /delivery/edit/{dvyid}
