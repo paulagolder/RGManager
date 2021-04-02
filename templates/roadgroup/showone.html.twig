@@ -12,22 +12,10 @@
 {{ parent() }}
 <script src="{{asset('js/maps.js')}}"></script>
 <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
-<script src="{{asset('js/L.KML.js')}}"></script>
-<script>
-  var popup = L.popup();
-  function onMapClick(e)
-  {
-  popup
-  .setLatLng(e.latlng)
-  .setContent("You clicked the map at " + e.latlng.toString())
-  .openOn(mymap);
+  <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
 
-  lat = e.latlng.lat;
-  lng = e.latlng.lng;
-  document.getElementById("street_form_Latitude").value=lat;
-  document.getElementById("street_form_Longitude").value=lng;
-  }
-</script>
+<script src="{{asset('js/L.KML.js')}}"></script>
+
 {% endblock %}
 
 
@@ -110,7 +98,8 @@
   if(kml)
   {
   var style = {"color":  "#0000FF" , "weight": 14 ,  "clickable": true ,"opacity": 0.3, "fillOpacity": 0.1 };
-  makeKMLLayer(mymap, path,style,true,kml);
+  /*makeKMLLayer(mymap, path,style,true,kml);*/
+  makeOutlineKml(mymap, path,style,true,kml);
   }
   mymap.on('click', onMapClick);
 </script>

@@ -225,10 +225,12 @@ function makeOutlineKml(amap,kmlfilepath,style, fitbounds=false, label='')
   var polygon = omnivore.kml(kmlfilepath);
   polygon.setStyle(style);
   polygon.addTo(amap);
-
+ if(fitbounds)
+ {
   polygon.on('ready', function() {
     amap.fitBounds(polygon.getBounds())
   });
+ }
 }
 
 

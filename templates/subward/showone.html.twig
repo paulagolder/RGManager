@@ -12,21 +12,8 @@
    {{ parent() }}
    <script src="{{asset('js/maps.js')}}"></script>
    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+   <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
    <script src="{{asset('js/L.KML.js')}}"></script>
-   <script>
-     var popup = L.popup();
-     function onMapClick(e)
-     {
-       popup
-        .setLatLng(e.latlng)
-        .setContent("You clicked the map at " + e.latlng.toString())
-        .openOn(mymap);
-        lat = e.latlng.lat;
-        lng = e.latlng.lng;
-        document.getElementById("street_form_Latitude").value=lat;
-        document.getElementById("street_form_Longitude").value=lng;
-      }
-    </script>
 {% endblock %}
 
 {% block middle %}
@@ -95,6 +82,14 @@
   {% set jslocation = subward.getjson() %}
   <script  type="text/javascript" >
     var mymap = mySwMap("{{jslocation}}");
+     kml = "{{ward.kml}}";
+  var path = "{{mappath}}roadgroups/"+kml;
+      if(kml)
+      {
+          var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.1 };
+          makeKMLLayer(mymap,path,style,true,"{{ward.rggroupid}}")
+      }
+
     var i=0;
     {% for aroadgroup in roadgroups %}
       var kml = "{{aroadgroup.kml}}";
@@ -109,11 +104,16 @@
          i=i+1;
          if(i>11) i=0;
       }
-      //mymap.fitBounds(fgroup.getBounds());
-      mymap.on('click', onMapClick);
+
   {% endfor %}
 
-
+    kml = "{{ward.kml}}";
+     var path = "{{mappath}}roadgroups/"+kml;
+      if(kml)
+      {
+          var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.0 };
+          makeOutlineKml(mymap,path,style,true,"{{ward.rggroupid}}")
+      }
    </script>
 
 {% endblock %}

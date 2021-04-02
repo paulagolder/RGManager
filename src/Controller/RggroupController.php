@@ -128,7 +128,7 @@ class RggroupController extends AbstractController
         {
           $aroadgroup->setKML($this->mapserver->findmap($aroadgroup->getRoadgroupid(),$this->rgyear));
         }
-        $rglist[]=$aroadgroup->getKML();
+        $rglist[$aroadgroup->getRoadgroupid()]=$aroadgroup->getKML();
       }
       $sglist[$swid]=$rglist;
       $asubward->total= $totalhh;

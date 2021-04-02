@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 30, 2021 at 05:48 PM
+-- Generation Time: Apr 02, 2021 at 09:33 AM
 -- Server version: 10.3.27-MariaDB-1:10.3.27+maria~bionic-log
 -- PHP Version: 7.4.3
 
@@ -34,6 +34,7 @@ DROP TABLE IF EXISTS `delivery`;
 CREATE TABLE `delivery` (
   `deliveryid` int(11) NOT NULL,
   `name` varchar(50) DEFAULT NULL,
+  `kml` varchar(20) DEFAULT NULL,
   `district` varchar(20) NOT NULL,
   `seat` varchar(20) DEFAULT NULL,
   `targetdate` varchar(10) DEFAULT NULL,
@@ -44,8 +45,10 @@ CREATE TABLE `delivery` (
 -- Dumping data for table `delivery`
 --
 
-INSERT INTO `delivery` (`deliveryid`, `name`, `district`, `seat`, `targetdate`, `comment`) VALUES
-(1, 'Keir Leaflet', 'SCC', 'LCN', '30/4/2021', 'Mainly LibDem areas');
+INSERT INTO `delivery` (`deliveryid`, `name`, `kml`, `district`, `seat`, `targetdate`, `comment`) VALUES
+(1, 'Keir Leaflet', 'SCC/LCN.kml', 'SCC', 'LCN', '30/4/2021', 'Mainly LibDem areas'),
+(3, 'Tony', 'SCC/LCS.kml', 'SCC', 'LCS', NULL, NULL),
+(4, 'Tony BLY', 'SCC/LRN.kml', 'SCC', 'LRN', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -62,6 +65,8 @@ CREATE TABLE `deliverytoroadgroup` (
   `issuedate` varchar(10) DEFAULT NULL,
   `households` int(11) DEFAULT NULL,
   `kml` varchar(20) DEFAULT NULL,
+  `supportgroup` varchar(5) DEFAULT NULL,
+  `labourness` varchar(10) DEFAULT NULL,
   `completed` varchar(10) DEFAULT NULL,
   `agent` varchar(10) DEFAULT NULL,
   `feedback` varchar(50) DEFAULT NULL,
@@ -72,61 +77,79 @@ CREATE TABLE `deliverytoroadgroup` (
 -- Dumping data for table `deliverytoroadgroup`
 --
 
-INSERT INTO `deliverytoroadgroup` (`deliveryid`, `roadgroupid`, `rggroupid`, `rgsubgroupid`, `issuedate`, `households`, `kml`, `completed`, `agent`, `feedback`, `instructions`) VALUES
-(1, 'CHD_C2', 'RG_CHD', 'RG_CHD_C', '21/3/21', 189, 'CHD_C2.kml', NULL, 'RT', NULL, NULL),
-(1, 'CHD_N2', 'RG_CHD', 'RG_CHD_N', '21/3/21', 178, 'CHD_N2.kml', NULL, 'RT', NULL, NULL),
-(1, 'CHD_S1', 'RG_CHD', 'RG_CHD_S', '21/3/21', 97, 'CHD_S1_2021.kml', 'done', 'RM', NULL, NULL),
-(1, 'CHD_S2', 'RG_CHD', 'RG_CHD_S', '23/3/21', 116, 'CHD_S2_2021.kml', 'done', 'PG', NULL, NULL),
-(1, 'CHD_S3', 'RG_CHD', 'RG_CHD_S', '18/3/21', 121, 'CHD_S3.kml', 'done', 'BB', NULL, NULL),
-(1, 'CHD_S4', 'RG_CHD', 'RG_CHD_S', '29/1/21', 136, 'CHD_S4_2021.kml', 'done', 'BB', NULL, NULL),
-(1, 'CUR_C2', 'RG_CUR', 'RG_CUR_C', '20/3/21', 205, 'CUR_C2_2021.kml', '', 'BW', NULL, NULL),
-(1, 'CUR_E1', 'RG_CUR', 'RG_CUR_E', '30/3/21', 136, 'CUR_E1_2021.kml', '', 'IG', NULL, NULL),
-(1, 'CUR_N1', 'RG_CUR', 'RG_CUR_N', '20/3/21', 151, 'CUR_N1.kml', 'done', 'RB', NULL, NULL),
-(1, 'CUR_N2', 'RG_CUR', 'RG_CUR_N', '20/3/21', 195, 'CUR_N2.kml', 'done', 'RB', NULL, NULL),
-(1, 'CUR_N3', 'RG_CUR', 'RG_CUR_N', '', 120, 'CUR_N3.kml', 'done', 'BB', NULL, NULL),
-(1, 'STW_E2', 'RG_STW', 'RG_STW_E', '20/3/21', 140, 'STW_E2.kml', '', 'CH', NULL, NULL),
-(1, 'STW_N2', 'RG_STW', 'RG_STW_N', '22/3/21', 141, 'STW_N2_2021.kml', 'done', 'DP', NULL, NULL),
-(1, 'STW_N4', 'RG_STW', 'RG_STW_N', '22/3/21', 168, 'STW_N4_2021.kml', 'done', 'DP', NULL, NULL),
-(1, 'STW_W1', 'RG_STW', 'RG_STW_W', '20/3/21', 114, 'STW_W1.kml', '', 'CH', NULL, NULL),
-(1, 'STW_W3', 'RG_STW', 'RG_STW_W', '20/3/21', 130, 'STW_W3.kml', '', 'CH', NULL, NULL),
-(2, 'STJ_C1', 'RG_STJ', 'RG_STJ_C', NULL, 156, 'STJ_C1.kml', NULL, NULL, NULL, NULL),
-(2, 'STJ_C2', 'RG_STJ', 'RG_STJ_C', NULL, 157, 'STJ_C2.kml', NULL, NULL, NULL, NULL),
-(2, 'STJ_C3', 'RG_STJ', 'RG_STJ_C', NULL, 104, 'STJ_C3.kml', NULL, NULL, NULL, NULL),
-(2, 'STJ_C4', 'RG_STJ', 'RG_STJ_C', NULL, 176, 'STJ_C4.kml', NULL, NULL, NULL, NULL),
-(2, 'STJ_C5', 'RG_STJ', 'RG_STJ_C', NULL, 200, 'STJ_C5.kml', NULL, NULL, NULL, NULL),
-(2, 'STJ_C6', 'RG_STJ', 'RG_STJ_C', NULL, 132, 'STJ_C6.kml', NULL, NULL, NULL, NULL),
-(2, 'STJ_E1', 'RG_STJ', 'RG_STJ_E', NULL, 176, 'STJ_E1.kml', NULL, NULL, NULL, NULL),
-(2, 'STJ_E2', 'RG_STJ', 'RG_STJ_E', NULL, 231, 'STJ_E2_2021.kml', NULL, NULL, NULL, NULL),
-(2, 'STJ_E3', 'RG_STJ', 'RG_STJ_E', NULL, 207, 'STJ_E3_2021.kml', NULL, NULL, NULL, NULL),
-(2, 'STJ_E4', 'RG_STJ', 'RG_STJ_E', NULL, 118, 'STJ_E4.kml', NULL, NULL, NULL, NULL),
-(2, 'STJ_E5', 'RG_STJ', 'RG_STJ_E', NULL, 174, 'STJ_E5.kml', NULL, NULL, NULL, NULL),
-(2, 'STJ_E6', 'RG_STJ', 'RG_STJ_E', NULL, 148, 'STJ_E6_2021.kml', NULL, NULL, NULL, NULL),
-(2, 'STJ_E7', 'RG_STJ', 'RG_STJ_E', NULL, 40, 'STJ_E7_2021.kml', NULL, NULL, NULL, NULL),
-(2, 'STJ_E8', 'RG_STJ', 'RG_STJ_E', NULL, 156, 'STJ_E8.kml', NULL, NULL, NULL, NULL),
-(2, 'STJ_E9', 'RG_STJ', 'RG_STJ_E', NULL, 60, 'STJ_E9_2021.kml', NULL, NULL, NULL, NULL),
-(2, 'STJ_W1', 'RG_STJ', 'RG_STJ_W', NULL, 170, 'STJ_W1.kml', NULL, NULL, NULL, NULL),
-(2, 'STJ_W2', 'RG_STJ', 'RG_STJ_W', NULL, 227, 'STJ_W2.kml', NULL, NULL, NULL, NULL),
-(2, 'STJ_XW', 'RG_STJ', 'RG_STJ_X', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(2, 'STW_C1', 'RG_STW', 'RG_STW_C', NULL, 140, 'STW_C1.kml', NULL, NULL, NULL, NULL),
-(2, 'STW_C2', 'RG_STW', 'RG_STW_C', NULL, 149, 'STW_C2_2021.kml', NULL, NULL, NULL, NULL),
-(2, 'STW_C3', 'RG_STW', 'RG_STW_C', NULL, 100, 'STW_C3.kml', NULL, NULL, NULL, NULL),
-(2, 'STW_E1', 'RG_STW', 'RG_STW_S', NULL, 189, 'STW_E1.kml', NULL, NULL, NULL, NULL),
-(2, 'STW_E2', 'RG_STW', 'RG_STW_E', NULL, 140, 'STW_E2.kml', NULL, NULL, NULL, NULL),
-(2, 'STW_E3', 'RG_STW', 'RG_STW_E', NULL, 145, 'STW_E3_2021.kml', NULL, NULL, NULL, NULL),
-(2, 'STW_E4', 'RG_STW', 'RG_STW_E', NULL, 154, 'STW_E4.kml', NULL, NULL, NULL, NULL),
-(2, 'STW_E5', 'RG_STW', 'RG_STW_E', NULL, 138, 'STW_E5.kml', NULL, NULL, NULL, NULL),
-(2, 'STW_E6', 'RG_STW', 'RG_STW_E', NULL, 110, 'STW_E6.kml', NULL, NULL, NULL, NULL),
-(2, 'STW_N1', 'RG_STW', 'RG_STW_N', NULL, 205, 'STW_N1.kml', NULL, NULL, NULL, NULL),
-(2, 'STW_N2', 'RG_STW', 'RG_STW_N', NULL, 141, 'STW_N2_2021.kml', NULL, NULL, NULL, NULL),
-(2, 'STW_N3', 'RG_STW', 'RG_STW_N', NULL, 132, 'STW_N3_2021.kml', NULL, NULL, NULL, NULL),
-(2, 'STW_N4', 'RG_STW', 'RG_STW_N', NULL, 168, 'STW_N4_2021.kml', NULL, NULL, NULL, NULL),
-(2, 'STW_S1', 'RG_STW', 'RG_STW_S', NULL, 139, 'STW_S1_2021.kml', NULL, NULL, NULL, NULL),
-(2, 'STW_S2', 'RG_STW', 'RG_STW_S', NULL, 121, 'STW_S2.kml', NULL, NULL, NULL, NULL),
-(2, 'STW_S3', 'RG_STW', 'RG_STW_S', NULL, 188, 'STW_S3_2021.kml', NULL, NULL, NULL, NULL),
-(2, 'STW_S4', 'RG_STW', 'RG_STW_S', NULL, NULL, 'STW_S4_2021.kml', NULL, NULL, NULL, NULL),
-(2, 'STW_W1', 'RG_STW', 'RG_STW_W', NULL, 114, 'STW_W1.kml', NULL, NULL, NULL, NULL),
-(2, 'STW_W2', 'RG_STW', 'RG_STW_W', NULL, 244, 'STW_W2.kml', NULL, NULL, NULL, NULL),
-(2, 'STW_W3', 'RG_STW', 'RG_STW_W', NULL, 130, 'STW_W3.kml', NULL, NULL, NULL, NULL);
+INSERT INTO `deliverytoroadgroup` (`deliveryid`, `roadgroupid`, `rggroupid`, `rgsubgroupid`, `issuedate`, `households`, `kml`, `supportgroup`, `labourness`, `completed`, `agent`, `feedback`, `instructions`) VALUES
+(1, 'CHD_C2', 'RG_CHD', 'RG_CHD_C', '21/3/21', 189, 'CHD_C2.kml', 'M', '102', NULL, 'RT', NULL, NULL),
+(1, 'CHD_N2', 'RG_CHD', 'RG_CHD_N', '21/3/21', 178, 'CHD_N2.kml', 'H', '35', NULL, 'RT', NULL, NULL),
+(1, 'CHD_S1', 'RG_CHD', 'RG_CHD_S', '21/3/21', 97, 'CHD_S1_2021.kml', 'L', '184', 'done', 'RM', NULL, NULL),
+(1, 'CHD_S2', 'RG_CHD', 'RG_CHD_S', '23/3/21', 116, 'CHD_S2_2021.kml', 'M', '136', 'done', 'PG', NULL, NULL),
+(1, 'CHD_S3', 'RG_CHD', 'RG_CHD_S', '18/3/21', 121, 'CHD_S3.kml', 'M', '133', 'done', 'BB', NULL, NULL),
+(1, 'CHD_S4', 'RG_CHD', 'RG_CHD_S', '29/1/21', 136, 'CHD_S4_2021.kml', 'M', '111', 'done', 'BB', NULL, NULL),
+(1, 'CUR_C2', 'RG_CUR', 'RG_CUR_C', '20/3/21', 205, 'CUR_C2_2021.kml', 'H', '67', '', 'BW', NULL, NULL),
+(1, 'CUR_E1', 'RG_CUR', 'RG_CUR_E', '30/3/21', 136, 'CUR_E1_2021.kml', 'M', '116', '', 'IG', NULL, NULL),
+(1, 'CUR_N1', 'RG_CUR', 'RG_CUR_N', '20/3/21', 151, 'CUR_N1.kml', 'M', '95', 'done', 'RB', NULL, NULL),
+(1, 'CUR_N2', 'RG_CUR', 'RG_CUR_N', '20/3/21', 195, 'CUR_N2.kml', 'H', '21', 'done', 'RB', NULL, NULL),
+(1, 'CUR_N3', 'RG_CUR', 'RG_CUR_N', '', 120, 'CUR_N3.kml', 'M', '', 'done', 'BB', NULL, NULL),
+(1, 'STW_E2', 'RG_STW', 'RG_STW_E', '20/3/21', 140, 'STW_E2.kml', 'M', '127', '', 'CH', NULL, NULL),
+(1, 'STW_N2', 'RG_STW', 'RG_STW_N', '22/3/21', 141, 'STW_N2_2021.kml', 'H', '43', 'done', 'DP', NULL, NULL),
+(1, 'STW_N4', 'RG_STW', 'RG_STW_N', '22/3/21', 168, 'STW_N4_2021.kml', 'L', '165', 'done', 'DP', NULL, NULL),
+(1, 'STW_W1', 'RG_STW', 'RG_STW_W', '20/3/21', 114, 'STW_W1.kml', 'H', '32', '', 'CH', NULL, NULL),
+(1, 'STW_W3', 'RG_STW', 'RG_STW_W', '20/3/21', 130, 'STW_W3.kml', 'H', '12', '', 'CH', NULL, NULL),
+(2, 'STJ_C1', 'RG_STJ', 'RG_STJ_C', NULL, 156, 'STJ_C1.kml', 'M', '124', NULL, NULL, NULL, NULL),
+(2, 'STJ_C2', 'RG_STJ', 'RG_STJ_C', NULL, 157, 'STJ_C2.kml', 'M', '114', NULL, NULL, NULL, NULL),
+(2, 'STJ_C3', 'RG_STJ', 'RG_STJ_C', NULL, 104, 'STJ_C3.kml', 'M', '100', NULL, NULL, NULL, NULL),
+(2, 'STJ_C4', 'RG_STJ', 'RG_STJ_C', NULL, 176, 'STJ_C4.kml', 'H', '4', NULL, NULL, NULL, NULL),
+(2, 'STJ_C5', 'RG_STJ', 'RG_STJ_C', NULL, 200, 'STJ_C5.kml', 'M', '85', NULL, NULL, NULL, NULL),
+(2, 'STJ_C6', 'RG_STJ', 'RG_STJ_C', NULL, 132, 'STJ_C6.kml', 'H', '7', NULL, NULL, NULL, NULL),
+(2, 'STJ_E1', 'RG_STJ', 'RG_STJ_E', NULL, 176, 'STJ_E1.kml', 'H', '40', NULL, NULL, NULL, NULL),
+(2, 'STJ_E2', 'RG_STJ', 'RG_STJ_E', NULL, 231, 'STJ_E2_2021.kml', 'H', '5', NULL, NULL, NULL, NULL),
+(2, 'STJ_E3', 'RG_STJ', 'RG_STJ_E', NULL, 207, 'STJ_E3_2021.kml', 'M', '109', NULL, NULL, NULL, NULL),
+(2, 'STJ_E4', 'RG_STJ', 'RG_STJ_E', NULL, 118, 'STJ_E4.kml', 'M', '77', NULL, NULL, NULL, NULL),
+(2, 'STJ_E5', 'RG_STJ', 'RG_STJ_E', NULL, 174, 'STJ_E5.kml', 'L', '167', NULL, NULL, NULL, NULL),
+(2, 'STJ_E6', 'RG_STJ', 'RG_STJ_E', NULL, 148, 'STJ_E6_2021.kml', 'L', '170', NULL, NULL, NULL, NULL),
+(2, 'STJ_E7', 'RG_STJ', 'RG_STJ_E', NULL, 40, 'STJ_E7_2021.kml', 'L', '146', NULL, NULL, NULL, NULL),
+(2, 'STJ_E8', 'RG_STJ', 'RG_STJ_E', NULL, 156, 'STJ_E8.kml', 'L', '166', NULL, NULL, NULL, NULL),
+(2, 'STJ_E9', 'RG_STJ', 'RG_STJ_E', NULL, 60, 'STJ_E9_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 'STJ_W1', 'RG_STJ', 'RG_STJ_W', NULL, 170, 'STJ_W1.kml', 'H', '68', NULL, NULL, NULL, NULL),
+(2, 'STJ_W2', 'RG_STJ', 'RG_STJ_W', NULL, 227, 'STJ_W2.kml', 'H', '11', NULL, NULL, NULL, NULL),
+(2, 'STJ_XW', 'RG_STJ', 'RG_STJ_X', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 'STW_C1', 'RG_STW', 'RG_STW_C', NULL, 140, 'STW_C1.kml', 'M', '132', NULL, NULL, NULL, NULL),
+(2, 'STW_C2', 'RG_STW', 'RG_STW_C', NULL, 149, 'STW_C2_2021.kml', 'M', '94', NULL, NULL, NULL, NULL),
+(2, 'STW_C3', 'RG_STW', 'RG_STW_C', NULL, 100, 'STW_C3.kml', 'H', '64.5', NULL, NULL, NULL, NULL),
+(2, 'STW_E1', 'RG_STW', 'RG_STW_S', NULL, 189, 'STW_E1.kml', 'H', '30.5', NULL, NULL, NULL, NULL),
+(2, 'STW_E2', 'RG_STW', 'RG_STW_E', NULL, 140, 'STW_E2.kml', 'M', '127', NULL, NULL, NULL, NULL),
+(2, 'STW_E3', 'RG_STW', 'RG_STW_E', NULL, 145, 'STW_E3_2021.kml', 'M', '103', NULL, NULL, NULL, NULL),
+(2, 'STW_E4', 'RG_STW', 'RG_STW_E', NULL, 154, 'STW_E4.kml', 'H', '52', NULL, NULL, NULL, NULL),
+(2, 'STW_E5', 'RG_STW', 'RG_STW_E', NULL, 138, 'STW_E5.kml', 'M', '104', NULL, NULL, NULL, NULL),
+(2, 'STW_E6', 'RG_STW', 'RG_STW_E', NULL, 110, 'STW_E6.kml', 'H', '59', NULL, NULL, NULL, NULL),
+(2, 'STW_N1', 'RG_STW', 'RG_STW_N', NULL, 205, 'STW_N1.kml', 'L', '145', NULL, NULL, NULL, NULL),
+(2, 'STW_N2', 'RG_STW', 'RG_STW_N', NULL, 141, 'STW_N2_2021.kml', 'H', '43', NULL, NULL, NULL, NULL),
+(2, 'STW_N3', 'RG_STW', 'RG_STW_N', NULL, 132, 'STW_N3_2021.kml', 'M', '75', NULL, NULL, NULL, NULL),
+(2, 'STW_N4', 'RG_STW', 'RG_STW_N', NULL, 168, 'STW_N4_2021.kml', 'L', '165', NULL, NULL, NULL, NULL),
+(2, 'STW_S1', 'RG_STW', 'RG_STW_S', NULL, 139, 'STW_S1_2021.kml', 'H', '49.5', NULL, NULL, NULL, NULL),
+(2, 'STW_S2', 'RG_STW', 'RG_STW_S', NULL, 121, 'STW_S2.kml', 'L', '155', NULL, NULL, NULL, NULL),
+(2, 'STW_S3', 'RG_STW', 'RG_STW_S', NULL, 188, 'STW_S3_2021.kml', 'M', '79', NULL, NULL, NULL, NULL),
+(2, 'STW_S4', 'RG_STW', 'RG_STW_S', NULL, NULL, 'STW_S4_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(2, 'STW_W1', 'RG_STW', 'RG_STW_W', NULL, 114, 'STW_W1.kml', 'H', '32', NULL, NULL, NULL, NULL),
+(2, 'STW_W2', 'RG_STW', 'RG_STW_W', NULL, 244, 'STW_W2.kml', 'H', '10', NULL, NULL, NULL, NULL),
+(2, 'STW_W3', 'RG_STW', 'RG_STW_W', NULL, 130, 'STW_W3.kml', 'H', '12', NULL, NULL, NULL, NULL),
+(3, 'LEO_C4', 'RG_LEO', 'RG_LEO_C', NULL, 171, 'LEO_C4_2021.kml', 'H', '9', NULL, NULL, NULL, NULL),
+(3, 'LEO_C5', 'RG_LEO', 'RG_LEO_C', NULL, 164, 'LEO_C5.kml', 'H', '20', NULL, NULL, NULL, NULL),
+(3, 'LEO_C6', 'RG_LEO', 'RG_LEO_C', NULL, 142, 'LEO_C6.kml', 'H', '1', NULL, NULL, NULL, NULL),
+(3, 'LEO_C7', 'RG_LEO', 'RG_LEO_C', NULL, 176, 'LEO_C7_2021.kml', 'H', '3', NULL, NULL, NULL, NULL),
+(3, 'LEO_C8', 'RG_LEO', 'RG_LEO_C', NULL, 197, 'LEO_C8.kml', 'H', '8', NULL, NULL, NULL, NULL),
+(3, 'LEO_N4', 'RG_LEO', 'RG_LEO_N', NULL, 93, 'LEO_N4_2021.kml', 'H', '69', NULL, NULL, NULL, NULL),
+(3, 'LEO_W2', 'RG_LEO', 'RG_LEO_W', NULL, 262, 'LEO_W2.kml', 'H', '6', NULL, NULL, NULL, NULL),
+(3, 'STJ_C4', 'RG_STJ', 'RG_STJ_C', NULL, 176, 'STJ_C4.kml', 'H', '4', NULL, NULL, NULL, NULL),
+(3, 'STJ_C6', 'RG_STJ', 'RG_STJ_C', NULL, 132, 'STJ_C6.kml', 'H', '7', NULL, NULL, NULL, NULL),
+(3, 'STJ_E1', 'RG_STJ', 'RG_STJ_E', NULL, 176, 'STJ_E1.kml', 'H', '40', NULL, NULL, NULL, NULL),
+(3, 'STJ_E2', 'RG_STJ', 'RG_STJ_E', NULL, 231, 'STJ_E2_2021.kml', 'H', '5', NULL, NULL, NULL, NULL),
+(3, 'STJ_W1', 'RG_STJ', 'RG_STJ_W', NULL, 170, 'STJ_W1.kml', 'H', '68', NULL, NULL, NULL, NULL),
+(3, 'STJ_W2', 'RG_STJ', 'RG_STJ_W', NULL, 227, 'STJ_W2.kml', 'H', '11', NULL, NULL, NULL, NULL),
+(4, 'BLY_C2', 'RG_BLY', 'RG_BLY_C', NULL, 137, 'BLY_C2.kml', 'H', '56', NULL, NULL, NULL, NULL),
+(4, 'BLY_N1', 'RG_BLY', 'RG_BLY_N', NULL, 244, 'BLY_N1.kml', 'H', '18', NULL, NULL, NULL, NULL),
+(4, 'STW_C3', 'RG_STW', 'RG_STW_C', NULL, 100, 'STW_C3.kml', 'H', '64.5', NULL, NULL, NULL, NULL),
+(4, 'STW_E1', 'RG_STW', 'RG_STW_S', NULL, 189, 'STW_E1.kml', 'H', '30.5', NULL, NULL, NULL, NULL),
+(4, 'STW_S1', 'RG_STW', 'RG_STW_S', NULL, 139, 'STW_S1_2021.kml', 'H', '49.5', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -435,8 +458,8 @@ INSERT INTO `roadgroup` (`roadgroupid`, `year`, `rggroupid`, `rgsubgroupid`, `na
 ('CUR_N1', 2021, 'RG_CUR', 'RG_CUR_N', 'Norwich', 10, 151, 306, 1.51263, 'M', '95', 'CUR_N1.kml', ' -1.8258670568466187', NULL, NULL, NULL, NULL, NULL, NULL),
 ('CUR_N2', 2020, 'RG_CUR', 'RG_CUR_N', 'Lincoln', 6, 181, 322, 0.919085, 'H', '21', 'CUR_N2.kml', ' -1.8221800327301025', NULL, NULL, NULL, NULL, NULL, NULL),
 ('CUR_N2', 2021, 'RG_CUR', 'RG_CUR_N', 'Lincoln', 6, 195, 322, 0.919085, 'H', '21', 'CUR_N2.kml', ' -1.8221800327301025', NULL, NULL, NULL, NULL, NULL, NULL),
-('CUR_N3', 2020, 'RG_CUR', 'RG_CUR_N', 'Saxon Gate', 16, 181, 322, 0.802763, '?', '?', 'CUR_N3.kml', ' -1.8230520486831665', NULL, NULL, NULL, NULL, NULL, NULL),
-('CUR_N3', 2021, 'RG_CUR', 'RG_CUR_N', 'Saxon Gate', 16, 120, 322, 0.802763, '?', '?', 'CUR_N3.kml', ' -1.8230520486831665', NULL, NULL, NULL, NULL, NULL, NULL),
+('CUR_N3', 2020, 'RG_CUR', 'RG_CUR_N', 'Saxon Gate', 16, 181, 322, 0.802763, 'M', '', 'CUR_N3.kml', ' -1.8230520486831665', NULL, NULL, NULL, NULL, NULL, NULL),
+('CUR_N3', 2021, 'RG_CUR', 'RG_CUR_N', 'Saxon Gate', 16, 120, 322, 0.802763, 'M', '', 'CUR_N3.kml', ' -1.8230520486831665', NULL, NULL, NULL, NULL, NULL, NULL),
 ('CUR_S1', 2020, 'RG_CUR', 'RG_CUR_S', 'Leyfields', 13, 112, 205, 1.50407, 'M', '141', 'CUR_S1.kml', ' -1.8301600217819214', NULL, NULL, NULL, NULL, NULL, NULL),
 ('CUR_S1', 2021, 'RG_CUR', 'RG_CUR_S', 'Leyfields', 13, 114, 205, 1.50407, 'M', '141', 'CUR_S1_2021.kml', ' -1.8301600217819214', NULL, NULL, NULL, NULL, NULL, NULL),
 ('CUR_S2', 2020, 'RG_CUR', 'RG_CUR_S', 'Ponesfield', 9, 174, 363, 1.6023, 'L', '183', 'CUR_S2.kml', ' -1.8270219564437866', NULL, NULL, NULL, NULL, NULL, NULL),
@@ -1955,19 +1978,7 @@ INSERT INTO `seattopd` (`pdid`, `seat`, `district`, `year`) VALUES
 ('SCC', 'LCS', 'RW', '2020'),
 ('SCC', 'LCS', 'RW', '2021'),
 ('SCC', 'LCS', 'RX', '2020'),
-('SCC', 'LCS', 'RX', '2021'),
-('SCC', 'LRN', 'RA', '2020'),
-('SCC', 'LRN', 'RA', '2021'),
-('SCC', 'LRN', 'RB', '2020'),
-('SCC', 'LRN', 'RB', '2021'),
-('SCC', 'LRN', 'RC', '2020'),
-('SCC', 'LRN', 'RC', '2021'),
-('SCC', 'LRN', 'RD', '2020'),
-('SCC', 'LRN', 'RD', '2021'),
-('SCC', 'LRN', 'RE', '2020'),
-('SCC', 'LRN', 'RE', '2021'),
-('SCC', 'LRN', 'RF', '2020'),
-('SCC', 'LRN', 'RF', '2021');
+('SCC', 'LCS', 'RX', '2021');
 
 -- --------------------------------------------------------
 
@@ -3067,7 +3078,7 @@ ALTER TABLE `TABLE13b`
 -- AUTO_INCREMENT for table `delivery`
 --
 ALTER TABLE `delivery`
-  MODIFY `deliveryid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `deliveryid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `roadgrouptostreet`
