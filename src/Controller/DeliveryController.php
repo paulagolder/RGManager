@@ -106,6 +106,34 @@ class DeliveryController extends AbstractController
             ]);
     }
 
+    public function mapschedule($dvyid)
+    {
+        $delivery = $this->getDoctrine()->getRepository("App:Delivery")->findOne($dvyid);
+        if (!$delivery)
+        {
+            return $this->render('Delivery/showone.html.twig', [ 'message' =>  'Delivery not Found',]);
+        }
+      //  $delivery->KML = $delivery->getDistrict()."_".$delivery->getSeat().".kml";
+        $rgs= $this->getDoctrine()->getRepository("App:Delivery")->findDeliveryRoadgroups($dvyid,$this->rgyear);
+        dump($rgs);
+        $rggroups = $this->maketree($dvyid,$rgs);
+        $sparergs = [];
+        $allrgs =  $this->getDoctrine()->getRepository("App:Delivery")->findCandidateDeliveryRoadgroups($delivery,$this->rgyear);
+        dump($allrgs);
+
+        return $this->render('delivery/showmap.html.twig',
+            [
+                'rgyear' => $this->rgyear,
+                'message' =>  '' ,
+                'delivery'=>$delivery,
+                'rgs'=>$rgs,
+                'rggroups'=>$rggroups,
+                'allrgs'=>$allrgs,
+                'back'=>"/delivery/showcurrent"
+            ]);
+    }
+
+
     public function viewdetail($dvyid, $rgsel)
     {
 
@@ -204,6 +232,42 @@ class DeliveryController extends AbstractController
     }
 
 
+     public function parseroadgroups($dvyid)
+    {
+       $request = $this->requestStack->getCurrentRequest();
+       $data = $request->request->get('form');
+        $input = $request->request->all();
+        $rglist  = preg_split('/[\ \n\,]+/', $input["rgids"]);
+          dump($rglist);
+        $i=0;
+        $entityManager = $this->getDoctrine()->getManager();
+        foreach($rglist as $rg)
+        {
+         dump($rg);
+         $dtorg =  $this->getDoctrine()->getRepository('App:DeliverytoRoadgroup')->findOne($dvyid,$rg);
+          dump($dtorg);
+         if($dtorg === null)
+         {
+                   $roadgroup =  $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rg,$this->rgyear);
+                   if($roadgroup !== null)
+                   {
+                    $adtrg = new DeliverytoRoadgroup();
+                    $adtrg->setDeliveryId($dvyid);
+                    $adtrg->setRoadgroupId($rg);
+                    $adtrg->setRggroupId($roadgroup->getRggroupId());
+                    $adtrg->setRgsubgroupId($roadgroup->getRgsubgroupId());
+                    $adtrg->setHouseholds($roadgroup->getHouseholds());
+                    $adtrg->setKML($roadgroup->getKml());
+                    $entityManager->persist($adtrg);
+                    }
+         }
+
+         }
+         $entityManager->flush();
+         return $this->redirect("/delivery/schedule/$dvyid");
+    }
+
+
 
     public function maketree($dvyid,$rglist)
     {
@@ -296,8 +360,6 @@ class DeliveryController extends AbstractController
             $form->handleRequest($request);
             if ($form->isValid())
             {
-               // $person->setContributor($user->getUsername());
-               // $person->setUpdateDt($time);
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($delivery);
                 $entityManager->flush();
@@ -527,6 +589,28 @@ class DeliveryController extends AbstractController
              return $this->redirect( "/delivery/viewdetail/".$dvyid."/".$rgsel);
       }
 
+  public function addRound($dvyid,$rgid)
+      {
+
+           $delivery = $this->getDoctrine()->getRepository("App:Delivery")->findOne($dvyid,$this->rgyear);
+
+
+               $entityManager = $this->getDoctrine()->getManager();
+
+                    $roadgroup =  $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
+                    $adtrg = new DeliverytoRoadgroup();
+                    $adtrg->setDeliveryId($dvyid);
+                    $adtrg->setRoadgroupId($rgid);
+                      $adtrg->setRggroupId($roadgroup->getRggroupId());
+                       $adtrg->setRgsubgroupId($roadgroup->getRgsubgroupId());
+                    $adtrg->setHouseholds($roadgroup->getHouseholds());
+                    $adtrg->setKML($roadgroup->getKml());
+                    $entityManager->persist($adtrg);
+               $entityManager->flush();
+
+
+             return $this->redirect( "/delivery/mapschedule/".$dvyid);
+      }
 
 
       public function removeRoadgroup($dvyid,$rgsel)
@@ -555,6 +639,19 @@ class DeliveryController extends AbstractController
            $entityManager->flush();
            return $this->redirect( "/delivery/viewdetail/".$dvyid."/".$rgsel);
       }
+
+
+      public function removeRound($dvyid,$rgid)
+      {
+
+           $entityManager = $this->getDoctrine()->getManager();
+
+              $roadgrouplink =  $this->getDoctrine()->getRepository("App:DeliverytoRoadgroup")->findOne($dvyid,$rgid);
+              $entityManager->remove($roadgrouplink);
+           $entityManager->flush();
+          return $this->redirect( "/delivery/mapschedule/".$dvyid);
+      }
+
 
       public function getSpareRoadgroups($dvyid, $year)
       {

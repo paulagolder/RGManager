@@ -42,6 +42,8 @@ class DeliveryRepository  extends EntityRepository
      {
         $conn = $this->getEntityManager()->getConnection();
         $sqlpd = 'select p.pollingdistrictid  from pollingdistrict  as p, seattopd as s where s.pdid =  p.pollingdistrictid and s.year = "'.$year.'" and s.district = "'.$delivery->getDistrict().'" ';
+        if($delivery->getSeat())
+         $sqlpd .= ' and s.seat = "'.$delivery->getSeat().'"';
         //dump($sqlpd);
         $stmt = $conn->prepare($sqlpd);
         $stmt->execute();
@@ -58,7 +60,13 @@ class DeliveryRepository  extends EntityRepository
         $stmt = $conn->executeQuery($sql);
 
         $roadgroups= $stmt->fetchAll();
-        return $roadgroups;
+
+        $rglist=[];
+        foreach($roadgroups as $rg)
+        {
+        $rglist[$rg["roadgroupid"]]= $rg;
+        }
+        return $rglist;
      }
 
 

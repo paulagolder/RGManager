@@ -43,6 +43,10 @@ class Delivery
     private $Comment;
 
 
+     /**
+     * @ORM\Column(name="kml",type="string", length=50)
+     */
+    public $KML;
 
     public function getDeliveryId()
     {
@@ -63,6 +67,16 @@ class Delivery
     public function setName(string $Text): self
     {
         $this->Name = $Text;
+        return $this;
+    }
+       public function getKML(): ?string
+    {
+        return $this->KML;
+    }
+
+    public function setKML(string $Text): self
+    {
+        $this->KML = $Text;
         return $this;
     }
 
@@ -111,6 +125,20 @@ class Delivery
         return $this;
     }
 
+
+   public function getjson()
+   {
+;
+
+   $str ="{";
+   $str .=  '"name":"'.$this->Name.'",';
+   $str .=  '"deliveryid":"'.$this->DeliveryId.'",';
+   $str .=  '"kml":"'.$this->KML.'"';
+  // $str .=  '"longitude":"'.$this->Longitude.'",';
+  // $str .=  '"latitude":"'.$this->Latitude.'"';
+   $str .="}";
+   return  $str;
+   }
 
 }
 

@@ -67,7 +67,7 @@ function myRgMap(location)
   var lat = mylocation.latitude;
   var long = mylocation.longitude;
   var zoom = 18;
-  if( lat < 40)
+  if( lat === undefined  || lat < 40)
   {
     long =-1.8304;
     lat = 52.6854 ;
@@ -96,7 +96,7 @@ function myWMap(location)
   var lat = mylocation.latitude;
   var long = mylocation.longitude;
   var zoom = 18;
-  if( lat < 40)
+  if( lat === undefined  || lat < 40)
   {
     long =-1.8304;
     lat = 52.6854 ;
@@ -127,7 +127,7 @@ function myStMap(location)
   var lat = mylocation.latitude;
   var long = mylocation.longitude;
   var zoom = 18;
-  if( lat < 40)
+  if( lat === undefined  || lat < 40)
   {
     long =-1.8304;
     lat = 52.6854 ;
@@ -209,14 +209,26 @@ function makeKMLLayer(amap,kmlfilepath,style, fitbounds=false, label='')
     track = new L.KML(kml);
     track.setStyle(style);
     amap.addLayer(track);
-    if(fitbounds)
-    {
-    const bounds = track.getBounds();
-    amap.fitBounds(bounds);
+     const bounds = track.getBounds();
+     if(bounds)
+     {
+    //  amap.fitBounds(bounds);
     }
    track.bindPopup(label);
   });
   return track;
+}
+
+
+function makeOutlineKml(amap,kmlfilepath,style, fitbounds=false, label='')
+{
+  var polygon = omnivore.kml(kmlfilepath);
+  polygon.setStyle(style);
+  polygon.addTo(amap);
+
+  polygon.on('ready', function() {
+    amap.fitBounds(polygon.getBounds())
+  });
 }
 
 

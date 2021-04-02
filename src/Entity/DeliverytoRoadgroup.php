@@ -51,6 +51,7 @@ class DeliverytoRoadgroup
      */
     private $Kml;
 
+
      /**
      * @ORM\Column(name="completed",type="string", length=50)
      */

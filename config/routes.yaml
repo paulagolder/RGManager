@@ -26,6 +26,11 @@ delivery_showone:
    path: /delivery/schedule/{dvyid}
    controller: App\Controller\DeliveryController::schedule
 
+
+delivery_mapone:
+   path: /delivery/mapschedule/{dvyid}
+   controller: App\Controller\DeliveryController::mapschedule
+
 delivery_viewdetail:
    path: /delivery/viewdetail/{dvyid}/{rgsel}
    controller: App\Controller\DeliveryController::viewdetail
@@ -41,6 +46,11 @@ delivery_update:
    controller: App\Controller\DeliveryController::update
    defaults:
         rgsel: ALL
+
+delivery_parseroadgroups:
+   path: /delivery/parseroadgroups/{dvyid}
+   controller: App\Controller\DeliveryController::parseroadgroups
+
 
 delivery_delete:
    path: /delivery/delete/{dvyid}
@@ -59,12 +69,20 @@ delivery_showcurrent:
    controller: App\Controller\DeliveryController::showcurrent
 
 delivery_removeroadgroup:
+   path: /delivery/removeround/{dvyid}/{rgid}
+   controller: App\Controller\DeliveryController::removeround
+
+delivery_removeroadgroupfrommap:
    path: /delivery/removeroadgroup/{dvyid}/{rgsel}
    controller: App\Controller\DeliveryController::removeroadgroup
 
 delivery_addroadgroups:
    path: /delivery/addroadgroup/{dvyid}/{rgsel}
    controller: App\Controller\DeliveryController::addroadgroup
+
+delivery_addroadgroupstomap:
+   path: /delivery/addround/{dvyid}/{rgid}
+   controller: App\Controller\DeliveryController::addround
 
 seats_showone:
    path: /seat/show/{dtid}/{stid}

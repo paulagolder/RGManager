@@ -84,7 +84,7 @@ class MainController extends AbstractController
 		    $res = new Response();
         $res->headers->setCookie( $cookie );
         $res->send();
-        return $this->redirect("/");
+        return $this->redirect("/rggroup/showall/");
     }
 
 }

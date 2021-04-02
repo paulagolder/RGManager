@@ -22,8 +22,9 @@
 {% if message %}
 <H1> No Deliveries found </H1>
 {% else %}
+<div id="delivery" >
 <div class="subheading row">
-      <div class="dvyid" >SeatId</div>
+      <div class="rgid" >DeliveryId</div>
       <div class="name" >Name</div>
       <div class="name" >target/achieved</div>
       <div class="button" ></div>
@@ -33,13 +34,14 @@
 
   <div class="list">
   {% for delivery in deliveries %}
-     <div class="seat row "  >
-       <div class="rdid" id="{{delivery.deliveryid}}" >{{delivery.deliveryid}}</div>
+     <div class="row "  >
+       <div class="rgid" id="{{delivery.deliveryid}}" >{{delivery.deliveryid}}</div>
        <div class="name" >{{delivery.name}}</div>
        <div class="name" >{{delivery.target}}/{{delivery.completed}}</div>
-       <div class="button" ><a class="button" href = "/delivery/manage/{{delivery.deliveryid}}" >MANAGE</a>   </div>
-       <div class="button" ><a class="button" href = "/delivery/edit/{{delivery.deliveryid}}" >EDIT</a>   </div>
-       <div class="button" ><a class="button" href = "/delivery/schedule/{{delivery.deliveryid}}" >SCHEDULE</a>   </div>
+       <div ><a class="button" href = "/delivery/manage/{{delivery.deliveryid}}" >MANAGE</a>   </div>
+       <div  ><a class="button" href = "/delivery/edit/{{delivery.deliveryid}}" >EDIT</a>   </div>
+        <div  ><a class="button" href = "/delivery/mapschedule/{{delivery.deliveryid}}" >MAP</a>   </div>
+       <div  ><a class="button" href = "/delivery/schedule/{{delivery.deliveryid}}" >SCHEDULE</a>   </div>
      </div>
   {% endfor %}
   </div>

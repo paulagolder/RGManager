@@ -10,6 +10,7 @@
 {{ parent() }}
 <script src="{{asset('js/maps.js')}}"></script>
 <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+<script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
 <script src="{{asset('js/L.KML.js')}}"></script>
 <script>
 var popup = L.popup();
@@ -94,11 +95,6 @@ var jslocation = '{ "name":"LCC","longitude":"-1.8304","latitude":"52.6854" }';
 
 var mymap = myWMap(jslocation);
 
-var path = "{{mappath}}LCC/{{topmap}}";
-{
-   var style = {"color":  "#0000FF" , "weight": 5 ,  "clickable": true ,"opacity": 0.2, "fillOpacity": 0.2 };
-   makeKMLLayer(mymap, path,style,true,"All RG-Groups");
-}
 
 
 
@@ -126,6 +122,12 @@ var i=0;
     if(i>11)i=0;
   }
  {% endfor %}
+ var path = "{{mappath}}LCC/{{topmap}}";
+{
+   var style = {"color":  "#0000FF" , "weight": 5 ,  "clickable": true ,"opacity": 0.2, "fillOpacity": 0.0};
+   makeOutlineKml(mymap, path,style,true,"All RG-Groups");
+}
+
 mymap.on('click', onMapClick);
 </script>
 {% endblock %}

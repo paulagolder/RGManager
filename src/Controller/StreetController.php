@@ -115,7 +115,7 @@ class StreetController extends AbstractController
 
   public function StreetViewGroup($name)
   {
-    $streets = $this->getDoctrine()->getRepository('App:Street')->findNamed($name,$this->rgyear, );
+    $streets = $this->getDoctrine()->getRepository('App:Street')->findNamed($name,$this->rgyear );
     return $this->render('street/viewgroup.html.twig', array(
       'rgyear'=>$this->rgyear,
       'message'=>"",
