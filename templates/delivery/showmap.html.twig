@@ -14,21 +14,7 @@
 <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
 <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
 <script src="{{asset('js/L.KML.js')}}"></script>
-<script>
-  var popup = L.popup();
-  function onMapClick(e)
-  {
-  popup
-  .setLatLng(e.latlng)
-  .setContent("You clicked the map at " + e.latlng.toString())
-  .openOn(mymap);
 
-  lat = e.latlng.lat;
-  lng = e.latlng.lng;
-  document.getElementById("roadgroup_form_Latitude").value=lat;
-  document.getElementById("roadgroup_form_Longitude").value=lng;
-  }
-</script>
 {% endblock %}
 
 
@@ -48,6 +34,7 @@
     <div class="label">Delivery</div>
     <div class="value">{{delivery.deliveryId}}:</div>
     <div class="value">{{delivery.Name }}</div>
+    <div class="value">({{delivery.Households }})</div>
 
     <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
   </div>
@@ -122,15 +109,15 @@ i=1;
  {% endfor %}
 
 var kml = "{{delivery.KML}}";
-      var path = "{{mappath}}"+kml;
+      var path = "{{mappath}}outlines/"+kml;
       if(kml)
       {
           var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.9, "fillOpacity": 0.0 };
-          makeOutlineKml(mymap,path,style,true,"{{delivery.name}}")
+          makeOutlineKml(mymap,path,style,false,"{{delivery.name}}")
       }
 //mymap.fitBounds(wardlayer.getBounds());
 
-mymap.on('click', onMapClick);
+
 </script>
 
 {% endblock %}

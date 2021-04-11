@@ -4,7 +4,7 @@
 
 {% block stylesheets %}
   {{ parent() }}
-  <link href="{{ asset('/css/ward.css') }}" rel="stylesheet" />
+  <link href="{{ asset('/css/rggroup.css') }}" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
 {% endblock %}
 
@@ -21,28 +21,37 @@
 {% block middle %}
   <div class="heading  row">
         <div class="label"> RG-Groups:</div>
-        <div class="value"> {{ward.rggroupid}}:</div>
-        <div class="value"> {{ward.name}}</div>
-        <div class="value"> {{ward.households}}</div>
+        <div class="value"> {{rggroup.rggroupid}}:</div>
+        <div class="value"> {{rggroup.name}}</div>
+        <div class="value"> {{rggroup.households}}</div>
+
         <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
       </div>
 
 {% if message %}
    <H1> {{message}} </H1>
 {% else %}
-
-      <div class="wards">
-      {% for subward in subwards %}
-         <div class="ward row" >
-           <div class="rgid" id="{{subward.rgsubgroupid}}">{{subward.rgsubgroupid}}</div>
-           <div class="name" >{{subward.name}}</div>
-           <div class="num" >{{subward.total}}</div>
-           <a class="button" href = "/rgsubgroup/show/{{subward.rgsubgroupid}}" >VIEW</a>
-           <a class="button" href = "/rgsubgroup/edit/{{subward.rgsubgroupid}}" >EDIT</a>
+ <div class="subheading row">
+      <div class="rgid" >RG-SubgroupId</div>
+      <div class="name" >Name</div>
+      <div class="bnum" >Households</div>
+       <div class="bnum" >Calculated</div>
+      <div class="button" ></div>
+      <div class="button" ></div>
+   </div
+      <div class="rggroups">
+      {% for subgroup in subgroups %}
+         <div class="rggroup row" >
+           <div class="rgid" id="{{subgroup.rgsubgroupid}}">{{subgroup.rgsubgroupid}}</div>
+           <div class="name" >{{subgroup.name}}</div>
+           <div class="bnum" >{{subgroup.total}}</div>
+           <div class="bnum" >{{subgroup.calculated}}</div>
+           <a class="button" href = "/rgsubgroup/show/{{subgroup.rgsubgroupid}}" >VIEW</a>
+           <a class="button" href = "/rgsubgroup/edit/{{subgroup.rgsubgroupid}}" >EDIT</a>
         </div>
       {% endfor %}
       </div>
-      <a class="button" href = "/rgsubgroup/new/{{ward.rggroupid}}" >MAKE RG-Subgroup</a>
+      <a class="button" href = "/rgsubgroup/new/{{rggroup.rggroupid}}" >MAKE RG-Subgroup</a>
 
 {% if roadgroups|length >0 %}
 <div class="subheading  row">
@@ -66,22 +75,22 @@
 <div class="map" >
   <div id="wmapid" ></div>
 </div>
-{% set jslocation = ward.getjson() %}
+{% set jslocation = rggroup.getjson() %}
 
 <script >
 
 var mymap = myWMap("{{jslocation}}");
 
 var bounds = null;
-var wardlayer = null;
+var rggrouplayer = null;
 var fgroup =  new L.featureGroup();
 
- kml = "{{ward.kml}}";
+ kml = "{{rggroup.kml}}";
   var path = "{{mappath}}roadgroups/"+kml;
       if(kml)
       {
           var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.2 };
-          makeKMLLayer(mymap,path,style,true,"{{ward.rggroupid}}")
+          makeKMLLayer(mymap,path,style,true,"{{rggroup.rggroupid}}")
       }
 
 
@@ -107,12 +116,12 @@ var i=0;
     if(i>11)i=0;
   }
  {% endfor %}
-  kml = "{{ward.kml}}";
+  kml = "{{rggroup.kml}}";
   var path = "{{mappath}}outlines/"+kml;
       if(kml)
       {
           var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.0 };
-          makeOutlineKml(mymap,path,style,true,"{{ward.name}}")
+          makeOutlineKml(mymap,path,style,true,"{{rggroup.name}}")
       }
 
 

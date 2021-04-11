@@ -84,6 +84,11 @@ delivery_addroadgroupstomap:
    path: /delivery/addround/{dvyid}/{rgid}
    controller: App\Controller\DeliveryController::addround
 
+delivery_export:
+   path: /delivery/export/{dvyid}
+   controller: App\Controller\DeliveryController::exportxml
+
+
 seats_showone:
    path: /seat/show/{dtid}/{stid}
    controller: App\Controller\SeatController::showone
@@ -123,7 +128,7 @@ rggroups_all:
 
 rggroups_new:
     path: /rggroup/new
-    controller: App\Controller\RggroupController::newward
+    controller: App\Controller\RggroupController::newrggroup
 
 rggroups_show_one:
     path: /rggroup/show/{wdid}
@@ -151,19 +156,19 @@ rggroups_print:
 
 rgsubgroups_show_one:
     path: /rgsubgroup/show/{swdid}
-    controller: App\Controller\RggroupController::showsubward
+    controller: App\Controller\RggroupController::showsubgroup
 
 rgsubgroups_new:
     path: /rgsubgroup/new/{wdid}
-    controller: App\Controller\RggroupController::newsubward
+    controller: App\Controller\RggroupController::newsubgroup
 
 rgsubgroups_edit:
     path: /rgsubgroup/edit/{swdid}
-    controller: App\Controller\RggroupController::editsubward
+    controller: App\Controller\RggroupController::editsubgroup
 
 rgsubgroups_delete:
     path: /rgsubgroup/delete/{swdid}
-    controller: App\Controller\RggroupController::deletesubward
+    controller: App\Controller\RggroupController::deletesubgroup
 
 roadgroups_show_all:
     path: /roadgroup/showall

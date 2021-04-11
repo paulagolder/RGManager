@@ -340,8 +340,25 @@ class Roadgroup
      return $this;
    }
 
+   public function getNorthWest()
+   {
+      $nw = [$this->maxlat,$this->minlong];
+      return $nw;
+   }
+   public function getSouthEast()
+   {
+       $se= [$this->minlat,$this->maxlong];
+       return $se;
+   }
+
    public function getjson()
    {
+   if($this->midlat<40)
+   {
+   $this->midlat = ($this->maxlat + $this->minlat)/2;
+   $this->midlong = ($this->minlong + $this->maxlong)/2;
+   }
+   $zoom = $this->getZoom();
    $str ="{";
    $str .=  '"roadgroupid":"'.$this->RoadgroupId.'",';
    $str .=  '"name":"'.$this->getName().'",';
@@ -349,9 +366,20 @@ class Roadgroup
    $str .=  '"rgsubgroupid":"'.$this->Rgsubgroupid.'",';
    $str .=  '"kml":"'.$this->KML.'",';
    $str .=  '"longitude":"'.$this->midlong.'",';
-   $str .=  '"latitude":"'.$this->midlat.'"';
+   $str .=  '"latitude":"'.$this->midlat.'",';
+   $str .=  '"maxlong":"'.$this->maxlong.'",';
+   $str .=  '"minlong":"'.$this->minlong.'",';
+   $str .=  '"maxlat":"'.$this->maxlat.'",';
+   $str .=  '"minlat":"'.$this->minlat.'",';
+   $str .=  '"zoom":"'.$zoom.'"';
    $str .="}";
    return  $str;
+   }
+
+   public function getZoom()
+   {
+     $zoom =      ($this->maxlat - $this->minlat)/0.000050;
+     return $zoom;
    }
 
    public function makexml()

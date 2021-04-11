@@ -99,9 +99,9 @@
   {
   var style = {"color":  "#0000FF" , "weight": 14 ,  "clickable": true ,"opacity": 0.3, "fillOpacity": 0.1 };
   /*makeKMLLayer(mymap, path,style,true,kml);*/
-  makeOutlineKml(mymap, path,style,true,kml);
+  makeOutlineKml(mymap, path,style,false,kml);
   }
-  mymap.on('click', onMapClick);
+  setBounds(mymap,"{{jslocation}}");
 </script>
 {% endif %}
 </div>

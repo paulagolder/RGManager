@@ -74,7 +74,6 @@ class DeliverytoRoadgroup
     private $Instructions;
 
 
-
     public function getDeliveryId()
     {
         return $this->DeliveryId;

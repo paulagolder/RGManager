@@ -1,0 +1,7 @@
+
+
+UPDATE `roadgroup` rg, `TABLE 16` t SET rg.`distance`=t.distance ,rg.`kml`=t.kml,rg.`minlat`=t.minlat,rg.`maxlat`=t.maxlat,rg.`minlong`=t.minlong,rg.`maxlong`=t.maxlong WHERE rg.roadgroupid = t.roadgroupid and rg.year = t.year
+
+
+
+52.674781799316406 	52.67631149291992 	-1.8297699689865112 	-1.827239990234375

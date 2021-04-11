@@ -34,7 +34,7 @@ class Rgsubgroup
    */
   private $Households;
 
-
+  private $Completions;
   /**
    * @ORM\Column(name="electors",type="integer",  nullable=true)
    */
@@ -54,15 +54,19 @@ class Rgsubgroup
 
 
 
-  /**
-   * @ORM\Column(name="latitude",type="string", length=20,  nullable=true)
-   */
-  private $Latitude;
 
-  /**
-   * @ORM\Column(name="longitude",type="string", length=20,   nullable=true)
-   */
-  private $Longitude;
+
+  private $minlat;
+
+
+  private $maxlat;
+
+
+  private $minlong;
+
+
+  private $maxlong;
+
 
   public function getRgsubgroupid()
    {
@@ -100,17 +104,49 @@ class Rgsubgroup
      return $this;
    }
 
+
+
    public function getHouseholds()
-   {
-     return $this->Households;
-   }
+    {
+        return $this->Households;
+    }
 
-   public function setHouseholds($number): self
-   {
-     $this->Households = $number;
+    public function setHouseholds($number): self
+    {
+        $this->Households = $number;
 
-     return $this;
-   }
+        return $this;
+    }
+
+    public function addHouseholds($number): self
+    {
+        $this->Households += $number;
+
+        return $this;
+    }
+
+
+      public function getCompletions()
+    {
+        return $this->Completions;
+    }
+
+    public function setCompletions($number): self
+    {
+        $this->Completions = $number;
+
+        return $this;
+    }
+
+     public function addCompletions($number): self
+    {
+        $this->Completions += $number;
+
+        return $this;
+    }
+
+
+
 
    public function getElectors()
    {
@@ -150,19 +186,14 @@ class Rgsubgroup
 
    public function getLatitude()
    {
-     return $this->Latitude;
+     return ($this->minlat + $this->maxlat)/2;
    }
 
-   public function setLatitude(?string $number): self
-   {
-     $this->Latitude = $number;
 
-     return $this;
-   }
 
    public function getLongitude()
    {
-     return $this->Longitude;
+     return ($this->minlong + $this->maxlong)/2;
    }
 
    public function setLongitude(?string $number): self
@@ -182,6 +213,60 @@ class Rgsubgroup
      return $this->Roadgrouplist;
    }
 
+     public function getMinlat(): ?float
+   {
+     return $this->minlat;
+   }
+
+   public function setMinlat(?float $minlat): self
+   {
+     $this->minlat = $minlat;
+     return $this;
+   }
+
+
+
+   public function getMaxlat(): ?float
+   {
+     return $this->maxlat;
+   }
+
+   public function setMaxlat(?float $maxlat): self
+   {
+     $this->maxlat = $maxlat;
+     return $this;
+   }
+
+   public function getMinlong(): ?float
+   {
+     return $this->minlong;
+   }
+
+    public function setMinlong(?float $num): self
+   {
+     $this->mminlong = $num;
+     return $this;
+   }
+
+
+
+
+
+   public function getMaxlong(): ?float
+   {
+     return $this->maxlong;
+   }
+
+   public function setMaxlong(?float $maxlong): self
+   {
+     $this->maxlong = $maxlong;
+     return $this;
+   }
+
+   public function getPriority(): ?float
+   {
+     return $this->Priority;
+   }
 
    public function getjson()
    {
@@ -191,8 +276,8 @@ class Rgsubgroup
      $str .=  '"wardid":"'.$this->Rggroupid.'",';
      $str .=  '"subwardid":"'.$this->Rgsubgroupid.'",';
      $str .=  '"kml":"'.$kml.'",';
-     $str .=  '"longitude":"'.$this->Longitude.'",';
-     $str .=  '"latitude":"'.$this->Latitude.'"';
+     $str .=  '"longitude":"'.$this->getLongitude().'",';
+     $str .=  '"latitude":"'.$this->getLatitude().'"';
      $str .="}";
      return  $str;
    }

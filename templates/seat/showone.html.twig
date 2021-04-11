@@ -13,20 +13,7 @@
    <script src="{{asset('js/maps.js')}}"></script>
    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
    <script src="{{asset('js/L.KML.js')}}"></script>
-   <script>
-     var popup = L.popup();
-     function onMapClick(e)
-     {
-       popup
-        .setLatLng(e.latlng)
-        .setContent("You clicked the map at " + e.latlng.toString())
-        .openOn(mymap);
-        lat = e.latlng.lat;
-        lng = e.latlng.lng;
-        document.getElementById("street_form_Latitude").value=lat;
-        document.getElementById("street_form_Longitude").value=lng;
-      }
-    </script>
+
 {% endblock %}
 
 {% block middle %}
@@ -74,7 +61,7 @@
 
       var mymap = mySwMap("{{jslocation}}");
  {% if  seat.kml %}
-      var aspath = "{{mappath}}{{seat.kml}}";
+      var aspath = "{{mappath}}outlines/{{seat.kml}}";
       if("{{seat.kml}}")
       {
          var style = {"color":  "#000000" , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.2};
@@ -103,7 +90,7 @@
       {% endfor %}
      {% endfor %}
 
-     mymap.on('click', onMapClick);
+
    </script>
    {% endif %}
    </div>

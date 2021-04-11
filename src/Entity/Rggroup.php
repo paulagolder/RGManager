@@ -52,7 +52,7 @@ class Rggroup
     private $Electors;
 
 
-
+   private $Completions;
 
 
 
@@ -110,6 +110,26 @@ class Rggroup
     }
 
 
+      public function getCompletions()
+    {
+        return $this->Completions;
+    }
+
+    public function setCompletions($number): self
+    {
+        $this->Completions = $number;
+
+        return $this;
+    }
+
+     public function addCompletions($number): self
+    {
+        $this->Completions += $number;
+
+        return $this;
+    }
+
+
      public function getElectors()
     {
         return $this->Electors;
@@ -155,7 +175,7 @@ class Rggroup
 
    $str ="{";
    $str .=  '"name":"'.$this->Name.'",';
-   $str .=  '"wardid":"'.$this->Rggroupid.'",';
+   $str .=  '"rggroupid":"'.$this->Rggroupid.'",';
    $str .=  '"kml":"'.$kml.'",';
    $str .=  '"longitude":"'.$this->Longitude.'",';
    $str .=  '"latitude":"'.$this->Latitude.'"';
@@ -172,12 +192,12 @@ class Rggroup
 
    public function makexml()
    {
-     $subwards=$this->subwards;
+     $subgroups=$this->subgroups;
      $xmlout = "";
      $xmlout .= "  <rggroup RggroupId='$this->Rggroupid' Name='$this->Name' Households='$this->Households' KML='$this->KML' >\n  ";
-     foreach ($subwards as $asubward )
+     foreach ($subgroups as $asubgroup )
      {
-     $xmlout .= $asubward->makexml();
+     $xmlout .= $asubgroup->makexml();
      }
      $xmlout .= "  </rggroup>\n";
      return $xmlout;
@@ -185,13 +205,13 @@ class Rggroup
 
     public function makecsv()
    {
-     $subwards=$this->subwards;
+     $subgroups=$this->subgroups;
      $csvout = "";
      $csvout  .= "$this->Rggroupid: $this->Name,,,$this->Households \n  ";
-     foreach ($subwards as $asubward )
+     foreach ($subgroups as $asubgroup )
      {
      $csvout  .= "\n ";
-     $csvout .= $asubward->makecsv();
+     $csvout .= $asubgroup->makecsv();
       $csvout  .= "\n ";
      }
      $csvout  .= "\n";

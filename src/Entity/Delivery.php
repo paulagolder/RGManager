@@ -48,6 +48,9 @@ class Delivery
      */
     public $KML;
 
+
+    public $Households;
+
     public function getDeliveryId()
     {
         return $this->DeliveryId;
@@ -62,6 +65,14 @@ class Delivery
     public function getName(): ?string
     {
         return $this->Name;
+    }
+
+    public function getSpacelessName(): ?string
+    {
+
+       $slname = str_replace(" ", "_",$this->Name);
+       $slname = str_replace("__", "_",$slname);
+        return $slname;
     }
 
     public function setName(string $Text): self

@@ -141,4 +141,24 @@ class MapServer
         else
           return false;
     }
+
+
+    public function maxnw($nwest1, $nwest2)
+    {
+      if($nwest1 === null)  $nwest1 = $nwest2;
+      if($nwest1[0] < $nwest2[0]) $nwest1[0] = $nwest2[0];
+      if($nwest1[1] < $nwest2[1]) $nwest1[1] = $nwest2[1];
+
+     return $nwest1;
+    }
+
+
+     public function minse($seast1, $seast2)
+     {
+        if($seast1 === null)  $seast1= $seast2;
+        if($seast1[0] >  $seast2[0]) $seast[0] = $seast2[0];
+        if($seast1[1] >  $seast2[1]) $seast[1] = $seast2[1];
+
+        return $seast1;
+     }
 }

@@ -3,24 +3,24 @@
 
 
 
-div.ward.row div.wardid
+div.rggroup.row div.rggroupid
 {
   width: 5em;
 
 }
 
-div.ward div.rgsubgroupid
+div.rggroup div.rgsubgroupid
 {
   width: 5em;
 
 }
 
-div.ward div.name
+div.rggroup div.name
 {
   width: 12em;
 }
 
-div.ward.row div.num
+div.rggroup.row div.num
 {
   width: 5em;
 }

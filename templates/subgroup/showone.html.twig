@@ -4,7 +4,7 @@
 
 {% block stylesheets %}
       {{ parent() }}
-   <link href="{{ asset('/css/subward.css') }}" rel="stylesheet" />
+   <link href="{{ asset('/css/subgroup.css') }}" rel="stylesheet" />
    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
 {% endblock %}
 
@@ -19,9 +19,9 @@
 {% block middle %}
 <div class="heading  row">
   <div class="label">RG-Subgroup: </div>
-  <div class="value">{{subward.rgsubgroupid}}:</div>
-  <div class="value">{{ward.name}}</div>
-  <div class="value">{{subward.name}}</div>
+  <div class="value">{{subgroup.rgsubgroupid}}:</div>
+  <div class="value">{{rggroup.name}}</div>
+  <div class="value">{{subgroup.name}}</div>
   <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
 </div>
 {% if message %}
@@ -53,7 +53,7 @@
   </div>
 {% endif %}
 
-<div><a class="button" href = "/roadgroup/new/{{ward.rggroupid}}/{{subward.rgsubgroupid}}" >ADD NEW ROADGROUP</a></div>
+<div><a class="button" href = "/roadgroup/new/{{rggroup.rggroupid}}/{{subgroup.rgsubgroupid}}" >ADD NEW ROADGROUP</a></div>
   {% if streets|length >0 %}
 <div class="subheading  row">
   <div class="label red"> Spare Streets</div>
@@ -79,15 +79,15 @@
 <div class="map" >
   <div id="swmapid" ></div>
 </div>
-  {% set jslocation = subward.getjson() %}
+  {% set jslocation = subgroup.getjson() %}
   <script  type="text/javascript" >
     var mymap = mySwMap("{{jslocation}}");
-     kml = "{{ward.kml}}";
+     kml = "{{rggroup.kml}}";
   var path = "{{mappath}}roadgroups/"+kml;
       if(kml)
       {
           var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.1 };
-          makeKMLLayer(mymap,path,style,true,"{{ward.rggroupid}}")
+          makeKMLLayer(mymap,path,style,true,"{{rggroup.rggroupid}}")
       }
 
     var i=0;
@@ -107,12 +107,12 @@
 
   {% endfor %}
 
-    kml = "{{ward.kml}}";
+    kml = "{{rggroup.kml}}";
      var path = "{{mappath}}roadgroups/"+kml;
       if(kml)
       {
           var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.0 };
-          makeOutlineKml(mymap,path,style,true,"{{ward.rggroupid}}")
+          makeOutlineKml(mymap,path,style,true,"{{rggroup.rggroupid}}")
       }
    </script>
 

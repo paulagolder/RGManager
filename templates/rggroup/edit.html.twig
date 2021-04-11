@@ -1,0 +1,60 @@
+{# views/rggroup/edit.html.twig #}
+
+{% extends 'rgmaster.html.twig' %}
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/rggroup.css') }}" rel="stylesheet" />
+{% endblock %}
+{% block js %}
+ {{ parent() }}
+<script>
+   var popup = L.popup();
+    function onMapClick(e) {
+       popup
+        .setLatLng(e.latlng)
+        .setContent("You clicked the map at " + e.latlng.toString())
+        .openOn(mymap);
+        lat = e.latlng.lat;
+        lng = e.latlng.lng;
+      document.getElementById("street_form_Latitude").value=lat;
+      document.getElementById("street_form_Longitude").value=lng;
+     }
+   </script>
+{% endblock %}
+
+{% block middle %}
+<div id="middle" >
+<div id="rggroupedit"  >
+<div>
+ <div class="heading  row" >
+ <div class="label">Edit RG-Group:</div>
+ <div class="title" > {{rggroup.name}}</div>
+ <div class="button  right"> <a class="button" href ="/rggroup/showall" >{{'back'}} </a> </div>
+</div>
+<div class="formmap">
+<div  class="form" >
+    {{ form_start(form) }}
+    {{ form_row(form.Rggroupid) }}
+    {{ form_row(form.Name) }}
+    {{ form_row(form.KML) }}
+    {{ form_row(form.Households) }}
+    {{ form_row(form.Electors) }}
+    {{ form_row(form.Latitude) }}
+    {{ form_row(form.Longitude) }}
+    <button type="submit">{{'Register!'}}</button>
+    {{ form_end(form) }}
+</div>
+<div class="button  right"> <a class="deletebutton" href ="/rggroup/delete/{{rggroup.Rggroupid}}" >{{'delete'}} </a> </div>
+<div class="map" >
+      <div id="rggmapid"></div>
+    </div>
+         {% set jslocation = rggroup.getjson() %}
+      <script  type="text/javascript" >
+       var mymap = myStMap("{{jslocation}}");
+         mymap.on('click', onMapClick);
+      </script>
+</div>
+</div>
+</div>
+{% endblock %}

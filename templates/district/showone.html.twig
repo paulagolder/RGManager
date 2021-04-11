@@ -15,22 +15,7 @@
    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
    <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
    <script src="{{asset('js/L.KML.js')}}"></script>
-   <script>
-     var popup = L.popup();
-     function onMapClick(e)
-     {
-       popup
-        .setLatLng(e.latlng)
-        .setContent("You clicked the map at " + e.latlng.toString())
-        .openOn(mymap);
-        lat = e.latlng.lat;
-        lng = e.latlng.lng;
-        var latdiv =  document.getElementById("street_form_Latitude");
-        if(latdiv) latdiv.value=lat;
-        var lngdiv =  document.getElementById("street_form_Longitude");
-        if(lngdiv) lngdiv.value=lng;
-      }
-    </script>
+
 {% endblock %}
 
 {% block middle %}
@@ -111,7 +96,7 @@
          var style = {"color":  "#0000ff" , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.0};
          makeOutlineKml(mymap,aspath,style, true,"{{district.name}}");
       }
-      mymap.on('click', onMapClick);
+
    </script>
    </div>
 {% endblock %}

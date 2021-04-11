@@ -30,7 +30,7 @@ function getColor(i)
     var mylocation = JSON.parse(location_dc);
     var lat = mylocation.latitude;
     var long = mylocation.longitude;
-    var zoom = 18;
+    var zoom = 5;
     if( lat < 40)
     {
       long =-1.8304;
@@ -66,12 +66,12 @@ function myRgMap(location)
   var mylocation = JSON.parse(location_dc);
   var lat = mylocation.latitude;
   var long = mylocation.longitude;
-  var zoom = 18;
+  var zoom = 10;
   if( lat === undefined  || lat < 40)
   {
     long =-1.8304;
     lat = 52.6854 ;
-    zoom = 12;
+    zoom = 18;
   }
 
   if(zoom <1 ) zoom = 1;
@@ -84,10 +84,21 @@ function myRgMap(location)
       attribution: '&copy; ' + mapLink + ' Contributors',
       maxZoom: 20,
     }).addTo(mymap);
-
-
     return mymap;
 }
+
+function setBounds(amap, location)
+{
+  var location_dc =redecode(location);
+  var alocation = JSON.parse(location_dc);
+  var bounds =[];
+  bounds.push([ alocation.maxlat,alocation.maxlong]);
+  bounds.push([ alocation.maxlat,alocation.minlong]);
+  bounds.push([ alocation.minlat,alocation.maxlong]);
+  bounds.push([ alocation.minlat,alocation.minlong]);
+  amap.fitBounds(bounds);
+}
+
 
 function myWMap(location)
 {
@@ -95,7 +106,7 @@ function myWMap(location)
   var mylocation = JSON.parse(location_dc);
   var lat = mylocation.latitude;
   var long = mylocation.longitude;
-  var zoom = 18;
+  var zoom = 12;
   if( lat === undefined  || lat < 40)
   {
     long =-1.8304;
@@ -231,6 +242,24 @@ function makeOutlineKml(amap,kmlfilepath,style, fitbounds=false, label='')
     amap.fitBounds(polygon.getBounds())
   });
  }
+}
+
+function addMyKML2(mymap, kmlfile, style,fitbounds=false, label='')
+{
+
+  var runLayer = omnivore.kml(kmlfile)
+  .on('ready', function() {
+
+    runLayer.eachLayer(function(layer) {
+      runLayer.bindPopup(layer.feature.properties.name);
+      runLayer.setStyle( style);
+      // mymap.fitBounds(runLayer.getBounds());
+      //runLayer.bindPopup(label);
+    });
+  })
+  .addTo(mymap);
+
+  return runLayer;
 }
 
 
