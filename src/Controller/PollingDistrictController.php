@@ -71,13 +71,15 @@ class PollingDistrictController extends AbstractController
     $rglist = $this->getDoctrine()->getRepository("App:Roadgroup")->findAllinPollingDistrict($pdid,$this->rgyear);
     $apollingdistrict = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findOne($pdid);
     $roadgroups = [];
+    $bounds = $this->mapserver->newBounds();
     foreach ($rglist as $rg)
     {
       $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rg["roadgroupid"],$this->rgyear);
+      $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getBounds());
       $kml = $aroadgroup->getKML();
       if(!$this->mapserver->ismap($kml))
       {
-        $aroadgroup->setKML($this->mapserver->findmap($aroadgroup->getRoadgroupId(),$this->rgyear));
+        //$aroadgroup->setKML($this->mapserver->findmap($aroadgroup->getRoadgroupId(),$this->rgyear));
       }
       $aroadgroup->setHouseholds(  $count = $this->getDoctrine()->getRepository("App:Roadgroup")->countHouseholds($aroadgroup->getRoadgroupId(), $this->rgyear));
       $roadgroups[] = $aroadgroup;
@@ -91,6 +93,7 @@ class PollingDistrictController extends AbstractController
     'rgyear'=>$this->rgyear,
     'message' =>  '' ,
     'pollingdistrict'=>$apollingdistrict,
+    'bounds'=> $bounds,
     'total'=>$totalhouseholds,
     'roadgroups' => $roadgroups ,
     'back'=>$back,

@@ -134,14 +134,12 @@ class Seat
 
    public function getjson()
    {
-
-
    $str ="{";
    $str .=  '"name":"'.$this->Name.'",';
    $str .=  '"seatid":"'.$this->SeatId.'",';
    $str .=  '"kml":"'.$this->KML.'",';
-   $str .=  '"longitude":"-1.8304",';
-   $str .=  '"latitude":"52.6854"';
+      $str .=  '"longitude":"0",';
+   $str .=  '"latitude":"0"';
    $str .="}";
    return  $str;
    }

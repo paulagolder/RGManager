@@ -30,7 +30,7 @@ function getColor(i)
     var mylocation = JSON.parse(location_dc);
     var lat = mylocation.latitude;
     var long = mylocation.longitude;
-    var zoom = 5;
+    var zoom = 12;
     if( lat < 40)
     {
       long =-1.8304;
@@ -46,7 +46,7 @@ function getColor(i)
     L.tileLayer(
       'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; ' + mapLink + ' Contributors',
-        maxZoom: 20,
+        xmaxZoom: 20,
       }).addTo(mymap);
 
 
@@ -100,6 +100,51 @@ function setBounds(amap, location)
 }
 
 
+function setBounds2(amap, amybounds)
+{
+  var mybounds_dc =redecode(amybounds);
+  var mybounds = JSON.parse(mybounds_dc);
+  var bounds =[];
+  bounds.push([ mybounds["nw"]["lat"], mybounds["nw"]["long"]]);
+  bounds.push([ mybounds["se"]["lat"],mybounds["se"]["long"]]);
+  amap.fitBounds(bounds);
+}
+
+function setMarkers(amap,amybounds)
+{
+  var mybounds_dc =redecode(amybounds);
+  var mybounds = JSON.parse(mybounds_dc);
+  var nwlat =  mybounds["nw"]["lat"];
+  var nwlong =  mybounds["nw"]["long"];
+  var selat =  mybounds["se"]["lat"];
+  var selong =  mybounds["se"]["long"];
+  var marker = L.marker([nwlat, nwlong]).addTo(amap);
+   marker = L.marker([selat, selong]).addTo(amap);
+   marker = L.marker([selat, nwlong]).addTo(amap);
+   marker = L.marker([nwlat, selong]).addTo(amap);
+}
+
+function drawBox(amap,mybounds)
+{
+  var bounds =[];
+  bounds.push([ mybounds["nw"]["lat"],mybounds["nw"]["long"]]);
+  bounds.push([ mybounds["nw"]["lat"],mybounds["se"]["long"]]);
+  bounds.push([ mybounds["se"]["lat"],mybounds["se"]["long"]]);
+  bounds.push([ mybounds["se"]["lat"],mybounds["nw"]["long"]]);
+  bounds.push([ mybounds["nw"]["lat"],mybounds["nw"]["long"]]);
+  var mypolyline = new L.Polyline(bounds, {
+    color: 'black',
+    weight: 1,
+    opacity: 0.5,
+    smoothFactor: 1
+  });
+  mypolyline.addTo(amap);
+}
+
+
+
+
+
 function myWMap(location)
 {
   var location_dc =redecode(location);
@@ -116,13 +161,14 @@ function myWMap(location)
 
   if(zoom <1 ) zoom = 1;
 
-  var mymap = L.map('wmapid').setView([ lat , long], zoom);
+ // var mymap = L.map('wmapid').setView([ lat , long], zoom);
+  var mymap = L.map('wmapid').setView([ lat , long],zoom);
   mapLink =
   '<a href="http://openstreetmap.org">OpenStreetMap</a>';
   L.tileLayer(
     'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; ' + mapLink + ' Contributors',
-      maxZoom: 20,
+      xmaxZoom: 20,
     }).addTo(mymap);
 
 

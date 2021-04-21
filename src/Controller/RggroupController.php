@@ -56,7 +56,7 @@ class RggroupController extends AbstractController
     {
       return $this->render('rggroup/showone.html.twig', [  'rgyear'=>$this->rgyear, 'message' =>  'rggroups not Found',]);
     }
-    // dump($rggroups);
+    $bounds = $this->mapserver->newBounds();
     for($i=0; $i<count($rggroups); $i++)
     {
       $rggroup = $rggroups[$i];
@@ -66,6 +66,8 @@ class RggroupController extends AbstractController
       for($j=0;$j<count($rgs);$j++)
       {
         $rgid = $rgs[$j]->getRoadgroupId();
+        $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
+        $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getBounds());
         $hh = $rgs[$j]->getHouseholds();
         $sumhh += $hh;
       //  $mpath = $maproot."roadgroups/".$rgid.".kml";
@@ -87,6 +89,7 @@ class RggroupController extends AbstractController
       $rggroup->roadgroups= $rgs;
       $rggroups[$i]=$rggroup;
     }
+
     $extraroadgroups =  $this->getDoctrine()->getRepository("App:Roadgroup")->findLooseRoadgroups();
     return $this->render('rggroup/showall.html.twig',
     [
@@ -94,6 +97,7 @@ class RggroupController extends AbstractController
     'message' =>  '' ,
     'heading' => 'The rggroups',
     'topmap'=>$topmap,
+    'bounds'=> $bounds,
     'rggroups' => $rggroups,
     'roadgroups' => $extraroadgroups,
     ]);
@@ -110,11 +114,13 @@ class RggroupController extends AbstractController
     if(!$this->mapserver->ismap($rggroup->getKML()))
     {
       $rggroup->setKML($this->mapserver->findmap($rggroup->getRggroupid(),$this->rgyear));
-      $rggroup->setHouseholds($this->getDoctrine()->getRepository("App:Rggroup")->countHouseholds($rggroup->getRggroupid(), $this->rgyear));
     }
+      $rggroup->setHouseholds($this->getDoctrine()->getRepository("App:Rggroup")->countHouseholds($rggroup->getRggroupid(), $this->rgyear));
+
     $subgroups = $this->getDoctrine()->getRepository("App:Rgsubgroup")->findChildren($wdid);
 
     $sglist = array();
+    $bounds = $this->mapserver->newBounds();
     foreach ($subgroups as $asubgroup)
     {
       $swid =  $asubgroup->getRgsubgroupid();
@@ -124,10 +130,11 @@ class RggroupController extends AbstractController
       $calchh= 0;
       foreach ($roadgroups as $aroadgroup)
       {
+        $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getBounds());
         $totalhh += $aroadgroup->getHouseholds();
         if(!$this->mapserver->ismap($aroadgroup->getKML()))
         {
-          $aroadgroup->setKML($this->mapserver->findmap($aroadgroup->getRoadgroupid(),$this->rgyear));
+          //$aroadgroup->setKML($this->mapserver->findmap($aroadgroup->getRoadgroupid(),$this->rgyear));
         }
         $rglist[$aroadgroup->getRoadgroupid()]=$aroadgroup->getKML();
         $hh = $this->getDoctrine()->getRepository("App:Roadgroup")->countHouseholds($aroadgroup->getRoadgroupId(),$this->rgyear);
@@ -144,6 +151,7 @@ class RggroupController extends AbstractController
     'message' =>  '' ,
     'rggroup'=> $rggroup,
     'subgroups'=> $subgroups,
+    'bounds'=> $bounds,
     'roadgroups'=>$extraroadgroups,
     'sglist'=>$sglist,
     'back'=>"/rggroup/showall"
@@ -235,22 +243,14 @@ class RggroupController extends AbstractController
     $rggroupid =  $subgroup->getRggroupid();
     $rggroup = $this->getDoctrine()->getRepository("App:Rggroup")->findOne($rggroupid);
     $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($swdid, $this->rgyear);
-    $nwest =null;
-    $seast = null;
+    $bounds = $this->mapserver->newBounds();
     foreach ($roadgroups as &$aroadgroup)
     {
-      $nwest = $this->mapserver->maxnw($nwest, $aroadgroup->getNorthWest());
-      $seast = $this->mapserver->minse($seast, $aroadgroup->getSouthEast());
-      $kml = $aroadgroup->getKML();
-      if(!$this->mapserver->ismap($kml))
-      {
-        $aroadgroup->setKML($this->mapserver->findmap($aroadgroup->getRoadgroupId(),$this->rgyear));
-      }
+      $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getBounds());
       $est = $this->getDoctrine()->getRepository("App:Roadgroup")->countHouseholds($aroadgroup->getRoadgroupId(),$this->rgyear);
       $aroadgroup->{"calculated"} = $est;
-
     }
-    // $extrastreets =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreets();
+
     $extrastreets =null;
     return $this->render('subgroup/showone.html.twig',
     [
@@ -259,6 +259,7 @@ class RggroupController extends AbstractController
     'rggroup'=>$rggroup,
     'subgroup'=>$subgroup,
     'roadgroups'=> $roadgroups,
+    'bounds'=> $bounds,
     'streets'=>$extrastreets,
     'back'=>"/rggroup/show/".$rggroupid,
     ]);

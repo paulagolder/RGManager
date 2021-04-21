@@ -117,14 +117,14 @@ class DeliveryController extends AbstractController
         {
             return $this->render('Delivery/showone.html.twig', [ 'message' =>  'Delivery not Found',]);
         }
-      //  $delivery->KML = $delivery->getDistrict()."_".$delivery->getSeat().".kml";
         $rgs= $this->getDoctrine()->getRepository("App:Delivery")->findDeliveryRoadgroups($dvyid,$this->rgyear);
-        dump($rgs);
         $rggroups = $this->maketree($dvyid,$rgs);
+        $bounds = $this->mapserver->newBounds();
         $totalhouseholds =0;
         foreach($rgs as $rg)
         {
-
+        $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rg["roadgroupid"],$this->rgyear);
+        $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getBounds());
          $totalhouseholds += $rg["households"];
 
         }
@@ -138,6 +138,7 @@ class DeliveryController extends AbstractController
                 'message' =>  '' ,
                 'delivery'=>$delivery,
                 'rgs'=>$rgs,
+                'bounds'=> $bounds,
                 'rggroups'=>$rggroups,
                 'allrgs'=>$allrgs,
                 'back'=>"/delivery/showcurrent"
@@ -332,7 +333,6 @@ class DeliveryController extends AbstractController
          }
        }
       }
-      dump($xrggroups);
       return $xrggroups;
      }
 
@@ -354,6 +354,7 @@ class DeliveryController extends AbstractController
          $xrggroups[$rggrp]["group"] =  $anobj;
          $xrggroups[$rggrp]["group"]->setHouseholds(0);
          $xrggroups[$rggrp]["group"]->setCompletions(0);
+         $xrggroups[$rggrp]["group"]->initBounds();
 
        }
        if(! array_key_exists ( $rgsubgrp , $xrggroups[$rggrp]["children"] ) )
@@ -363,24 +364,28 @@ class DeliveryController extends AbstractController
           $asubobj->copy($oldsubobj);
           $xrggroups[$rggrp]["children"][$rgsubgrp]["children"] = array();
           $xrggroups[$rggrp]["children"][$rgsubgrp]["group"] = $asubobj;
-           $xrggroups[$rggrp]["children"][$rgsubgrp]["group"]->setHouseholds(0);
-            $xrggroups[$rggrp]["children"][$rgsubgrp]["group"]->setCompletions(0);
+          $xrggroups[$rggrp]["children"][$rgsubgrp]["group"]->setHouseholds(0);
+          $xrggroups[$rggrp]["children"][$rgsubgrp]["group"]->setCompletions(0);
+          $xrggroups[$rggrp]["children"][$rgsubgrp]["group"]->initBounds();
        }
-      // if(! array_key_exists ( $rgid ,  $rggroups[$rggrp]["children"][$rgsubgrp]["children"]) )
-       {
+
           $thisrg =  $this->getDoctrine()->getRepository('App:DeliverytoRoadgroup')->findOne($dvyid,$rgid);
+          $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
           $xrggroups[$rggrp]["children"][$rgsubgrp]["children"][$rgid] =  $thisrg;
-
-
           $hh = $thisrg->getHouseholds();
+          $bnds = $aroadgroup->getBounds();
           $xrggroups[$rggrp]["group"]->addHouseholds($hh);
+          dump( $xrggroups[$rggrp]["group"]);
+           dump($bnds);
+            dump($aroadgroup);
+          $xrggroups[$rggrp]["group"]->expandBounds($bnds);
           $xrggroups[$rggrp]["children"][$rgsubgrp]["group"]->addHouseholds($hh);
+          $xrggroups[$rggrp]["children"][$rgsubgrp]["group"]->expandBounds($bnds);
           if($thisrg->getCompleted())
           {
              $xrggroups[$rggrp]["group"]->addCompletions($hh);
              $xrggroups[$rggrp]["children"][$rgsubgrp]["group"]->addHouseholds($hh);
           }
-       }
       }
       return $xrggroups;
      }
@@ -456,34 +461,12 @@ class DeliveryController extends AbstractController
 
 
 
-    public function xxExportxml($drid)
-    {
-            $Delivery = $this->getDoctrine()->getRepository("App:Delivery")->findOne($drid);
-             $kml = $Delivery->getKML();
-          if(!$kml)
-          {
-             $Delivery->setKML($this->mapserver->findDelivery($Delivery->getDeliveryId(),$this->rgyear));
-          }
-           // $file = "maps/".$drid."_".$this->rgyear.".rgml";
-              $file = "rgml/roadgroups.rgml";
-            $xmlout = "";
-            $xmlout .= "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-            $xmlout .= "<?xml-stylesheet type='text/xsl' href='./Stylesheets/rgml.xsl' ?>\n";
-            $xmlout .= "<electionDelivery Name='Lichfield City Labour Party' DeliveryId='".$drid."' KML='".$Delivery->getKML()."' >\n";
 
-            $xmlout .= $this->makexml();
-            $xmlout .= "</electionDelivery>\n";
-            $handle = fopen($file, "w") or die("ERROR: Cannot open the file.");
-            fwrite($handle, $xmlout) or die ("ERROR: Cannot write the file.");
-            fclose($handle);
-            $this->addFlash('notice','xml file saved'.$file );
-            return $this->redirect("/");
-    }
 
-      public function Exportcsv($drid)
+     public function Exportcsv($dvyid)
     {
-            $Delivery = $this->getDoctrine()->getRepository("App:Delivery")->findOne($drid);
-            $file = "documents/".$drid."_".$this->rgyear.".csv";
+            $delivery = $this->getDoctrine()->getRepository("App:Delivery")->findOne($dvyid);
+            $file = "documents/".$delivery->getName()."_".$this->rgyear.".csv";
             $csvout = "";
 
             $csvout .= "RD-Groups, RD-Sugroups, Roadgroups, Households \n\n";
@@ -498,48 +481,7 @@ class DeliveryController extends AbstractController
     }
 
 
-    public function xxmakexml()
-    {
-         $xmlout = "";
-         $rggroups = $this->getDoctrine()->getRepository("App:Rggroup")->findAll();
-        if (!$rggroups) {
-            return "";
-        }
-        foreach (  $rggroups as $arggroup )
-        {
-           $subgroups =   $this->getDoctrine()->getRepository("App:Rgsubgroup")->findChildren($arggroup->getRggroupid());
-           $arggroup->{'subwards'} = $subgroups;
-           foreach($subgroups as $asubward)
-           {
-              $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($asubward->getRgsubgroupid(),$this->rgyear);
-              $asubward->{'roadgrouplist'}=$roadgroups;
-              foreach($roadgroups as $aroadgroup)
-              {
-                $streetlist = [];
-                $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($aroadgroup->getRoadgroupid(),$this->rgyear);
-                foreach($streets as $astreet )
-                {
-                if(array_key_exists($astreet->getName(), $streetlist))
-                {
-                  $sstreet = $streetlist[$astreet->getName()];
-                  $sstreet->setQualifier($sstreet->getQualifier()." ".$astreet->getQualifier());
-                  $streetlist[$astreet->getName()]= $sstreet;
-                }else
-                  $streetlist[$astreet->getName()] = $astreet;
-                }
-                $aroadgroup->{'streets'}= $streetlist;
-                //dump($aroadgroup);
-              }
-           }
-        }
 
-        foreach (  $rggroups as $arggroup )
-        {
-           $xmlout .= $arggroup->makexml();
-           $xmlout .= "\n";
-        }
-      return $xmlout;;
-      }
 
 
      public function makecsv()
@@ -553,7 +495,7 @@ class DeliveryController extends AbstractController
         {
 
            $subgroups =   $this->getDoctrine()->getRepository("App:Rgsubgroup")->findChildren($arggroup->getRggroupid());
-           $arggroup->{'subwards'} = $subgroups;
+           $arggroup->{'subgroups'} = $subgroups;
            foreach($subgroups as $asubward)
            {
               $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($asubward->getRgsubgroupid(),$this->rgyear);
@@ -745,7 +687,6 @@ class DeliveryController extends AbstractController
             $xmlout .= "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
             $xmlout .= "<?xml-stylesheet type='text/xsl' href='./Stylesheets/rgml.xsl' ?>\n";
             $xmlout .= "<delivery Name='".$delivery->getName()."' DeliveryId='".$dvyid."' KML='".$delivery->getKML()."' >\n";
-           // dump($rggroups);
             $xmlout .= $this->makexml($rggroups);
             $xmlout .= "</delivery>\n";
             $handle = fopen($file, "w") or die("ERROR: Cannot open the file.");
@@ -756,7 +697,7 @@ class DeliveryController extends AbstractController
     }
 
 
-      public function makexml( $rggroups)
+    public function makexml( $rggroups)
     {
          $xmlout = "";
          $delivery = $this;
@@ -768,25 +709,25 @@ class DeliveryController extends AbstractController
             return $this->render('Delivery/showone.html.twig', [ 'message' =>  'Delivery not Found',]);
         }
 
-
         foreach (  $rggroups as $arggroup )
         {
            $arg = $arggroup["group"];
            $subgroups=$arggroup["children"];
-           $xmlout .= "  <rggroup RggroupId='".$arg->getRggroupid()."' Name='".$arg->getName()."' Households='".$arg->getHouseholds()."' KML='".$arg->getKML()."' >\n";
+           $xmlout .= "  <rggroup RggroupId='".$arg->getRggroupid()."' Name='".$arg->getName()."' Households='".$arg->getHouseholds()."' KML='".$arg->getKML()."' Bounds='".$arg->getBoundsStr()."' >\n";
            foreach ($subgroups as $asubgroup )
             {
-            dump($asubgroup);
               $asubg  = $asubgroup["group"];
-              $xmlout .= "  <rgsubgroup RgsubgroupId='".$asubg->getRgsubgroupid()."' Name='".$asubg->getName()."' Households='".$asubg->getHouseholds()."' >\n";
+              $xmlout .= "  <rgsubgroup RgsubgroupId='".$asubg->getRgsubgroupid()."' Name='".$asubg->getName()."' Households='".$asubg->getHouseholds()."' Bounds='".$asubg->getBoundsStr()."' >\n";
               $roadgroups=$asubgroup["children"];
-            foreach ($roadgroups as $argroup )
+             foreach ($roadgroups as $argroup )
              {
-               $rgid = $argroup->getRoadgroupId();
+                 $rgid = $argroup->getRoadgroupId();
                  $aroadgroup =  $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
                  $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($aroadgroup->getRoadgroupid(),$this->rgyear);
                  $aroadgroup->streets = $streets;
-                $xmlout .= $aroadgroup->makeXML();
+                 $kml =  $this->mapserver->findmap($aroadgroup->getRoadgroupId(),$this->rgyear));
+                 $aroadgroup->setKML($kml);
+                 $xmlout .= $aroadgroup->makeXML($this->rgyear);
              }
               $xmlout .= "  </rgsubgroup>\n";
             }

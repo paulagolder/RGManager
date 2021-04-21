@@ -67,6 +67,8 @@ class Rgsubgroup
 
   private $maxlong;
 
+  private $Bounds;
+
 
   public function getRgsubgroupid()
    {
@@ -268,6 +270,42 @@ class Rgsubgroup
      return $this->Priority;
    }
 
+    public function initBounds()
+    {
+      $this->Bounds["se"]["lat"] = null;
+      $this->Bounds["nw"]["lat"] = null;
+      $this->Bounds["se"]["long"] = null;
+      $this->Bounds["nw"]["long"] = null;
+    }
+
+   public function getBounds()
+   {
+     return $this->Bounds;
+   }
+
+   public function getBoundsStr()
+   {
+
+     $out = "{";
+     $out .= '"se":{"lat" : '.$this->Bounds["se"]["lat"].',"long":'.$this->Bounds["se"]["long"].'},';
+     $out .= '"nw":{"lat" : '.$this->Bounds["nw"]["lat"].',"long":'.$this->Bounds["nw"]["long"].'}}';
+     return $out;
+   }
+
+
+
+     public function expandbounds($bounds)
+     {
+        if($this->Bounds["se"]["lat"] === null)  $this->Bounds["se"]["lat"] =  $bounds["se"]["lat"];
+        if($this->Bounds["se"]["long"] === null)  $this->Bounds["se"]["long"] =  $bounds["se"]["long"];
+        if(($bounds["se"]["lat"] !== null) && ($this->Bounds["se"]["lat"] >  $bounds["se"]["lat"])) $this->Bounds["se"]["lat"] = $bounds["se"]["lat"];
+        if(($bounds["se"]["long"] !== null) && ($this->Bounds["se"]["long"] <  $bounds["se"]["long"])) $this->Bounds["se"]["long"] = $bounds["se"]["long"];
+         if($this->Bounds["nw"]["lat"] === null)  $this->Bounds["nw"]["lat"] =  $bounds["nw"]["lat"];
+        if($this->Bounds["nw"]["long"] === null)  $this->Bounds["nw"]["long"] =  $bounds["nw"]["long"];
+      if(($bounds["nw"]["lat"] !== null) && ( $this->Bounds["nw"]["lat"] < $bounds["nw"]["lat"]))  $this->Bounds["nw"]["lat"]= $bounds["nw"]["lat"];
+      if(($bounds["nw"]["long"] !== null) && ( $this->Bounds["nw"]["long"] > $bounds["nw"]["long"]))  $this->Bounds["nw"]["long"] = $bounds["nw"]["long"];
+     }
+
    public function getjson()
    {
      $kml="";
@@ -282,7 +320,7 @@ class Rgsubgroup
      return  $str;
    }
 
-    public function copy($obj)
+   public function copy($obj)
    {
    $this->Name = $obj->Name;
    $this->Rggroupid = $obj->Rggroupid;

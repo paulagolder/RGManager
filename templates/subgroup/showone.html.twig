@@ -80,6 +80,7 @@
   <div id="swmapid" ></div>
 </div>
   {% set jslocation = subgroup.getjson() %}
+    {% set abounds = bounds | json_encode | raw %}
   <script  type="text/javascript" >
     var mymap = mySwMap("{{jslocation}}");
      kml = "{{rggroup.kml}}";
@@ -87,7 +88,7 @@
       if(kml)
       {
           var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.1 };
-          makeKMLLayer(mymap,path,style,true,"{{rggroup.rggroupid}}")
+        //  makeKMLLayer(mymap,path,style,false,"{{rggroup.rggroupid}}");
       }
 
     var i=0;
@@ -100,7 +101,7 @@
          if(h2s)
             h2s.style.backgroundColor = getColor(i);
          var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
-         makeKMLLayer(mymap,path,style,true,"{{aroadgroup.name}}")
+          makeKMLLayer(mymap,path,style,false,"{{aroadgroup.name}}");
          i=i+1;
          if(i>11) i=0;
       }
@@ -111,9 +112,13 @@
      var path = "{{mappath}}roadgroups/"+kml;
       if(kml)
       {
-          var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.0 };
-          makeOutlineKml(mymap,path,style,true,"{{rggroup.rggroupid}}")
+          var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 3 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.0 };
+       //   makeOutlineKml(mymap,path,style,false,"{{rggroup.rggroupid}}");
       }
+     setMarkers(mymap,"{{abounds}}");
+  //   drawBox(mymap,"{{abounds}}");
+     setBounds2(mymap,"{{abounds}}");
+
    </script>
 
 {% endblock %}

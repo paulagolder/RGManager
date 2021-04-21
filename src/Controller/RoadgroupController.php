@@ -103,7 +103,7 @@ class RoadgroupController extends AbstractController
     }
     if(!$roadgroup->getKML())
     {
-      $roadgroup->setKML($this->mapserver->findmap($roadgroup->getRoadgroupid(),$this->rgyear));
+     // $roadgroup->setKML($this->mapserver->findmap($roadgroup->getRoadgroupid(),$this->rgyear));
     }
     $swdid = $roadgroup->getRgsubgroupid();
     $wdid = $roadgroup->getRggroupid();
@@ -212,8 +212,7 @@ class RoadgroupController extends AbstractController
         if($wdid == "")
           return $this->redirect("/roadgroup/showall");
         else
-          return $this->redirect("/rggPointerEvent.pressure instead. leaflet.js:5:285
-          roup/show/".$wdid);
+          return $this->redirect("/rggroup/show/".$wdid);
       }
     }
 

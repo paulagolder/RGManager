@@ -79,7 +79,7 @@
   <div id="wmapid" ></div>
 </div>
 {% set jslocation = delivery.getjson() %}
-
+{% set abounds = bounds | json_encode | raw %}
 <script >
 
 var mymap = myWMap("{{jslocation}}");
@@ -115,7 +115,8 @@ var kml = "{{delivery.KML}}";
           var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.9, "fillOpacity": 0.0 };
           makeOutlineKml(mymap,path,style,false,"{{delivery.name}}")
       }
-//mymap.fitBounds(wardlayer.getBounds());
+   setMarkers(mymap,"{{abounds}}");
+   setBounds2(mymap,"{{abounds}}");
 
 
 </script>

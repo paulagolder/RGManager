@@ -114,6 +114,8 @@ class Roadgroup
    */
   private $Note;
 
+  private $Bounds;
+
   public function getRoadgroupId()
    {
      return $this->RoadgroupId;
@@ -342,21 +344,47 @@ class Roadgroup
 
    public function getNorthWest()
    {
-      $nw = [$this->maxlat,$this->minlong];
+      $nw = array();
+      $nw["lat"] = $this->maxlat;
+      $nw["long"] = $this->minlong;
       return $nw;
    }
    public function getSouthEast()
    {
-       $se= [$this->minlat,$this->maxlong];
+       $se= array();
+        $se["lat"] = $this->minlat;
+        $se["long"] = $this->maxlong;
        return $se;
+   }
+
+   public function makeBounds()
+   {
+     $this->Bounds = array();
+     $this->Bounds["nw"]=$this->getNorthwest();
+     $this->Bounds["se"]=$this->getSouthEast();
+   }
+
+    public function getBounds()
+   {
+     $this->makeBounds();
+     return $this->Bounds;
+   }
+
+    public function getBoundsStr()
+   {
+
+     $out = "{";
+     $out .= '"se":{"lat" : '.$this->Bounds["se"]["lat"].',"long":'.$this->Bounds["se"]["long"].'},';
+     $out .= '"nw":{"lat" : '.$this->Bounds["nw"]["lat"].',"long":'.$this->Bounds["nw"]["long"].'}}';
+     return $out;
    }
 
    public function getjson()
    {
    if($this->midlat<40)
    {
-   $this->midlat = ($this->maxlat + $this->minlat)/2;
-   $this->midlong = ($this->minlong + $this->maxlong)/2;
+    $this->midlat = ($this->maxlat + $this->minlat)/2;
+    $this->midlong = ($this->minlong + $this->maxlong)/2;
    }
    $zoom = $this->getZoom();
    $str ="{";
@@ -378,15 +406,17 @@ class Roadgroup
 
    public function getZoom()
    {
-     $zoom =      ($this->maxlat - $this->minlat)/0.000050;
+     $zoom = ($this->maxlat - $this->minlat)/0.000050;
      return $zoom;
    }
 
    public function makexml()
    {
+     $this->makeBounds();
      $streets =$this->streets;
+
      $xmlout = "";
-     $xmlout .= "      <roadgroup RoadgroupId='$this->RoadgroupId' Name='".$this->getName()."' KML='$this->KML' Households='$this->Households' >\n  ";
+     $xmlout .= "      <roadgroup RoadgroupId='$this->RoadgroupId' Name='".$this->getName()."' KML='$this->KML' Households='$this->Households'  Bounds='".$this->getBoundsStr()."' >\n";
      foreach ($streets as $astreet )
      {
     // dump($astreet);

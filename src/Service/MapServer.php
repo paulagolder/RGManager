@@ -143,22 +143,31 @@ class MapServer
     }
 
 
-    public function maxnw($nwest1, $nwest2)
-    {
-      if($nwest1 === null)  $nwest1 = $nwest2;
-      if($nwest1[0] < $nwest2[0]) $nwest1[0] = $nwest2[0];
-      if($nwest1[1] < $nwest2[1]) $nwest1[1] = $nwest2[1];
-
-     return $nwest1;
-    }
 
 
-     public function minse($seast1, $seast2)
+     public function newbounds()
      {
-        if($seast1 === null)  $seast1= $seast2;
-        if($seast1[0] >  $seast2[0]) $seast[0] = $seast2[0];
-        if($seast1[1] >  $seast2[1]) $seast[1] = $seast2[1];
+       $bounds = array();
+       $bounds["se"]["lat"] = null;
+      $bounds["nw"]["lat"] = null;
+      $bounds["se"]["long"] = null;
+      $bounds["nw"]["long"] = null;
+       return $bounds;
+     }
 
-        return $seast1;
+
+
+
+     public function expandbounds($rootbounds, $bounds)
+     {
+        if($rootbounds["se"]["lat"] === null)  $rootbounds["se"]["lat"] =  $bounds["se"]["lat"];
+        if($rootbounds["se"]["long"] === null)  $rootbounds["se"]["long"] =  $bounds["se"]["long"];
+        if(($bounds["se"]["lat"] !== null) && ($rootbounds["se"]["lat"] >  $bounds["se"]["lat"])) $rootbounds["se"]["lat"] = $bounds["se"]["lat"];
+        if(($bounds["se"]["long"] !== null) && ($rootbounds["se"]["long"] <  $bounds["se"]["long"])) $rootbounds["se"]["long"] = $bounds["se"]["long"];
+         if($rootbounds["nw"]["lat"] === null)  $rootbounds["nw"]["lat"] =  $bounds["nw"]["lat"];
+        if($rootbounds["nw"]["long"] === null)  $rootbounds["nw"]["long"] =  $bounds["nw"]["long"];
+      if(($bounds["nw"]["lat"] !== null) && ( $rootbounds["nw"]["lat"] < $bounds["nw"]["lat"]))  $rootbounds["nw"]["lat"]= $bounds["nw"]["lat"];
+      if(($bounds["nw"]["long"] !== null) && ( $rootbounds["nw"]["long"] > $bounds["nw"]["long"]))  $rootbounds["nw"]["long"] = $bounds["nw"]["long"];
+      return $rootbounds;
      }
 }

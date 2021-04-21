@@ -88,6 +88,10 @@ delivery_export:
    path: /delivery/export/{dvyid}
    controller: App\Controller\DeliveryController::exportxml
 
+delivery_exportcsv:
+    path: /delivery/exportcsv/{dvyid}
+    controller: App\Controller\DeliveryController::exportcsv
+
 
 seats_showone:
    path: /seat/show/{dtid}/{stid}

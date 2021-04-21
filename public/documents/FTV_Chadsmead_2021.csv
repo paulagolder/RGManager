@@ -1,0 +1,162 @@
+RD-Groups, RD-Sugroups, Roadgroups, Households 
+
+RG_BLY: Boley Park,,,1896 
+  
+    ,RG_BLY_C: Central,BLY_C1: Abbotsford Rd..etc , 233
+     ,,BLY_C2: Baskeyfield Cl..etc ,137 
+     ,,BLY_C3: Haymoor..etc ,205 
+  
+ 
+    ,RG_BLY_E: East,BLY_E1: Birchwood Rd..etc , 157
+     ,,BLY_E2: Curlew Cl..etc ,137 
+     ,,BLY_E3: Gable Croft..etc ,165 
+     ,,BLY_E4: Hartslade..etc ,139 
+     ,,BLY_E5: Bracken Cl..etc ,88 
+  
+ 
+    ,RG_BLY_N: North,BLY_N1: Cornfield..etc , 244
+     ,,BLY_N2: Yew Tree..etc ,151 
+  
+ 
+    ,RG_BLY_W: West,BLY_W1: Broadlands..etc , 240
+  
+ 
+RG_CHD: Chadsmead,,,2049 
+  
+    ,RG_CHD_C: Central,CHD_C1: Oakenfield..etc , 254
+     ,,CHD_C2: Swallow Croft..etc ,189 
+     ,,CHD_C3: Leasowe..etc ,133 
+     ,,CHD_C4: Dimbles Lane..etc ,131 
+  
+ 
+    ,RG_CHD_N: North,CHD_N1: Garrick Road..etc , 175
+     ,,CHD_N2: Grange Lane..etc ,178 
+     ,,CHD_N3: Pauls Walk..etc ,296 
+     ,,CHD_N4: Weston Road..etc ,212 
+     ,,CHD_NW: No Walk..etc , 
+  
+ 
+    ,RG_CHD_S: South,CHD_S1: Charters..etc , 97
+     ,,CHD_S2: Gaia Lane..etc ,116 
+     ,,CHD_S3: Anson Ave..etc ,121 
+     ,,CHD_S4: Beacon St..etc ,136 
+  
+ 
+    ,RG_CHD_X: Outside City,CHD_X1: Outside City..etc , 
+  
+ 
+RG_CUR: Curborough,,,2236 
+  
+    ,RG_CUR_C: Central,CUR_C1: Curborough...etc , 210
+     ,,CUR_C2: Meadowbrook..etc ,205 
+     ,,CUR_C3: Fallowfield..etc ,125 
+  
+ 
+    ,RG_CUR_E: East,CUR_E1: Giles..etc , 136
+     ,,CUR_E2: St Margarets etc ,182 
+     ,,CUR_E3: David Garrick Gardens..etc ,226 
+     ,,CUR_E4: Dimbles Lane..etc ,182 
+  
+ 
+    ,RG_CUR_N: North,CUR_N1: Norwich..etc , 151
+     ,,CUR_N2: Lincoln..etc ,195 
+     ,,CUR_N3: Saxon Gate..etc ,120 
+  
+ 
+    ,RG_CUR_S: South,CUR_S1: Leyfields..etc , 114
+     ,,CUR_S2: Ponesfield..etc ,195 
+     ,,CUR_S3: Purcell Ave..etc ,195 
+  
+ 
+RG_LEO: Leomansley,,,3000 
+  
+    ,RG_LEO_A: Outer,LEO_A1: Hallam Park..etc , 50
+  
+ 
+    ,RG_LEO_C: Central,LEO_C1: Walsall Rd..etc , 259
+     ,,LEO_C2: Christchurch Ln..etc ,266 
+     ,,LEO_C3: Walnut Walk..etc ,187 
+     ,,LEO_C4: Whithouse Dr..etc ,171 
+     ,,LEO_C5: Blakeman Way..etc ,164 
+     ,,LEO_C6: St Foy Ave..etc ,142 
+     ,,LEO_C7: Deykin Rd (part) ..etc ,176 
+     ,,LEO_C8: Sandfield Meadow..etc ,197 
+     ,,LEO_C9: Lawrence Way..etc ,103 
+  
+ 
+    ,RG_LEO_N: North,LEO_N1: Beacon St..etc , 212
+     ,,LEO_N2: Harrington Walk..etc ,251 
+     ,,LEO_N3: Swinfen Broun Rd..etc ,118 
+     ,,LEO_N4: Mary Slater..etc ,93 
+     ,,LEO_N5: Ferndale Rd..etc ,213 
+  
+ 
+    ,RG_LEO_W: West,LEO_W1: Bham Rd (part)..etc , 272
+     ,,LEO_W2: Swan Rd..etc ,262 
+     ,,LEO_W3: Lower Sandford St..etc ,260 
+  
+ 
+    ,RG_LEO_X: Not Walk,LEO_X1: Walsall Rd extension..etc , 
+     ,,LEO_X2: Vacant Roads..etc , 
+  
+ 
+RG_STJ: St Johns,,,2750 
+  
+    ,RG_STJ_C: Central,STJ_C1: Scott Close..etc , 156
+     ,,STJ_C2: Chapel Lane..etc ,157 
+     ,,STJ_C3: Dovehouse Fields..etc ,104 
+     ,,STJ_C4: Trafalgar Way..etc ,176 
+     ,,STJ_C5: Shortbutts Lane..etc ,200 
+     ,,STJ_C6: Bham Rd..etc ,132 
+  
+ 
+    ,RG_STJ_E: East,STJ_E1: Upper St John St..etc , 176
+     ,,STJ_E2: Cherry Orchard..etc ,231 
+     ,,STJ_E3: Beech Gds..etc ,207 
+     ,,STJ_E4: Tamworth Road..etc ,118 
+     ,,STJ_E5: Borrowcop..etc ,174 
+     ,,STJ_E6: Wentworth Dr..etc ,148 
+     ,,STJ_E7: Woodfield etc ,40 
+     ,,STJ_E8: Longbridge..etc ,156 
+     ,,STJ_E9: Manor Rise..etc ,60 
+  
+ 
+    ,RG_STJ_W: West,STJ_W1: Chesterfield Rd..etc , 170
+     ,,STJ_W2: Agincourt..etc ,227 
+  
+ 
+    ,RG_STJ_X: Non Walk,STJ_XW: Dont Walk..etc , 
+  
+ 
+RG_STW: Stowe,,,3300 
+  
+    ,RG_STW_C: Central,STW_C1: Stowe St..etc , 140
+     ,,STW_C2: St Michael Road..etc ,149 
+     ,,STW_C3: Wissage Rd..etc ,100 
+  
+ 
+    ,RG_STW_E: East,STW_E2: Rocklands Cres..etc , 140
+     ,,STW_E3: Valley Lane..etc ,145 
+     ,,STW_E4: Hobs Road..etc ,154 
+     ,,STW_E5: Scotch Orchard..etc ,138 
+     ,,STW_E6: Eastern Ave..etc ,110 
+  
+ 
+    ,RG_STW_N: North,STW_N1: Gilbert Road..etc , 205
+     ,,STW_N2: Chadswell Heights..etc ,141 
+     ,,STW_N3: York Close..etc ,132 
+     ,,STW_N4: Fecknam Way..etc ,168 
+  
+ 
+    ,RG_STW_S: South,STW_E1: Lower Trent Valley Road..etc , 189
+     ,,STW_S1: Maxwell Close..etc ,139 
+     ,,STW_S2: Maryvale Court..etc ,121 
+     ,,STW_S3: BORW..etc ,188 
+     ,,STW_S4: Deans Croft..etc , 
+  
+ 
+    ,RG_STW_W: West,STW_W1: Close..etc , 160
+     ,,STW_W2: Bird St..etc ,337 
+     ,,STW_W3: Wade Street..etc ,224 
+  
+ 

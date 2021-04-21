@@ -1,3 +1,5 @@
+{# views/rggroup/showall.html.twig #}
+
 {% extends 'rgmaster.html.twig' %}
 
 {% block stylesheets %}
@@ -74,7 +76,7 @@
 <div class="map" >
   <div id="wmapid" ></div>
 </div>
-
+  {% set abounds = bounds | json_encode | raw %}
 <script >
 
 var jslocation = '{ "name":"LCC","longitude":"-1.8304","latitude":"52.6854" }';
@@ -111,6 +113,7 @@ var i=0;
    makeOutlineKml(mymap, path,style,false,"All RG-Groups");
 }
 
-//mymap.on('click', onMapClick);
+  //drawBox(mymap,"{{abounds}}");
+  setBounds2(mymap,"{{abounds}}");
 </script>
 {% endblock %}

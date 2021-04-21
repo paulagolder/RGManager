@@ -12,6 +12,7 @@
    {{ parent() }}
    <script src="{{asset('js/maps.js')}}"></script>
    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+   <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
    <script src="{{asset('js/L.KML.js')}}"></script>
 
 {% endblock %}
@@ -55,17 +56,16 @@
 </div>
 
   {% set jslocation = seat.getjson() %}
-
+  {% set abounds = bounds | json_encode | raw %}
 
   <script  type="text/javascript" >
-
       var mymap = mySwMap("{{jslocation}}");
  {% if  seat.kml %}
       var aspath = "{{mappath}}outlines/{{seat.kml}}";
       if("{{seat.kml}}")
       {
          var style = {"color":  "#000000" , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.2};
-         makeKMLLayer(mymap,aspath,style,true,"{{seat.name}}")
+         makeOutlineKml(mymap,aspath,style,false,"{{seat.name}}")
       }
      {% endif %}
         var i=0;
@@ -89,8 +89,9 @@
            if(i>11)i=0;
       {% endfor %}
      {% endfor %}
-
-
+    {% dump(abounds) %}
+     setMarkers(mymap,"{{abounds}}");
+     setBounds2(mymap,"{{abounds}}");
    </script>
    {% endif %}
    </div>

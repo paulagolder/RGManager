@@ -54,6 +54,7 @@ class Rggroup
 
    private $Completions;
 
+   private $Bounds;
 
 
 
@@ -153,14 +154,27 @@ class Rggroup
     public function setLatitude(?string $number): self
     {
         $this->Latitude = $number;
-
         return $this;
     }
 
-      public function getLongitude()
+    public function getLongitude()
     {
         return $this->Longitude;
     }
+
+   public function getBounds()
+   {
+     return $this->Bounds;
+   }
+
+   public function getBoundsStr()
+   {
+
+     $out = "{";
+     $out .= '"se":{"lat" : '.$this->Bounds["se"]["lat"].',"long":'.$this->Bounds["se"]["long"].'},';
+     $out .= '"nw":{"lat" : '.$this->Bounds["nw"]["lat"].',"long":'.$this->Bounds["nw"]["long"].'}}';
+     return $out;
+   }
 
     public function setLongitude(?string $number): self
     {
@@ -168,6 +182,27 @@ class Rggroup
 
         return $this;
     }
+
+    public function initBounds()
+    {
+      $this->Bounds["se"]["lat"] = null;
+      $this->Bounds["nw"]["lat"] = null;
+      $this->Bounds["se"]["long"] = null;
+      $this->Bounds["nw"]["long"] = null;
+    }
+
+     public function expandbounds($bounds)
+     {
+        if($this->Bounds["se"]["lat"] === null)  $this->Bounds["se"]["lat"] =  $bounds["se"]["lat"];
+        if($this->Bounds["se"]["long"] === null)  $this->Bounds["se"]["long"] =  $bounds["se"]["long"];
+        if(($bounds["se"]["lat"] !== null) && ($this->Bounds["se"]["lat"] >  $bounds["se"]["lat"])) $this->Bounds["se"]["lat"] = $bounds["se"]["lat"];
+        if(($bounds["se"]["long"] !== null) && ($this->Bounds["se"]["long"] <  $bounds["se"]["long"])) $this->Bounds["se"]["long"] = $bounds["se"]["long"];
+         if($this->Bounds["nw"]["lat"] === null)  $this->Bounds["nw"]["lat"] =  $bounds["nw"]["lat"];
+        if($this->Bounds["nw"]["long"] === null)  $this->Bounds["nw"]["long"] =  $bounds["nw"]["long"];
+      if(($bounds["nw"]["lat"] !== null) && ( $this->Bounds["nw"]["lat"] < $bounds["nw"]["lat"]))  $this->Bounds["nw"]["lat"]= $bounds["nw"]["lat"];
+      if(($bounds["nw"]["long"] !== null) && ( $this->Bounds["nw"]["long"] > $bounds["nw"]["long"]))  $this->Bounds["nw"]["long"] = $bounds["nw"]["long"];
+     }
+
 
    public function getjson()
    {
@@ -187,6 +222,7 @@ class Rggroup
    {
    $this->Name = $obj->Name;
    $this->Rggroupid = $obj->Rggroupid;
+   $this->KML = $obj->KML;
    $this->Households = 0;
    }
 

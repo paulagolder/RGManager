@@ -76,7 +76,7 @@
   <div id="wmapid" ></div>
 </div>
 {% set jslocation = rggroup.getjson() %}
-
+  {% set abounds = bounds | json_encode | raw %}
 <script >
 
 var mymap = myWMap("{{jslocation}}");
@@ -87,11 +87,7 @@ var fgroup =  new L.featureGroup();
 
  kml = "{{rggroup.kml}}";
   var path = "{{mappath}}roadgroups/"+kml;
-      if(kml)
-      {
-          var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.2 };
-          makeKMLLayer(mymap,path,style,true,"{{rggroup.rggroupid}}")
-      }
+
 
 
 var i=0;
@@ -104,7 +100,7 @@ var i=0;
       if(kml)
       {
         countsgs = countsgs+1;
-        makeKMLLayer(mymap,path,style,true,"{{key2}}");
+        makeKMLLayer(mymap,path,style,false,"{{key2}}");
       }
   {% endfor %}
 
@@ -121,10 +117,11 @@ var i=0;
       if(kml)
       {
           var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.0 };
-          makeOutlineKml(mymap,path,style,true,"{{rggroup.name}}")
+          makeOutlineKml(mymap,path,style,false,"{{rggroup.name}}")
       }
 
-
+   setMarkers(mymap,"{{abounds}}");
+     setBounds2(mymap,"{{abounds}}");
 </script>
 {% endif %}
 {% endblock %}

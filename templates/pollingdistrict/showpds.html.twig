@@ -11,20 +11,6 @@
    <script src="{{asset('js/maps.js')}}"></script>
    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
    <script src="{{asset('js/L.KML.js')}}"></script>
-   <script>
-     var popup = L.popup();
-     function onMapClick(e)
-     {
-       popup
-        .setLatLng(e.latlng)
-        .setContent("You clicked the map at " + e.latlng.toString())
-        .openOn(mymap);
-        lat = e.latlng.lat;
-        lng = e.latlng.lng;
-        document.getElementById("street_form_Latitude").value=lat;
-        document.getElementById("street_form_Longitude").value=lng;
-      }
-    </script>
 {% endblock %}
 
 {% block middle %}
@@ -76,7 +62,7 @@
 
 
   {% set jslocation = pollingdistrict.getjson() %}
-
+  {% set abounds = bounds | json_encode | raw %}
   <script  type="text/javascript" >
     var mymap = mySwMap("{{jslocation}}");
     var i=0;
@@ -98,8 +84,8 @@
       }
     }
        {% endfor %}
-      //mymap.fitBounds(fgroup.getBounds());
-      mymap.on('click', onMapClick);
+   setMarkers(mymap,"{{abounds}}");
+     setBounds2(mymap,"{{abounds}}");
    </script>
    {% endif %}
 

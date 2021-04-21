@@ -146,16 +146,18 @@ class SeatController extends AbstractController
         $roadgrouplinks = $this->getDoctrine()->getRepository("App:Seat")->findRoadgroups($dtid,$stid,$this->rgyear);
 
         $rglist = array();
-
+        $bounds =$this->mapserver->newbounds();
         foreach ($roadgrouplinks as $aroadgrouplink)
         {
            $aroadgroup =  $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($aroadgrouplink["roadgroupid"],$this->rgyear);
+           $bounds = $this->mapserver->expandbounds($bounds,$aroadgroup->getBounds());
+           dump($bounds);
            $kml = $aroadgroup->getKML();
            if($aroadgroup)
            {
             if(!$this->mapserver->ismap($kml))
            {
-             $aroadgroup->setKML($this->mapserver->findmap($aroadgroup->getRoadgroupId(),$this->rgyear));
+             //$aroadgroup->setKML($this->mapserver->findmap($aroadgroup->getRoadgroupId(),$this->rgyear));
            }
            $swid =  $aroadgroup->getRgsubgroupid();
            $wid = $aroadgroup->getRggroupid();
@@ -172,12 +174,14 @@ class SeatController extends AbstractController
             $rglist[$wid] =  $wrglist;
           }
         }
+
         return $this->render('seat/showone.html.twig',
             [
                 'rgyear' => $this->rgyear,
                 'message' =>  '' ,
                 'district'=> $district,
                 'seat' => $seat,
+                'bounds'=>$bounds,
                 'roadgrouplist'=>$rglist,
                 'back'=>"/district/show/".$dtid,
             ]);
