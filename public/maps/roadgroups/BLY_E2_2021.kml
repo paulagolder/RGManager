@@ -5,7 +5,7 @@
     <name>BLY_E2_2021</name>
     <author>org.lerot.KMLU.Author@4564c7d</author>
     <Placemark>
-      <name>BLY_E2_2021</name>
+      <name>BLY_E2_2021a</name>
         <LineString>
           <coordinates>
 -1.7995699644088745,52.68156814575195,76.11000061035156
@@ -17,7 +17,7 @@
         </LineString>
     </Placemark>
     <Placemark>
-      <name>BLY_E2_2021</name>
+      <name>BLY_E2_2021b</name>
         <LineString>
           <coordinates>
 -1.8002300262451172,52.6810188293457,77.12000274658203
@@ -31,7 +31,7 @@
         </LineString>
     </Placemark>
     <Placemark>
-      <name>BLY_E2_2021</name>
+      <name>BLY_E2_2021c</name>
         <LineString>
           <coordinates>
 -1.800379991531372,52.68046188354492,78.43000030517578
@@ -70,7 +70,7 @@
         </LineString>
     </Placemark>
     <Placemark>
-      <name>BLY_E2_2021</name>
+      <name>BLY_E2_2021d</name>
         <LineString>
           <coordinates>
 -1.8043700456619263,52.68027114868164,87.18000030517578

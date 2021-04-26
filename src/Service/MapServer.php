@@ -148,10 +148,10 @@ class MapServer
      public function newbounds()
      {
        $bounds = array();
-       $bounds["se"]["lat"] = null;
-      $bounds["nw"]["lat"] = null;
-      $bounds["se"]["long"] = null;
-      $bounds["nw"]["long"] = null;
+       $bounds["minlat"] = null;
+      $bounds["maxlat"] = null;
+      $bounds["maxlong"] = null;
+      $bounds["minlong"] = null;
        return $bounds;
      }
 
@@ -160,14 +160,100 @@ class MapServer
 
      public function expandbounds($rootbounds, $bounds)
      {
-        if($rootbounds["se"]["lat"] === null)  $rootbounds["se"]["lat"] =  $bounds["se"]["lat"];
-        if($rootbounds["se"]["long"] === null)  $rootbounds["se"]["long"] =  $bounds["se"]["long"];
-        if(($bounds["se"]["lat"] !== null) && ($rootbounds["se"]["lat"] >  $bounds["se"]["lat"])) $rootbounds["se"]["lat"] = $bounds["se"]["lat"];
-        if(($bounds["se"]["long"] !== null) && ($rootbounds["se"]["long"] <  $bounds["se"]["long"])) $rootbounds["se"]["long"] = $bounds["se"]["long"];
-         if($rootbounds["nw"]["lat"] === null)  $rootbounds["nw"]["lat"] =  $bounds["nw"]["lat"];
-        if($rootbounds["nw"]["long"] === null)  $rootbounds["nw"]["long"] =  $bounds["nw"]["long"];
-      if(($bounds["nw"]["lat"] !== null) && ( $rootbounds["nw"]["lat"] < $bounds["nw"]["lat"]))  $rootbounds["nw"]["lat"]= $bounds["nw"]["lat"];
-      if(($bounds["nw"]["long"] !== null) && ( $rootbounds["nw"]["long"] > $bounds["nw"]["long"]))  $rootbounds["nw"]["long"] = $bounds["nw"]["long"];
+      if (!$bounds) return $rootbounds;
+      if(!array_key_exists("minlat", $rootbounds)) return $rootbounds;
+          if(!array_key_exists("minlat", $bounds)) return $rootbounds;
+        if($rootbounds["minlat"] === null)  $rootbounds["minlat"] =  $bounds["minlat"];
+        if($rootbounds["maxlong"] === null)  $rootbounds["maxlong"] =  $bounds["maxlong"];
+        if(($bounds["minlat"] !== null) && ($rootbounds["minlat"] >  $bounds["minlat"])) $rootbounds["minlat"] = $bounds["minlat"];
+        if(($bounds["maxlong"] !== null) && ($rootbounds["maxlong"] <  $bounds["maxlong"])) $rootbounds["maxlong"] = $bounds["maxlong"];
+         if($rootbounds["maxlat"] === null)  $rootbounds["maxlat"] =  $bounds["maxlat"];
+        if($rootbounds["minlong"] === null)  $rootbounds["minlong"] =  $bounds["minlong"];
+      if(($bounds["maxlat"] !== null) && ( $rootbounds["maxlat"] < $bounds["maxlat"]))  $rootbounds["maxlat"]= $bounds["maxlat"];
+      if(($bounds["minlong"] !== null) && ( $rootbounds["minlong"] > $bounds["minlong"]))  $rootbounds["minlong"] = $bounds["minlong"];
       return $rootbounds;
      }
+
+
+     public function getDistanceBetweenTwoPoints($point1 , $point2)
+     {
+    // array of lat-long i.e  $point1 = [lat,long]
+    $earthRadius = 6371;  // earth radius in km
+    $point1Lat = $point1[1];
+    $point2Lat =$point2[1];
+    $deltaLat = deg2rad($point2Lat - $point1Lat);
+    $point1Long =$point1[0];
+    $point2Long =$point2[0];
+    $deltaLong = deg2rad($point2Long - $point1Long);
+    $a = sin($deltaLat/2) * sin($deltaLat/2) + cos(deg2rad($point1Lat)) * cos(deg2rad($point2Lat)) * sin($deltaLong/2) * sin($deltaLong/2);
+    $c = 2 * atan2(sqrt($a), sqrt(1-$a));
+
+    $distance = $earthRadius * $c;
+    return $distance;    // in km
+    }
+
+
+
+
+public function loadRoute($kmlfile)
+{
+    $geodata=[];
+     $geodata["dist"]=-1;
+       $geodata["maxlat"]="0";
+      $geodata["midlat"]="0";
+      $geodata["minlat"]="0";
+
+      $geodata["maxlong"]="0";
+       $geodata["midlong"]="0";
+      $geodata["minlong"]="0";
+    if(!$kmlfile) return $geodata;
+    $kmlpath =  $this->mappath."roadgroups/".$kmlfile;
+    $xmlstr = file_get_contents($kmlpath);
+    $kml = new \SimpleXMLElement($xmlstr);
+    $dist = 0;
+    $minlat=360;
+    $minlong =360;
+    $maxlat=-360;
+    $maxlong=-306;
+    foreach ($kml->Document->Placemark as $placemark)
+    {
+    // echo '<script>console.log(" placemark '.$placemark->name.'\n")</script></br>';
+
+     $k=0;
+
+     $coordinatesstr = $placemark->LineString->coordinates ;
+     $value =  explode(PHP_EOL,  $coordinatesstr);
+     $coords   = array();
+     foreach($value as $coord)
+     {
+        $args     = explode(",", $coord);
+        if(count($args)==3)
+        {
+         $coords[] = array($args[0], $args[1], $args[2]);
+         if($k>0)
+         {
+           $dist += $this->getDistanceBetweenTwoPoints($coords[$k], $coords[$k-1]);
+           if($maxlat < $coords[$k][1])$maxlat= $coords[$k][1];
+           if($maxlong < $coords[$k][0])$maxlong= $coords[$k][0];
+           if($minlat > $coords[$k][1])$minlat= $coords[$k][1];
+           if($minlong > $coords[$k][0])$minlong= $coords[$k][0];
+          }
+           $k++;
+           }
+      }
+
+     }
+      $geodata["dist"]=number_format((float)$dist, 2, '.', '');
+      $geodata["maxlat"]=$maxlat;
+      $geodata["midlat"]="".($maxlat+$minlat)/2;
+      $geodata["minlat"]=$minlat;
+
+      $geodata["maxlong"]=$maxlong;
+       $geodata["midlong"]="".($minlong+$maxlong)/2;
+      $geodata["minlong"]=$minlong;
+      return  $geodata;
 }
+
+}
+
+

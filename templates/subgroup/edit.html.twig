@@ -5,7 +5,7 @@
 
 {% block stylesheets %}
       {{ parent() }}
-   <link href="{{ asset('/css/subward.css') }}" rel="stylesheet" />
+   <link href="{{ asset('/css/subgroup.css') }}" rel="stylesheet" />
 
 {% endblock %}
 
@@ -14,12 +14,12 @@
 
 {% block middle %}
 <div id="middle" >
-<div id="subwardedit"  >
+<div id="subgroupedit"  >
 <div>
  <div class="heading  row" >
- <div class="label">{{'edit subward' }}:</div>
- <div class="title" > {{subward.name}}</div>
- <div class="button  right"> <a class="button" href ="/rggroup/show/{{subward.rggroupid}}" >{{'back'}} </a> </div>
+ <div class="label">{{'edit subgroup' }}:</div>
+ <div class="title" > {{subgroup.name}}</div>
+ <div class="button  right"> <a class="button" href ="/rggroup/show/{{subgroup.rggroupid}}" >{{'back'}} </a> </div>
 </div>
 <div class="formmap">
 <div  class="form" >
@@ -35,7 +35,7 @@
 
 </div>
       <div class ="row">
-     <div class="deletebutton right "> <a class="button  red" href ="/rgsubgroup/delete/{{subward.rgsubgroupid}}" >{{'DELETE SUBWARD'}} </a> </div>
+     <div class="deletebutton right "> <a class="button  red" href ="/rgsubgroup/delete/{{subgroup.rgsubgroupid}}" >{{'DELETE subgroup'}} </a> </div>
      </div>
 </div>
 </div>

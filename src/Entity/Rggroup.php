@@ -54,19 +54,9 @@ class Rggroup
 
    private $Completions;
 
-   private $Bounds;
+   private $Geodata;
 
 
-
-        /**
-     * @ORM\Column(name="latitude",type="string", length=20,  nullable=true)
-     */
-    private $Latitude;
-
-          /**
-     * @ORM\Column(name="longitude",type="string", length=20,   nullable=true)
-     */
-    private $Longitude;
 
     public function getRggroupid()
     {
@@ -145,62 +135,57 @@ class Rggroup
 
 
 
+public function getGeodata_json()
+{
+ return  $this->Geodata;
+}
 
-    public function getLatitude()
+public function getGeodata()
+{
+ return  json_decode($this->Geodata,true);
+}
+
+public function setGeodata($text)
+{
+  $text_json = json_encode($text);
+   $this->Geodata= $text_json;
+}
+
+
+
+
+
+
+
+
+ public function initGeodata()
     {
-        return $this->Latitude;
-    }
-
-    public function setLatitude(?string $number): self
-    {
-        $this->Latitude = $number;
-        return $this;
-    }
-
-    public function getLongitude()
-    {
-        return $this->Longitude;
-    }
-
-   public function getBounds()
-   {
-     return $this->Bounds;
-   }
-
-   public function getBoundsStr()
-   {
-
-     $out = "{";
-     $out .= '"se":{"lat" : '.$this->Bounds["se"]["lat"].',"long":'.$this->Bounds["se"]["long"].'},';
-     $out .= '"nw":{"lat" : '.$this->Bounds["nw"]["lat"].',"long":'.$this->Bounds["nw"]["long"].'}}';
-     return $out;
-   }
-
-    public function setLongitude(?string $number): self
-    {
-        $this->Longitude = $number;
-
-        return $this;
-    }
-
-    public function initBounds()
-    {
-      $this->Bounds["se"]["lat"] = null;
-      $this->Bounds["nw"]["lat"] = null;
-      $this->Bounds["se"]["long"] = null;
-      $this->Bounds["nw"]["long"] = null;
+          $geodata = array();
+          $geodata["dist"]=-1;
+          $geodata["maxlat"]=null;
+          $geodata["midlat"]=null;
+          $geodata["minlat"]=null;
+          $geodata["maxlong"]=null;
+          $geodata["midlong"]=null;
+          $geodata["minlong"]=null;
+          $this->Geodata = json_encode($geodata);
     }
 
      public function expandbounds($bounds)
      {
-        if($this->Bounds["se"]["lat"] === null)  $this->Bounds["se"]["lat"] =  $bounds["se"]["lat"];
-        if($this->Bounds["se"]["long"] === null)  $this->Bounds["se"]["long"] =  $bounds["se"]["long"];
-        if(($bounds["se"]["lat"] !== null) && ($this->Bounds["se"]["lat"] >  $bounds["se"]["lat"])) $this->Bounds["se"]["lat"] = $bounds["se"]["lat"];
-        if(($bounds["se"]["long"] !== null) && ($this->Bounds["se"]["long"] <  $bounds["se"]["long"])) $this->Bounds["se"]["long"] = $bounds["se"]["long"];
-         if($this->Bounds["nw"]["lat"] === null)  $this->Bounds["nw"]["lat"] =  $bounds["nw"]["lat"];
-        if($this->Bounds["nw"]["long"] === null)  $this->Bounds["nw"]["long"] =  $bounds["nw"]["long"];
-      if(($bounds["nw"]["lat"] !== null) && ( $this->Bounds["nw"]["lat"] < $bounds["nw"]["lat"]))  $this->Bounds["nw"]["lat"]= $bounds["nw"]["lat"];
-      if(($bounds["nw"]["long"] !== null) && ( $this->Bounds["nw"]["long"] > $bounds["nw"]["long"]))  $this->Bounds["nw"]["long"] = $bounds["nw"]["long"];
+     if (!$bounds) return ;
+     $thisbounds= $this->getGeodata();
+      if(!array_key_exists("minlat",  $this->getGeodata())) return;
+          if(!array_key_exists("minlat", $bounds)) return;
+        if($thisbounds["minlat"] === null)  $thisbounds["minlat"] =  $bounds["minlat"];
+        if($thisbounds["maxlong"] === null)  $thisbounds["maxlong"] =  $bounds["maxlong"];
+        if(($bounds["minlat"] !== null) && ($thisbounds["minlat"] >  $bounds["minlat"])) $thisbounds["minlat"] = $bounds["minlat"];
+        if(($bounds["maxlong"] !== null) && ($thisbounds["maxlong"] <  $bounds["maxlong"])) $thisbounds["maxlong"] = $bounds["maxlong"];
+         if($thisbounds["maxlat"] === null)  $thisbounds["maxlat"] =  $bounds["maxlat"];
+        if($thisbounds["minlong"] === null)  $thisbounds["minlong"] =  $bounds["minlong"];
+      if(($bounds["maxlat"] !== null) && ( $thisbounds["maxlat"] < $bounds["maxlat"]))  $thisbounds["maxlat"]= $bounds["maxlat"];
+      if(($bounds["minlong"] !== null) && ( $thisbounds["minlong"] > $bounds["minlong"]))  $thisbounds["minlong"] = $bounds["minlong"];
+      $this->setGeodata($thisbounds);
      }
 
 
@@ -211,9 +196,7 @@ class Rggroup
    $str ="{";
    $str .=  '"name":"'.$this->Name.'",';
    $str .=  '"rggroupid":"'.$this->Rggroupid.'",';
-   $str .=  '"kml":"'.$kml.'",';
-   $str .=  '"longitude":"'.$this->Longitude.'",';
-   $str .=  '"latitude":"'.$this->Latitude.'"';
+   $str .=  '"kml":"'.$kml.'" ';
    $str .="}";
    return  $str;
    }

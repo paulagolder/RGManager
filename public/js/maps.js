@@ -31,7 +31,7 @@ function getColor(i)
     var lat = mylocation.latitude;
     var long = mylocation.longitude;
     var zoom = 12;
-    if( lat < 40)
+    if( (typeof lat === "undefined") || lat < 40)
     {
       long =-1.8304;
       lat = 52.6854 ;
@@ -87,6 +87,31 @@ function myRgMap(location)
     return mymap;
 }
 
+function myRgMapb(latstr,longstr)
+{
+  lat=parseFloat(latstr);
+  long= parseFloat(longstr);
+  var zoom = 10;
+  if( lat === undefined  || lat < 40)
+  {
+    long =-1.8304;
+    lat = 52.6854 ;
+    zoom = 18;
+  }
+
+  if(zoom <1 ) zoom = 1;
+
+  var mymap = L.map('rgmapid').setView([ lat , long], zoom);
+  mapLink =
+  '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+  L.tileLayer(
+    'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; ' + mapLink + ' Contributors',
+      maxZoom: 20,
+    }).addTo(mymap);
+    return mymap;
+}
+
 function setBounds(amap, location)
 {
   var location_dc =redecode(location);
@@ -99,14 +124,25 @@ function setBounds(amap, location)
   amap.fitBounds(bounds);
 }
 
+function setBoundsb(amap, maxlat,maxlong,minlat,minlong)
+{
+  var bounds =[];
+  bounds.push([ parseFloat(maxlat),parseFloat(maxlong)]);
+  bounds.push([ parseFloat(maxlat),parseFloat(minlong)]);
+  bounds.push([ parseFloat(minlat),parseFloat(maxlong)]);
+  bounds.push([ parseFloat(minlat),parseFloat(minlong)]);
+  amap.fitBounds(bounds);
+}
 
 function setBounds2(amap, amybounds)
 {
+
   var mybounds_dc =redecode(amybounds);
   var mybounds = JSON.parse(mybounds_dc);
+  if(mybounds["minlat"]===null) return;
   var bounds =[];
-  bounds.push([ mybounds["nw"]["lat"], mybounds["nw"]["long"]]);
-  bounds.push([ mybounds["se"]["lat"],mybounds["se"]["long"]]);
+  bounds.push([ mybounds["maxlat"], mybounds["minlong"]]);
+  bounds.push([ mybounds["minlat"],mybounds["maxlong"]]);
   amap.fitBounds(bounds);
 }
 
@@ -114,10 +150,11 @@ function setMarkers(amap,amybounds)
 {
   var mybounds_dc =redecode(amybounds);
   var mybounds = JSON.parse(mybounds_dc);
-  var nwlat =  mybounds["nw"]["lat"];
-  var nwlong =  mybounds["nw"]["long"];
-  var selat =  mybounds["se"]["lat"];
-  var selong =  mybounds["se"]["long"];
+  if(mybounds["minlat"]===null) return;
+  var nwlat =  mybounds["maxlat"];
+  var nwlong =  mybounds["minlong"];
+  var selat =  mybounds["minlat"];
+  var selong =  mybounds["maxlong"];
   var marker = L.marker([nwlat, nwlong]).addTo(amap);
    marker = L.marker([selat, selong]).addTo(amap);
    marker = L.marker([selat, nwlong]).addTo(amap);

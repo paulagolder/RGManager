@@ -194,7 +194,6 @@ class DeliveryController extends AbstractController
 
      public function manage($dvyid, $rgsel)
     {
-
         $delivery = $this->getDoctrine()->getRepository("App:Delivery")->findOne($dvyid);
         $district = $this->getDoctrine()->getRepository("App:District")->findOne($delivery->getDistrict());
         if (!$delivery)
@@ -231,8 +230,6 @@ class DeliveryController extends AbstractController
        $request = $this->requestStack->getCurrentRequest();
        $data = $request->request->get('form');
         $input = $request->request->all();
- //gget data and update
-        dump($input);
         $i=0;
         $entityManager = $this->getDoctrine()->getManager();
         foreach($input["rgid"] as $arid)
@@ -241,7 +238,6 @@ class DeliveryController extends AbstractController
         $dtorg->setAgent($input["agent"][$i]);
         $dtorg->setIssuedate($input["issued"][$i]);
         $dtorg->setCompleted($input["achieved"][$i]);
-        dump($dtorg);
          $entityManager->persist($dtorg);
         $i++;
         }
@@ -252,9 +248,7 @@ class DeliveryController extends AbstractController
             return $this->render('Delivery/showone.html.twig', [ 'message' =>  'Delivery not Found',]);
         }
         $rgs= $this->getDoctrine()->getRepository("App:Delivery")->findDeliveryRoadgroups($dvyid,$this->rgyear);
-
         $rggroups = self::maketree($dvyid,$rgs);
-
              return $this->redirect("/delivery/manage/$dvyid/$rgsel");
     }
 
@@ -265,14 +259,11 @@ class DeliveryController extends AbstractController
        $data = $request->request->get('form');
         $input = $request->request->all();
         $rglist  = preg_split('/[\ \n\,]+/', $input["rgids"]);
-          dump($rglist);
         $i=0;
         $entityManager = $this->getDoctrine()->getManager();
         foreach($rglist as $rg)
         {
-         dump($rg);
          $dtorg =  $this->getDoctrine()->getRepository('App:DeliverytoRoadgroup')->findOne($dvyid,$rg);
-          dump($dtorg);
          if($dtorg === null)
          {
                    $roadgroup =  $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rg,$this->rgyear);
@@ -354,7 +345,7 @@ class DeliveryController extends AbstractController
          $xrggroups[$rggrp]["group"] =  $anobj;
          $xrggroups[$rggrp]["group"]->setHouseholds(0);
          $xrggroups[$rggrp]["group"]->setCompletions(0);
-         $xrggroups[$rggrp]["group"]->initBounds();
+         $xrggroups[$rggrp]["group"]->initGeodata();
 
        }
        if(! array_key_exists ( $rgsubgrp , $xrggroups[$rggrp]["children"] ) )
@@ -366,21 +357,17 @@ class DeliveryController extends AbstractController
           $xrggroups[$rggrp]["children"][$rgsubgrp]["group"] = $asubobj;
           $xrggroups[$rggrp]["children"][$rgsubgrp]["group"]->setHouseholds(0);
           $xrggroups[$rggrp]["children"][$rgsubgrp]["group"]->setCompletions(0);
-          $xrggroups[$rggrp]["children"][$rgsubgrp]["group"]->initBounds();
+          $xrggroups[$rggrp]["children"][$rgsubgrp]["group"]->initGeodata();
        }
-
           $thisrg =  $this->getDoctrine()->getRepository('App:DeliverytoRoadgroup')->findOne($dvyid,$rgid);
           $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
           $xrggroups[$rggrp]["children"][$rgsubgrp]["children"][$rgid] =  $thisrg;
           $hh = $thisrg->getHouseholds();
-          $bnds = $aroadgroup->getBounds();
+          $geodata = $aroadgroup->getGeodata();
           $xrggroups[$rggrp]["group"]->addHouseholds($hh);
-          dump( $xrggroups[$rggrp]["group"]);
-           dump($bnds);
-            dump($aroadgroup);
-          $xrggroups[$rggrp]["group"]->expandBounds($bnds);
+          $xrggroups[$rggrp]["group"]->expandBounds($geodata);
           $xrggroups[$rggrp]["children"][$rgsubgrp]["group"]->addHouseholds($hh);
-          $xrggroups[$rggrp]["children"][$rgsubgrp]["group"]->expandBounds($bnds);
+          $xrggroups[$rggrp]["children"][$rgsubgrp]["group"]->expandBounds($geodata);
           if($thisrg->getCompleted())
           {
              $xrggroups[$rggrp]["group"]->addCompletions($hh);
@@ -427,8 +414,6 @@ class DeliveryController extends AbstractController
             $form->handleRequest($request);
             if ($form->isValid())
             {
-               // $person->setContributor($user->getUsername());
-               // $person->setUpdateDt($time);
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($delivery);
                 $entityManager->flush();
@@ -449,13 +434,10 @@ class DeliveryController extends AbstractController
     {
         $request = $this->requestStack->getCurrentRequest();
         $delivery = $this->getDoctrine()->getRepository("App:Delivery")->findOne($dvyid);
-
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->remove($delivery);
                 $entityManager->flush();
-
                 return $this->redirect("/delivery/showcurrent/");
-
     }
 
 
@@ -463,16 +445,13 @@ class DeliveryController extends AbstractController
 
 
 
-     public function Exportcsv($dvyid)
+    public function Exportcsv($dvyid)
     {
             $delivery = $this->getDoctrine()->getRepository("App:Delivery")->findOne($dvyid);
             $file = "documents/".$delivery->getName()."_".$this->rgyear.".csv";
             $csvout = "";
-
             $csvout .= "RD-Groups, RD-Sugroups, Roadgroups, Households \n\n";
-
             $csvout .= $this->makecsv();
-
             $handle = fopen($file, "w") or die("ERROR: Cannot open the file.");
             fwrite($handle, $csvout) or die ("ERROR: Cannot write the file.");
             fclose($handle);
@@ -488,12 +467,12 @@ class DeliveryController extends AbstractController
     {
          $csvout = "";
          $rggroups = $this->getDoctrine()->getRepository("App:Rggroup")->findAll();
-        if (!$rggroups) {
+        if (!$rggroups)
+        {
             return "";
         }
         foreach ($rggroups as $arggroup )
         {
-
            $subgroups =   $this->getDoctrine()->getRepository("App:Rgsubgroup")->findChildren($arggroup->getRggroupid());
            $arggroup->{'subgroups'} = $subgroups;
            foreach($subgroups as $asubward)
@@ -503,13 +482,10 @@ class DeliveryController extends AbstractController
               foreach($roadgroups as $aroadgroup)
               {
                 $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($aroadgroup->getRoadgroupid(),$this->rgyear);
-
                 $aroadgroup->{'streets'}= $streets;
-                //dump($aroadgroup);
               }
            }
         }
-
         foreach ($rggroups as $arggroup )
         {
            $csvout .= $arggroup->makecsv();
@@ -523,7 +499,6 @@ class DeliveryController extends AbstractController
            $rgid = str_replace("RG_","",$rgsel);
            $delivery = $this->getDoctrine()->getRepository("App:Delivery")->findOne($dvyid,$this->rgyear);
            $sparergs= $this->getSpareRoadgroups($dvyid, $this->rgyear);
-           dump($sparergs);
            if($rgid =="ALL")
            {
                 $entityManager = $this->getDoctrine()->getManager();
@@ -547,7 +522,6 @@ class DeliveryController extends AbstractController
                $entityManager = $this->getDoctrine()->getManager();
                foreach( $sparergs  as $key=>$arg)
                {
-                  dump($key."=".$rgid);
                   if(strpos($key , $rgid) !== false)
                   {
                     $roadgroup =  $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($key,$this->rgyear);
@@ -563,18 +537,13 @@ class DeliveryController extends AbstractController
                }
                $entityManager->flush();
            }
-
              return $this->redirect( "/delivery/viewdetail/".$dvyid."/".$rgsel);
       }
 
-  public function addRound($dvyid,$rgid)
+      public function addRound($dvyid,$rgid)
       {
-
            $delivery = $this->getDoctrine()->getRepository("App:Delivery")->findOne($dvyid,$this->rgyear);
-
-
-               $entityManager = $this->getDoctrine()->getManager();
-
+           $entityManager = $this->getDoctrine()->getManager();
                     $roadgroup =  $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
                     $adtrg = new DeliverytoRoadgroup();
                     $adtrg->setDeliveryId($dvyid);
@@ -585,8 +554,6 @@ class DeliveryController extends AbstractController
                     $adtrg->setKML($roadgroup->getKml());
                     $entityManager->persist($adtrg);
                $entityManager->flush();
-
-
              return $this->redirect( "/delivery/mapschedule/".$dvyid);
       }
 
@@ -597,19 +564,15 @@ class DeliveryController extends AbstractController
            $rgsel = "RG_".$rgid;
            $entityManager = $this->getDoctrine()->getManager();
            $rgs= $this->getCommittedRoadgroups($dvyid, $this->rgyear);
-           //dump($rgs);
            foreach($rgs as $key=>$rg)
            {
-           dump($key."=".$rgid);
             if(strpos($key , $rgid) !== false)
             {
-              dump($key."=".$rgid);
               $roadgrouplink =  $this->getDoctrine()->getRepository("App:DeliverytoRoadgroup")->findOne($dvyid,$key);
               $entityManager->remove($roadgrouplink);
             }
             else if(strpos($rgid, $key ) !== false)
             {
-              dump($key."=".$rgid);
               $roadgrouplink =  $this->getDoctrine()->getRepository("App:DeliverytoRoadgroup")->findOne($dvyid,$key);
               $entityManager->remove($roadgrouplink);
             }
@@ -621,13 +584,11 @@ class DeliveryController extends AbstractController
 
       public function removeRound($dvyid,$rgid)
       {
-
            $entityManager = $this->getDoctrine()->getManager();
-
-              $roadgrouplink =  $this->getDoctrine()->getRepository("App:DeliverytoRoadgroup")->findOne($dvyid,$rgid);
-              $entityManager->remove($roadgrouplink);
+           $roadgrouplink =  $this->getDoctrine()->getRepository("App:DeliverytoRoadgroup")->findOne($dvyid,$rgid);
+           $entityManager->remove($roadgrouplink);
            $entityManager->flush();
-          return $this->redirect( "/delivery/mapschedule/".$dvyid);
+           return $this->redirect( "/delivery/mapschedule/".$dvyid);
       }
 
 
@@ -660,7 +621,6 @@ class DeliveryController extends AbstractController
         $dtrgs= $this->getDoctrine()->getRepository("App:DeliverytoRoadgroup")->findRoadgroups($dvyid);
         $total = 0;
         $done = 0;
-
         foreach($dtrgs as $dtrg)
         {
           $total += $dtrg->getHouseholds();
@@ -668,7 +628,6 @@ class DeliveryController extends AbstractController
           {
             $done += $dtrg->getHouseholds();
           }
-
         }
         $result = array();
         $result["target"]= $total;
@@ -699,41 +658,85 @@ class DeliveryController extends AbstractController
 
     public function makexml( $rggroups)
     {
-         $xmlout = "";
-         $delivery = $this;
+        $xmlout = "";
+        $delivery = $this;
         if (!$delivery)
         {
             return $this->render('Delivery/showone.html.twig', [ 'message' =>  'Delivery not Found',]);
         }
-        if (!$rggroups) {
+        if (!$rggroups)
+        {
             return $this->render('Delivery/showone.html.twig', [ 'message' =>  'Delivery not Found',]);
         }
-
-        foreach (  $rggroups as $arggroup )
+        foreach ($rggroups as $arggroup)
         {
            $arg = $arggroup["group"];
            $subgroups=$arggroup["children"];
-           $xmlout .= "  <rggroup RggroupId='".$arg->getRggroupid()."' Name='".$arg->getName()."' Households='".$arg->getHouseholds()."' KML='".$arg->getKML()."' Bounds='".$arg->getBoundsStr()."' >\n";
-           foreach ($subgroups as $asubgroup )
+           $xmlout .= "  <rggroup RggroupId='".$arg->getRggroupid()."' Name='".$arg->getName()."' Households='".$arg->getHouseholds()."' KML='".$arg->getKML()."' Bounds='".$arg->getGeodata_json()."' >\n";
+           foreach ($subgroups as $asubgroup)
             {
               $asubg  = $asubgroup["group"];
-              $xmlout .= "  <rgsubgroup RgsubgroupId='".$asubg->getRgsubgroupid()."' Name='".$asubg->getName()."' Households='".$asubg->getHouseholds()."' Bounds='".$asubg->getBoundsStr()."' >\n";
+              $xmlout .= "  <rgsubgroup RgsubgroupId='".$asubg->getRgsubgroupid()."' Name='".$asubg->getName()."' Households='".$asubg->getHouseholds()."' Bounds='".$asubg->getGeodata_json()."' >\n";
               $roadgroups=$asubgroup["children"];
-             foreach ($roadgroups as $argroup )
-             {
+              foreach ($roadgroups as $argroup)
+              {
                  $rgid = $argroup->getRoadgroupId();
                  $aroadgroup =  $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
                  $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($aroadgroup->getRoadgroupid(),$this->rgyear);
-                 $aroadgroup->streets = $streets;
-                 $kml =  $this->mapserver->findmap($aroadgroup->getRoadgroupId(),$this->rgyear));
+                 $streettree = array();
+                 foreach($streets as $astreet)
+                 {
+                   $streetname = $astreet->getName();
+                   if(array_key_exists($streetname,$streettree))
+                   {
+                     $streettree[$streetname][] = $astreet;
+                   }
+                   else
+                   {
+                     $streettree[$streetname] = array();
+                     $streettree[$streetname][] = $astreet;
+                   }
+                 }
+                 $streetlist = array();
+                 $trace = false;
+                 foreach($streettree as  $streetname=>$astreetgroup)
+                 {
+                    $allnamed = $this->getDoctrine()->getRepository("App:Street")->findAllbyName($streetname,$this->rgyear);
+                    if(count($allnamed)> 1 && count($allnamed)== count($astreetgroup))
+                    {
+                       $trace= true;
+                       $hh = 0;
+                       foreach($astreetgroup as  $astreet)
+                     {
+                        $hh += $astreet->getHouseholds();
+                     }
+                      $tstreet = $astreetgroup[0];
+                      $tstreet->setHouseholds($hh);
+                      $tstreet->setPart(null);
+                      $tstreet->setQualifier(null);
+                      $streetlist[]=$tstreet;
+                    }else
+                    {
+                     foreach($astreetgroup as  $astreet)
+                     {
+                        $streetlist[]=$astreet;
+                     }
+                    }
+                }
+                if($trace)
+                {
+              //  dump($streettree);
+              //  dump($streetlist);
+                }
+                 $aroadgroup->streets = $streetlist;
+                 $kml =  $this->mapserver->findmap($aroadgroup->getRoadgroupId(),$this->rgyear);
                  $aroadgroup->setKML($kml);
                  $xmlout .= $aroadgroup->makeXML($this->rgyear);
-             }
+              }
               $xmlout .= "  </rgsubgroup>\n";
             }
             $xmlout .= "  </rggroup>\n";
-
-
-      }return $xmlout;;
-}
+      }
+      return $xmlout;;
+    }
 }

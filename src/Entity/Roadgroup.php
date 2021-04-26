@@ -69,35 +69,7 @@ class Roadgroup
    */
   private $KML;
 
-  /**
-   * @ORM\Column(name="minlat",type="float", nullable=true)
-   */
-  private $minlat;
 
-  /**
-   * @ORM\Column(name="midlat",type="float", nullable=true)
-   */
-  private $midlat;
-
-  /**
-   * @ORM\Column(name="maxlat",type="float", nullable=true)
-   */
-  private $maxlat;
-
-  /**
-   * @ORM\Column(name="minlong",type="float", nullable=true)
-   */
-  private $minlong;
-
-  /**
-   * @ORM\Column(name="midlong",type="float", nullable=true)
-   */
-  private $midlong;
-
-  /**
-   * @ORM\Column(name="maxlong",type="float", nullable=true)
-   */
-  private $maxlong;
 
   /**
    * @ORM\Column(name="Priority",type="float", nullable=true)
@@ -114,7 +86,10 @@ class Roadgroup
    */
   private $Note;
 
-  private $Bounds;
+    /**
+   * @ORM\Column(name="geodata",type="string", length=300, nullable=true)
+   */
+  private $Geodata;
 
   public function getRoadgroupId()
    {
@@ -243,71 +218,6 @@ class Roadgroup
      return $this;
    }
 
-   public function getMinlat(): ?float
-   {
-     return $this->minlat;
-   }
-
-   public function setMinlat(?float $minlat): self
-   {
-     $this->minlat = $minlat;
-     return $this;
-   }
-
-   public function getMidlat(): ?float
-   {
-     return $this->midlat;
-   }
-
-   public function setMidlat(?float $midlat): self
-   {
-     $this->midlat = $midlat;
-     return $this;
-   }
-
-   public function getMaxlat(): ?float
-   {
-     return $this->maxlat;
-   }
-
-   public function setMaxlat(?float $maxlat): self
-   {
-     $this->maxlat = $maxlat;
-     return $this;
-   }
-
-   public function getMinlong(): ?float
-   {
-     return $this->minlong;
-   }
-
-   public function setMinlong(?float $minlong): self
-   {
-     $this->minlong = $minlong;
-     return $this;
-   }
-
-   public function getMidlong(): ?float
-   {
-     return $this->midlong;
-   }
-
-   public function setMidlong(?float $midlong): self
-   {
-     $this->midlong = $midlong;
-     return $this;
-   }
-
-   public function getMaxlong(): ?float
-   {
-     return $this->maxlong;
-   }
-
-   public function setMaxlong(?float $maxlong): self
-   {
-     $this->maxlong = $maxlong;
-     return $this;
-   }
 
    public function getPriority(): ?float
    {
@@ -342,84 +252,48 @@ class Roadgroup
      return $this;
    }
 
-   public function getNorthWest()
-   {
-      $nw = array();
-      $nw["lat"] = $this->maxlat;
-      $nw["long"] = $this->minlong;
-      return $nw;
-   }
-   public function getSouthEast()
-   {
-       $se= array();
-        $se["lat"] = $this->minlat;
-        $se["long"] = $this->maxlong;
-       return $se;
-   }
 
-   public function makeBounds()
-   {
-     $this->Bounds = array();
-     $this->Bounds["nw"]=$this->getNorthwest();
-     $this->Bounds["se"]=$this->getSouthEast();
-   }
 
-    public function getBounds()
-   {
-     $this->makeBounds();
-     return $this->Bounds;
-   }
 
-    public function getBoundsStr()
-   {
+public function getGeodata_json()
+{
+ return  $this->Geodata;
+}
 
-     $out = "{";
-     $out .= '"se":{"lat" : '.$this->Bounds["se"]["lat"].',"long":'.$this->Bounds["se"]["long"].'},';
-     $out .= '"nw":{"lat" : '.$this->Bounds["nw"]["lat"].',"long":'.$this->Bounds["nw"]["long"].'}}';
-     return $out;
-   }
+public function getGeodata()
+{
+ return  json_decode($this->Geodata,true);
+}
+
+public function setGeodata($text)
+{
+  $text_json = json_encode($text);
+   $this->Geodata= $text_json;
+}
+
+
 
    public function getjson()
    {
-   if($this->midlat<40)
-   {
-    $this->midlat = ($this->maxlat + $this->minlat)/2;
-    $this->midlong = ($this->minlong + $this->maxlong)/2;
-   }
-   $zoom = $this->getZoom();
    $str ="{";
    $str .=  '"roadgroupid":"'.$this->RoadgroupId.'",';
    $str .=  '"name":"'.$this->getName().'",';
    $str .=  '"rggroupid":"'.$this->Rggroupid.'",';
    $str .=  '"rgsubgroupid":"'.$this->Rgsubgroupid.'",';
    $str .=  '"kml":"'.$this->KML.'",';
-   $str .=  '"longitude":"'.$this->midlong.'",';
-   $str .=  '"latitude":"'.$this->midlat.'",';
-   $str .=  '"maxlong":"'.$this->maxlong.'",';
-   $str .=  '"minlong":"'.$this->minlong.'",';
-   $str .=  '"maxlat":"'.$this->maxlat.'",';
-   $str .=  '"minlat":"'.$this->minlat.'",';
-   $str .=  '"zoom":"'.$zoom.'"';
    $str .="}";
    return  $str;
    }
 
-   public function getZoom()
-   {
-     $zoom = ($this->maxlat - $this->minlat)/0.000050;
-     return $zoom;
-   }
+
 
    public function makexml()
    {
-     $this->makeBounds();
      $streets =$this->streets;
-
      $xmlout = "";
-     $xmlout .= "      <roadgroup RoadgroupId='$this->RoadgroupId' Name='".$this->getName()."' KML='$this->KML' Households='$this->Households'  Bounds='".$this->getBoundsStr()."' >\n";
-     foreach ($streets as $astreet )
+     $xmlout .= "      <roadgroup RoadgroupId='$this->RoadgroupId' Name='".$this->getName()."' KML='$this->KML' Households='$this->Households'  Bounds='".$this->getGeodata_json()."' >\n";
+     foreach ($streets as $astreet)
      {
-    // dump($astreet);
         $xmlout .="        ".$astreet->makexml();
      }
      $xmlout .= "      </roadgroup>\n";

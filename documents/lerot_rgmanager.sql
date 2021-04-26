@@ -1,63 +1,31 @@
--- phpMyAdmin SQL Dump
--- version 4.9.5deb2
--- https://www.phpmyadmin.net/
---
--- Host: localhost:3306
--- Generation Time: Apr 02, 2021 at 09:33 AM
--- Server version: 10.3.27-MariaDB-1:10.3.27+maria~bionic-log
--- PHP Version: 7.4.3
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
-START TRANSACTION;
 SET time_zone = "+00:00";
-
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
---
--- Database: `lerot_rgmanager`
---
-CREATE DATABASE IF NOT EXISTS `lerot_rgmanager` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `lerot_rgmanager`;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `delivery`
---
-
-DROP TABLE IF EXISTS `delivery`;
-CREATE TABLE `delivery` (
-  `deliveryid` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `delivery` (
+  `deliveryid` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL,
   `kml` varchar(20) DEFAULT NULL,
   `district` varchar(20) NOT NULL,
   `seat` varchar(20) DEFAULT NULL,
   `targetdate` varchar(10) DEFAULT NULL,
-  `comment` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `comment` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`deliveryid`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `delivery`
---
-
+TRUNCATE TABLE `delivery`;
 INSERT INTO `delivery` (`deliveryid`, `name`, `kml`, `district`, `seat`, `targetdate`, `comment`) VALUES
 (1, 'Keir Leaflet', 'SCC/LCN.kml', 'SCC', 'LCN', '30/4/2021', 'Mainly LibDem areas'),
-(3, 'Tony', 'SCC/LCS.kml', 'SCC', 'LCS', NULL, NULL),
-(4, 'Tony BLY', 'SCC/LRN.kml', 'SCC', 'LRN', NULL, NULL);
+(8, 'Tony Kearon', 'LCC.kml', 'LCC', NULL, NULL, NULL),
+(9, 'PV_CHD_STW', 'SCC_LCN.kml', 'SCC', 'LCN', NULL, NULL),
+(10, 'EA_2021', 'SCC_LCN.kml', 'SCC', 'LCN', NULL, NULL);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `deliverytoroadgroup`
---
-
-DROP TABLE IF EXISTS `deliverytoroadgroup`;
-CREATE TABLE `deliverytoroadgroup` (
+CREATE TABLE IF NOT EXISTS `deliverytoroadgroup` (
   `deliveryid` int(11) NOT NULL,
   `roadgroupid` varchar(10) NOT NULL,
   `rggroupid` varchar(20) DEFAULT NULL,
@@ -70,13 +38,11 @@ CREATE TABLE `deliverytoroadgroup` (
   `completed` varchar(10) DEFAULT NULL,
   `agent` varchar(10) DEFAULT NULL,
   `feedback` varchar(50) DEFAULT NULL,
-  `instructions` varchar(50) DEFAULT NULL
+  `instructions` varchar(50) DEFAULT NULL,
+  UNIQUE KEY `index` (`deliveryid`,`roadgroupid`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `deliverytoroadgroup`
---
-
+TRUNCATE TABLE `deliverytoroadgroup`;
 INSERT INTO `deliverytoroadgroup` (`deliveryid`, `roadgroupid`, `rggroupid`, `rgsubgroupid`, `issuedate`, `households`, `kml`, `supportgroup`, `labourness`, `completed`, `agent`, `feedback`, `instructions`) VALUES
 (1, 'CHD_C2', 'RG_CHD', 'RG_CHD_C', '21/3/21', 189, 'CHD_C2.kml', 'M', '102', NULL, 'RT', NULL, NULL),
 (1, 'CHD_N2', 'RG_CHD', 'RG_CHD_N', '21/3/21', 178, 'CHD_N2.kml', 'H', '35', NULL, 'RT', NULL, NULL),
@@ -85,7 +51,7 @@ INSERT INTO `deliverytoroadgroup` (`deliveryid`, `roadgroupid`, `rggroupid`, `rg
 (1, 'CHD_S3', 'RG_CHD', 'RG_CHD_S', '18/3/21', 121, 'CHD_S3.kml', 'M', '133', 'done', 'BB', NULL, NULL),
 (1, 'CHD_S4', 'RG_CHD', 'RG_CHD_S', '29/1/21', 136, 'CHD_S4_2021.kml', 'M', '111', 'done', 'BB', NULL, NULL),
 (1, 'CUR_C2', 'RG_CUR', 'RG_CUR_C', '20/3/21', 205, 'CUR_C2_2021.kml', 'H', '67', '', 'BW', NULL, NULL),
-(1, 'CUR_E1', 'RG_CUR', 'RG_CUR_E', '30/3/21', 136, 'CUR_E1_2021.kml', 'M', '116', '', 'IG', NULL, NULL),
+(1, 'CUR_E1', 'RG_CUR', 'RG_CUR_E', '30/3/21', 136, 'CUR_E1_2021.kml', 'M', '116', 'done', 'IG', NULL, NULL),
 (1, 'CUR_N1', 'RG_CUR', 'RG_CUR_N', '20/3/21', 151, 'CUR_N1.kml', 'M', '95', 'done', 'RB', NULL, NULL),
 (1, 'CUR_N2', 'RG_CUR', 'RG_CUR_N', '20/3/21', 195, 'CUR_N2.kml', 'H', '21', 'done', 'RB', NULL, NULL),
 (1, 'CUR_N3', 'RG_CUR', 'RG_CUR_N', '', 120, 'CUR_N3.kml', 'M', '', 'done', 'BB', NULL, NULL),
@@ -132,11 +98,11 @@ INSERT INTO `deliverytoroadgroup` (`deliveryid`, `roadgroupid`, `rggroupid`, `rg
 (2, 'STW_W1', 'RG_STW', 'RG_STW_W', NULL, 114, 'STW_W1.kml', 'H', '32', NULL, NULL, NULL, NULL),
 (2, 'STW_W2', 'RG_STW', 'RG_STW_W', NULL, 244, 'STW_W2.kml', 'H', '10', NULL, NULL, NULL, NULL),
 (2, 'STW_W3', 'RG_STW', 'RG_STW_W', NULL, 130, 'STW_W3.kml', 'H', '12', NULL, NULL, NULL, NULL),
-(3, 'LEO_C4', 'RG_LEO', 'RG_LEO_C', NULL, 171, 'LEO_C4_2021.kml', 'H', '9', NULL, NULL, NULL, NULL),
-(3, 'LEO_C5', 'RG_LEO', 'RG_LEO_C', NULL, 164, 'LEO_C5.kml', 'H', '20', NULL, NULL, NULL, NULL),
-(3, 'LEO_C6', 'RG_LEO', 'RG_LEO_C', NULL, 142, 'LEO_C6.kml', 'H', '1', NULL, NULL, NULL, NULL),
-(3, 'LEO_C7', 'RG_LEO', 'RG_LEO_C', NULL, 176, 'LEO_C7_2021.kml', 'H', '3', NULL, NULL, NULL, NULL),
-(3, 'LEO_C8', 'RG_LEO', 'RG_LEO_C', NULL, 197, 'LEO_C8.kml', 'H', '8', NULL, NULL, NULL, NULL),
+(3, 'LEO_C4', 'RG_LEO', 'RG_LEO_C', '', 171, 'LEO_C4_2021.kml', 'H', '9', '', '', NULL, NULL),
+(3, 'LEO_C5', 'RG_LEO', 'RG_LEO_C', '', 164, 'LEO_C5.kml', 'H', '20', '', '', NULL, NULL),
+(3, 'LEO_C6', 'RG_LEO', 'RG_LEO_C', '', 142, 'LEO_C6.kml', 'H', '1', '', '', NULL, NULL),
+(3, 'LEO_C7', 'RG_LEO', 'RG_LEO_C', '', 176, 'LEO_C7_2021.kml', 'H', '3', '', '', NULL, NULL),
+(3, 'LEO_C8', 'RG_LEO', 'RG_LEO_C', '', 197, 'LEO_C8.kml', 'H', '8', '', '', NULL, NULL),
 (3, 'LEO_N4', 'RG_LEO', 'RG_LEO_N', NULL, 93, 'LEO_N4_2021.kml', 'H', '69', NULL, NULL, NULL, NULL),
 (3, 'LEO_W2', 'RG_LEO', 'RG_LEO_W', NULL, 262, 'LEO_W2.kml', 'H', '6', NULL, NULL, NULL, NULL),
 (3, 'STJ_C4', 'RG_STJ', 'RG_STJ_C', NULL, 176, 'STJ_C4.kml', 'H', '4', NULL, NULL, NULL, NULL),
@@ -149,40 +115,156 @@ INSERT INTO `deliverytoroadgroup` (`deliveryid`, `roadgroupid`, `rggroupid`, `rg
 (4, 'BLY_N1', 'RG_BLY', 'RG_BLY_N', NULL, 244, 'BLY_N1.kml', 'H', '18', NULL, NULL, NULL, NULL),
 (4, 'STW_C3', 'RG_STW', 'RG_STW_C', NULL, 100, 'STW_C3.kml', 'H', '64.5', NULL, NULL, NULL, NULL),
 (4, 'STW_E1', 'RG_STW', 'RG_STW_S', NULL, 189, 'STW_E1.kml', 'H', '30.5', NULL, NULL, NULL, NULL),
-(4, 'STW_S1', 'RG_STW', 'RG_STW_S', NULL, 139, 'STW_S1_2021.kml', 'H', '49.5', NULL, NULL, NULL, NULL);
+(4, 'STW_S1', 'RG_STW', 'RG_STW_S', NULL, 139, 'STW_S1_2021.kml', 'H', '49.5', NULL, NULL, NULL, NULL),
+(5, 'BLY_C1', 'RG_BLY', 'RG_BLY_C', NULL, 233, 'BLY_C1_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'BLY_C3', 'RG_BLY', 'RG_BLY_C', NULL, 205, 'BLY_C3_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'BLY_W1', 'RG_BLY', 'RG_BLY_W', NULL, 240, 'BLY_W1_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'LEO_C1', 'RG_LEO', 'RG_LEO_C', NULL, 259, 'LEO_C1_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'LEO_C2', 'RG_LEO', 'RG_LEO_C', NULL, 266, 'LEO_C2.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'LEO_C3', 'RG_LEO', 'RG_LEO_C', NULL, 187, 'LEO_C3.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'LEO_C7', 'RG_LEO', 'RG_LEO_C', NULL, 176, 'LEO_C7_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'LEO_C8', 'RG_LEO', 'RG_LEO_C', NULL, 197, 'LEO_C8.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'LEO_N2', 'RG_LEO', 'RG_LEO_N', NULL, 251, 'LEO_N2.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'LEO_N5', 'RG_LEO', 'RG_LEO_N', NULL, 213, 'LEO_N5.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'STJ_C5', 'RG_STJ', 'RG_STJ_C', NULL, 200, 'STJ_C5.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'STJ_E2', 'RG_STJ', 'RG_STJ_E', NULL, 231, 'STJ_E2_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'STJ_E3', 'RG_STJ', 'RG_STJ_E', NULL, 207, 'STJ_E3_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'STJ_W2', 'RG_STJ', 'RG_STJ_W', NULL, 227, 'STJ_W2.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'STW_E1', 'RG_STW', 'RG_STW_S', NULL, 189, 'STW_E1.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(5, 'STW_S3', 'RG_STW', 'RG_STW_S', NULL, 188, 'STW_S3_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 'BLY_W1', 'RG_BLY', 'RG_BLY_W', NULL, 240, 'BLY_W1_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 'LEO_A1', 'RG_LEO', 'RG_LEO_A', NULL, 50, 'LEO_A1.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 'LEO_C1', 'RG_LEO', 'RG_LEO_C', NULL, 259, 'LEO_C1_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 'LEO_C2', 'RG_LEO', 'RG_LEO_C', NULL, 266, 'LEO_C2.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 'LEO_C3', 'RG_LEO', 'RG_LEO_C', NULL, 187, 'LEO_C3.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 'LEO_C4', 'RG_LEO', 'RG_LEO_C', NULL, 171, 'LEO_C4_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 'LEO_C5', 'RG_LEO', 'RG_LEO_C', NULL, 164, 'LEO_C5.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 'LEO_C7', 'RG_LEO', 'RG_LEO_C', NULL, 176, 'LEO_C7_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 'LEO_C8', 'RG_LEO', 'RG_LEO_C', NULL, 197, 'LEO_C8.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 'LEO_C9', 'RG_LEO', 'RG_LEO_C', NULL, 103, 'LEO_C9.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 'STJ_E2', 'RG_STJ', 'RG_STJ_E', NULL, 231, 'STJ_E2_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 'STJ_E3', 'RG_STJ', 'RG_STJ_E', NULL, 207, 'STJ_E3_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 'STJ_E9', 'RG_STJ', 'RG_STJ_E', NULL, 60, 'STJ_E9_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 'STJ_W2', 'RG_STJ', 'RG_STJ_W', NULL, 227, 'STJ_W2.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(6, 'STW_S3', 'RG_STW', 'RG_STW_S', NULL, 188, 'STW_S3_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 'LEO_C3', 'RG_LEO', 'RG_LEO_C', NULL, 187, 'LEO_C3.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 'LEO_C4', 'RG_LEO', 'RG_LEO_C', NULL, 171, 'LEO_C4_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 'LEO_C5', 'RG_LEO', 'RG_LEO_C', NULL, 164, 'LEO_C5.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 'LEO_C6', 'RG_LEO', 'RG_LEO_C', NULL, 142, 'LEO_C6.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 'LEO_C7', 'RG_LEO', 'RG_LEO_C', NULL, 176, 'LEO_C7_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 'LEO_C8', 'RG_LEO', 'RG_LEO_C', NULL, 197, 'LEO_C8.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 'LEO_C9', 'RG_LEO', 'RG_LEO_C', NULL, 103, 'LEO_C9.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 'LEO_N4', 'RG_LEO', 'RG_LEO_N', NULL, 93, 'LEO_N4_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 'STJ_C4', 'RG_STJ', 'RG_STJ_C', NULL, 176, 'STJ_C4.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 'STJ_C5', 'RG_STJ', 'RG_STJ_C', NULL, 200, 'STJ_C5.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 'STJ_C6', 'RG_STJ', 'RG_STJ_C', NULL, 132, 'STJ_C6.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 'STJ_E2', 'RG_STJ', 'RG_STJ_E', NULL, 231, 'STJ_E2_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 'STJ_E3', 'RG_STJ', 'RG_STJ_E', NULL, 207, 'STJ_E3_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 'STJ_W1', 'RG_STJ', 'RG_STJ_W', NULL, 170, 'STJ_W1.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(7, 'STJ_W2', 'RG_STJ', 'RG_STJ_W', NULL, 227, 'STJ_W2.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'LEO_A1', 'RG_LEO', 'RG_LEO_A', NULL, 50, 'LEO_A1.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'LEO_C1', 'RG_LEO', 'RG_LEO_C', NULL, 259, 'LEO_C1_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'LEO_C2', 'RG_LEO', 'RG_LEO_C', NULL, 266, 'LEO_C2.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'LEO_C3', 'RG_LEO', 'RG_LEO_C', NULL, 187, 'LEO_C3.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'LEO_C4', 'RG_LEO', 'RG_LEO_C', NULL, 171, 'LEO_C4_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'LEO_C5', 'RG_LEO', 'RG_LEO_C', NULL, 164, 'LEO_C5.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'LEO_C6', 'RG_LEO', 'RG_LEO_C', NULL, 142, 'LEO_C6.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'LEO_C7', 'RG_LEO', 'RG_LEO_C', NULL, 176, 'LEO_C7_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'LEO_C8', 'RG_LEO', 'RG_LEO_C', NULL, 197, 'LEO_C8.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'LEO_C9', 'RG_LEO', 'RG_LEO_C', NULL, 103, 'LEO_C9.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'STJ_C4', 'RG_STJ', 'RG_STJ_C', NULL, 176, 'STJ_C4.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'STJ_C5', 'RG_STJ', 'RG_STJ_C', NULL, 200, 'STJ_C5.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'STJ_C6', 'RG_STJ', 'RG_STJ_C', NULL, 132, 'STJ_C6.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'STJ_E2', 'RG_STJ', 'RG_STJ_E', NULL, 231, 'STJ_E2_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'STJ_E3', 'RG_STJ', 'RG_STJ_E', NULL, 207, 'STJ_E3_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'STJ_W1', 'RG_STJ', 'RG_STJ_W', NULL, 170, 'STJ_W1.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(8, 'STJ_W2', 'RG_STJ', 'RG_STJ_W', NULL, 227, 'STJ_W2.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'CHD_C1', 'RG_CHD', 'RG_CHD_C', NULL, 254, 'CHD_C1_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'CHD_C2', 'RG_CHD', 'RG_CHD_C', NULL, 189, 'CHD_C2.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'CHD_C3', 'RG_CHD', 'RG_CHD_C', NULL, 133, 'CHD_C3.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'CHD_C4', 'RG_CHD', 'RG_CHD_C', NULL, 131, 'CHD_C4.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'CHD_N2', 'RG_CHD', 'RG_CHD_N', NULL, 178, 'CHD_N2.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'CHD_N3', 'RG_CHD', 'RG_CHD_N', NULL, 296, 'CHD_N3.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'CHD_N4', 'RG_CHD', 'RG_CHD_N', NULL, 212, 'CHD_N4.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'CHD_S1', 'RG_CHD', 'RG_CHD_S', NULL, 97, 'CHD_S1_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'CHD_S2', 'RG_CHD', 'RG_CHD_S', NULL, 116, 'CHD_S2_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'CHD_S3', 'RG_CHD', 'RG_CHD_S', NULL, 121, 'CHD_S3.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'CHD_S4', 'RG_CHD', 'RG_CHD_S', NULL, 136, 'CHD_S4.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'CHD_X1', 'RG_CHD', 'RG_CHD_X', NULL, NULL, 'CHD_X1.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'STW_C1', 'RG_STW', 'RG_STW_C', NULL, 140, 'STW_C1.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'STW_C2', 'RG_STW', 'RG_STW_C', NULL, 149, 'STW_C2.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'STW_C3', 'RG_STW', 'RG_STW_C', NULL, 100, 'STW_C3.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'STW_E2', 'RG_STW', 'RG_STW_E', NULL, 140, 'STW_E2.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'STW_E3', 'RG_STW', 'RG_STW_E', NULL, 145, 'STW_E3.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'STW_E4', 'RG_STW', 'RG_STW_E', NULL, 154, 'STW_E4.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'STW_E5', 'RG_STW', 'RG_STW_E', NULL, 138, 'STW_E5.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'STW_E6', 'RG_STW', 'RG_STW_E', NULL, 110, 'STW_E6.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'STW_N1', 'RG_STW', 'RG_STW_N', NULL, 205, 'STW_N1.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'STW_N2', 'RG_STW', 'RG_STW_N', NULL, 141, 'STW_N2_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'STW_N3', 'RG_STW', 'RG_STW_N', NULL, 132, 'STW_N3_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'STW_N4', 'RG_STW', 'RG_STW_N', NULL, 168, 'STW_N4.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'STW_S1', 'RG_STW', 'RG_STW_S', NULL, 139, 'STW_S1_2020.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'STW_W1', 'RG_STW', 'RG_STW_W', NULL, 160, 'STW_W1.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'STW_W2', 'RG_STW', 'RG_STW_W', NULL, 337, 'STW_W2.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(9, 'STW_W3', 'RG_STW', 'RG_STW_W', NULL, 224, 'STW_W3.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CHD_C1', 'RG_CHD', 'RG_CHD_C', NULL, 254, 'CHD_C1_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CHD_C2', 'RG_CHD', 'RG_CHD_C', NULL, 189, 'CHD_C2.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CHD_C3', 'RG_CHD', 'RG_CHD_C', NULL, 133, 'CHD_C3.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CHD_C4', 'RG_CHD', 'RG_CHD_C', NULL, 131, 'CHD_C4.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CHD_N2', 'RG_CHD', 'RG_CHD_N', NULL, 178, 'CHD_N2.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CHD_N3', 'RG_CHD', 'RG_CHD_N', NULL, 296, 'CHD_N3.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CHD_N4', 'RG_CHD', 'RG_CHD_N', NULL, 212, 'CHD_N4.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CHD_S1', 'RG_CHD', 'RG_CHD_S', NULL, 97, 'CHD_S1_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CHD_S2', 'RG_CHD', 'RG_CHD_S', NULL, 116, 'CHD_S2_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CHD_S3', 'RG_CHD', 'RG_CHD_S', NULL, 121, 'CHD_S3.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CHD_S4', 'RG_CHD', 'RG_CHD_S', NULL, 136, 'CHD_S4.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CHD_X1', 'RG_CHD', 'RG_CHD_X', NULL, NULL, 'CHD_X1.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CUR_C1', 'RG_CUR', 'RG_CUR_C', NULL, 210, 'CUR_C1_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CUR_C2', 'RG_CUR', 'RG_CUR_C', NULL, 205, 'CUR_C2_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CUR_C3', 'RG_CUR', 'RG_CUR_C', NULL, 125, 'CUR_C3.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CUR_E1', 'RG_CUR', 'RG_CUR_E', NULL, 136, 'CUR_E1_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CUR_E2', 'RG_CUR', 'RG_CUR_E', NULL, 182, 'CUR_E2_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CUR_E3', 'RG_CUR', 'RG_CUR_E', NULL, 226, 'CUR_E3_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CUR_E4', 'RG_CUR', 'RG_CUR_E', NULL, 182, 'CUR_E4_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CUR_N1', 'RG_CUR', 'RG_CUR_N', NULL, 151, 'CUR_N1.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CUR_N2', 'RG_CUR', 'RG_CUR_N', NULL, 195, 'CUR_N2.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CUR_N3', 'RG_CUR', 'RG_CUR_N', NULL, 120, 'CUR_N3.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CUR_S1', 'RG_CUR', 'RG_CUR_S', NULL, 114, 'CUR_S1.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CUR_S2', 'RG_CUR', 'RG_CUR_S', NULL, 195, 'CUR_S2_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'CUR_S3', 'RG_CUR', 'RG_CUR_S', NULL, 195, 'CUR_S3.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'STW_C1', 'RG_STW', 'RG_STW_C', NULL, 140, 'STW_C1.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'STW_C2', 'RG_STW', 'RG_STW_C', NULL, 149, 'STW_C2.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'STW_C3', 'RG_STW', 'RG_STW_C', NULL, 100, 'STW_C3.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'STW_E2', 'RG_STW', 'RG_STW_E', NULL, 140, 'STW_E2.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'STW_E3', 'RG_STW', 'RG_STW_E', NULL, 145, 'STW_E3.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'STW_E4', 'RG_STW', 'RG_STW_E', NULL, 154, 'STW_E4.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'STW_E5', 'RG_STW', 'RG_STW_E', NULL, 138, 'STW_E5.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'STW_E6', 'RG_STW', 'RG_STW_E', NULL, 110, 'STW_E6.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'STW_N1', 'RG_STW', 'RG_STW_N', NULL, 205, 'STW_N1.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'STW_N2', 'RG_STW', 'RG_STW_N', NULL, 141, 'STW_N2_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'STW_N3', 'RG_STW', 'RG_STW_N', NULL, 132, 'STW_N3_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'STW_N4', 'RG_STW', 'RG_STW_N', NULL, 168, 'STW_N4.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'STW_S1', 'RG_STW', 'RG_STW_S', NULL, 139, 'STW_S1_2020.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'STW_W1', 'RG_STW', 'RG_STW_W', NULL, 160, 'STW_W1.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'STW_W2', 'RG_STW', 'RG_STW_W', NULL, 337, 'STW_W2.kml', NULL, NULL, NULL, NULL, NULL, NULL),
+(10, 'STW_W3', 'RG_STW', 'RG_STW_W', NULL, 224, 'STW_W3.kml', NULL, NULL, NULL, NULL, NULL, NULL);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `district`
---
-
-DROP TABLE IF EXISTS `district`;
-CREATE TABLE `district` (
+CREATE TABLE IF NOT EXISTS `district` (
   `districtid` varchar(10) NOT NULL,
   `name` varchar(50) NOT NULL,
   `date` varchar(12) DEFAULT NULL,
-  `kml` varchar(20) DEFAULT NULL
+  `kml` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`districtid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16;
 
---
--- Dumping data for table `district`
---
-
+TRUNCATE TABLE `district`;
 INSERT INTO `district` (`districtid`, `name`, `date`, `kml`) VALUES
 ('LCC', 'Lichfield City Council', NULL, 'LCC.kml'),
 ('LDC', 'Lichfield District Council', NULL, 'LDC.kml'),
-('SCC', 'Staffordshire County Council', NULL, NULL),
-('UKP', 'UK Parliament', '20190000', NULL);
+('SCC', 'Staffordshire County Council', NULL, 'LDC.kml'),
+('UKP', 'UK Parliament', '20190000', 'LDC.kml');
 
--- --------------------------------------------------------
-
---
--- Table structure for table `pollingdistrict`
---
-
-DROP TABLE IF EXISTS `pollingdistrict`;
-CREATE TABLE `pollingdistrict` (
+CREATE TABLE IF NOT EXISTS `pollingdistrict` (
   `pollingdistrictid` varchar(10) CHARACTER SET utf16 DEFAULT NULL,
   `electors` int(11) DEFAULT NULL,
   `households` int(11) DEFAULT NULL,
@@ -192,13 +274,11 @@ CREATE TABLE `pollingdistrict` (
   `minlong` float DEFAULT NULL,
   `maxlat` float DEFAULT NULL,
   `midlat` float DEFAULT NULL,
-  `minlat` float DEFAULT NULL
+  `minlat` float DEFAULT NULL,
+  UNIQUE KEY `index` (`pollingdistrictid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
---
--- Dumping data for table `pollingdistrict`
---
-
+TRUNCATE TABLE `pollingdistrict`;
 INSERT INTO `pollingdistrict` (`pollingdistrictid`, `electors`, `households`, `kml`, `maxlong`, `midlong`, `minlong`, `maxlat`, `midlat`, `minlat`) VALUES
 ('RA', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('RB', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
@@ -226,14 +306,7 @@ INSERT INTO `pollingdistrict` (`pollingdistrictid`, `electors`, `households`, `k
 ('RU', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('RX', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `pollingstation`
---
-
-DROP TABLE IF EXISTS `pollingstation`;
-CREATE TABLE `pollingstation` (
+CREATE TABLE IF NOT EXISTS `pollingstation` (
   `pdid` varchar(10) NOT NULL DEFAULT 'NULL',
   `stationno` varchar(3) DEFAULT NULL,
   `ldcward` varchar(10) DEFAULT 'NULL',
@@ -242,10 +315,7 @@ CREATE TABLE `pollingstation` (
   `midlong` decimal(7,6) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
---
--- Dumping data for table `pollingstation`
---
-
+TRUNCATE TABLE `pollingstation`;
 INSERT INTO `pollingstation` (`pdid`, `stationno`, `ldcward`, `address`, `midlat`, `midlong`) VALUES
 ('RA', '39', 'BLY', 'Boley Park Community Hall, 7 Ryknild Street, Boley Park, Lichfield, Staffs, WS14 9XU', '52.677250', '1.802278'),
 ('RB', '40', 'BLY', 'Boley Park Community Hall, 7 Ryknild Street, Boley Park, Lichfield, Staffs, WS14 9XU', '52.679400', '1.809440'),
@@ -274,14 +344,7 @@ INSERT INTO `pollingstation` (`pdid`, `stationno`, `ldcward`, `address`, `midlat
 ('RU', '61', 'STW', 'Cruck House, Stowe Street, Lichfield, Staffs, WS13 6BN', '52.687218', '1.823280'),
 ('RX', '62', 'STW', 'Scotch Orchard C.P. School, Early Years Unit, Scotch Orchard, Lichfield, Staffs, WS13 6DE', '52.688194', '1.812015');
 
--- --------------------------------------------------------
-
---
--- Table structure for table `rggroup`
---
-
-DROP TABLE IF EXISTS `rggroup`;
-CREATE TABLE `rggroup` (
+CREATE TABLE IF NOT EXISTS `rggroup` (
   `rggroupid` varchar(20) DEFAULT 'NULL',
   `name` varchar(20) DEFAULT NULL,
   `kml` varchar(20) DEFAULT NULL,
@@ -290,29 +353,20 @@ CREATE TABLE `rggroup` (
   `households` int(11) DEFAULT NULL,
   `electors` int(11) DEFAULT NULL,
   `latitude` varchar(20) DEFAULT NULL,
-  `longitude` varchar(20) DEFAULT NULL
+  `longitude` varchar(20) DEFAULT NULL,
+  UNIQUE KEY `index` (`rggroupid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16 ROW_FORMAT=COMPACT;
 
---
--- Dumping data for table `rggroup`
---
-
+TRUNCATE TABLE `rggroup`;
 INSERT INTO `rggroup` (`rggroupid`, `name`, `kml`, `roads`, `roadgroups`, `households`, `electors`, `latitude`, `longitude`) VALUES
-('RG_BLY', 'Boley Park', 'RD_BLY.kml', NULL, NULL, 1896, NULL, NULL, NULL),
-('RG_CHD', 'Chadsmead', 'RD_CHD.kml', NULL, NULL, 837, NULL, NULL, NULL),
-('RG_CUR', 'Curborough', 'RD_CUR.kml', NULL, NULL, 2236, NULL, NULL, NULL),
-('RG_LEO', 'Leomansley', 'RD_LEO.kml', NULL, NULL, 3000, NULL, NULL, NULL),
-('RG_STJ', 'St Johns', 'RD_STJ.kml', NULL, NULL, 2750, NULL, NULL, NULL),
-('RG_STW', 'Stowe', 'RD_STW.kml', NULL, NULL, 1278, 3086, NULL, NULL);
+('RG_BLY', 'Boley Park', 'RG_BLY.kml', NULL, NULL, 1896, NULL, NULL, NULL),
+('RG_CHD', 'Chadsmead', 'RG_CHD.kml', NULL, NULL, 2049, NULL, NULL, NULL),
+('RG_CUR', 'Curborough', 'RG_CUR.kml', NULL, NULL, 2236, NULL, NULL, NULL),
+('RG_LEO', 'Leomansley', 'RG_LEO.kml', NULL, NULL, 3000, NULL, NULL, NULL),
+('RG_STJ', 'St Johns', 'RG_STJ.kml', NULL, NULL, 2750, NULL, NULL, NULL),
+('RG_STW', 'Stowe', 'RG_STW.kml', NULL, NULL, 3300, 3086, NULL, NULL);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `rgsubgroup`
---
-
-DROP TABLE IF EXISTS `rgsubgroup`;
-CREATE TABLE `rgsubgroup` (
+CREATE TABLE IF NOT EXISTS `rgsubgroup` (
   `rgsubgroupid` varchar(20) DEFAULT 'NULL',
   `name` varchar(20) DEFAULT NULL,
   `rggroupid` varchar(20) DEFAULT 'NULL',
@@ -324,10 +378,7 @@ CREATE TABLE `rgsubgroup` (
   `longitude` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
---
--- Dumping data for table `rgsubgroup`
---
-
+TRUNCATE TABLE `rgsubgroup`;
 INSERT INTO `rgsubgroup` (`rgsubgroupid`, `name`, `rggroupid`, `roads`, `roadgroups`, `households`, `electors`, `latitude`, `longitude`) VALUES
 ('RG_BLY_E', 'East', 'RG_BLY', NULL, NULL, NULL, NULL, NULL, NULL),
 ('RG_BLY_N', 'North', 'RG_BLY', NULL, NULL, NULL, NULL, NULL, NULL),
@@ -356,14 +407,7 @@ INSERT INTO `rgsubgroup` (`rgsubgroupid`, `name`, `rggroupid`, `roads`, `roadgro
 ('RG_CHD_X', 'Outside City', 'RG_CHD', NULL, NULL, 10, NULL, NULL, NULL),
 ('RG_STJ_X', 'Non Walk', 'RG_STJ', NULL, NULL, NULL, NULL, NULL, NULL);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `roadgroup`
---
-
-DROP TABLE IF EXISTS `roadgroup`;
-CREATE TABLE `roadgroup` (
+CREATE TABLE IF NOT EXISTS `roadgroup` (
   `roadgroupid` varchar(10) NOT NULL DEFAULT 'NULL',
   `year` int(11) NOT NULL,
   `rggroupid` varchar(10) DEFAULT NULL,
@@ -382,227 +426,217 @@ CREATE TABLE `roadgroup` (
   `maxlong` varchar(20) DEFAULT NULL,
   `midlat` varchar(20) DEFAULT NULL,
   `midlong` varchar(20) DEFAULT NULL,
-  `note` varchar(100) DEFAULT NULL
+  `note` varchar(100) DEFAULT NULL,
+  UNIQUE KEY `index` (`roadgroupid`,`year`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16 ROW_FORMAT=COMPACT;
 
---
--- Dumping data for table `roadgroup`
---
-
+TRUNCATE TABLE `roadgroup`;
 INSERT INTO `roadgroup` (`roadgroupid`, `year`, `rggroupid`, `rgsubgroupid`, `name`, `streets`, `households`, `electors`, `distance`, `priority`, `prioritygroup`, `kml`, `minlat`, `maxlat`, `minlong`, `maxlong`, `midlat`, `midlong`, `note`) VALUES
 ('BLY_C1', 2020, 'RG_BLY', 'RG_BLY_C', 'Abbotsford Rd', 20, 219, 365, 1.98929, 'M', '80', 'BLY_C1.kml', ' -1.8110899925231934', NULL, NULL, NULL, NULL, NULL, NULL),
-('BLY_C1', 2021, 'RG_BLY', 'RG_BLY_C', 'Abbotsford Rd', 20, 233, 365, 1.98929, 'M', '80', 'BLY_C1_2021.kml', ' -1.8110899925231934', NULL, NULL, NULL, NULL, NULL, NULL),
+('BLY_C1', 2021, 'RG_BLY', 'RG_BLY_C', 'Abbotsford Rd', 20, 233, 365, 1.62631, 'M', '80', 'BLY_C1.kml', '52.68043899536133', '52.6823616027832', '-1.8110899925231934', '-1.8061800003051758', NULL, NULL, NULL),
 ('BLY_C2', 2020, 'RG_BLY', 'RG_BLY_C', 'Baskeyfield Cl', 8, 130, 249, 1.56091, 'H', '56', 'BLY_C2.kml', ' -1.81351900100708', NULL, NULL, NULL, NULL, NULL, NULL),
-('BLY_C2', 2021, 'RG_BLY', 'RG_BLY_C', 'Baskeyfield Cl', 8, 137, 249, 1.56091, 'H', '56', 'BLY_C2.kml', ' -1.81351900100708', NULL, NULL, NULL, NULL, NULL, NULL),
+('BLY_C2', 2021, 'RG_BLY', 'RG_BLY_C', 'Baskeyfield Cl', 8, 137, 249, 1.21686, 'H', '56', 'BLY_C2.kml', '52.679290771484375', '52.68143081665039', '-1.81351900100708', '-1.808940052986145', NULL, NULL, NULL),
 ('BLY_C3', 2020, 'RG_BLY', 'RG_BLY_C', 'Haymoor', 19, 199, 374, 2.46375, 'M', '106', 'BLY_C3.kml', ' -1.8124099969863892', NULL, NULL, NULL, NULL, NULL, NULL),
-('BLY_C3', 2021, 'RG_BLY', 'RG_BLY_C', 'Haymoor', 19, 205, 374, 2.46375, 'M', '106', 'BLY_C3_2021.kml', ' -1.8124099969863892', NULL, NULL, NULL, NULL, NULL, NULL),
+('BLY_C3', 2021, 'RG_BLY', 'RG_BLY_C', 'Haymoor', 19, 205, 374, 2.36718, 'M', '106', 'BLY_C3_2021.kml', '52.676239013671875', '52.6797981262207', '-1.8123699426651', '-1.8062800168991089', NULL, NULL, NULL),
 ('BLY_E1', 2020, 'RG_BLY', 'RG_BLY_E', 'Birchwood Rd', 14, 153, 314, 1.50943, 'L', '162', 'BLY_E1.kml', ' -1.8029199838638306', NULL, NULL, NULL, NULL, NULL, NULL),
-('BLY_E1', 2021, 'RG_BLY', 'RG_BLY_E', 'Birchwood Rd', 14, 157, 314, 1.50943, 'L', '162', 'BLY_E1.kml', ' -1.8029199838638306', NULL, NULL, NULL, NULL, NULL, NULL),
+('BLY_E1', 2021, 'RG_BLY', 'RG_BLY_E', 'Birchwood Rd', 14, 157, 314, 1.21365, 'L', '162', 'BLY_E1.kml', '52.68006134033203', '52.68302917480469', '-1.8029199838638306', '-1.7983200550079346', NULL, NULL, NULL),
 ('BLY_E2', 2020, 'RG_BLY', 'RG_BLY_E', 'Curlew Cl', 12, 117, 224, 1.89626, 'M', '119', 'BLY_E2.kml', ' -1.8047000169754028', NULL, NULL, NULL, NULL, NULL, NULL),
-('BLY_E2', 2021, 'RG_BLY', 'RG_BLY_E', 'Curlew Cl', 12, 137, 224, 1.89626, 'M', '119', 'BLY_E2_2021.kml', ' -1.8047000169754028', NULL, NULL, NULL, NULL, NULL, NULL),
+('BLY_E2', 2021, 'RG_BLY', 'RG_BLY_E', 'Curlew Cl', 12, 137, 224, 1.49449, 'M', '119', 'BLY_E2.kml', '52.67898178100586', '52.68159866333008', '-1.8047000169754028', '-1.798840045928955', NULL, NULL, NULL),
 ('BLY_E3', 2020, 'RG_BLY', 'RG_BLY_E', 'Gable Croft', 13, 164, 337, 2.48349, 'L', '182', 'BLY_E3.kml', ' -1.8068000078201294', NULL, NULL, NULL, NULL, NULL, NULL),
-('BLY_E3', 2021, 'RG_BLY', 'RG_BLY_E', 'Gable Croft', 13, 165, 337, 2.48349, 'L', '182', 'BLY_E3.kml', ' -1.8068000078201294', NULL, NULL, NULL, NULL, NULL, NULL),
+('BLY_E3', 2021, 'RG_BLY', 'RG_BLY_E', 'Gable Croft', 13, 165, 337, 1.97035, 'L', '182', 'BLY_E3.kml', '52.676979064941406', '52.67940902709961', '-1.8068000078201294', '-1.8003499507904053', NULL, NULL, NULL),
 ('BLY_E4', 2020, 'RG_BLY', 'RG_BLY_E', 'Hartslade', 8, 136, 278, 1.59954, 'L', '158', 'BLY_E4.kml', ' -1.8075799942016602', NULL, NULL, NULL, NULL, NULL, NULL),
-('BLY_E4', 2021, 'RG_BLY', 'RG_BLY_E', 'Hartslade', 8, 139, 278, 1.59954, 'L', '158', 'BLY_E4_2021.kml', ' -1.8075799942016602', NULL, NULL, NULL, NULL, NULL, NULL),
+('BLY_E4', 2021, 'RG_BLY', 'RG_BLY_E', 'Hartslade', 8, 139, 278, 1.33135, 'L', '158', 'BLY_E4_2021.kml', '52.675819396972656', '52.67784118652344', '-1.8075799942016602', '-1.801759958267212', NULL, NULL, NULL),
 ('BLY_E5', 2020, 'RG_BLY', 'RG_BLY_E', 'Bracken Cl', 12, 88, 174, 0.976436, 'L', '179', 'BLY_E5.kml', ' -1.8084800243377686', NULL, NULL, NULL, NULL, NULL, NULL),
-('BLY_E5', 2021, 'RG_BLY', 'RG_BLY_E', 'Bracken Cl', 12, 88, 174, 0.976436, 'L', '179', 'BLY_E5_2021.kml', ' -1.8084800243377686', NULL, NULL, NULL, NULL, NULL, NULL),
+('BLY_E5', 2021, 'RG_BLY', 'RG_BLY_E', 'Bracken Cl', 12, 88, 174, 0.802764, 'L', '179', 'BLY_E5.kml', '52.674251556396484', '52.67723083496094', '-1.8084800243377686', '-1.8046300411224365', NULL, NULL, NULL),
 ('BLY_N1', 2020, 'RG_BLY', 'RG_BLY_N', 'Cornfield', 15, 223, 339, 2.17104, 'H', '18', 'BLY_N1.kml', ' -1.8085600137710571', NULL, NULL, NULL, NULL, NULL, NULL),
-('BLY_N1', 2021, 'RG_BLY', 'RG_BLY_N', 'Cornfield', 15, 244, 339, 2.17104, 'H', '18', 'BLY_N1.kml', ' -1.8085600137710571', NULL, NULL, NULL, NULL, NULL, NULL),
+('BLY_N1', 2021, 'RG_BLY', 'RG_BLY_N', 'Cornfield', 15, 244, 339, 1.72833, 'H', '18', 'BLY_N1.kml', '52.68164825439453', '52.68513107299805', '-1.8085600137710571', '-1.8018200397491455', NULL, NULL, NULL),
 ('BLY_N2', 2020, 'RG_BLY', 'RG_BLY_N', 'Yew Tree', 10, 149, 270, 1.16977, 'M', '122', 'BLY_N2.kml', ' -1.8074549436569214', NULL, NULL, NULL, NULL, NULL, NULL),
-('BLY_N2', 2021, 'RG_BLY', 'RG_BLY_N', 'Yew Tree', 10, 151, 270, 1.16977, 'M', '122', 'BLY_N2.kml', ' -1.8074549436569214', NULL, NULL, NULL, NULL, NULL, NULL),
+('BLY_N2', 2021, 'RG_BLY', 'RG_BLY_N', 'Yew Tree', 10, 151, 270, 0.985632, 'M', '122', 'BLY_N2.kml', '52.68190002441406', '52.684303283691406', '-1.8074549436569214', '-1.8048800230026245', NULL, NULL, NULL),
 ('BLY_W1', 2020, 'RG_BLY', 'RG_BLY_W', 'Broadlands', 20, 237, 484, 2.9859, 'L', '185', 'BLY_W1.kml', ' -1.818019986152649', NULL, NULL, NULL, NULL, NULL, NULL),
-('BLY_W1', 2021, 'RG_BLY', 'RG_BLY_W', 'Broadlands', 20, 240, 484, 2.9859, 'L', '185', 'BLY_W1_2021.kml', ' -1.818019986152649', NULL, NULL, NULL, NULL, NULL, NULL),
+('BLY_W1', 2021, 'RG_BLY', 'RG_BLY_W', 'Broadlands', 20, 240, 484, 2.54145, 'L', '185', 'BLY_W1.kml', '52.67662811279297', '52.6810302734375', '-1.818019986152649', '-1.812019944190979', NULL, NULL, NULL),
 ('CHD_C1', 2020, 'RG_CHD', 'RG_CHD_C', 'Oakenfield', 12, 209, 379, 1.89107, 'L', '181', 'CHD_C1.kml', ' -1.8401000499725342', NULL, NULL, NULL, NULL, NULL, NULL),
-('CHD_C1', 2021, 'RG_CHD', 'RG_CHD_C', 'Oakenfield', 12, 254, 379, 1.89107, 'L', '181', 'CHD_C1_2021.kml', ' -1.8401000499725342', NULL, NULL, NULL, NULL, NULL, NULL),
+('CHD_C1', 2021, 'RG_CHD', 'RG_CHD_C', 'Oakenfield', 12, 254, 379, 1.35664, 'L', '181', 'CHD_C1_2021.kml', '52.69287872314453', '52.69504165649414', '-1.8401199579238892', '-1.8328100442886353', NULL, NULL, NULL),
 ('CHD_C2', 2020, 'RG_CHD', 'RG_CHD_C', 'Swallow Croft', 14, 166, 273, 1.67742, 'M', '102', 'CHD_C2.kml', ' -1.8401600122451782', NULL, NULL, NULL, NULL, NULL, NULL),
-('CHD_C2', 2021, 'RG_CHD', 'RG_CHD_C', 'Swallow Croft', 14, 189, 273, 1.67742, 'M', '102', 'CHD_C2.kml', ' -1.8401600122451782', NULL, NULL, NULL, NULL, NULL, NULL),
+('CHD_C2', 2021, 'RG_CHD', 'RG_CHD_C', 'Swallow Croft', 14, 189, 273, 1.31331, 'M', '102', 'CHD_C2.kml', '52.68880844116211', '52.6917610168457', '-1.8401600122451782', '-1.8347699642181396', NULL, NULL, NULL),
 ('CHD_C3', 2020, 'RG_CHD', 'RG_CHD_C', 'Leasowe', 8, 124, 225, 1.72954, 'L', '176', 'CHD_C3_2021.kml', ' -1.8364100456237793', NULL, NULL, NULL, NULL, NULL, NULL),
-('CHD_C3', 2021, 'RG_CHD', 'RG_CHD_C', 'Leasowe', 8, 133, 225, 1.72954, 'L', '176', 'CHD_C3_2021.kml', ' -1.8364100456237793', NULL, NULL, NULL, NULL, NULL, NULL),
+('CHD_C3', 2021, 'RG_CHD', 'RG_CHD_C', 'Leasowe', 8, 133, 225, 1.31626, 'L', '176', 'CHD_C3.kml', '52.68852996826172', '52.69340896606445', '-1.8364100456237793', '-1.8306100368499756', NULL, NULL, NULL),
 ('CHD_C4', 2020, 'RG_CHD', 'RG_CHD_C', 'Dimbles Lane', 6, 131, 213, 0.763773, 'L', '163', 'CHD_C4_2021.kml', ' -1.8327300548553467', NULL, NULL, NULL, NULL, NULL, NULL),
-('CHD_C4', 2021, 'RG_CHD', 'RG_CHD_C', 'Dimbles Lane', 6, 131, 213, 0.763773, 'L', '163', 'CHD_C4_2021.kml', ' -1.8327300548553467', NULL, NULL, NULL, NULL, NULL, NULL),
+('CHD_C4', 2021, 'RG_CHD', 'RG_CHD_C', 'Dimbles Lane', 6, 131, 213, 0.708858, 'L', '163', 'CHD_C4.kml', '52.68962097167969', '52.69232177734375', '-1.8327300548553467', '-1.83024001121521', NULL, NULL, NULL),
 ('CHD_C5', 2020, 'RG_CHD', 'RG_CHD_C', 'Weston Road', NULL, NULL, NULL, 1.67553, NULL, NULL, 'CHD_C5.kml', ' -1.839419960975647', NULL, NULL, NULL, NULL, NULL, NULL),
 ('CHD_N1', 2020, 'RG_CHD', 'RG_CHD_N', 'Garrick Road', 19, 154, 328, 1.52114, 'H', '28.5', 'CHD_N1.kml', ' -1.848080039024353', NULL, NULL, NULL, NULL, NULL, NULL),
-('CHD_N1', 2021, 'RG_CHD', 'RG_CHD_N', 'Garrick Road', 19, 175, 328, 1.52114, 'H', '28.5', 'CHD_N1.kml', ' -1.848080039024353', NULL, NULL, NULL, NULL, NULL, NULL),
+('CHD_N1', 2021, 'RG_CHD', 'RG_CHD_N', 'Garrick Road', 19, 175, 328, 1.2475, 'H', '28.5', 'CHD_N1.kml', '52.69184112548828', '52.69416046142578', '-1.848080039024353', '-1.8415100574493408', NULL, NULL, NULL),
 ('CHD_N2', 2020, 'RG_CHD', 'RG_CHD_N', 'Grange Lane', 14, 162, 295, 1.62808, 'H', '35', 'CHD_N2.kml', ' -1.842229962348938', NULL, NULL, NULL, NULL, NULL, NULL),
-('CHD_N2', 2021, 'RG_CHD', 'RG_CHD_N', 'Grange Lane', 14, 178, 295, 1.62808, 'H', '35', 'CHD_N2.kml', ' -1.842229962348938', NULL, NULL, NULL, NULL, NULL, NULL),
+('CHD_N2', 2021, 'RG_CHD', 'RG_CHD_N', 'Grange Lane', 14, 178, 295, 1.30872, 'H', '35', 'CHD_N2.kml', '52.691471099853516', '52.69525909423828', '-1.842229962348938', '-1.839400053024292', NULL, NULL, NULL),
 ('CHD_N3', 2020, 'RG_CHD', 'RG_CHD_N', 'Pauls Walk', 26, 269, 472, 2.49059, 'L', '175', 'CHD_N3.kml', ' -1.8395899534225464', NULL, NULL, NULL, NULL, NULL, NULL),
-('CHD_N3', 2021, 'RG_CHD', 'RG_CHD_N', 'Pauls Walk', 26, 296, 472, 2.49059, 'L', '175', 'CHD_N3.kml', ' -1.8395899534225464', NULL, NULL, NULL, NULL, NULL, NULL),
+('CHD_N3', 2021, 'RG_CHD', 'RG_CHD_N', 'Pauls Walk', 26, 296, 472, 2.01651, 'L', '175', 'CHD_N3.kml', '52.69466018676758', '52.697479248046875', '-1.8395899534225464', '-1.8330299854278564', NULL, NULL, NULL),
 ('CHD_N4', 2020, 'RG_CHD', 'RG_CHD_N', 'Weston Road evens', 10, NULL, NULL, 1.42722, NULL, NULL, 'CHD_N4_2021.kml', ' -1.8393399715423584', NULL, NULL, NULL, NULL, NULL, NULL),
-('CHD_N4', 2021, 'RG_CHD', 'RG_CHD_N', 'Weston Road', 10, 212, NULL, 1.42722, NULL, NULL, 'CHD_N4_2021.kml', ' -1.8393399715423584', NULL, NULL, NULL, NULL, NULL, NULL),
+('CHD_N4', 2021, 'RG_CHD', 'RG_CHD_N', 'Weston Road', 10, 212, NULL, 1.13935, NULL, NULL, 'CHD_N4.kml', '52.691200256347656', '52.694698333740234', '-1.8393399715423584', '-1.827430009841919', NULL, NULL, NULL),
 ('CHD_NW', 2021, 'RG_CHD', 'RG_CHD_N', 'No Walk..etc', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Outside city'),
 ('CHD_S1', 2020, 'RG_CHD', 'RG_CHD_S', 'Charters', 12, 94, 193, 1.86154, 'L', '184', 'CHD_S1.kml', ' -1.831470012664795', NULL, NULL, NULL, NULL, NULL, NULL),
-('CHD_S1', 2021, 'RG_CHD', 'RG_CHD_S', 'Charters', 12, 97, 193, 1.86154, 'L', '184', 'CHD_S1_2021.kml', ' -1.831470012664795', NULL, NULL, NULL, NULL, NULL, NULL),
+('CHD_S1', 2021, 'RG_CHD', 'RG_CHD_S', 'Charters', 12, 97, 193, 1.35361, 'L', '184', 'CHD_S1_2021.kml', '52.68852615356445', '52.690731048583984', '-1.8314399719238281', '-1.8266899585723877', NULL, NULL, NULL),
 ('CHD_S2', 2020, 'RG_CHD', 'RG_CHD_S', 'Gaia Lane', 10, 107, 206, 2.95357, 'M', '136', 'CHD_S2.kml', ' -1.833490014076233', NULL, NULL, NULL, NULL, NULL, NULL),
-('CHD_S2', 2021, 'RG_CHD', 'RG_CHD_S', 'Gaia Lane', 10, 116, 206, 2.95357, 'M', '136', 'CHD_S2_2021.kml', ' -1.833490014076233', NULL, NULL, NULL, NULL, NULL, NULL),
+('CHD_S2', 2021, 'RG_CHD', 'RG_CHD_S', 'Gaia Lane', 10, 116, 206, 1.29441, 'M', '136', 'CHD_S2_2021.kml', '52.68762969970703', '52.69075012207031', '-1.8286999464035034', '-1.8232899904251099', NULL, NULL, NULL),
 ('CHD_S3', 2020, 'RG_CHD', 'RG_CHD_S', 'Anson Ave', 14, 119, 202, 1.45883, 'M', '133', 'CHD_S3.kml', ' -1.8353899717330933', NULL, NULL, NULL, NULL, NULL, NULL),
-('CHD_S3', 2021, 'RG_CHD', 'RG_CHD_S', 'Anson Ave', 14, 121, 202, 1.45883, 'M', '133', 'CHD_S3.kml', ' -1.8353899717330933', NULL, NULL, NULL, NULL, NULL, NULL),
+('CHD_S3', 2021, 'RG_CHD', 'RG_CHD_S', 'Anson Ave', 14, 121, 202, 1.19083, 'M', '133', 'CHD_S3.kml', '52.687068939208984', '52.68960189819336', '-1.8353899717330933', '-1.8307700157165527', NULL, NULL, NULL),
 ('CHD_S4', 2020, 'RG_CHD', 'RG_CHD_S', 'Beacon St', 12, 116, 203, 1.54311, 'M', '111', 'CHD_S4_2021.kml', ' -1.839050054550171', NULL, NULL, NULL, NULL, NULL, NULL),
-('CHD_S4', 2021, 'RG_CHD', 'RG_CHD_S', 'Beacon St', 12, 136, 203, 1.54311, 'M', '111', 'CHD_S4_2021.kml', ' -1.839050054550171', NULL, NULL, NULL, NULL, NULL, NULL),
+('CHD_S4', 2021, 'RG_CHD', 'RG_CHD_S', 'Beacon St', 12, 136, 203, 1.30465, 'M', '111', 'CHD_S4.kml', '52.687679290771484', '52.68975067138672', '-1.839050054550171', '-1.834149956703186', NULL, NULL, NULL),
 ('CHD_X1', 2020, 'RG_CHD', 'RG_CHD_X', 'Outside City', NULL, NULL, NULL, 0.448949, NULL, NULL, 'CHD_X1.kml', ' -1.85050630569458', NULL, NULL, NULL, NULL, NULL, NULL),
-('CHD_X1', 2021, 'RG_CHD', 'RG_CHD_X', 'Outside City', NULL, NULL, NULL, 0.448949, NULL, NULL, 'CHD_X1.kml', ' -1.85050630569458', NULL, NULL, NULL, NULL, NULL, NULL),
+('CHD_X1', 2021, 'RG_CHD', 'RG_CHD_X', 'Outside City', NULL, NULL, NULL, 0.365923, NULL, NULL, 'CHD_X1.kml', '52.6944465637207', '52.697784423828125', '-1.85050630569458', '-1.8433072566986084', NULL, NULL, NULL),
 ('CUR_C1', 2020, 'RG_CUR', 'RG_CUR_C', 'Curborough', 6, 171, 347, 1.70145, 'M', '88', 'CUR_C1_2021.kml', ' -1.8293299674987793', NULL, NULL, NULL, NULL, NULL, NULL),
-('CUR_C1', 2021, 'RG_CUR', 'RG_CUR_C', 'Curborough...etc', 6, 210, 347, 1.70145, 'M', '88', 'CUR_C1_2021.kml', ' -1.8293299674987793', NULL, NULL, NULL, NULL, NULL, NULL),
+('CUR_C1', 2021, 'RG_CUR', 'RG_CUR_C', 'Curborough...etc', 6, 210, 347, 1.66642, 'M', '88', 'CUR_C1_2021.kml', '52.689720153808594', '52.698760986328125', '-1.829300045967102', '-1.8243499994277954', NULL, NULL, NULL),
 ('CUR_C2', 2020, 'RG_CUR', 'RG_CUR_C', 'Meadowbrook', 8, 194, 353, 1.86864, 'H', '67', 'CUR_C2.kml', ' -1.8281400203704834', NULL, NULL, NULL, NULL, NULL, NULL),
-('CUR_C2', 2021, 'RG_CUR', 'RG_CUR_C', 'Meadowbrook', 8, 205, 353, 1.86864, 'H', '67', 'CUR_C2_2021.kml', ' -1.8281400203704834', NULL, NULL, NULL, NULL, NULL, NULL),
+('CUR_C2', 2021, 'RG_CUR', 'RG_CUR_C', 'Meadowbrook', 8, 205, 353, 1.54032, 'H', '67', 'CUR_C2_2021.kml', '52.69562911987305', '52.69831085205078', '-1.8281400203704834', '-1.822029948234558', NULL, NULL, NULL),
 ('CUR_C3', 2020, 'RG_CUR', 'RG_CUR_C', 'Fallowfield', 8, 118, 176, 1.00758, 'L', '160', 'CUR_C3.kml', ' -1.8251440525054932', NULL, NULL, NULL, NULL, NULL, NULL),
-('CUR_C3', 2021, 'RG_CUR', 'RG_CUR_C', 'Fallowfield', 8, 125, 176, 1.00758, 'L', '160', 'CUR_C3.kml', ' -1.8251440525054932', NULL, NULL, NULL, NULL, NULL, NULL),
+('CUR_C3', 2021, 'RG_CUR', 'RG_CUR_C', 'Fallowfield', 8, 125, 176, 0.882974, 'L', '160', 'CUR_C3.kml', '52.6963996887207', '52.69868087768555', '-1.8251440525054932', '-1.8214999437332153', NULL, NULL, NULL),
 ('CUR_E1', 2020, 'RG_CUR', 'RG_CUR_E', 'Giles', 4, 132, 237, 1.39898, 'M', '116', 'CUR_E1_2021.kml', ' -1.8341460227966309', NULL, NULL, NULL, NULL, NULL, NULL),
-('CUR_E1', 2021, 'RG_CUR', 'RG_CUR_E', 'Giles', 4, 136, 237, 1.39898, 'M', '116', 'CUR_E1_2021.kml', ' -1.8341460227966309', NULL, NULL, NULL, NULL, NULL, NULL),
+('CUR_E1', 2021, 'RG_CUR', 'RG_CUR_E', 'Giles', 4, 136, 237, 0.99866, 'M', '116', 'CUR_E1_2021.kml', '52.695518493652344', '52.698158264160156', '-1.8341699838638306', '-1.830680012702942', NULL, NULL, NULL),
 ('CUR_E2', 2020, 'RG_CUR', 'RG_CUR_E', 'St Margarets', 11, 170, 330, 1.42309, 'H', '66', 'CUR_E2_2021.kml', ' -1.8310099840164185', NULL, NULL, NULL, NULL, NULL, NULL),
-('CUR_E2', 2021, 'RG_CUR', 'RG_CUR_E', 'St Margarets etc', 11, 182, 330, 1.42309, 'H', '66', 'CUR_E2_2021.kml', ' -1.8310099840164185', NULL, NULL, NULL, NULL, NULL, NULL),
+('CUR_E2', 2021, 'RG_CUR', 'RG_CUR_E', 'St Margarets etc', 11, 182, 330, 1.39848, 'H', '66', 'CUR_E2_2021.kml', '52.6967887878418', '52.69906997680664', '-1.8309999704360962', '-1.8263399600982666', NULL, NULL, NULL),
 ('CUR_E3', 2020, 'RG_CUR', 'RG_CUR_E', 'David Garrick Gardens', 8, 153, 226, 1.22595, 'M', '134', 'CUR_E3.kml', ' -1.8330899477005005', NULL, NULL, NULL, NULL, NULL, NULL),
-('CUR_E3', 2021, 'RG_CUR', 'RG_CUR_E', 'David Garrick Gardens', 8, 226, 226, 1.22595, 'M', '134', 'CUR_E3_2021.kml', ' -1.8330899477005005', NULL, NULL, NULL, NULL, NULL, NULL),
+('CUR_E3', 2021, 'RG_CUR', 'RG_CUR_E', 'David Garrick Gardens', 8, 226, 226, 0.84006, 'M', '134', 'CUR_E3_2021.kml', '52.69409942626953', '52.695987701416016', '-1.8330689668655396', '-1.8304100036621094', NULL, NULL, NULL),
 ('CUR_E4', 2020, 'RG_CUR', 'RG_CUR_E', 'Dimbles Lane', 14, 158, 281, 1.34243, 'M', '128.5', 'CUR_E4.kml', ' -1.8317699432373047', NULL, NULL, NULL, NULL, NULL, NULL),
-('CUR_E4', 2021, 'RG_CUR', 'RG_CUR_E', 'Dimbles Lane', 14, 182, 281, 1.34243, 'M', '128.5', 'CUR_E4_2021.kml', ' -1.8317699432373047', NULL, NULL, NULL, NULL, NULL, NULL),
+('CUR_E4', 2021, 'RG_CUR', 'RG_CUR_E', 'Dimbles Lane', 14, 182, 281, 1.12535, 'M', '128.5', 'CUR_E4_2021.kml', '52.69306945800781', '52.69562911987305', '-1.8330399990081787', '-1.8272700309753418', NULL, NULL, NULL),
 ('CUR_N1', 2020, 'RG_CUR', 'RG_CUR_N', 'Norwich', 10, 149, 306, 1.51263, 'M', '95', 'CUR_N1.kml', ' -1.8258670568466187', NULL, NULL, NULL, NULL, NULL, NULL),
-('CUR_N1', 2021, 'RG_CUR', 'RG_CUR_N', 'Norwich', 10, 151, 306, 1.51263, 'M', '95', 'CUR_N1.kml', ' -1.8258670568466187', NULL, NULL, NULL, NULL, NULL, NULL),
+('CUR_N1', 2021, 'RG_CUR', 'RG_CUR_N', 'Norwich', 10, 151, 306, 1.26227, 'M', '95', 'CUR_N1.kml', '52.69858932495117', '52.700679779052734', '-1.8258670568466187', '-1.8212699890136719', NULL, NULL, NULL),
 ('CUR_N2', 2020, 'RG_CUR', 'RG_CUR_N', 'Lincoln', 6, 181, 322, 0.919085, 'H', '21', 'CUR_N2.kml', ' -1.8221800327301025', NULL, NULL, NULL, NULL, NULL, NULL),
-('CUR_N2', 2021, 'RG_CUR', 'RG_CUR_N', 'Lincoln', 6, 195, 322, 0.919085, 'H', '21', 'CUR_N2.kml', ' -1.8221800327301025', NULL, NULL, NULL, NULL, NULL, NULL),
+('CUR_N2', 2021, 'RG_CUR', 'RG_CUR_N', 'Lincoln', 6, 195, 322, 0.727653, 'H', '21', 'CUR_N2.kml', '52.69731140136719', '52.69921875', '-1.8221800327301025', '-1.8192800283432007', NULL, NULL, NULL),
 ('CUR_N3', 2020, 'RG_CUR', 'RG_CUR_N', 'Saxon Gate', 16, 181, 322, 0.802763, 'M', '', 'CUR_N3.kml', ' -1.8230520486831665', NULL, NULL, NULL, NULL, NULL, NULL),
-('CUR_N3', 2021, 'RG_CUR', 'RG_CUR_N', 'Saxon Gate', 16, 120, 322, 0.802763, 'M', '', 'CUR_N3.kml', ' -1.8230520486831665', NULL, NULL, NULL, NULL, NULL, NULL),
+('CUR_N3', 2021, 'RG_CUR', 'RG_CUR_N', 'Saxon Gate', 16, 120, 322, 0.726884, 'M', '', 'CUR_N3.kml', '52.70039367675781', '52.70195388793945', '-1.8230520486831665', '-1.8202409744262695', NULL, NULL, NULL),
 ('CUR_S1', 2020, 'RG_CUR', 'RG_CUR_S', 'Leyfields', 13, 112, 205, 1.50407, 'M', '141', 'CUR_S1.kml', ' -1.8301600217819214', NULL, NULL, NULL, NULL, NULL, NULL),
-('CUR_S1', 2021, 'RG_CUR', 'RG_CUR_S', 'Leyfields', 13, 114, 205, 1.50407, 'M', '141', 'CUR_S1_2021.kml', ' -1.8301600217819214', NULL, NULL, NULL, NULL, NULL, NULL),
+('CUR_S1', 2021, 'RG_CUR', 'RG_CUR_S', 'Leyfields', 13, 114, 205, 1.1707, 'M', '141', 'CUR_S1.kml', '52.68939971923828', '52.693031311035156', '-1.8301600217819214', '-1.823240041732788', NULL, NULL, NULL),
 ('CUR_S2', 2020, 'RG_CUR', 'RG_CUR_S', 'Ponesfield', 9, 174, 363, 1.6023, 'L', '183', 'CUR_S2.kml', ' -1.8270219564437866', NULL, NULL, NULL, NULL, NULL, NULL),
-('CUR_S2', 2021, 'RG_CUR', 'RG_CUR_S', 'Ponesfield', 9, 195, 363, 1.6023, 'L', '183', 'CUR_S2.kml', ' -1.8270219564437866', NULL, NULL, NULL, NULL, NULL, NULL),
+('CUR_S2', 2021, 'RG_CUR', 'RG_CUR_S', 'Ponesfield', 9, 195, 363, 1.89357, 'L', '183', 'CUR_S2_2021.kml', '52.69232177734375', '52.698978424072266', '-1.8290400505065918', '-1.821131944656372', NULL, NULL, NULL),
 ('CUR_S3', 2020, 'RG_CUR', 'RG_CUR_S', 'Purcell Ave', 8, 159, 267, 1.79795, 'L', '147', 'CUR_S3.kml', ' -1.8274630308151245', NULL, NULL, NULL, NULL, NULL, NULL),
-('CUR_S3', 2021, 'RG_CUR', 'RG_CUR_S', 'Purcell Ave', 8, 195, 267, 1.79795, 'L', '147', 'CUR_S3.kml', ' -1.8274630308151245', NULL, NULL, NULL, NULL, NULL, NULL),
+('CUR_S3', 2021, 'RG_CUR', 'RG_CUR_S', 'Purcell Ave', 8, 195, 267, 1.26579, 'L', '147', 'CUR_S3.kml', '52.69464874267578', '52.69618606567383', '-1.8274630308151245', '-1.818830966949463', NULL, NULL, NULL),
 ('LEO_A1', 2020, 'RG_LEO', 'RG_LEO_A', 'Hallam Park', 10, 50, NULL, 0.819037, NULL, NULL, 'LEO_A1.kml', ' -1.8511170148849487', NULL, NULL, NULL, NULL, NULL, NULL),
-('LEO_A1', 2021, 'RG_LEO', 'RG_LEO_A', 'Hallam Park', 10, 50, NULL, 0.819037, NULL, NULL, 'LEO_A1.kml', ' -1.8511170148849487', NULL, NULL, NULL, NULL, NULL, NULL),
+('LEO_A1', 2021, 'RG_LEO', 'RG_LEO_A', 'Hallam Park', 10, 50, NULL, 0.654642, NULL, NULL, 'LEO_A1.kml', '52.674468994140625', '52.676578521728516', '-1.8511170148849487', '-1.8468409776687622', NULL, NULL, NULL),
 ('LEO_C1', 2020, 'RG_LEO', 'RG_LEO_C', 'Walsall Rd', 14, 226, 444, 2.28598, 'M', '98', 'LEO_C1.kml', ' -1.8515100479125977', NULL, NULL, NULL, NULL, NULL, NULL),
-('LEO_C1', 2021, 'RG_LEO', 'RG_LEO_C', 'Walsall Rd', 14, 259, 444, 2.28598, 'M', '98', 'LEO_C1_2021.kml', ' -1.8515100479125977', NULL, NULL, NULL, NULL, NULL, NULL),
+('LEO_C1', 2021, 'RG_LEO', 'RG_LEO_C', 'Walsall Rd', 14, 259, 444, 1.56217, 'M', '98', 'LEO_C1.kml', '52.67647171020508', '52.679988861083984', '-1.8515100479125977', '-1.837689995765686', NULL, NULL, NULL),
 ('LEO_C2', 2020, 'RG_LEO', 'RG_LEO_C', 'Christchurch Ln', 20, 249, 459, 2.93678, 'M', '76', 'LEO_C2.kml', ' -1.847409963607788', NULL, NULL, NULL, NULL, NULL, NULL),
-('LEO_C2', 2021, 'RG_LEO', 'RG_LEO_C', 'Christchurch Ln', 20, 266, 459, 2.93678, 'M', '76', 'LEO_C2.kml', ' -1.847409963607788', NULL, NULL, NULL, NULL, NULL, NULL),
+('LEO_C2', 2021, 'RG_LEO', 'RG_LEO_C', 'Christchurch Ln', 20, 266, 459, 2.30175, 'M', '76', 'LEO_C2.kml', '52.67802047729492', '52.681129455566406', '-1.847409963607788', '-1.8384699821472168', NULL, NULL, NULL),
 ('LEO_C3', 2020, 'RG_LEO', 'RG_LEO_C', 'Walnut Walk', 12, 181, 368, 2.44791, 'M', '101', 'LEO_C3.kml', ' -1.8487999439239502', NULL, NULL, NULL, NULL, NULL, NULL),
-('LEO_C3', 2021, 'RG_LEO', 'RG_LEO_C', 'Walnut Walk', 12, 187, 368, 2.44791, 'M', '101', 'LEO_C3.kml', ' -1.8487999439239502', NULL, NULL, NULL, NULL, NULL, NULL),
+('LEO_C3', 2021, 'RG_LEO', 'RG_LEO_C', 'Walnut Walk', 12, 187, 368, 1.96341, 'M', '101', 'LEO_C3.kml', '52.67538833618164', '52.67790985107422', '-1.8487999439239502', '-1.8424500226974487', NULL, NULL, NULL),
 ('LEO_C4', 2020, 'RG_LEO', 'RG_LEO_C', 'Whithouse Dr', 14, 163, 296, 2.03495, 'H', '9', 'LEO_C4.kml', ' -1.844851016998291', NULL, NULL, NULL, NULL, NULL, NULL),
-('LEO_C4', 2021, 'RG_LEO', 'RG_LEO_C', 'Whithouse Dr', 14, 171, 296, 2.03495, 'H', '9', 'LEO_C4_2021.kml', ' -1.844851016998291', NULL, NULL, NULL, NULL, NULL, NULL),
+('LEO_C4', 2021, 'RG_LEO', 'RG_LEO_C', 'Whithouse Dr', 14, 171, 296, 1.69731, 'H', '9', 'LEO_C4.kml', '52.67428970336914', '52.67695236206055', '-1.844851016998291', '-1.8410199880599976', NULL, NULL, NULL),
 ('LEO_C5', 2020, 'RG_LEO', 'RG_LEO_C', 'Blakeman Way', 10, 132, 264, 1.99741, 'H', '20', 'LEO_C5.kml', ' -1.8420350551605225', NULL, NULL, NULL, NULL, NULL, NULL),
-('LEO_C5', 2021, 'RG_LEO', 'RG_LEO_C', 'Blakeman Way', 10, 164, 264, 1.99741, 'H', '20', 'LEO_C5.kml', ' -1.8420350551605225', NULL, NULL, NULL, NULL, NULL, NULL),
+('LEO_C5', 2021, 'RG_LEO', 'RG_LEO_C', 'Blakeman Way', 10, 164, 264, 1.61572, 'H', '20', 'LEO_C5.kml', '52.675418853759766', '52.6790885925293', '-1.8420350551605225', '-1.8382049798965454', NULL, NULL, NULL),
 ('LEO_C6', 2020, 'RG_LEO', 'RG_LEO_C', 'St Foy Ave', 6, 126, 204, 1.10716, 'H', '1', 'LEO_C6.kml', ' -1.8366459608078003', NULL, NULL, NULL, NULL, NULL, NULL),
-('LEO_C6', 2021, 'RG_LEO', 'RG_LEO_C', 'St Foy Ave', 6, 142, 204, 1.10716, 'H', '1', 'LEO_C6.kml', ' -1.8366459608078003', NULL, NULL, NULL, NULL, NULL, NULL),
+('LEO_C6', 2021, 'RG_LEO', 'RG_LEO_C', 'St Foy Ave', 6, 142, 204, 0.800263, 'H', '1', 'LEO_C6.kml', '52.67388153076172', '52.6756706237793', '-1.8366459608078003', '-1.8316999673843384', NULL, NULL, NULL),
 ('LEO_C7', 2020, 'RG_LEO', 'RG_LEO_C', 'Deykin Rd (part) ', 8, 176, 311, 0.774513, 'H', '3', 'LEO_C7.kml', ' -1.8372299671173096', NULL, NULL, NULL, NULL, NULL, NULL),
-('LEO_C7', 2021, 'RG_LEO', 'RG_LEO_C', 'Deykin Rd (part) ', 8, 176, 311, 0.774513, 'H', '3', 'LEO_C7_2021.kml', ' -1.8372299671173096', NULL, NULL, NULL, NULL, NULL, NULL),
+('LEO_C7', 2021, 'RG_LEO', 'RG_LEO_C', 'Deykin Rd (part) ', 8, 176, 311, 0.572334, 'H', '3', 'LEO_C7.kml', '52.674949645996094', '52.67599105834961', '-1.8372299671173096', '-1.8338199853897095', NULL, NULL, NULL),
 ('LEO_C8', 2020, 'RG_LEO', 'RG_LEO_C', 'Sandfield Meadow', 12, 188, 342, 1.26959, 'H', '8', 'LEO_C8.kml', ' -1.8382600545883179', NULL, NULL, NULL, NULL, NULL, NULL),
-('LEO_C8', 2021, 'RG_LEO', 'RG_LEO_C', 'Sandfield Meadow', 12, 197, 342, 1.26959, 'H', '8', 'LEO_C8.kml', ' -1.8382600545883179', NULL, NULL, NULL, NULL, NULL, NULL),
+('LEO_C8', 2021, 'RG_LEO', 'RG_LEO_C', 'Sandfield Meadow', 12, 197, 342, 1.10788, 'H', '8', 'LEO_C8.kml', '52.67539978027344', '52.678260803222656', '-1.8382600545883179', '-1.8347400426864624', NULL, NULL, NULL),
 ('LEO_C9', 2020, 'RG_LEO', 'RG_LEO_C', 'Lawrence Way', 12, 103, 231, 1.35568, 'M', '91', 'LEO_C9.kml', ' -1.841189980506897', NULL, NULL, NULL, NULL, NULL, NULL),
-('LEO_C9', 2021, 'RG_LEO', 'RG_LEO_C', 'Lawrence Way', 12, 103, 231, 1.35568, 'M', '91', 'LEO_C9.kml', ' -1.841189980506897', NULL, NULL, NULL, NULL, NULL, NULL),
+('LEO_C9', 2021, 'RG_LEO', 'RG_LEO_C', 'Lawrence Way', 12, 103, 231, 1.19122, 'M', '91', 'LEO_C9.kml', '52.672908782958984', '52.67496109008789', '-1.841189980506897', '-1.837499976158142', NULL, NULL, NULL),
 ('LEO_N1', 2020, 'RG_LEO', 'RG_LEO_N', 'Beacon St', 6, 168, 287, 0.869655, 'M', '82', 'LEO_N1.kml', ' -1.847301959991455', NULL, NULL, NULL, NULL, NULL, NULL),
-('LEO_N1', 2021, 'RG_LEO', 'RG_LEO_N', 'Beacon St', 6, 212, 287, 0.869655, 'M', '82', 'LEO_N1.kml', ' -1.847301959991455', NULL, NULL, NULL, NULL, NULL, NULL),
+('LEO_N1', 2021, 'RG_LEO', 'RG_LEO_N', 'Beacon St', 6, 212, 287, 0.694793, 'M', '82', 'LEO_N1.kml', '52.69005584716797', '52.6922607421875', '-1.847301959991455', '-1.8437080383300781', NULL, NULL, NULL),
 ('LEO_N2', 2020, 'RG_LEO', 'RG_LEO_N', 'Harrington Walk', 16, 212, 393, 2.15753, 'M', '93', 'LEO_N2.kml', ' -1.8467400074005127', NULL, NULL, NULL, NULL, NULL, NULL),
-('LEO_N2', 2021, 'RG_LEO', 'RG_LEO_N', 'Harrington Walk', 16, 251, 393, 2.15753, 'M', '93', 'LEO_N2.kml', ' -1.8467400074005127', NULL, NULL, NULL, NULL, NULL, NULL),
+('LEO_N2', 2021, 'RG_LEO', 'RG_LEO_N', 'Harrington Walk', 16, 251, 393, 1.70506, 'M', '93', 'LEO_N2.kml', '52.68756866455078', '52.690391540527344', '-1.8467400074005127', '-1.8418099880218506', NULL, NULL, NULL),
 ('LEO_N3', 2020, 'RG_LEO', 'RG_LEO_N', 'Parkside Ct', 21, 106, 159, 1.70916, 'M', '84', 'LEO_N3.kml', ' -1.8385900259017944', NULL, NULL, NULL, NULL, NULL, NULL),
-('LEO_N3', 2021, 'RG_LEO', 'RG_LEO_N', 'Swinfen Broun Rd', 21, 118, 159, 1.70916, 'M', '84', 'LEO_N3_2021.kml', ' -1.8385900259017944', NULL, NULL, NULL, NULL, NULL, NULL),
+('LEO_N3', 2021, 'RG_LEO', 'RG_LEO_N', 'Swinfen Broun Rd', 21, 118, 159, 1.1046, 'M', '84', 'LEO_N3_2021.kml', '52.68465042114258', '52.68777847290039', '-1.83856999874115', '-1.8337500095367432', NULL, NULL, NULL),
 ('LEO_N4', 2020, 'RG_LEO', 'RG_LEO_N', 'Mary Slater', 8, 90, 172, 2.17275, 'H', '69', 'LEO_N4.kml', ' -1.837820053100586', NULL, NULL, NULL, NULL, NULL, NULL),
-('LEO_N4', 2021, 'RG_LEO', 'RG_LEO_N', 'Mary Slater', 8, 93, 172, 2.17275, 'H', '69', 'LEO_N4_2021.kml', ' -1.837820053100586', NULL, NULL, NULL, NULL, NULL, NULL),
+('LEO_N4', 2021, 'RG_LEO', 'RG_LEO_N', 'Mary Slater', 8, 93, 172, 0.974299, 'H', '69', 'LEO_N4_2021.kml', '52.67673873901367', '52.67993927001953', '-1.8377000093460083', '-1.8331029415130615', NULL, NULL, NULL),
 ('LEO_N5', 2020, 'RG_LEO', 'RG_LEO_N', 'Ferndale Rd', 16, 201, 380, 2.55836, 'M', '110', 'LEO_N5.kml', ' -1.8451299667358398', NULL, NULL, NULL, NULL, NULL, NULL),
-('LEO_N5', 2021, 'RG_LEO', 'RG_LEO_N', 'Ferndale Rd', 16, 213, 380, 2.55836, 'M', '110', 'LEO_N5.kml', ' -1.8451299667358398', NULL, NULL, NULL, NULL, NULL, NULL),
+('LEO_N5', 2021, 'RG_LEO', 'RG_LEO_N', 'Ferndale Rd', 16, 213, 380, 2.12077, 'M', '110', 'LEO_N5.kml', '52.68904113769531', '52.693111419677734', '-1.8451299667358398', '-1.8392599821090698', NULL, NULL, NULL),
 ('LEO_W1', 2020, 'RG_LEO', 'RG_LEO_W', 'Bham Rd (part)', 8, 197, 315, 1.15599, 'M', '74', 'LEO_W1.kml', ' -1.8333560228347778', NULL, NULL, NULL, NULL, NULL, NULL),
-('LEO_W1', 2021, 'RG_LEO', 'RG_LEO_W', 'Bham Rd (part)', 8, 272, 315, 1.15599, 'M', '74', 'LEO_W1_2021.kml', ' -1.8333560228347778', NULL, NULL, NULL, NULL, NULL, NULL),
+('LEO_W1', 2021, 'RG_LEO', 'RG_LEO_W', 'Bham Rd (part)', 8, 272, 315, 1.05559, 'M', '74', 'LEO_W1.kml', '52.67606735229492', '52.68055725097656', '-1.8333560228347778', '-1.8272500038146973', NULL, NULL, NULL),
 ('LEO_W2', 2020, 'RG_LEO', 'RG_LEO_W', 'Swan Rd', 12, 186, 261, 1.65735, 'H', '6', 'LEO_W2.kml', ' -1.8328419923782349', NULL, NULL, NULL, NULL, NULL, NULL),
-('LEO_W2', 2021, 'RG_LEO', 'RG_LEO_W', 'Swan Rd', 12, 262, 261, 1.65735, 'H', '6', 'LEO_W2.kml', ' -1.8328419923782349', NULL, NULL, NULL, NULL, NULL, NULL),
+('LEO_W2', 2021, 'RG_LEO', 'RG_LEO_W', 'Swan Rd', 12, 262, 261, 1.38533, 'H', '6', 'LEO_W2.kml', '52.67998504638672', '52.6846923828125', '-1.8328419923782349', '-1.8272409439086914', NULL, NULL, NULL),
 ('LEO_W3', 2020, 'RG_LEO', 'RG_LEO_W', 'Lower Sandford St', 11, 237, 310, 0.931123, 'M', '105', 'LEO_W3.kml', ' -1.8368459939956665', NULL, NULL, NULL, NULL, NULL, NULL),
-('LEO_W3', 2021, 'RG_LEO', 'RG_LEO_W', 'Lower Sandford St', 11, 260, 310, 0.931123, 'M', '105', 'LEO_W3.kml', ' -1.8368459939956665', NULL, NULL, NULL, NULL, NULL, NULL),
+('LEO_W3', 2021, 'RG_LEO', 'RG_LEO_W', 'Lower Sandford St', 11, 260, 310, 0.66302, 'M', '105', 'LEO_W3.kml', '52.680419921875', '52.682369232177734', '-1.8368459939956665', '-1.831845998764038', NULL, NULL, NULL),
 ('LEO_X1', 2020, 'RG_LEO', 'RG_LEO_X', 'Walsall Rd extension', NULL, NULL, NULL, 0.14657, NULL, NULL, 'LEO_X1.kml', ' -1.854701042175293', NULL, NULL, NULL, NULL, NULL, NULL),
-('LEO_X1', 2021, 'RG_LEO', 'RG_LEO_X', 'Walsall Rd extension', NULL, NULL, NULL, 0.14657, NULL, NULL, 'LEO_X1.kml', ' -1.854701042175293', NULL, NULL, NULL, NULL, NULL, NULL),
+('LEO_X1', 2021, 'RG_LEO', 'RG_LEO_X', 'Walsall Rd extension', NULL, NULL, NULL, 0.111497, NULL, NULL, 'LEO_X1.kml', '52.67510986328125', '52.67580032348633', '-1.854701042175293', '-1.8527699708938599', NULL, NULL, NULL),
 ('LEO_X2', 2020, 'RG_LEO', 'RG_LEO_X', 'Vacant Roads', 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('LEO_X2', 2021, 'RG_LEO', 'RG_LEO_X', 'Vacant Roads', 10, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('STJ_C1', 2020, 'RG_STJ', 'RG_STJ_C', 'Scott Close', 10, 155, 274, 1.68802, 'M', '124', 'STJ_C1.kml', ' -1.8291399478912354', NULL, NULL, NULL, NULL, NULL, NULL),
-('STJ_C1', 2021, 'RG_STJ', 'RG_STJ_C', 'Scott Close', 10, 156, 274, 1.68802, 'M', '124', 'STJ_C1.kml', ' -1.8291399478912354', NULL, NULL, NULL, NULL, NULL, NULL),
+('STJ_C1', 2021, 'RG_STJ', 'RG_STJ_C', 'Scott Close', 10, 156, 274, 1.30945, 'M', '124', 'STJ_C1.kml', '52.67586898803711', '52.678131103515625', '-1.8291399478912354', '-1.8250700235366821', NULL, NULL, NULL),
 ('STJ_C2', 2020, 'RG_STJ', 'RG_STJ_C', 'Chapel Lane', 10, 126, 226, 1.17642, 'M', '114', 'STJ_C2.kml', ' -1.8280999660491943', NULL, NULL, NULL, NULL, NULL, NULL),
-('STJ_C2', 2021, 'RG_STJ', 'RG_STJ_C', 'Chapel Lane', 10, 157, 226, 1.17642, 'M', '114', 'STJ_C2.kml', ' -1.8280999660491943', NULL, NULL, NULL, NULL, NULL, NULL),
+('STJ_C2', 2021, 'RG_STJ', 'RG_STJ_C', 'Chapel Lane', 10, 157, 226, 0.94624, 'M', '114', 'STJ_C2.kml', '52.67427062988281', '52.67665100097656', '-1.8280999660491943', '-1.8245199918746948', NULL, NULL, NULL),
 ('STJ_C3', 2020, 'RG_STJ', 'RG_STJ_C', 'Dovehouse Fields', 8, 102, 196, 0.887864, 'M', '100', 'STJ_C3.kml', ' -1.8297699689865112', NULL, NULL, NULL, NULL, NULL, NULL),
-('STJ_C3', 2021, 'RG_STJ', 'RG_STJ_C', 'Dovehouse Fields', 8, 104, 196, 0.887864, 'M', '100', 'STJ_C3.kml', ' -1.8297699689865112', NULL, NULL, NULL, NULL, NULL, NULL),
+('STJ_C3', 2021, 'RG_STJ', 'RG_STJ_C', 'Dovehouse Fields', 8, 104, 196, 0.709908, 'M', '100', 'STJ_C3.kml', '52.674781799316406', '52.67631149291992', '-1.8297699689865112', '-1.827239990234375', NULL, NULL, NULL),
 ('STJ_C4', 2020, 'RG_STJ', 'RG_STJ_C', 'Trafalgar Way', 10, 163, 291, 1.26617, 'H', '4', 'STJ_C4.kml', ' -1.830180048942566', NULL, NULL, NULL, NULL, NULL, NULL),
-('STJ_C4', 2021, 'RG_STJ', 'RG_STJ_C', 'Trafalgar Way', 10, 176, 291, 1.26617, 'H', '4', 'STJ_C4.kml', ' -1.830180048942566', NULL, NULL, NULL, NULL, NULL, NULL),
+('STJ_C4', 2021, 'RG_STJ', 'RG_STJ_C', 'Trafalgar Way', 10, 176, 291, 1.13173, 'H', '4', 'STJ_C4.kml', '52.672340393066406', '52.67438888549805', '-1.830180048942566', '-1.8270299434661865', NULL, NULL, NULL),
 ('STJ_C5', 2020, 'RG_STJ', 'RG_STJ_C', 'Shortbutts Lane', 13, 183, 352, 2.32248, 'M', '85', 'STJ_C5.kml', ' -1.8321199417114258', NULL, NULL, NULL, NULL, NULL, NULL),
-('STJ_C5', 2021, 'RG_STJ', 'RG_STJ_C', 'Shortbutts Lane', 13, 200, 352, 2.32248, 'M', '85', 'STJ_C5.kml', ' -1.8321199417114258', NULL, NULL, NULL, NULL, NULL, NULL),
+('STJ_C5', 2021, 'RG_STJ', 'RG_STJ_C', 'Shortbutts Lane', 13, 200, 352, 1.6947, 'M', '85', 'STJ_C5.kml', '52.6710319519043', '52.673980712890625', '-1.8321199417114258', '-1.822759985923767', NULL, NULL, NULL),
 ('STJ_C6', 2020, 'RG_STJ', 'RG_STJ_C', 'Bham Rd', 9, 121, 213, 1.19199, 'H', '7', 'STJ_C6.kml', ' -1.8322499990463257', NULL, NULL, NULL, NULL, NULL, NULL),
-('STJ_C6', 2021, 'RG_STJ', 'RG_STJ_C', 'Bham Rd', 9, 132, 213, 1.19199, 'H', '7', 'STJ_C6.kml', ' -1.8322499990463257', NULL, NULL, NULL, NULL, NULL, NULL),
+('STJ_C6', 2021, 'RG_STJ', 'RG_STJ_C', 'Bham Rd', 9, 132, 213, 1.33073, 'H', '7', 'STJ_C6.kml', '52.67018127441406', '52.67549133300781', '-1.8322499990463257', '-1.8309099674224854', NULL, NULL, NULL),
 ('STJ_E1', 2020, 'RG_STJ', 'RG_STJ_E', 'Upper St John St', 5, 133, 216, 0.76755, 'H', '40', 'STJ_E1.kml', ' -1.8262499570846558', NULL, NULL, NULL, NULL, NULL, NULL),
-('STJ_E1', 2021, 'RG_STJ', 'RG_STJ_E', 'Upper St John St', 5, 176, 216, 0.76755, 'H', '40', 'STJ_E1.kml', ' -1.8262499570846558', NULL, NULL, NULL, NULL, NULL, NULL),
+('STJ_E1', 2021, 'RG_STJ', 'RG_STJ_E', 'Upper St John St', 5, 176, 216, 0.71268, 'H', '40', 'STJ_E1.kml', '52.67449951171875', '52.68001937866211', '-1.8262499570846558', '-1.8232200145721436', NULL, NULL, NULL),
 ('STJ_E2', 2020, 'RG_STJ', 'RG_STJ_E', 'Cherry Orchard', 18, 210, 395, 2.65132, 'H', '5', 'STJ_E2.kml', ' -1.8259049654006958', NULL, NULL, NULL, NULL, NULL, NULL),
-('STJ_E2', 2021, 'RG_STJ', 'RG_STJ_E', 'Cherry Orchard', 18, 231, 395, 2.65132, 'H', '5', 'STJ_E2_2021.kml', ' -1.8259049654006958', NULL, NULL, NULL, NULL, NULL, NULL),
+('STJ_E2', 2021, 'RG_STJ', 'RG_STJ_E', 'Cherry Orchard', 18, 231, 395, 2.01556, 'H', '5', 'STJ_E2.kml', '52.67707061767578', '52.68186950683594', '-1.8259049654006958', '-1.8178199529647827', NULL, NULL, NULL),
 ('STJ_E3', 2020, 'RG_STJ', 'RG_STJ_E', 'Beech Gds', 17, 202, 388, 2.87452, 'M', '109', 'STJ_E3.kml', ' -1.8236700296401978', NULL, NULL, NULL, NULL, NULL, NULL),
-('STJ_E3', 2021, 'RG_STJ', 'RG_STJ_E', 'Beech Gds', 17, 207, 388, 2.87452, 'M', '109', 'STJ_E3_2021.kml', ' -1.8236700296401978', NULL, NULL, NULL, NULL, NULL, NULL),
+('STJ_E3', 2021, 'RG_STJ', 'RG_STJ_E', 'Beech Gds', 17, 207, 388, 2.28544, 'M', '109', 'STJ_E3.kml', '52.67707061767578', '52.68193054199219', '-1.8236700296401978', '-1.8158400058746338', NULL, NULL, NULL),
 ('STJ_E4', 2020, 'RG_STJ', 'RG_STJ_E', 'Tamworth Road', 4, 105, 183, 2.46706, 'M', '77', 'STJ_E4.kml', ' -1.82191002368927', NULL, NULL, NULL, NULL, NULL, NULL),
-('STJ_E4', 2021, 'RG_STJ', 'RG_STJ_E', 'Tamworth Road', 4, 118, 183, 2.46706, 'M', '77', 'STJ_E4.kml', ' -1.82191002368927', NULL, NULL, NULL, NULL, NULL, NULL),
+('STJ_E4', 2021, 'RG_STJ', 'RG_STJ_E', 'Tamworth Road', 4, 118, 183, 1.56873, 'M', '77', 'STJ_E4.kml', '52.67197799682617', '52.67321014404297', '-1.82191002368927', '-1.8075790405273438', NULL, NULL, NULL),
 ('STJ_E5', 2020, 'RG_STJ', 'RG_STJ_E', 'Borrowcop', 9, 161, 349, 3.14249, 'L', '167', 'STJ_E5.kml', ' -1.8227709531784058', NULL, NULL, NULL, NULL, NULL, NULL),
-('STJ_E5', 2021, 'RG_STJ', 'RG_STJ_E', 'Borrowcop', 9, 174, 349, 3.14249, 'L', '167', 'STJ_E5.kml', ' -1.8227709531784058', NULL, NULL, NULL, NULL, NULL, NULL),
+('STJ_E5', 2021, 'RG_STJ', 'RG_STJ_E', 'Borrowcop', 9, 174, 349, 2.53821, 'L', '167', 'STJ_E5.kml', '52.673309326171875', '52.675498962402344', '-1.8227709531784058', '-1.8125300407409668', NULL, NULL, NULL),
 ('STJ_E6', 2020, 'RG_STJ', 'RG_STJ_E', 'Wentworth Dr', 11, 144, 302, 2.36475, 'L', '170', 'STJ_E6.kml', ' -1.8137099742889404', NULL, NULL, NULL, NULL, NULL, NULL),
-('STJ_E6', 2021, 'RG_STJ', 'RG_STJ_E', 'Wentworth Dr', 11, 148, 302, 2.36475, 'L', '170', 'STJ_E6_2021.kml', ' -1.8137099742889404', NULL, NULL, NULL, NULL, NULL, NULL),
+('STJ_E6', 2021, 'RG_STJ', 'RG_STJ_E', 'Wentworth Dr', 11, 148, 302, 2.09641, 'L', '170', 'STJ_E6_2021.kml', '52.67264938354492', '52.67728042602539', '-1.8141499757766724', '-1.8085299730300903', NULL, NULL, NULL),
 ('STJ_E7', 2020, 'RG_STJ', 'RG_STJ_E', 'Manor Rise', 6, 107, 228, 2.78609, 'L', '146', 'STJ_E7.kml', ' -1.8202300071716309', NULL, NULL, NULL, NULL, NULL, NULL),
-('STJ_E7', 2021, 'RG_STJ', 'RG_STJ_E', 'Woodfield etc', 6, 40, NULL, 2.78609, 'L', '146', 'STJ_E7_2021.kml', ' -1.8202300071716309', NULL, NULL, NULL, NULL, NULL, NULL),
+('STJ_E7', 2021, 'RG_STJ', 'RG_STJ_E', 'Woodfield etc', 6, 40, NULL, 2.31624, 'L', '146', 'STJ_E7.kml', '52.67316818237305', '52.679779052734375', '-1.8202300071716309', '-1.807129979133606', NULL, NULL, NULL),
 ('STJ_E8', 2020, 'RG_STJ', 'RG_STJ_E', 'Longbridge', 10, 148, 305, 2.47365, 'L', '166', 'STJ_E8.kml', ' -1.8254330158233643', NULL, NULL, NULL, NULL, NULL, NULL),
-('STJ_E8', 2021, 'RG_STJ', 'RG_STJ_E', 'Longbridge', 10, 156, 305, 2.47365, 'L', '166', 'STJ_E8.kml', ' -1.8254330158233643', NULL, NULL, NULL, NULL, NULL, NULL),
-('STJ_E9', 2021, 'RG_STJ', 'RG_STJ_E', 'Manor Rise..etc', NULL, 60, NULL, NULL, NULL, NULL, 'STJ_E9_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('STJ_E8', 2021, 'RG_STJ', 'RG_STJ_E', 'Longbridge', 10, 156, 305, 2.10864, 'L', '166', 'STJ_E8.kml', '52.667701721191406', '52.67218017578125', '-1.8254330158233643', '-1.8149399757385254', NULL, NULL, NULL),
+('STJ_E9', 2021, 'RG_STJ', 'RG_STJ_E', 'Manor Rise..etc', NULL, 60, NULL, 0.687738, NULL, NULL, 'STJ_E9_2021.kml', '52.677490234375', '52.67900085449219', '-1.8203200101852417', '-1.8180999755859375', NULL, NULL, NULL),
 ('STJ_W1', 2020, 'RG_STJ', 'RG_STJ_W', 'Chesterfield Rd', 12, 164, 323, 2.02615, 'H', '68', 'STJ_W1.kml', ' -1.8366199731826782', NULL, NULL, NULL, NULL, NULL, NULL),
-('STJ_W1', 2021, 'RG_STJ', 'RG_STJ_W', 'Chesterfield Rd', 12, 170, 323, 2.02615, 'H', '68', 'STJ_W1.kml', ' -1.8366199731826782', NULL, NULL, NULL, NULL, NULL, NULL),
+('STJ_W1', 2021, 'RG_STJ', 'RG_STJ_W', 'Chesterfield Rd', 12, 170, 323, 1.67479, 'H', '68', 'STJ_W1.kml', '52.67000961303711', '52.67407989501953', '-1.8366199731826782', '-1.8324300050735474', NULL, NULL, NULL),
 ('STJ_W2', 2020, 'RG_STJ', 'RG_STJ_W', 'Agincourt', 10, 207, 389, 3.07397, 'H', '11', 'STJ_W2.kml', ' -1.8404330015182495', NULL, NULL, NULL, NULL, NULL, NULL),
-('STJ_W2', 2021, 'RG_STJ', 'RG_STJ_W', 'Agincourt', 10, 227, 389, 3.07397, 'H', '11', 'STJ_W2.kml', ' -1.8404330015182495', NULL, NULL, NULL, NULL, NULL, NULL),
+('STJ_W2', 2021, 'RG_STJ', 'RG_STJ_W', 'Agincourt', 10, 227, 389, 2.44861, 'H', '11', 'STJ_W2.kml', '52.66989517211914', '52.672889709472656', '-1.8404330015182495', '-1.8352500200271606', NULL, NULL, NULL),
 ('STJ_X1', 2020, 'RG_STJ', 'RG_STJ_X', 'No Walk', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('STJ_XW', 2020, 'RG_STJ', 'RG_STJ_X', 'Dont Walk', 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('STJ_XW', 2021, 'RG_STJ', 'RG_STJ_X', 'Dont Walk', 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 ('STW_C1', 2020, 'RG_STW', 'RG_STW_C', 'Stowe St', 10, 140, 209, 1.11367, 'M', '132', 'STW_C1.kml', ' -1.8243000507354736', NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_C1', 2021, 'RG_STW', 'RG_STW_C', 'Stowe St', 10, 140, 209, 1.11367, 'M', '132', 'STW_C1.kml', ' -1.8243000507354736', NULL, NULL, NULL, NULL, NULL, NULL),
+('STW_C1', 2021, 'RG_STW', 'RG_STW_C', 'Stowe St', 10, 140, 209, 0.874443, 'M', '132', 'STW_C1.kml', '52.68547821044922', '52.687076568603516', '-1.8243000507354736', '-1.8212529420852661', NULL, NULL, NULL),
 ('STW_C2', 2020, 'RG_STW', 'RG_STW_C', 'St Michael Road', 6, 149, 263, 2.31241, 'M', '94', 'STW_C2.kml', ' -1.8219900131225586', NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_C2', 2021, 'RG_STW', 'RG_STW_C', 'St Michael Road', 6, 149, 263, 2.31241, 'M', '94', 'STW_C2_2021.kml', ' -1.8219900131225586', NULL, NULL, NULL, NULL, NULL, NULL),
+('STW_C2', 2021, 'RG_STW', 'RG_STW_C', 'St Michael Road', 6, 149, 263, 2.01449, 'M', '94', 'STW_C2.kml', '52.68421173095703', '52.68812942504883', '-1.8219900131225586', '-1.816606044769287', NULL, NULL, NULL),
 ('STW_C3', 2020, 'RG_STW', 'RG_STW_C', 'Wissage Rd', 7, 100, 292, 1.19256, 'H', '64.5', 'STW_C3.kml', ' -1.8206499814987183', NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_C3', 2021, 'RG_STW', 'RG_STW_C', 'Wissage Rd', 7, 100, 292, 1.19256, 'H', '64.5', 'STW_C3.kml', ' -1.8206499814987183', NULL, NULL, NULL, NULL, NULL, NULL),
+('STW_C3', 2021, 'RG_STW', 'RG_STW_C', 'Wissage Rd', 7, 100, 292, 0.964129, 'H', '64.5', 'STW_C3.kml', '52.68532180786133', '52.688331604003906', '-1.8206499814987183', '-1.8138200044631958', NULL, NULL, NULL),
 ('STW_E1', 2020, 'RG_STW', 'RG_STW_S', 'Lower Trent Valley Road', 6, 189, 352, 0.41837, 'H', '30.5', 'STW_E1.kml', ' -1.8079440593719482', NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_E1', 2021, 'RG_STW', 'RG_STW_S', 'Lower Trent Valley Road', 6, 189, 352, 0.41837, 'H', '30.5', 'STW_E1.kml', ' -1.8079440593719482', NULL, NULL, NULL, NULL, NULL, NULL),
+('STW_E1', 2021, 'RG_STW', 'RG_STW_S', 'Lower Trent Valley Road', 6, 189, 352, 0.360253, 'H', '30.5', 'STW_E1.kml', '52.6850700378418', '52.686248779296875', '-1.8079440593719482', '-1.8063100576400757', NULL, NULL, NULL),
 ('STW_E2', 2020, 'RG_STW', 'RG_STW_E', 'Rocklands Cres', 8, 140, 253, 1.39365, 'M', '127', 'STW_E2.kml', ' -1.8160400390625', NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_E2', 2021, 'RG_STW', 'RG_STW_E', 'Rocklands Cres', 8, 140, 253, 1.39365, 'M', '127', 'STW_E2.kml', ' -1.8160400390625', NULL, NULL, NULL, NULL, NULL, NULL),
+('STW_E2', 2021, 'RG_STW', 'RG_STW_E', 'Rocklands Cres', 8, 140, 253, 1.21956, 'M', '127', 'STW_E2.kml', '52.68642044067383', '52.68938064575195', '-1.8160400390625', '-1.8111000061035156', NULL, NULL, NULL),
 ('STW_E3', 2020, 'RG_STW', 'RG_STW_E', 'Valley Lane', 4, 145, 257, 1.68312, 'M', '103', 'STW_E3.kml', ' -1.8140699863433838', NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_E3', 2021, 'RG_STW', 'RG_STW_E', 'Valley Lane', 4, 145, 257, 1.68312, 'M', '103', 'STW_E3_2021.kml', ' -1.8140699863433838', NULL, NULL, NULL, NULL, NULL, NULL),
+('STW_E3', 2021, 'RG_STW', 'RG_STW_E', 'Valley Lane', 4, 145, 257, 1.15314, 'M', '103', 'STW_E3_2021.kml', '52.6861686706543', '52.688880920410156', '-1.8140699863433838', '-1.8061200380325317', NULL, NULL, NULL),
 ('STW_E4', 2020, 'RG_STW', 'RG_STW_E', 'Hobs Road', 8, 154, 229, 0.834175, 'H', '52', 'STW_E4.kml', ' -1.8102999925613403', NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_E4', 2021, 'RG_STW', 'RG_STW_E', 'Hobs Road', 8, 154, 229, 0.834175, 'H', '52', 'STW_E4.kml', ' -1.8102999925613403', NULL, NULL, NULL, NULL, NULL, NULL),
+('STW_E4', 2021, 'RG_STW', 'RG_STW_E', 'Hobs Road', 8, 154, 229, 0.692011, 'H', '52', 'STW_E4.kml', '52.68751907348633', '52.68920135498047', '-1.8102999925613403', '-1.8069599866867065', NULL, NULL, NULL),
 ('STW_E5', 2020, 'RG_STW', 'RG_STW_E', 'Scotch Orchard', 6, 138, 271, 1.339, 'M', '104', 'STW_E5.kml', ' -1.8158899545669556', NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_E5', 2021, 'RG_STW', 'RG_STW_E', 'Scotch Orchard', 6, 138, 271, 1.339, 'M', '104', 'STW_E5.kml', ' -1.8158899545669556', NULL, NULL, NULL, NULL, NULL, NULL),
+('STW_E5', 2021, 'RG_STW', 'RG_STW_E', 'Scotch Orchard', 6, 138, 271, 1.10666, 'M', '104', 'STW_E5.kml', '52.68724060058594', '52.6904296875', '-1.8158899545669556', '-1.8094600439071655', NULL, NULL, NULL),
 ('STW_E6', 2020, 'RG_STW', 'RG_STW_E', 'Eastern Ave', 4, 110, 211, 1.37236, 'H', '59', 'STW_E6.kml', ' -1.8143999576568604', NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_E6', 2021, 'RG_STW', 'RG_STW_E', 'Eastern Ave', 4, 110, 211, 1.37236, 'H', '59', 'STW_E6.kml', ' -1.8143999576568604', NULL, NULL, NULL, NULL, NULL, NULL),
+('STW_E6', 2021, 'RG_STW', 'RG_STW_E', 'Eastern Ave', 4, 110, 211, 1.13735, 'H', '59', 'STW_E6.kml', '52.689910888671875', '52.69209671020508', '-1.8143999576568604', '-1.8090280294418335', NULL, NULL, NULL),
 ('STW_N1', 2020, 'RG_STW', 'RG_STW_N', 'Gilbert Road', 18, 205, 352, 2.68945, 'L', '145', 'STW_N1.kml', ' -1.8215299844741821', NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_N1', 2021, 'RG_STW', 'RG_STW_N', 'Gilbert Road', 18, 205, 352, 2.68945, 'L', '145', 'STW_N1.kml', ' -1.8215299844741821', NULL, NULL, NULL, NULL, NULL, NULL),
+('STW_N1', 2021, 'RG_STW', 'RG_STW_N', 'Gilbert Road', 18, 205, 352, 2.45612, 'L', '145', 'STW_N1.kml', '52.6899299621582', '52.694820404052734', '-1.8215299844741821', '-1.81535005569458', NULL, NULL, NULL),
 ('STW_N2', 2020, 'RG_STW', 'RG_STW_N', 'Chadswell Heights', 6, 141, 261, 1.57268, 'H', '43', 'STW_N2.kml', ' -1.8176089525222778', NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_N2', 2021, 'RG_STW', 'RG_STW_N', 'Chadswell Heights', 6, 141, 261, 1.57268, 'H', '43', 'STW_N2_2021.kml', ' -1.8176089525222778', NULL, NULL, NULL, NULL, NULL, NULL),
+('STW_N2', 2021, 'RG_STW', 'RG_STW_N', 'Chadswell Heights', 6, 141, 261, 0.878848, 'H', '43', 'STW_N2_2021.kml', '52.69438934326172', '52.697059631347656', '-1.8173799514770508', '-1.8139899969100952', NULL, NULL, NULL),
 ('STW_N3', 2020, 'RG_STW', 'RG_STW_N', 'York Close', 16, 132, 254, 1.96892, 'M', '75', 'STW_N3.kml', ' -1.8188899755477905', NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_N3', 2021, 'RG_STW', 'RG_STW_N', 'York Close', 16, 132, 254, 1.96892, 'M', '75', 'STW_N3_2021.kml', ' -1.8188899755477905', NULL, NULL, NULL, NULL, NULL, NULL),
+('STW_N3', 2021, 'RG_STW', 'RG_STW_N', 'York Close', 16, 132, 254, 1.22397, 'M', '75', 'STW_N3_2021.kml', '52.693363189697266', '52.697052001953125', '-1.818847894668579', '-1.8126933574676514', NULL, NULL, NULL),
 ('STW_N4', 2020, 'RG_STW', 'RG_STW_N', 'Fecknam Way', 14, 168, 313, 2.36078, 'L', '165', 'STW_N4.kml', ' -1.8199000358581543', NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_N4', 2021, 'RG_STW', 'RG_STW_N', 'Fecknam Way', 14, 168, 313, 2.36078, 'L', '165', 'STW_N4_2021.kml', ' -1.8199000358581543', NULL, NULL, NULL, NULL, NULL, NULL),
+('STW_N4', 2021, 'RG_STW', 'RG_STW_N', 'Fecknam Way', 14, 168, 313, 2.13849, 'L', '165', 'STW_N4.kml', '52.688358306884766', '52.69321060180664', '-1.8199000358581543', '-1.8141900300979614', NULL, NULL, NULL),
 ('STW_S1', 2020, 'RG_STW', 'RG_STW_S', 'Maxwell Close', 12, 139, 230, 1.6814, 'H', '49.5', 'STW_S1_2020.kml', ' -1.82383394241333', NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_S1', 2021, 'RG_STW', 'RG_STW_S', 'Maxwell Close', 12, 139, 230, 1.6814, 'H', '49.5', 'STW_S1_2021.kml', ' -1.82383394241333', NULL, NULL, NULL, NULL, NULL, NULL),
+('STW_S1', 2021, 'RG_STW', 'RG_STW_S', 'Maxwell Close', 12, 139, 230, 0.952139, 'H', '49.5', 'STW_S1_2020.kml', '52.68095779418945', '52.68306350708008', '-1.8250540494918823', '-1.8196699619293213', NULL, NULL, NULL),
 ('STW_S2', 2020, 'RG_STW', 'RG_STW_S', 'Maryvale Court', 14, 121, 205, 1.9395, 'L', '155', 'STW_S2.kml', ' -1.815690040588379', NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_S2', 2021, 'RG_STW', 'RG_STW_S', 'Maryvale Court', 14, 121, 205, 1.9395, 'L', '155', 'STW_S2.kml', ' -1.815690040588379', NULL, NULL, NULL, NULL, NULL, NULL),
+('STW_S2', 2021, 'RG_STW', 'RG_STW_S', 'Maryvale Court', 14, 121, 205, 1.57684, 'L', '155', 'STW_S2.kml', '52.68067932128906', '52.68373107910156', '-1.815690040588379', '-1.8102999925613403', NULL, NULL, NULL),
 ('STW_S3', 2020, 'RG_STW', 'RG_STW_S', 'BORW', 22, 188, 381, 2.87484, 'M', '79', 'STW_S3.kml', ' -1.8172099590301514', NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_S3', 2021, 'RG_STW', 'RG_STW_S', 'BORW', 22, 188, 381, 2.87484, 'M', '79', 'STW_S3_2021.kml', ' -1.8172099590301514', NULL, NULL, NULL, NULL, NULL, NULL),
+('STW_S3', 2021, 'RG_STW', 'RG_STW_S', 'BORW', 22, 188, 381, 2.07088, 'M', '79', 'STW_S3.kml', '52.683528900146484', '52.686038970947266', '-1.8172099590301514', '-1.808150053024292', NULL, NULL, NULL),
 ('STW_S4', 2020, 'RG_STW', 'RG_STW_S', 'Deans Croft', 7, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_S4', 2021, 'RG_STW', 'RG_STW_S', 'Deans Croft', 7, NULL, NULL, NULL, NULL, NULL, 'STW_S4_2021.kml', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('STW_S4', 2021, 'RG_STW', 'RG_STW_S', 'Deans Croft', 7, NULL, NULL, 0.826508, NULL, NULL, 'STW_S4_2021.kml', '52.68178176879883', '52.683998107910156', '-1.8211499452590942', '-1.8167860507965088', NULL, NULL, NULL),
 ('STW_W1', 2020, 'RG_STW', 'RG_STW_W', 'Close', 12, 114, 177, 1.63344, 'H', '32', 'STW_W1.kml', ' -1.8343000411987305', NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_W1', 2021, 'RG_STW', 'RG_STW_W', 'Close', 12, 114, 177, 1.63344, 'H', '32', 'STW_W1.kml', ' -1.8343000411987305', NULL, NULL, NULL, NULL, NULL, NULL),
+('STW_W1', 2021, 'RG_STW', 'RG_STW_W', 'Close', 12, 160, 177, 1.24804, 'H', '32', 'STW_W1.kml', '52.68423080444336', '52.687068939208984', '-1.8343000411987305', '-1.8293100595474243', NULL, NULL, NULL),
 ('STW_W2', 2020, 'RG_STW', 'RG_STW_W', 'Bird St', 30, 244, 338, 2.36671, 'H', '10', 'STW_W2.kml', ' -1.8309259414672852', NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_W2', 2021, 'RG_STW', 'RG_STW_W', 'Bird St', 30, 244, 338, 2.36671, 'H', '10', 'STW_W2.kml', ' -1.8309259414672852', NULL, NULL, NULL, NULL, NULL, NULL),
+('STW_W2', 2021, 'RG_STW', 'RG_STW_W', 'Bird St', 30, 337, 338, 1.87598, 'H', '10', 'STW_W2.kml', '52.68218994140625', '52.685428619384766', '-1.8309259414672852', '-1.821560025215149', NULL, NULL, NULL),
 ('STW_W3', 2020, 'RG_STW', 'RG_STW_W', 'Wade Street', 9, 130, 166, 0.373298, 'H', '12', 'STW_W3.kml', ' -1.828529953956604', NULL, NULL, NULL, NULL, NULL, NULL),
-('STW_W3', 2021, 'RG_STW', 'RG_STW_W', 'Wade Street', 9, 130, 166, 0.373298, 'H', '12', 'STW_W3.kml', ' -1.828529953956604', NULL, NULL, NULL, NULL, NULL, NULL);
+('STW_W3', 2021, 'RG_STW', 'RG_STW_W', 'Wade Street', 9, 224, 166, 0.295083, 'H', '12', 'STW_W3.kml', '52.680999755859375', '52.682430267333984', '-1.828529953956604', '-1.8260999917984009', NULL, NULL, NULL);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `roadgrouptostreet`
---
-
-DROP TABLE IF EXISTS `roadgrouptostreet`;
-CREATE TABLE `roadgrouptostreet` (
-  `seq` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `roadgrouptostreet` (
+  `seq` int(11) NOT NULL AUTO_INCREMENT,
   `street` varchar(40) CHARACTER SET utf16 DEFAULT NULL,
   `part` varchar(10) CHARACTER SET utf16 DEFAULT NULL,
   `pd` varchar(10) CHARACTER SET utf16 DEFAULT NULL,
   `roadgroupid` varchar(20) CHARACTER SET utf16 DEFAULT NULL,
-  `year` int(4) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+  `year` int(4) DEFAULT NULL,
+  PRIMARY KEY (`seq`),
+  UNIQUE KEY `street` (`street`,`part`,`pd`,`roadgroupid`,`year`)
+) ENGINE=InnoDB AUTO_INCREMENT=1726 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
---
--- Dumping data for table `roadgrouptostreet`
---
-
+TRUNCATE TABLE `roadgrouptostreet`;
 INSERT INTO `roadgrouptostreet` (`seq`, `street`, `part`, `pd`, `roadgroupid`, `year`) VALUES
 (75, 'Abbotsford Road', '', 'RB', 'BLY_C1', 2020),
 (633, 'Abbotsford Road', '', 'RB', 'BLY_C1', 2021),
@@ -729,7 +763,7 @@ INSERT INTO `roadgrouptostreet` (`seq`, `street`, `part`, `pd`, `roadgroupid`, `
 (401, 'Boley Lane', 'RP', 'RP', 'STJ_E3', 2020),
 (945, 'Boley Lane', 'RP', 'RP', 'STJ_E3', 2021),
 (210, 'Booth Close', 'Rf', 'RF', 'CHD_C1', 2020),
-(1659, 'Booth Close', 'Rf', 'RF', 'CHD_N4', 2021),
+(1659, 'Booth Close', 'RF', 'RF', 'CHD_N4', 2021),
 (322, 'Booth Close', 'RG', 'RG', 'CHD_N4', 2020),
 (867, 'Booth Close', 'RG', 'RG', 'CHD_N4', 2021),
 (482, 'Bore Street', '', 'RS', 'STW_W2', 2020),
@@ -1683,14 +1717,7 @@ INSERT INTO `roadgrouptostreet` (`seq`, `street`, `part`, `pd`, `roadgroupid`, `
 (541, 'York Close', '', 'RT', 'STW_N3', 2020),
 (1081, 'York Close', '', 'RT', 'STW_N3', 2021);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `seat`
---
-
-DROP TABLE IF EXISTS `seat`;
-CREATE TABLE `seat` (
+CREATE TABLE IF NOT EXISTS `seat` (
   `districtid` varchar(20) NOT NULL,
   `seatid` varchar(20) NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -1698,13 +1725,11 @@ CREATE TABLE `seat` (
   `date` int(9) DEFAULT NULL,
   `electorate` int(11) DEFAULT NULL,
   `households` int(11) DEFAULT NULL,
-  `seats` int(11) NOT NULL
+  `seats` int(11) NOT NULL,
+  UNIQUE KEY `index` (`districtid`,`seatid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16 ROW_FORMAT=COMPACT;
 
---
--- Dumping data for table `seat`
---
-
+TRUNCATE TABLE `seat`;
 INSERT INTO `seat` (`districtid`, `seatid`, `name`, `kml`, `date`, `electorate`, `households`, `seats`) VALUES
 ('LCC', 'BLY', 'Boley Park', 'LCC_BLY.kml', 20190503, 2953, NULL, 3),
 ('LCC', 'BOW', 'Burton Old Road', 'LCC_BOW.kml', 20190503, 894, NULL, 1),
@@ -1727,24 +1752,15 @@ INSERT INTO `seat` (`districtid`, `seatid`, `name`, `kml`, `date`, `electorate`,
 ('UKP', 'LPC', 'Lichfield Constituency', 'UKP_LPC.kml', 2019, NULL, NULL, 1),
 ('UKP', 'TPC', 'Tamworth Constituency', 'UKP_TPC.kml', 2019, NULL, NULL, 1);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `seattopd`
---
-
-DROP TABLE IF EXISTS `seattopd`;
-CREATE TABLE `seattopd` (
+CREATE TABLE IF NOT EXISTS `seattopd` (
   `pdid` varchar(5) NOT NULL,
   `seat` varchar(10) NOT NULL,
   `district` varchar(20) NOT NULL,
-  `year` varchar(8) NOT NULL
+  `year` varchar(8) NOT NULL,
+  UNIQUE KEY `index` (`pdid`,`seat`,`district`,`year`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16;
 
---
--- Dumping data for table `seattopd`
---
-
+TRUNCATE TABLE `seattopd`;
 INSERT INTO `seattopd` (`pdid`, `seat`, `district`, `year`) VALUES
 ('RA', 'BLY', 'LCC', '2019'),
 ('RA', 'BLY', 'LCC', '2020'),
@@ -1980,15 +1996,8 @@ INSERT INTO `seattopd` (`pdid`, `seat`, `district`, `year`) VALUES
 ('SCC', 'LCS', 'RX', '2020'),
 ('SCC', 'LCS', 'RX', '2021');
 
--- --------------------------------------------------------
-
---
--- Table structure for table `street`
---
-
-DROP TABLE IF EXISTS `street`;
-CREATE TABLE `street` (
-  `seq` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `street` (
+  `seq` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) CHARACTER SET utf16 NOT NULL,
   `qualifier` varchar(100) CHARACTER SET utf16 DEFAULT NULL,
   `part` varchar(40) CHARACTER SET utf16 DEFAULT NULL,
@@ -1997,15 +2006,14 @@ CREATE TABLE `street` (
   `electors` int(3) DEFAULT NULL,
   `note` text CHARACTER SET utf16 DEFAULT NULL,
   `latitude` varchar(20) CHARACTER SET utf16 DEFAULT NULL,
-  `longitude` varchar(20) CHARACTER SET utf16 DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
+  `longitude` varchar(20) CHARACTER SET utf16 DEFAULT NULL,
+  PRIMARY KEY (`seq`),
+  UNIQUE KEY `index` (`name`,`part`)
+) ENGINE=InnoDB AUTO_INCREMENT=543 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
---
--- Dumping data for table `street`
---
-
+TRUNCATE TABLE `street`;
 INSERT INTO `street` (`seq`, `name`, `qualifier`, `part`, `pd`, `households`, `electors`, `note`, `latitude`, `longitude`) VALUES
-(1, 'Abbotsford Road', '', '', 'RB', 56, 98, '', NULL, NULL),
+(1, 'Abbotsford Road', '', '', 'RB', 56, 98, NULL, '52.680800099449065', '-1.8091607093811037'),
 (2, 'Abnalls Croft', '', '', 'RL', 29, 8, NULL, '52.68851624947911', '-1.8442440032958987'),
 (3, 'Abnalls Lane', '', '', 'RL', 10, 20, '', '52.688453818092704', '-1.8434715270996096'),
 (4, 'Agincourt Road', '', '', 'RQ', 85, 98, '', NULL, NULL),
@@ -2544,554 +2552,16 @@ INSERT INTO `street` (`seq`, `name`, `qualifier`, `part`, `pd`, `households`, `e
 (541, 'Fosseway Lane', '', 'RM2', 'RM2', 1, 4, 'Fossway Farm  Vets dont deliver', '52.66951218928502', '-1.841239929199219'),
 (542, 'Broad Lane', '', 'RBb', 'RB', 3, NULL, 'odds 51,  53 and the Farthings  by Cross Lane corner', '52.67913493881053', '-1.8127441406250002');
 
--- --------------------------------------------------------
-
---
--- Table structure for table `TABLE 12`
---
-
-DROP TABLE IF EXISTS `TABLE 12`;
-CREATE TABLE `TABLE 12` (
-  `COL 1` varchar(11) DEFAULT NULL,
-  `COL 2` varchar(16) DEFAULT NULL,
-  `COL 3` varchar(20) DEFAULT NULL,
-  `COL 4` varchar(20) DEFAULT NULL,
-  `COL 5` varchar(20) DEFAULT NULL,
-  `COL 6` varchar(19) DEFAULT NULL,
-  `COL 7` varchar(19) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `TABLE 12`
---
-
-INSERT INTO `TABLE 12` (`COL 1`, `COL 2`, `COL 3`, `COL 4`, `COL 5`, `COL 6`, `COL 7`) VALUES
-('roadgroupid', ' kml', ' distance', '  maxlat', '  minlat', 'maxlong', ' minlong'),
-('STJ_C6', ' STJ_C6.kml', ' 1.1919913859661297', ' -1.8309099674224854', ' -1.8322499990463257', ' 52.67549133300781', ' 52.67018127441406'),
-('CHD_S2_2021', ' CHD_S2_2021.kml', ' 1.6250237257664746', ' -1.8232899904251099', ' -1.8286999464035034', ' 52.69075012207031', ' 52.68762969970703'),
-('CUR_E2_2021', ' CUR_E2_2021.kml', ' 1.1348772952654977', ' -1.828410029411316', ' -1.8310600519180298', ' 52.69887924194336', ' 52.6967887878418'),
-('CHD_N4', ' CHD_N4.kml', ' 1.4272246590188606', ' -1.827430009841919', ' -1.8393399715423584', ' 52.694698333740234', ' 52.691200256347656'),
-('LEO_A1', ' LEO_A1.kml', ' 0.8190371617620916', ' -1.8468409776687622', ' -1.8511170148849487', ' 52.676578521728516', ' 52.674468994140625'),
-('LEO_C1', ' LEO_C1.kml', ' 2.285975621818782', ' -1.837689995765686', ' -1.8515100479125977', ' 52.679988861083984', ' 52.67647171020508'),
-('BLY_E3', ' BLY_E3.kml', ' 2.4834923848097334', ' -1.8003499507904053', ' -1.8068000078201294', ' 52.67940902709961', ' 52.676979064941406'),
-('LEO_C5', ' LEO_C5.kml', ' 1.997407389107111', ' -1.8382049798965454', ' -1.8420350551605225', ' 52.6790885925293', ' 52.675418853759766'),
-('STW_N4', ' STW_N4.kml', ' 2.360778884207463', ' -1.8141900300979614', ' -1.8199000358581543', ' 52.69321060180664', ' 52.688358306884766'),
-('LEO_C4', ' LEO_C4.kml', ' 2.0349497962964866', ' -1.8410199880599976', ' -1.844851016998291', ' 52.67695236206055', ' 52.67428970336914'),
-('STJ_C4', ' STJ_C4.kml', ' 1.2661681812876546', ' -1.8270299434661865', ' -1.830180048942566', ' 52.67438888549805', ' 52.672340393066406'),
-('CUR_S1', ' CUR_S1.kml', ' 1.5040675509367312', ' -1.823240041732788', ' -1.8301600217819214', ' 52.693031311035156', ' 52.68939971923828'),
-('STW_S4_2021', ' STW_S4_2021.kml', ' 0.7766428346829397', ' -1.8192700147628784', ' -1.8211499452590942', ' 52.683982849121094', ' 52.682350158691406'),
-('STJ_C3', ' STJ_C3.kml', ' 0.8878637645006352', ' -1.827239990234375', ' -1.8297699689865112', ' 52.67631149291992', ' 52.674781799316406'),
-('LEO_W3', ' LEO_W3.kml', ' 0.9311232671867702', ' -1.831845998764038', ' -1.8368459939956665', ' 52.682369232177734', ' 52.680419921875'),
-('BLY_W1', ' BLY_W1.kml', ' 2.9859004334849453', ' -1.812019944190979', ' -1.818019986152649', ' 52.6810302734375', ' 52.67662811279297'),
-('BLY_E1', ' BLY_E1.kml', ' 1.5094340648542055', ' -1.7983200550079346', ' -1.8029199838638306', ' 52.68302917480469', ' 52.68006134033203'),
-('CUR_N2', ' CUR_N2.kml', ' 0.9190848260772094', ' -1.8192800283432007', ' -1.8221800327301025', ' 52.69921875', ' 52.69731140136719'),
-('BLY_C2', ' BLY_C2.kml', ' 1.56091297433125', ' -1.808940052986145', ' -1.81351900100708', ' 52.68143081665039', ' 52.679290771484375'),
-('BLY_E2', ' BLY_E2.kml', ' 1.8962629110313953', ' -1.798840045928955', ' -1.8047000169754028', ' 52.68159866333008', ' 52.67898178100586'),
-('CUR_C3', ' CUR_C3.kml', ' 1.0075830394620373', ' -1.8214999437332153', ' -1.8251440525054932', ' 52.69868087768555', ' 52.6963996887207'),
-('CUR_S3', ' CUR_S3.kml', ' 1.7979449745163694', ' -1.818830966949463', ' -1.8274630308151245', ' 52.69618606567383', ' 52.69464874267578'),
-('STJ_E4', ' STJ_E4.kml', ' 2.4670550317125755', ' -1.8075790405273438', ' -1.82191002368927', ' 52.67321014404297', ' 52.67197799682617'),
-('LEO_C8', ' LEO_C8.kml', ' 1.2695946812260175', ' -1.8347400426864624', ' -1.8382600545883179', ' 52.678260803222656', ' 52.67539978027344'),
-('STW_N1', ' STW_N1.kml', ' 2.6894519684467046', ' -1.81535005569458', ' -1.8215299844741821', ' 52.694820404052734', ' 52.6899299621582'),
-('STJ_W1', ' STJ_W1.kml', ' 2.0261517501582476', ' -1.8324300050735474', ' -1.8366199731826782', ' 52.67407989501953', ' 52.67000961303711'),
-('STJ_E7', ' STJ_E7.kml', ' 2.7860857558450953', ' -1.807129979133606', ' -1.8202300071716309', ' 52.679779052734375', ' 52.67316818237305'),
-('STJ_E5', ' STJ_E5.kml', ' 3.1424906002380086', ' -1.8125300407409668', ' -1.8227709531784058', ' 52.675498962402344', ' 52.673309326171875'),
-('STW_N4_2021', ' STW_N4_2021.kml', ' 2.6677474126772927', ' -1.8146799802780151', ' -1.820770025253296', ' 52.693260192871094', ' 52.687931060791016'),
-('STJ_E7_2021', ' STJ_E7_2021.kml', ' 0.7309810658267119', ' -1.807070016860962', ' -1.8097100257873535', ' 52.67620086669922', ' 52.67316818237305'),
-('RG_STW', ' RG_STW.kml', ' 6.030806199839327', ' -1.798985242843628', ' -1.8344038724899292', ' 52.697364807128906', ' 52.67945098876953'),
-('STJ_E8', ' STJ_E8.kml', ' 2.4736545816074877', ' -1.8149399757385254', ' -1.8254330158233643', ' 52.67218017578125', ' 52.667701721191406'),
-('RG_BLY', ' RG_BLY.kml', ' 4.1912776994203895', ' -1.7927109003067017', ' -1.8185577392578125', ' 52.686763763427734', ' 52.672889709472656'),
-('LEO_W1', ' LEO_W1.kml', ' 1.1559917090568135', ' -1.8272500038146973', ' -1.8333560228347778', ' 52.68055725097656', ' 52.67606735229492'),
-('CHD_X1', ' CHD_X1.kml', ' 0.44894865698252917', ' -1.8433072566986084', ' -1.85050630569458', ' 52.697784423828125', ' 52.6944465637207'),
-('STW_N2', ' STW_N2.kml', ' 1.572679858511019', ' -1.813979983329773', ' -1.8176089525222778', ' 52.697059631347656', ' 52.694400787353516'),
-('STW_W1', ' STW_W1.kml', ' 1.6334367672481678', ' -1.8293100595474243', ' -1.8343000411987305', ' 52.687068939208984', ' 52.68423080444336'),
-('LEO_C2', ' LEO_C2.kml', ' 2.936777880917455', ' -1.8384699821472168', ' -1.847409963607788', ' 52.681129455566406', ' 52.67802047729492'),
-('STW_S5_2021', ' STW_S5_2021.kml', ' 0.7605727390088253', ' -1.8192499876022339', ' -1.821181058883667', ' 52.68400573730469', ' 52.68238067626953'),
-('STJ_E2', ' STJ_E2.kml', ' 2.6513201060819855', ' -1.8178199529647827', ' -1.8259049654006958', ' 52.68186950683594', ' 52.67707061767578'),
-('STJ_E1', ' STJ_E1.kml', ' 0.7675500079504001', ' -1.8232200145721436', ' -1.8262499570846558', ' 52.68001937866211', ' 52.67449951171875'),
-('BLY_E5', ' BLY_E5.kml', ' 0.9764359587036326', ' -1.8046300411224365', ' -1.8084800243377686', ' 52.67723083496094', ' 52.674251556396484'),
-('STJ_E3', ' STJ_E3.kml', ' 2.874522404906829', ' -1.8158400058746338', ' -1.8236700296401978', ' 52.68193054199219', ' 52.67707061767578'),
-('LEO_N5', ' LEO_N5.kml', ' 2.55835685958013', ' -1.8392599821090698', ' -1.8451299667358398', ' 52.693111419677734', ' 52.68904113769531'),
-('CUR_N3', ' CUR_N3.kml', ' 0.802762987213365', ' -1.8202409744262695', ' -1.8230520486831665', ' 52.70195388793945', ' 52.70039367675781'),
-('RG_CHD', ' RG_CHD.kml', ' 5.376623059205542', ' -1.8229973316192627', ' -1.8538122177124023', ' 52.70183563232422', ' 52.68559646606445'),
-('CHD_C3', ' CHD_C3.kml', ' 1.729536236508894', ' -1.8306100368499756', ' -1.8364100456237793', ' 52.69340896606445', ' 52.68852996826172'),
-('CHD_C1', ' CHD_C1.kml', ' 1.8910694450221586', ' -1.8327399492263794', ' -1.8401000499725342', ' 52.69504165649414', ' 52.69287109375'),
-('STW_E4', ' STW_E4.kml', ' 0.8341754612181244', ' -1.8069599866867065', ' -1.8102999925613403', ' 52.68920135498047', ' 52.68751907348633'),
-('BLY_N2', ' BLY_N2.kml', ' 1.169766674954556', ' -1.8048800230026245', ' -1.8074549436569214', ' 52.684303283691406', ' 52.68190002441406'),
-('STJ_C1', ' STJ_C1.kml', ' 1.688017508963689', ' -1.8250700235366821', ' -1.8291399478912354', ' 52.678131103515625', ' 52.67586898803711'),
-('STW_W3', ' STW_W3.kml', ' 0.37329791118017525', ' -1.8260999917984009', ' -1.828529953956604', ' 52.682430267333984', ' 52.680999755859375'),
-('CHD_N1', ' CHD_N1.kml', ' 1.521140755223137', ' -1.8415100574493408', ' -1.848080039024353', ' 52.69416046142578', ' 52.69184112548828'),
-('BLY_C1', ' BLY_C1.kml', ' 1.9892910841922657', ' -1.8061800003051758', ' -1.8110899925231934', ' 52.6823616027832', ' 52.68043899536133'),
-('STW_W2', ' STW_W2.kml', ' 2.3667122780995165', ' -1.821560025215149', ' -1.8309259414672852', ' 52.685428619384766', ' 52.68218994140625'),
-('STW_C2', ' STW_C2.kml', ' 2.3124082638461543', ' -1.816606044769287', ' -1.8219900131225586', ' 52.68812942504883', ' 52.68421173095703'),
-('CUR_N1', ' CUR_N1.kml', ' 1.5126320228564418', ' -1.8212699890136719', ' -1.8258670568466187', ' 52.700679779052734', ' 52.69858932495117'),
-('CHD_C5', ' CHD_C5.kml', ' 1.6755281500617962', ' -1.8314299583435059', ' -1.839419960975647', ' 52.694068908691406', ' 52.69124984741211'),
-('STJ_W2', ' STJ_W2.kml', ' 3.073970370475888', ' -1.8352500200271606', ' -1.8404330015182495', ' 52.672889709472656', ' 52.66989517211914'),
-('LEO_X1', ' LEO_X1.kml', ' 0.14656954872546482', ' -1.8527699708938599', ' -1.854701042175293', ' 52.67580032348633', ' 52.67510986328125'),
-('LEO_C3', ' LEO_C3.kml', ' 2.4479146774970624', ' -1.8424500226974487', ' -1.8487999439239502', ' 52.67790985107422', ' 52.67538833618164'),
-('CUR_E1', ' CUR_E1.kml', ' 1.3989841649004464', ' -1.8306699991226196', ' -1.8341460227966309', ' 52.69816970825195', ' 52.696189880371094'),
-('CUR_E2', ' CUR_E2.kml', ' 1.4230930261358743', ' -1.8263700008392334', ' -1.8310099840164185', ' 52.699058532714844', ' 52.696800231933594'),
-('STJ_E6_2021', ' STJ_E6_2021.kml', ' 1.9368278650494624', ' -1.8085299730300903', ' -1.8139400482177734', ' 52.676170349121094', ' 52.672821044921875'),
-('RG_LEO', ' RG_LEO.kml', ' 7.388221028523994', ' -1.8267091512680054', ' -1.8652340173721313', ' 52.6944694519043', ' 52.668785095214844'),
-('LEO_N4', ' LEO_N4.kml', ' 2.1727506629834887', ' -1.8311070203781128', ' -1.837820053100586', ' 52.68107223510742', ' 52.67629623413086'),
-('LEO_C9', ' LEO_C9.kml', ' 1.3556777018366617', ' -1.837499976158142', ' -1.841189980506897', ' 52.67496109008789', ' 52.672908782958984'),
-('LEO_C7', ' LEO_C7.kml', ' 0.7745126729812504', ' -1.8338199853897095', ' -1.8372299671173096', ' 52.67599105834961', ' 52.674949645996094'),
-('CUR_C2_2021', ' CUR_C2_2021.kml', ' 2.0537879512044173', ' -1.822029948234558', ' -1.8280800580978394', ' 52.69906997680664', ' 52.69562911987305'),
-('LCC', ' LCC.kml', ' 13.541344853892875', ' -1.7927109003067017', ' -1.8652340173721313', ' 52.7032585144043', ' 52.65790557861328'),
-('STJ_C2', ' STJ_C2.kml', ' 1.1764241127198478', ' -1.8245199918746948', ' -1.8280999660491943', ' 52.67665100097656', ' 52.67427062988281'),
-('STW_E3', ' STW_E3.kml', ' 1.6831216842465881', ' -1.8061200380325317', ' -1.8140699863433838', ' 52.688880920410156', ' 52.6861686706543'),
-('BLY_E4', ' BLY_E4.kml', ' 1.5995364784050536', ' -1.8017300367355347', ' -1.8075799942016602', ' 52.67784881591797', ' 52.67586135864258'),
-('CUR_E4_2021', ' CUR_E4_2021.kml', ' 0.903483343084471', ' -1.8272500038146973', ' -1.8313699960708618', ' 52.69559097290039', ' 52.69343185424805'),
-('STW_E6', ' STW_E6.kml', ' 1.3723560075659909', ' -1.8090280294418335', ' -1.8143999576568604', ' 52.69209671020508', ' 52.689910888671875'),
-('CHD_S2', ' CHD_S2.kml', ' 2.953572765624817', ' -1.8240699768066406', ' -1.833490014076233', ' 52.69873046875', ' 52.685970306396484'),
-('RG_CUR', ' RG_CUR.kml', ' 4.055543619694577', ' -1.8142372369766235', ' -1.8361214399337769', ' 52.7032585144043', ' 52.68925857543945'),
-('CHD_C3_2021', ' CHD_C3_2021.kml', ' 1.8675905495973084', ' -1.83024001121521', ' -1.8364100456237793', ' 52.693450927734375', ' 52.68960189819336'),
-('BLY_C1_2021', ' BLY_C1_2021.kml', ' 1.9892910841922657', ' -1.8061800003051758', ' -1.8110899925231934', ' 52.6823616027832', ' 52.68043899536133'),
-('STW_E1', ' STW_E1.kml', ' 0.41837022958592596', ' -1.8063100576400757', ' -1.8079440593719482', ' 52.686248779296875', ' 52.6850700378418'),
-('STW_N3', ' STW_N3.kml', ' 1.9689239363827473', ' -1.8140000104904175', ' -1.8188899755477905', ' 52.69702911376953', ' 52.69337844848633'),
-('CHD_C4', ' CHD_C4.kml', ' 0.7637733846617373', ' -1.83024001121521', ' -1.8327300548553467', ' 52.69232177734375', ' 52.68962097167969'),
-('CUR_C1', ' CUR_C1.kml', ' 1.7014500446588416', ' -1.823140025138855', ' -1.8293299674987793', ' 52.69921112060547', ' 52.689369201660156'),
-('CUR_E3', ' CUR_E3.kml', ' 1.225953387463604', ' -1.830399990081787', ' -1.8330899477005005', ' 52.69596862792969', ' 52.69395065307617'),
-('CHD_N3', ' CHD_N3.kml', ' 2.490585131703239', ' -1.8330299854278564', ' -1.8395899534225464', ' 52.697479248046875', ' 52.69466018676758'),
-('STJ_C5', ' STJ_C5.kml', ' 2.322481180048538', ' -1.822759985923767', ' -1.8321199417114258', ' 52.673980712890625', ' 52.6710319519043'),
-('STW_S3', ' STW_S3.kml', ' 2.874837711549851', ' -1.808150053024292', ' -1.8172099590301514', ' 52.686038970947266', ' 52.683528900146484'),
-('STJ_E6', ' STJ_E6.kml', ' 2.3647477303460303', ' -1.8085500001907349', ' -1.8137099742889404', ' 52.67728042602539', ' 52.67353820800781'),
-('RG_STJ', ' RG_STJ.kml', ' 8.565748321441124', ' -1.8044084310531616', ' -1.8537237644195557', ' 52.6822395324707', ' 52.65790557861328'),
-('LEO_C6', ' LEO_C6.kml', ' 1.107159130664133', ' -1.8316999673843384', ' -1.8366459608078003', ' 52.6756706237793', ' 52.67388153076172'),
-('STW_W4_2021', ' STW_W4_2021.kml', ' 1.0555557831562934', ' -1.8196699619293213', ' -1.8249579668045044', ' 52.68349838256836', ' 52.681270599365234'),
-('CUR_E1_2', ' CUR_E1_2.kml', ' 1.0605543046512331', ' -1.830739974975586', ' -1.8340799808502197', ' 52.69816970825195', ' 52.696189880371094'),
-('CUR_C2', ' CUR_C2.kml', ' 1.8686365342428384', ' -1.822029948234558', ' -1.8281400203704834', ' 52.69829177856445', ' 52.69565963745117'),
-('CUR_S2', ' CUR_S2.kml', ' 1.602299020923998', ' -1.8209060430526733', ' -1.8270219564437866', ' 52.69572830200195', ' 52.69234848022461'),
-('CHD_N4_2021', ' CHD_N4_2021.kml', ' 0.9616036030840274', ' -1.8315199613571167', ' -1.839419960975647', ' 52.693458557128906', ' 52.691200256347656'),
-('STW_C1', ' STW_C1.kml', ' 1.1136732325187322', ' -1.8212529420852661', ' -1.8243000507354736', ' 52.687076568603516', ' 52.68547821044922'),
-('STW_E2', ' STW_E2.kml', ' 1.3936451920561688', ' -1.8111000061035156', ' -1.8160400390625', ' 52.68938064575195', ' 52.68642044067383'),
-('CHD_S3', ' CHD_S3.kml', ' 1.458831832437154', ' -1.8307700157165527', ' -1.8353899717330933', ' 52.68960189819336', ' 52.687068939208984'),
-('STW_S2', ' STW_S2.kml', ' 1.939501538116138', ' -1.8102999925613403', ' -1.815690040588379', ' 52.68373107910156', ' 52.68067932128906'),
-('BLY_W1_2021', ' BLY_W1_2021.kml', ' 3.078254516338758', ' -1.8120900392532349', ' -1.8180099725723267', ' 52.68070983886719', ' 52.67660903930664'),
-('CHD_C2', ' CHD_C2.kml', ' 1.6774221729456082', ' -1.8347699642181396', ' -1.8401600122451782', ' 52.6917610168457', ' 52.68880844116211'),
-('CUR_E4', ' CUR_E4.kml', ' 1.3424269033726768', ' -1.827299952507019', ' -1.8317699432373047', ' 52.695621490478516', ' 52.69198989868164'),
-('STW_S1', ' STW_S1.kml', ' 1.6814021960778758', ' -1.8167699575424194', ' -1.82383394241333', ' 52.68360137939453', ' 52.68172073364258'),
-('STJ_E3_2021', ' STJ_E3_2021.kml', ' 3.754218811586876', ' -1.8170599937438965', ' -1.8253300189971924', ' 52.68159866333008', ' 52.67707061767578'),
-('CHD_S4', ' CHD_S4.kml', ' 1.543112918922316', ' -1.834149956703186', ' -1.839050054550171', ' 52.68975067138672', ' 52.687679290771484'),
-('STW_C3', ' STW_C3.kml', ' 1.192562406928515', ' -1.8138200044631958', ' -1.8206499814987183', ' 52.688331604003906', ' 52.68532180786133'),
-('STW_E5', ' STW_E5.kml', ' 1.338998389110168', ' -1.8094600439071655', ' -1.8158899545669556', ' 52.6904296875', ' 52.68724060058594'),
-('CHD_S1', ' CHD_S1.kml', ' 1.8615366992402782', ' -1.8266899585723877', ' -1.831470012664795', ' 52.69142150878906', ' 52.688568115234375'),
-('CHD_N2', ' CHD_N2.kml', ' 1.6280757310622804', ' -1.839400053024292', ' -1.842229962348938', ' 52.69525909423828', ' 52.691471099853516'),
-('CHD_C4_2021', ' CHD_C4_2021.kml', ' 0.2460640126021386', ' -1.8314909934997559', ' -1.8340699672698975', ' 52.697288513183594', ' 52.69358444213867'),
-('CHD_S4_2921', ' CHD_S4_2921.kml', ' 1.962441682970203', ' -1.8341200351715088', ' -1.83951997756958', ' 52.689781188964844', ' 52.68642044067383'),
-('BLY_C3', ' BLY_C3.kml', ' 2.463750496805034', ' -1.8062800168991089', ' -1.8124099969863892', ' 52.6797981262207', ' 52.67688751220703'),
-('LEO_N2', ' LEO_N2.kml', ' 2.1575284062850906', ' -1.8418099880218506', ' -1.8467400074005127', ' 52.690391540527344', ' 52.68756866455078'),
-('LEO_N1', ' LEO_N1.kml', ' 0.8696547692636487', ' -1.8437080383300781', ' -1.847301959991455', ' 52.6922607421875', ' 52.69005584716797'),
-('STW_S1_2021', ' STW_S1_2021.kml', ' 1.2860635572799846', ' -1.819640040397644', ' -1.8249950408935547', ' 52.68306350708008', ' 52.68097686767578'),
-('BLY_N1', ' BLY_N1.kml', ' 2.17103806916049', ' -1.8018200397491455', ' -1.8085600137710571', ' 52.68513107299805', ' 52.68164825439453'),
-('LEO_N3', ' LEO_N3.kml', ' 1.7091608938562235', ' -1.8336999416351318', ' -1.8385900259017944', ' 52.68756103515625', ' 52.685218811035156'),
-('LEO_W2', ' LEO_W2.kml', ' 1.657351885824771', ' -1.8272409439086914', ' -1.8328419923782349', ' 52.6846923828125', ' 52.67998504638672'),
-('CHD_S4_2021', ' CHD_S4_2021.kml', ' 1.962441682970203', ' -1.8341200351715088', ' -1.83951997756958', ' 52.689781188964844', ' 52.68642044067383');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `TABLE13`
---
-
-DROP TABLE IF EXISTS `TABLE13`;
-CREATE TABLE `TABLE13` (
-  `roadgroupid` varchar(11) DEFAULT NULL,
-  `year` int(11) DEFAULT NULL,
-  `kml` varchar(16) DEFAULT NULL,
-  `distance` varchar(20) DEFAULT NULL,
-  `maxlat` varchar(20) DEFAULT NULL,
-  `minlat` varchar(20) DEFAULT NULL,
-  `maxlong` varchar(19) DEFAULT NULL,
-  `minlong` varchar(19) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf16;
-
---
--- Dumping data for table `TABLE13`
---
-
-INSERT INTO `TABLE13` (`roadgroupid`, `year`, `kml`, `distance`, `maxlat`, `minlat`, `maxlong`, `minlong`) VALUES
-('STJ_C6', 2020, ' STJ_C6.kml', ' 1.1919913859661297', ' -1.8309099674224854', ' -1.8322499990463257', ' 52.67549133300781', ' 52.67018127441406'),
-('CHD_S2', 2021, ' CHD_S2_2021.kml', ' 1.6250237257664746', ' -1.8232899904251099', ' -1.8286999464035034', ' 52.69075012207031', ' 52.68762969970703'),
-('CUR_E2', 2021, ' CUR_E2_2021.kml', ' 1.1348772952654977', ' -1.828410029411316', ' -1.8310600519180298', ' 52.69887924194336', ' 52.6967887878418'),
-('CHD_N4', 2020, ' CHD_N4.kml', ' 1.4272246590188606', ' -1.827430009841919', ' -1.8393399715423584', ' 52.694698333740234', ' 52.691200256347656'),
-('LEO_A1', 2020, ' LEO_A1.kml', ' 0.8190371617620916', ' -1.8468409776687622', ' -1.8511170148849487', ' 52.676578521728516', ' 52.674468994140625'),
-('LEO_C1', 2020, ' LEO_C1.kml', ' 2.285975621818782', ' -1.837689995765686', ' -1.8515100479125977', ' 52.679988861083984', ' 52.67647171020508'),
-('BLY_E3', 2020, ' BLY_E3.kml', ' 2.4834923848097334', ' -1.8003499507904053', ' -1.8068000078201294', ' 52.67940902709961', ' 52.676979064941406'),
-('LEO_C5', 2020, ' LEO_C5.kml', ' 1.997407389107111', ' -1.8382049798965454', ' -1.8420350551605225', ' 52.6790885925293', ' 52.675418853759766'),
-('STW_N4', 2020, ' STW_N4.kml', ' 2.360778884207463', ' -1.8141900300979614', ' -1.8199000358581543', ' 52.69321060180664', ' 52.688358306884766'),
-('LEO_C4', 2020, ' LEO_C4.kml', ' 2.0349497962964866', ' -1.8410199880599976', ' -1.844851016998291', ' 52.67695236206055', ' 52.67428970336914'),
-('STJ_C4', 2020, ' STJ_C4.kml', ' 1.2661681812876546', ' -1.8270299434661865', ' -1.830180048942566', ' 52.67438888549805', ' 52.672340393066406'),
-('CUR_S1', 2020, ' CUR_S1.kml', ' 1.5040675509367312', ' -1.823240041732788', ' -1.8301600217819214', ' 52.693031311035156', ' 52.68939971923828'),
-('STW_S4', 2021, ' STW_S4_2021.kml', ' 0.7766428346829397', ' -1.8192700147628784', ' -1.8211499452590942', ' 52.683982849121094', ' 52.682350158691406'),
-('STJ_C3', 2020, ' STJ_C3.kml', ' 0.8878637645006352', ' -1.827239990234375', ' -1.8297699689865112', ' 52.67631149291992', ' 52.674781799316406'),
-('LEO_W3', 2020, ' LEO_W3.kml', ' 0.9311232671867702', ' -1.831845998764038', ' -1.8368459939956665', ' 52.682369232177734', ' 52.680419921875'),
-('BLY_W1', 2020, ' BLY_W1.kml', ' 2.9859004334849453', ' -1.812019944190979', ' -1.818019986152649', ' 52.6810302734375', ' 52.67662811279297'),
-('BLY_E1', 2020, ' BLY_E1.kml', ' 1.5094340648542055', ' -1.7983200550079346', ' -1.8029199838638306', ' 52.68302917480469', ' 52.68006134033203'),
-('CUR_N2', 2020, ' CUR_N2.kml', ' 0.9190848260772094', ' -1.8192800283432007', ' -1.8221800327301025', ' 52.69921875', ' 52.69731140136719'),
-('BLY_C2', 2020, ' BLY_C2.kml', ' 1.56091297433125', ' -1.808940052986145', ' -1.81351900100708', ' 52.68143081665039', ' 52.679290771484375'),
-('BLY_E2', 2020, ' BLY_E2.kml', ' 1.8962629110313953', ' -1.798840045928955', ' -1.8047000169754028', ' 52.68159866333008', ' 52.67898178100586'),
-('CUR_C3', 2020, ' CUR_C3.kml', ' 1.0075830394620373', ' -1.8214999437332153', ' -1.8251440525054932', ' 52.69868087768555', ' 52.6963996887207'),
-('CUR_S3', 2020, ' CUR_S3.kml', ' 1.7979449745163694', ' -1.818830966949463', ' -1.8274630308151245', ' 52.69618606567383', ' 52.69464874267578'),
-('STJ_E4', 2020, ' STJ_E4.kml', ' 2.4670550317125755', ' -1.8075790405273438', ' -1.82191002368927', ' 52.67321014404297', ' 52.67197799682617'),
-('LEO_C8', 2020, ' LEO_C8.kml', ' 1.2695946812260175', ' -1.8347400426864624', ' -1.8382600545883179', ' 52.678260803222656', ' 52.67539978027344'),
-('STW_N1', 2020, ' STW_N1.kml', ' 2.6894519684467046', ' -1.81535005569458', ' -1.8215299844741821', ' 52.694820404052734', ' 52.6899299621582'),
-('STJ_W1', 2020, ' STJ_W1.kml', ' 2.0261517501582476', ' -1.8324300050735474', ' -1.8366199731826782', ' 52.67407989501953', ' 52.67000961303711'),
-('STJ_E7', 2020, ' STJ_E7.kml', ' 2.7860857558450953', ' -1.807129979133606', ' -1.8202300071716309', ' 52.679779052734375', ' 52.67316818237305'),
-('STJ_E5', 2020, ' STJ_E5.kml', ' 3.1424906002380086', ' -1.8125300407409668', ' -1.8227709531784058', ' 52.675498962402344', ' 52.673309326171875'),
-('STW_N4', 2021, ' STW_N4_2021.kml', ' 2.6677474126772927', ' -1.8146799802780151', ' -1.820770025253296', ' 52.693260192871094', ' 52.687931060791016'),
-('STJ_E7', 2021, ' STJ_E7_2021.kml', ' 0.7309810658267119', ' -1.807070016860962', ' -1.8097100257873535', ' 52.67620086669922', ' 52.67316818237305'),
-('RG_STW', 2020, ' RG_STW.kml', ' 6.030806199839327', ' -1.798985242843628', ' -1.8344038724899292', ' 52.697364807128906', ' 52.67945098876953'),
-('STJ_E8', 2020, ' STJ_E8.kml', ' 2.4736545816074877', ' -1.8149399757385254', ' -1.8254330158233643', ' 52.67218017578125', ' 52.667701721191406'),
-('RG_BLY', 2020, ' RG_BLY.kml', ' 4.1912776994203895', ' -1.7927109003067017', ' -1.8185577392578125', ' 52.686763763427734', ' 52.672889709472656'),
-('LEO_W1', 2020, ' LEO_W1.kml', ' 1.1559917090568135', ' -1.8272500038146973', ' -1.8333560228347778', ' 52.68055725097656', ' 52.67606735229492'),
-('CHD_X1', 2020, ' CHD_X1.kml', ' 0.44894865698252917', ' -1.8433072566986084', ' -1.85050630569458', ' 52.697784423828125', ' 52.6944465637207'),
-('STW_N2', 2020, ' STW_N2.kml', ' 1.572679858511019', ' -1.813979983329773', ' -1.8176089525222778', ' 52.697059631347656', ' 52.694400787353516'),
-('STW_W1', 2020, ' STW_W1.kml', ' 1.6334367672481678', ' -1.8293100595474243', ' -1.8343000411987305', ' 52.687068939208984', ' 52.68423080444336'),
-('LEO_C2', 2020, ' LEO_C2.kml', ' 2.936777880917455', ' -1.8384699821472168', ' -1.847409963607788', ' 52.681129455566406', ' 52.67802047729492'),
-('STW_S5', 2021, ' STW_S5_2021.kml', ' 0.7605727390088253', ' -1.8192499876022339', ' -1.821181058883667', ' 52.68400573730469', ' 52.68238067626953'),
-('STJ_E2', 2020, ' STJ_E2.kml', ' 2.6513201060819855', ' -1.8178199529647827', ' -1.8259049654006958', ' 52.68186950683594', ' 52.67707061767578'),
-('STJ_E1', 2020, ' STJ_E1.kml', ' 0.7675500079504001', ' -1.8232200145721436', ' -1.8262499570846558', ' 52.68001937866211', ' 52.67449951171875'),
-('BLY_E5', 2020, ' BLY_E5.kml', ' 0.9764359587036326', ' -1.8046300411224365', ' -1.8084800243377686', ' 52.67723083496094', ' 52.674251556396484'),
-('STJ_E3', 2020, ' STJ_E3.kml', ' 2.874522404906829', ' -1.8158400058746338', ' -1.8236700296401978', ' 52.68193054199219', ' 52.67707061767578'),
-('LEO_N5', 2020, ' LEO_N5.kml', ' 2.55835685958013', ' -1.8392599821090698', ' -1.8451299667358398', ' 52.693111419677734', ' 52.68904113769531'),
-('CUR_N3', 2020, ' CUR_N3.kml', ' 0.802762987213365', ' -1.8202409744262695', ' -1.8230520486831665', ' 52.70195388793945', ' 52.70039367675781'),
-('RG_CHD', 2020, ' RG_CHD.kml', ' 5.376623059205542', ' -1.8229973316192627', ' -1.8538122177124023', ' 52.70183563232422', ' 52.68559646606445'),
-('CHD_C3', 2020, ' CHD_C3.kml', ' 1.729536236508894', ' -1.8306100368499756', ' -1.8364100456237793', ' 52.69340896606445', ' 52.68852996826172'),
-('CHD_C1', 2020, ' CHD_C1.kml', ' 1.8910694450221586', ' -1.8327399492263794', ' -1.8401000499725342', ' 52.69504165649414', ' 52.69287109375'),
-('STW_E4', 2020, ' STW_E4.kml', ' 0.8341754612181244', ' -1.8069599866867065', ' -1.8102999925613403', ' 52.68920135498047', ' 52.68751907348633'),
-('BLY_N2', 2020, ' BLY_N2.kml', ' 1.169766674954556', ' -1.8048800230026245', ' -1.8074549436569214', ' 52.684303283691406', ' 52.68190002441406'),
-('STJ_C1', 2020, ' STJ_C1.kml', ' 1.688017508963689', ' -1.8250700235366821', ' -1.8291399478912354', ' 52.678131103515625', ' 52.67586898803711'),
-('STW_W3', 2020, ' STW_W3.kml', ' 0.37329791118017525', ' -1.8260999917984009', ' -1.828529953956604', ' 52.682430267333984', ' 52.680999755859375'),
-('CHD_N1', 2020, ' CHD_N1.kml', ' 1.521140755223137', ' -1.8415100574493408', ' -1.848080039024353', ' 52.69416046142578', ' 52.69184112548828'),
-('BLY_C1', 2020, ' BLY_C1.kml', ' 1.9892910841922657', ' -1.8061800003051758', ' -1.8110899925231934', ' 52.6823616027832', ' 52.68043899536133'),
-('STW_W2', 2020, ' STW_W2.kml', ' 2.3667122780995165', ' -1.821560025215149', ' -1.8309259414672852', ' 52.685428619384766', ' 52.68218994140625'),
-('STW_C2', 2020, ' STW_C2.kml', ' 2.3124082638461543', ' -1.816606044769287', ' -1.8219900131225586', ' 52.68812942504883', ' 52.68421173095703'),
-('CUR_N1', 2020, ' CUR_N1.kml', ' 1.5126320228564418', ' -1.8212699890136719', ' -1.8258670568466187', ' 52.700679779052734', ' 52.69858932495117'),
-('CHD_C5', 2020, ' CHD_C5.kml', ' 1.6755281500617962', ' -1.8314299583435059', ' -1.839419960975647', ' 52.694068908691406', ' 52.69124984741211'),
-('STJ_W2', 2020, ' STJ_W2.kml', ' 3.073970370475888', ' -1.8352500200271606', ' -1.8404330015182495', ' 52.672889709472656', ' 52.66989517211914'),
-('LEO_X1', 2020, ' LEO_X1.kml', ' 0.14656954872546482', ' -1.8527699708938599', ' -1.854701042175293', ' 52.67580032348633', ' 52.67510986328125'),
-('LEO_C3', 2020, ' LEO_C3.kml', ' 2.4479146774970624', ' -1.8424500226974487', ' -1.8487999439239502', ' 52.67790985107422', ' 52.67538833618164'),
-('CUR_E1', 2020, ' CUR_E1.kml', ' 1.3989841649004464', ' -1.8306699991226196', ' -1.8341460227966309', ' 52.69816970825195', ' 52.696189880371094'),
-('CUR_E2', 2020, ' CUR_E2.kml', ' 1.4230930261358743', ' -1.8263700008392334', ' -1.8310099840164185', ' 52.699058532714844', ' 52.696800231933594'),
-('STJ_E6', 2021, ' STJ_E6_2021.kml', ' 1.9368278650494624', ' -1.8085299730300903', ' -1.8139400482177734', ' 52.676170349121094', ' 52.672821044921875'),
-('RG_LEO', 2020, ' RG_LEO.kml', ' 7.388221028523994', ' -1.8267091512680054', ' -1.8652340173721313', ' 52.6944694519043', ' 52.668785095214844'),
-('LEO_N4', 2020, ' LEO_N4.kml', ' 2.1727506629834887', ' -1.8311070203781128', ' -1.837820053100586', ' 52.68107223510742', ' 52.67629623413086'),
-('LEO_C9', 2020, ' LEO_C9.kml', ' 1.3556777018366617', ' -1.837499976158142', ' -1.841189980506897', ' 52.67496109008789', ' 52.672908782958984'),
-('LEO_C7', 2020, ' LEO_C7.kml', ' 0.7745126729812504', ' -1.8338199853897095', ' -1.8372299671173096', ' 52.67599105834961', ' 52.674949645996094'),
-('CUR_C2', 2021, ' CUR_C2_2021.kml', ' 2.0537879512044173', ' -1.822029948234558', ' -1.8280800580978394', ' 52.69906997680664', ' 52.69562911987305'),
-('LCC', 2020, ' LCC.kml', ' 13.541344853892875', ' -1.7927109003067017', ' -1.8652340173721313', ' 52.7032585144043', ' 52.65790557861328'),
-('STJ_C2', 2020, ' STJ_C2.kml', ' 1.1764241127198478', ' -1.8245199918746948', ' -1.8280999660491943', ' 52.67665100097656', ' 52.67427062988281'),
-('STW_E3', 2020, ' STW_E3.kml', ' 1.6831216842465881', ' -1.8061200380325317', ' -1.8140699863433838', ' 52.688880920410156', ' 52.6861686706543'),
-('BLY_E4', 2020, ' BLY_E4.kml', ' 1.5995364784050536', ' -1.8017300367355347', ' -1.8075799942016602', ' 52.67784881591797', ' 52.67586135864258'),
-('CUR_E4', 2021, ' CUR_E4_2021.kml', ' 0.903483343084471', ' -1.8272500038146973', ' -1.8313699960708618', ' 52.69559097290039', ' 52.69343185424805'),
-('STW_E6', 2020, ' STW_E6.kml', ' 1.3723560075659909', ' -1.8090280294418335', ' -1.8143999576568604', ' 52.69209671020508', ' 52.689910888671875'),
-('CHD_S2', 2020, ' CHD_S2.kml', ' 2.953572765624817', ' -1.8240699768066406', ' -1.833490014076233', ' 52.69873046875', ' 52.685970306396484'),
-('RG_CUR', 2020, ' RG_CUR.kml', ' 4.055543619694577', ' -1.8142372369766235', ' -1.8361214399337769', ' 52.7032585144043', ' 52.68925857543945'),
-('CHD_C3', 2021, ' CHD_C3_2021.kml', ' 1.8675905495973084', ' -1.83024001121521', ' -1.8364100456237793', ' 52.693450927734375', ' 52.68960189819336'),
-('BLY_C1', 2021, ' BLY_C1_2021.kml', ' 1.9892910841922657', ' -1.8061800003051758', ' -1.8110899925231934', ' 52.6823616027832', ' 52.68043899536133'),
-('STW_E1', 2020, ' STW_E1.kml', ' 0.41837022958592596', ' -1.8063100576400757', ' -1.8079440593719482', ' 52.686248779296875', ' 52.6850700378418'),
-('STW_N3', 2020, ' STW_N3.kml', ' 1.9689239363827473', ' -1.8140000104904175', ' -1.8188899755477905', ' 52.69702911376953', ' 52.69337844848633'),
-('CHD_C4', 2020, ' CHD_C4.kml', ' 0.7637733846617373', ' -1.83024001121521', ' -1.8327300548553467', ' 52.69232177734375', ' 52.68962097167969'),
-('CUR_C1', 2020, ' CUR_C1.kml', ' 1.7014500446588416', ' -1.823140025138855', ' -1.8293299674987793', ' 52.69921112060547', ' 52.689369201660156'),
-('CUR_E3', 2020, ' CUR_E3.kml', ' 1.225953387463604', ' -1.830399990081787', ' -1.8330899477005005', ' 52.69596862792969', ' 52.69395065307617'),
-('CHD_N3', 2020, ' CHD_N3.kml', ' 2.490585131703239', ' -1.8330299854278564', ' -1.8395899534225464', ' 52.697479248046875', ' 52.69466018676758'),
-('STJ_C5', 2020, ' STJ_C5.kml', ' 2.322481180048538', ' -1.822759985923767', ' -1.8321199417114258', ' 52.673980712890625', ' 52.6710319519043'),
-('STW_S3', 2020, ' STW_S3.kml', ' 2.874837711549851', ' -1.808150053024292', ' -1.8172099590301514', ' 52.686038970947266', ' 52.683528900146484'),
-('STJ_E6', 2020, ' STJ_E6.kml', ' 2.3647477303460303', ' -1.8085500001907349', ' -1.8137099742889404', ' 52.67728042602539', ' 52.67353820800781'),
-('RG_STJ', 2020, ' RG_STJ.kml', ' 8.565748321441124', ' -1.8044084310531616', ' -1.8537237644195557', ' 52.6822395324707', ' 52.65790557861328'),
-('LEO_C6', 2020, ' LEO_C6.kml', ' 1.107159130664133', ' -1.8316999673843384', ' -1.8366459608078003', ' 52.6756706237793', ' 52.67388153076172'),
-('STW_W4', 2021, ' STW_W4_2021.kml', ' 1.0555557831562934', ' -1.8196699619293213', ' -1.8249579668045044', ' 52.68349838256836', ' 52.681270599365234'),
-('CUR_E1_2', 2020, ' CUR_E1_2.kml', ' 1.0605543046512331', ' -1.830739974975586', ' -1.8340799808502197', ' 52.69816970825195', ' 52.696189880371094'),
-('CUR_C2', 2020, ' CUR_C2.kml', ' 1.8686365342428384', ' -1.822029948234558', ' -1.8281400203704834', ' 52.69829177856445', ' 52.69565963745117'),
-('CUR_S2', 2020, ' CUR_S2.kml', ' 1.602299020923998', ' -1.8209060430526733', ' -1.8270219564437866', ' 52.69572830200195', ' 52.69234848022461'),
-('CHD_N4', 2021, ' CHD_N4_2021.kml', ' 0.9616036030840274', ' -1.8315199613571167', ' -1.839419960975647', ' 52.693458557128906', ' 52.691200256347656'),
-('STW_C1', 2020, ' STW_C1.kml', ' 1.1136732325187322', ' -1.8212529420852661', ' -1.8243000507354736', ' 52.687076568603516', ' 52.68547821044922'),
-('STW_E2', 2020, ' STW_E2.kml', ' 1.3936451920561688', ' -1.8111000061035156', ' -1.8160400390625', ' 52.68938064575195', ' 52.68642044067383'),
-('CHD_S3', 2020, ' CHD_S3.kml', ' 1.458831832437154', ' -1.8307700157165527', ' -1.8353899717330933', ' 52.68960189819336', ' 52.687068939208984'),
-('STW_S2', 2020, ' STW_S2.kml', ' 1.939501538116138', ' -1.8102999925613403', ' -1.815690040588379', ' 52.68373107910156', ' 52.68067932128906'),
-('BLY_W1', 2021, ' BLY_W1_2021.kml', ' 3.078254516338758', ' -1.8120900392532349', ' -1.8180099725723267', ' 52.68070983886719', ' 52.67660903930664'),
-('CHD_C2', 2020, ' CHD_C2.kml', ' 1.6774221729456082', ' -1.8347699642181396', ' -1.8401600122451782', ' 52.6917610168457', ' 52.68880844116211'),
-('CUR_E4', 2020, ' CUR_E4.kml', ' 1.3424269033726768', ' -1.827299952507019', ' -1.8317699432373047', ' 52.695621490478516', ' 52.69198989868164'),
-('STW_S1', 2020, ' STW_S1.kml', ' 1.6814021960778758', ' -1.8167699575424194', ' -1.82383394241333', ' 52.68360137939453', ' 52.68172073364258'),
-('STJ_E3', 2021, ' STJ_E3_2021.kml', ' 3.754218811586876', ' -1.8170599937438965', ' -1.8253300189971924', ' 52.68159866333008', ' 52.67707061767578'),
-('CHD_S4', 2020, ' CHD_S4.kml', ' 1.543112918922316', ' -1.834149956703186', ' -1.839050054550171', ' 52.68975067138672', ' 52.687679290771484'),
-('STW_C3', 2020, ' STW_C3.kml', ' 1.192562406928515', ' -1.8138200044631958', ' -1.8206499814987183', ' 52.688331604003906', ' 52.68532180786133'),
-('STW_E5', 2020, ' STW_E5.kml', ' 1.338998389110168', ' -1.8094600439071655', ' -1.8158899545669556', ' 52.6904296875', ' 52.68724060058594'),
-('CHD_S1', 2020, ' CHD_S1.kml', ' 1.8615366992402782', ' -1.8266899585723877', ' -1.831470012664795', ' 52.69142150878906', ' 52.688568115234375'),
-('CHD_N2', 2020, ' CHD_N2.kml', ' 1.6280757310622804', ' -1.839400053024292', ' -1.842229962348938', ' 52.69525909423828', ' 52.691471099853516'),
-('CHD_C4', 2021, ' CHD_C4_2021.kml', ' 0.2460640126021386', ' -1.8314909934997559', ' -1.8340699672698975', ' 52.697288513183594', ' 52.69358444213867'),
-('BLY_C3', 2020, ' BLY_C3.kml', ' 2.463750496805034', ' -1.8062800168991089', ' -1.8124099969863892', ' 52.6797981262207', ' 52.67688751220703'),
-('LEO_N2', 2020, ' LEO_N2.kml', ' 2.1575284062850906', ' -1.8418099880218506', ' -1.8467400074005127', ' 52.690391540527344', ' 52.68756866455078'),
-('LEO_N1', 2020, ' LEO_N1.kml', ' 0.8696547692636487', ' -1.8437080383300781', ' -1.847301959991455', ' 52.6922607421875', ' 52.69005584716797'),
-('STW_S1', 2021, ' STW_S1_2021.kml', ' 1.2860635572799846', ' -1.819640040397644', ' -1.8249950408935547', ' 52.68306350708008', ' 52.68097686767578'),
-('BLY_N1', 2020, ' BLY_N1.kml', ' 2.17103806916049', ' -1.8018200397491455', ' -1.8085600137710571', ' 52.68513107299805', ' 52.68164825439453'),
-('LEO_N3', 2020, ' LEO_N3.kml', ' 1.7091608938562235', ' -1.8336999416351318', ' -1.8385900259017944', ' 52.68756103515625', ' 52.685218811035156'),
-('LEO_W2', 2020, ' LEO_W2.kml', ' 1.657351885824771', ' -1.8272409439086914', ' -1.8328419923782349', ' 52.6846923828125', ' 52.67998504638672'),
-('CHD_S4', 2021, ' CHD_S4_2021.kml', ' 1.962441682970203', ' -1.8341200351715088', ' -1.83951997756958', ' 52.689781188964844', ' 52.68642044067383');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `TABLE13b`
---
-
-DROP TABLE IF EXISTS `TABLE13b`;
-CREATE TABLE `TABLE13b` (
-  `roadgroupid` varchar(11) DEFAULT NULL,
-  `year` int(11) DEFAULT NULL,
-  `kml` varchar(16) DEFAULT NULL,
-  `distance` varchar(20) DEFAULT NULL,
-  `maxlat` varchar(20) DEFAULT NULL,
-  `minlat` varchar(20) DEFAULT NULL,
-  `maxlong` varchar(19) DEFAULT NULL,
-  `minlong` varchar(19) DEFAULT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `TABLE13b`
---
-
-INSERT INTO `TABLE13b` (`roadgroupid`, `year`, `kml`, `distance`, `maxlat`, `minlat`, `maxlong`, `minlong`) VALUES
-('STJ_C6', 2020, ' STJ_C6.kml', ' 1.1919913859661297', ' -1.8309099674224854', ' -1.8322499990463257', ' 52.67549133300781', ' 52.67018127441406'),
-('CHD_S2', 2021, ' CHD_S2_2021.kml', ' 1.6250237257664746', ' -1.8232899904251099', ' -1.8286999464035034', ' 52.69075012207031', ' 52.68762969970703'),
-('CUR_E2', 2021, ' CUR_E2_2021.kml', ' 1.1348772952654977', ' -1.828410029411316', ' -1.8310600519180298', ' 52.69887924194336', ' 52.6967887878418'),
-('CHD_N4', 2020, ' CHD_N4.kml', ' 1.4272246590188606', ' -1.827430009841919', ' -1.8393399715423584', ' 52.694698333740234', ' 52.691200256347656'),
-('LEO_A1', 2020, ' LEO_A1.kml', ' 0.8190371617620916', ' -1.8468409776687622', ' -1.8511170148849487', ' 52.676578521728516', ' 52.674468994140625'),
-('LEO_C1', 2020, ' LEO_C1.kml', ' 2.285975621818782', ' -1.837689995765686', ' -1.8515100479125977', ' 52.679988861083984', ' 52.67647171020508'),
-('BLY_E3', 2020, ' BLY_E3.kml', ' 2.4834923848097334', ' -1.8003499507904053', ' -1.8068000078201294', ' 52.67940902709961', ' 52.676979064941406'),
-('LEO_C5', 2020, ' LEO_C5.kml', ' 1.997407389107111', ' -1.8382049798965454', ' -1.8420350551605225', ' 52.6790885925293', ' 52.675418853759766'),
-('STW_N4', 2020, ' STW_N4.kml', ' 2.360778884207463', ' -1.8141900300979614', ' -1.8199000358581543', ' 52.69321060180664', ' 52.688358306884766'),
-('LEO_C4', 2020, ' LEO_C4.kml', ' 2.0349497962964866', ' -1.8410199880599976', ' -1.844851016998291', ' 52.67695236206055', ' 52.67428970336914'),
-('STJ_C4', 2020, ' STJ_C4.kml', ' 1.2661681812876546', ' -1.8270299434661865', ' -1.830180048942566', ' 52.67438888549805', ' 52.672340393066406'),
-('CUR_S1', 2020, ' CUR_S1.kml', ' 1.5040675509367312', ' -1.823240041732788', ' -1.8301600217819214', ' 52.693031311035156', ' 52.68939971923828'),
-('STW_S4', 2021, ' STW_S4_2021.kml', ' 0.7766428346829397', ' -1.8192700147628784', ' -1.8211499452590942', ' 52.683982849121094', ' 52.682350158691406'),
-('STJ_C3', 2020, ' STJ_C3.kml', ' 0.8878637645006352', ' -1.827239990234375', ' -1.8297699689865112', ' 52.67631149291992', ' 52.674781799316406'),
-('LEO_W3', 2020, ' LEO_W3.kml', ' 0.9311232671867702', ' -1.831845998764038', ' -1.8368459939956665', ' 52.682369232177734', ' 52.680419921875'),
-('BLY_W1', 2020, ' BLY_W1.kml', ' 2.9859004334849453', ' -1.812019944190979', ' -1.818019986152649', ' 52.6810302734375', ' 52.67662811279297'),
-('BLY_E1', 2020, ' BLY_E1.kml', ' 1.5094340648542055', ' -1.7983200550079346', ' -1.8029199838638306', ' 52.68302917480469', ' 52.68006134033203'),
-('CUR_N2', 2020, ' CUR_N2.kml', ' 0.9190848260772094', ' -1.8192800283432007', ' -1.8221800327301025', ' 52.69921875', ' 52.69731140136719'),
-('BLY_C2', 2020, ' BLY_C2.kml', ' 1.56091297433125', ' -1.808940052986145', ' -1.81351900100708', ' 52.68143081665039', ' 52.679290771484375'),
-('BLY_E2', 2020, ' BLY_E2.kml', ' 1.8962629110313953', ' -1.798840045928955', ' -1.8047000169754028', ' 52.68159866333008', ' 52.67898178100586'),
-('CUR_C3', 2020, ' CUR_C3.kml', ' 1.0075830394620373', ' -1.8214999437332153', ' -1.8251440525054932', ' 52.69868087768555', ' 52.6963996887207'),
-('CUR_S3', 2020, ' CUR_S3.kml', ' 1.7979449745163694', ' -1.818830966949463', ' -1.8274630308151245', ' 52.69618606567383', ' 52.69464874267578'),
-('STJ_E4', 2020, ' STJ_E4.kml', ' 2.4670550317125755', ' -1.8075790405273438', ' -1.82191002368927', ' 52.67321014404297', ' 52.67197799682617'),
-('LEO_C8', 2020, ' LEO_C8.kml', ' 1.2695946812260175', ' -1.8347400426864624', ' -1.8382600545883179', ' 52.678260803222656', ' 52.67539978027344'),
-('STW_N1', 2020, ' STW_N1.kml', ' 2.6894519684467046', ' -1.81535005569458', ' -1.8215299844741821', ' 52.694820404052734', ' 52.6899299621582'),
-('STJ_W1', 2020, ' STJ_W1.kml', ' 2.0261517501582476', ' -1.8324300050735474', ' -1.8366199731826782', ' 52.67407989501953', ' 52.67000961303711'),
-('STJ_E7', 2020, ' STJ_E7.kml', ' 2.7860857558450953', ' -1.807129979133606', ' -1.8202300071716309', ' 52.679779052734375', ' 52.67316818237305'),
-('STJ_E5', 2020, ' STJ_E5.kml', ' 3.1424906002380086', ' -1.8125300407409668', ' -1.8227709531784058', ' 52.675498962402344', ' 52.673309326171875'),
-('STW_N4', 2021, ' STW_N4_2021.kml', ' 2.6677474126772927', ' -1.8146799802780151', ' -1.820770025253296', ' 52.693260192871094', ' 52.687931060791016'),
-('STJ_E7', 2021, ' STJ_E7_2021.kml', ' 0.7309810658267119', ' -1.807070016860962', ' -1.8097100257873535', ' 52.67620086669922', ' 52.67316818237305'),
-('RG_STW', 2020, ' RG_STW.kml', ' 6.030806199839327', ' -1.798985242843628', ' -1.8344038724899292', ' 52.697364807128906', ' 52.67945098876953'),
-('STJ_E8', 2020, ' STJ_E8.kml', ' 2.4736545816074877', ' -1.8149399757385254', ' -1.8254330158233643', ' 52.67218017578125', ' 52.667701721191406'),
-('RG_BLY', 2020, ' RG_BLY.kml', ' 4.1912776994203895', ' -1.7927109003067017', ' -1.8185577392578125', ' 52.686763763427734', ' 52.672889709472656'),
-('LEO_W1', 2020, ' LEO_W1.kml', ' 1.1559917090568135', ' -1.8272500038146973', ' -1.8333560228347778', ' 52.68055725097656', ' 52.67606735229492'),
-('CHD_X1', 2020, ' CHD_X1.kml', ' 0.44894865698252917', ' -1.8433072566986084', ' -1.85050630569458', ' 52.697784423828125', ' 52.6944465637207'),
-('STW_N2', 2020, ' STW_N2.kml', ' 1.572679858511019', ' -1.813979983329773', ' -1.8176089525222778', ' 52.697059631347656', ' 52.694400787353516'),
-('STW_W1', 2020, ' STW_W1.kml', ' 1.6334367672481678', ' -1.8293100595474243', ' -1.8343000411987305', ' 52.687068939208984', ' 52.68423080444336'),
-('LEO_C2', 2020, ' LEO_C2.kml', ' 2.936777880917455', ' -1.8384699821472168', ' -1.847409963607788', ' 52.681129455566406', ' 52.67802047729492'),
-('STW_S5', 2021, ' STW_S5_2021.kml', ' 0.7605727390088253', ' -1.8192499876022339', ' -1.821181058883667', ' 52.68400573730469', ' 52.68238067626953'),
-('STJ_E2', 2020, ' STJ_E2.kml', ' 2.6513201060819855', ' -1.8178199529647827', ' -1.8259049654006958', ' 52.68186950683594', ' 52.67707061767578'),
-('STJ_E1', 2020, ' STJ_E1.kml', ' 0.7675500079504001', ' -1.8232200145721436', ' -1.8262499570846558', ' 52.68001937866211', ' 52.67449951171875'),
-('BLY_E5', 2020, ' BLY_E5.kml', ' 0.9764359587036326', ' -1.8046300411224365', ' -1.8084800243377686', ' 52.67723083496094', ' 52.674251556396484'),
-('STJ_E3', 2020, ' STJ_E3.kml', ' 2.874522404906829', ' -1.8158400058746338', ' -1.8236700296401978', ' 52.68193054199219', ' 52.67707061767578'),
-('LEO_N5', 2020, ' LEO_N5.kml', ' 2.55835685958013', ' -1.8392599821090698', ' -1.8451299667358398', ' 52.693111419677734', ' 52.68904113769531'),
-('CUR_N3', 2020, ' CUR_N3.kml', ' 0.802762987213365', ' -1.8202409744262695', ' -1.8230520486831665', ' 52.70195388793945', ' 52.70039367675781'),
-('RG_CHD', 2020, ' RG_CHD.kml', ' 5.376623059205542', ' -1.8229973316192627', ' -1.8538122177124023', ' 52.70183563232422', ' 52.68559646606445'),
-('CHD_C3', 2020, ' CHD_C3.kml', ' 1.729536236508894', ' -1.8306100368499756', ' -1.8364100456237793', ' 52.69340896606445', ' 52.68852996826172'),
-('CHD_C1', 2020, ' CHD_C1.kml', ' 1.8910694450221586', ' -1.8327399492263794', ' -1.8401000499725342', ' 52.69504165649414', ' 52.69287109375'),
-('STW_E4', 2020, ' STW_E4.kml', ' 0.8341754612181244', ' -1.8069599866867065', ' -1.8102999925613403', ' 52.68920135498047', ' 52.68751907348633'),
-('BLY_N2', 2020, ' BLY_N2.kml', ' 1.169766674954556', ' -1.8048800230026245', ' -1.8074549436569214', ' 52.684303283691406', ' 52.68190002441406'),
-('STJ_C1', 2020, ' STJ_C1.kml', ' 1.688017508963689', ' -1.8250700235366821', ' -1.8291399478912354', ' 52.678131103515625', ' 52.67586898803711'),
-('STW_W3', 2020, ' STW_W3.kml', ' 0.37329791118017525', ' -1.8260999917984009', ' -1.828529953956604', ' 52.682430267333984', ' 52.680999755859375'),
-('CHD_N1', 2020, ' CHD_N1.kml', ' 1.521140755223137', ' -1.8415100574493408', ' -1.848080039024353', ' 52.69416046142578', ' 52.69184112548828'),
-('BLY_C1', 2020, ' BLY_C1.kml', ' 1.9892910841922657', ' -1.8061800003051758', ' -1.8110899925231934', ' 52.6823616027832', ' 52.68043899536133'),
-('STW_W2', 2020, ' STW_W2.kml', ' 2.3667122780995165', ' -1.821560025215149', ' -1.8309259414672852', ' 52.685428619384766', ' 52.68218994140625'),
-('STW_C2', 2020, ' STW_C2.kml', ' 2.3124082638461543', ' -1.816606044769287', ' -1.8219900131225586', ' 52.68812942504883', ' 52.68421173095703'),
-('CUR_N1', 2020, ' CUR_N1.kml', ' 1.5126320228564418', ' -1.8212699890136719', ' -1.8258670568466187', ' 52.700679779052734', ' 52.69858932495117'),
-('CHD_C5', 2020, ' CHD_C5.kml', ' 1.6755281500617962', ' -1.8314299583435059', ' -1.839419960975647', ' 52.694068908691406', ' 52.69124984741211'),
-('STJ_W2', 2020, ' STJ_W2.kml', ' 3.073970370475888', ' -1.8352500200271606', ' -1.8404330015182495', ' 52.672889709472656', ' 52.66989517211914'),
-('LEO_X1', 2020, ' LEO_X1.kml', ' 0.14656954872546482', ' -1.8527699708938599', ' -1.854701042175293', ' 52.67580032348633', ' 52.67510986328125'),
-('LEO_C3', 2020, ' LEO_C3.kml', ' 2.4479146774970624', ' -1.8424500226974487', ' -1.8487999439239502', ' 52.67790985107422', ' 52.67538833618164'),
-('CUR_E1', 2020, ' CUR_E1.kml', ' 1.3989841649004464', ' -1.8306699991226196', ' -1.8341460227966309', ' 52.69816970825195', ' 52.696189880371094'),
-('CUR_E2', 2020, ' CUR_E2.kml', ' 1.4230930261358743', ' -1.8263700008392334', ' -1.8310099840164185', ' 52.699058532714844', ' 52.696800231933594'),
-('STJ_E6', 2021, ' STJ_E6_2021.kml', ' 1.9368278650494624', ' -1.8085299730300903', ' -1.8139400482177734', ' 52.676170349121094', ' 52.672821044921875'),
-('RG_LEO', 2020, ' RG_LEO.kml', ' 7.388221028523994', ' -1.8267091512680054', ' -1.8652340173721313', ' 52.6944694519043', ' 52.668785095214844'),
-('LEO_N4', 2020, ' LEO_N4.kml', ' 2.1727506629834887', ' -1.8311070203781128', ' -1.837820053100586', ' 52.68107223510742', ' 52.67629623413086'),
-('LEO_C9', 2020, ' LEO_C9.kml', ' 1.3556777018366617', ' -1.837499976158142', ' -1.841189980506897', ' 52.67496109008789', ' 52.672908782958984'),
-('LEO_C7', 2020, ' LEO_C7.kml', ' 0.7745126729812504', ' -1.8338199853897095', ' -1.8372299671173096', ' 52.67599105834961', ' 52.674949645996094'),
-('CUR_C2', 2021, ' CUR_C2_2021.kml', ' 2.0537879512044173', ' -1.822029948234558', ' -1.8280800580978394', ' 52.69906997680664', ' 52.69562911987305'),
-('LCC', 2020, ' LCC.kml', ' 13.541344853892875', ' -1.7927109003067017', ' -1.8652340173721313', ' 52.7032585144043', ' 52.65790557861328'),
-('STJ_C2', 2020, ' STJ_C2.kml', ' 1.1764241127198478', ' -1.8245199918746948', ' -1.8280999660491943', ' 52.67665100097656', ' 52.67427062988281'),
-('STW_E3', 2020, ' STW_E3.kml', ' 1.6831216842465881', ' -1.8061200380325317', ' -1.8140699863433838', ' 52.688880920410156', ' 52.6861686706543'),
-('BLY_E4', 2020, ' BLY_E4.kml', ' 1.5995364784050536', ' -1.8017300367355347', ' -1.8075799942016602', ' 52.67784881591797', ' 52.67586135864258'),
-('CUR_E4', 2021, ' CUR_E4_2021.kml', ' 0.903483343084471', ' -1.8272500038146973', ' -1.8313699960708618', ' 52.69559097290039', ' 52.69343185424805'),
-('STW_E6', 2020, ' STW_E6.kml', ' 1.3723560075659909', ' -1.8090280294418335', ' -1.8143999576568604', ' 52.69209671020508', ' 52.689910888671875'),
-('CHD_S2', 2020, ' CHD_S2.kml', ' 2.953572765624817', ' -1.8240699768066406', ' -1.833490014076233', ' 52.69873046875', ' 52.685970306396484'),
-('RG_CUR', 2020, ' RG_CUR.kml', ' 4.055543619694577', ' -1.8142372369766235', ' -1.8361214399337769', ' 52.7032585144043', ' 52.68925857543945'),
-('CHD_C3', 2021, ' CHD_C3_2021.kml', ' 1.8675905495973084', ' -1.83024001121521', ' -1.8364100456237793', ' 52.693450927734375', ' 52.68960189819336'),
-('BLY_C1', 2021, ' BLY_C1_2021.kml', ' 1.9892910841922657', ' -1.8061800003051758', ' -1.8110899925231934', ' 52.6823616027832', ' 52.68043899536133'),
-('STW_E1', 2020, ' STW_E1.kml', ' 0.41837022958592596', ' -1.8063100576400757', ' -1.8079440593719482', ' 52.686248779296875', ' 52.6850700378418'),
-('STW_N3', 2020, ' STW_N3.kml', ' 1.9689239363827473', ' -1.8140000104904175', ' -1.8188899755477905', ' 52.69702911376953', ' 52.69337844848633'),
-('CHD_C4', 2020, ' CHD_C4.kml', ' 0.7637733846617373', ' -1.83024001121521', ' -1.8327300548553467', ' 52.69232177734375', ' 52.68962097167969'),
-('CUR_C1', 2020, ' CUR_C1.kml', ' 1.7014500446588416', ' -1.823140025138855', ' -1.8293299674987793', ' 52.69921112060547', ' 52.689369201660156'),
-('CUR_E3', 2020, ' CUR_E3.kml', ' 1.225953387463604', ' -1.830399990081787', ' -1.8330899477005005', ' 52.69596862792969', ' 52.69395065307617'),
-('CHD_N3', 2020, ' CHD_N3.kml', ' 2.490585131703239', ' -1.8330299854278564', ' -1.8395899534225464', ' 52.697479248046875', ' 52.69466018676758'),
-('STJ_C5', 2020, ' STJ_C5.kml', ' 2.322481180048538', ' -1.822759985923767', ' -1.8321199417114258', ' 52.673980712890625', ' 52.6710319519043'),
-('STW_S3', 2020, ' STW_S3.kml', ' 2.874837711549851', ' -1.808150053024292', ' -1.8172099590301514', ' 52.686038970947266', ' 52.683528900146484'),
-('STJ_E6', 2020, ' STJ_E6.kml', ' 2.3647477303460303', ' -1.8085500001907349', ' -1.8137099742889404', ' 52.67728042602539', ' 52.67353820800781'),
-('RG_STJ', 2020, ' RG_STJ.kml', ' 8.565748321441124', ' -1.8044084310531616', ' -1.8537237644195557', ' 52.6822395324707', ' 52.65790557861328'),
-('LEO_C6', 2020, ' LEO_C6.kml', ' 1.107159130664133', ' -1.8316999673843384', ' -1.8366459608078003', ' 52.6756706237793', ' 52.67388153076172'),
-('STW_W4', 2021, ' STW_W4_2021.kml', ' 1.0555557831562934', ' -1.8196699619293213', ' -1.8249579668045044', ' 52.68349838256836', ' 52.681270599365234'),
-('CUR_E1_2', 2020, ' CUR_E1_2.kml', ' 1.0605543046512331', ' -1.830739974975586', ' -1.8340799808502197', ' 52.69816970825195', ' 52.696189880371094'),
-('CUR_C2', 2020, ' CUR_C2.kml', ' 1.8686365342428384', ' -1.822029948234558', ' -1.8281400203704834', ' 52.69829177856445', ' 52.69565963745117'),
-('CUR_S2', 2020, ' CUR_S2.kml', ' 1.602299020923998', ' -1.8209060430526733', ' -1.8270219564437866', ' 52.69572830200195', ' 52.69234848022461'),
-('CHD_N4', 2021, ' CHD_N4_2021.kml', ' 0.9616036030840274', ' -1.8315199613571167', ' -1.839419960975647', ' 52.693458557128906', ' 52.691200256347656'),
-('STW_C1', 2020, ' STW_C1.kml', ' 1.1136732325187322', ' -1.8212529420852661', ' -1.8243000507354736', ' 52.687076568603516', ' 52.68547821044922'),
-('STW_E2', 2020, ' STW_E2.kml', ' 1.3936451920561688', ' -1.8111000061035156', ' -1.8160400390625', ' 52.68938064575195', ' 52.68642044067383'),
-('CHD_S3', 2020, ' CHD_S3.kml', ' 1.458831832437154', ' -1.8307700157165527', ' -1.8353899717330933', ' 52.68960189819336', ' 52.687068939208984'),
-('STW_S2', 2020, ' STW_S2.kml', ' 1.939501538116138', ' -1.8102999925613403', ' -1.815690040588379', ' 52.68373107910156', ' 52.68067932128906'),
-('BLY_W1', 2021, ' BLY_W1_2021.kml', ' 3.078254516338758', ' -1.8120900392532349', ' -1.8180099725723267', ' 52.68070983886719', ' 52.67660903930664'),
-('CHD_C2', 2020, ' CHD_C2.kml', ' 1.6774221729456082', ' -1.8347699642181396', ' -1.8401600122451782', ' 52.6917610168457', ' 52.68880844116211'),
-('CUR_E4', 2020, ' CUR_E4.kml', ' 1.3424269033726768', ' -1.827299952507019', ' -1.8317699432373047', ' 52.695621490478516', ' 52.69198989868164'),
-('STW_S1', 2020, ' STW_S1.kml', ' 1.6814021960778758', ' -1.8167699575424194', ' -1.82383394241333', ' 52.68360137939453', ' 52.68172073364258'),
-('STJ_E3', 2021, ' STJ_E3_2021.kml', ' 3.754218811586876', ' -1.8170599937438965', ' -1.8253300189971924', ' 52.68159866333008', ' 52.67707061767578'),
-('CHD_S4', 2020, ' CHD_S4.kml', ' 1.543112918922316', ' -1.834149956703186', ' -1.839050054550171', ' 52.68975067138672', ' 52.687679290771484'),
-('STW_C3', 2020, ' STW_C3.kml', ' 1.192562406928515', ' -1.8138200044631958', ' -1.8206499814987183', ' 52.688331604003906', ' 52.68532180786133'),
-('STW_E5', 2020, ' STW_E5.kml', ' 1.338998389110168', ' -1.8094600439071655', ' -1.8158899545669556', ' 52.6904296875', ' 52.68724060058594'),
-('CHD_S1', 2020, ' CHD_S1.kml', ' 1.8615366992402782', ' -1.8266899585723877', ' -1.831470012664795', ' 52.69142150878906', ' 52.688568115234375'),
-('CHD_N2', 2020, ' CHD_N2.kml', ' 1.6280757310622804', ' -1.839400053024292', ' -1.842229962348938', ' 52.69525909423828', ' 52.691471099853516'),
-('CHD_C4', 2021, ' CHD_C4_2021.kml', ' 0.2460640126021386', ' -1.8314909934997559', ' -1.8340699672698975', ' 52.697288513183594', ' 52.69358444213867'),
-('BLY_C3', 2020, ' BLY_C3.kml', ' 2.463750496805034', ' -1.8062800168991089', ' -1.8124099969863892', ' 52.6797981262207', ' 52.67688751220703'),
-('LEO_N2', 2020, ' LEO_N2.kml', ' 2.1575284062850906', ' -1.8418099880218506', ' -1.8467400074005127', ' 52.690391540527344', ' 52.68756866455078'),
-('LEO_N1', 2020, ' LEO_N1.kml', ' 0.8696547692636487', ' -1.8437080383300781', ' -1.847301959991455', ' 52.6922607421875', ' 52.69005584716797'),
-('STW_S1', 2021, ' STW_S1_2021.kml', ' 1.2860635572799846', ' -1.819640040397644', ' -1.8249950408935547', ' 52.68306350708008', ' 52.68097686767578'),
-('BLY_N1', 2020, ' BLY_N1.kml', ' 2.17103806916049', ' -1.8018200397491455', ' -1.8085600137710571', ' 52.68513107299805', ' 52.68164825439453'),
-('LEO_N3', 2020, ' LEO_N3.kml', ' 1.7091608938562235', ' -1.8336999416351318', ' -1.8385900259017944', ' 52.68756103515625', ' 52.685218811035156'),
-('LEO_W2', 2020, ' LEO_W2.kml', ' 1.657351885824771', ' -1.8272409439086914', ' -1.8328419923782349', ' 52.6846923828125', ' 52.67998504638672'),
-('CHD_S4', 2021, ' CHD_S4_2021.kml', ' 1.962441682970203', ' -1.8341200351715088', ' -1.83951997756958', ' 52.689781188964844', ' 52.68642044067383');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user`
---
-
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user` (
+CREATE TABLE IF NOT EXISTS `user` (
   `id` int(11) NOT NULL,
   `email` varchar(180) COLLATE utf8mb4_unicode_ci NOT NULL,
   `roles` longtext COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '(DC2Type:json)',
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `user`
---
-
+TRUNCATE TABLE `user`;
 INSERT INTO `user` (`id`, `email`, `roles`, `password`) VALUES
 (1, 'paul.a.golder@lerot.org', 'ROLE_ADMIN', '$argon2id$v=19$m=65536,t=4,p=1$Y8Q6iCSBVG1h80zIxhOgeg$uP1rVzrZNfMDU1xjfkhjWzf1Pbcsm1/YiHswp9DupeU');
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `delivery`
---
-ALTER TABLE `delivery`
-  ADD PRIMARY KEY (`deliveryid`);
-
---
--- Indexes for table `deliverytoroadgroup`
---
-ALTER TABLE `deliverytoroadgroup`
-  ADD UNIQUE KEY `index` (`deliveryid`,`roadgroupid`) USING BTREE;
-
---
--- Indexes for table `district`
---
-ALTER TABLE `district`
-  ADD PRIMARY KEY (`districtid`);
-
---
--- Indexes for table `pollingdistrict`
---
-ALTER TABLE `pollingdistrict`
-  ADD UNIQUE KEY `index` (`pollingdistrictid`);
-
---
--- Indexes for table `rggroup`
---
-ALTER TABLE `rggroup`
-  ADD UNIQUE KEY `index` (`rggroupid`);
-
---
--- Indexes for table `roadgroup`
---
-ALTER TABLE `roadgroup`
-  ADD UNIQUE KEY `index` (`roadgroupid`,`year`) USING BTREE;
-
---
--- Indexes for table `roadgrouptostreet`
---
-ALTER TABLE `roadgrouptostreet`
-  ADD PRIMARY KEY (`seq`),
-  ADD UNIQUE KEY `street` (`street`,`part`,`pd`,`roadgroupid`,`year`);
-
---
--- Indexes for table `seat`
---
-ALTER TABLE `seat`
-  ADD UNIQUE KEY `index` (`districtid`,`seatid`);
-
---
--- Indexes for table `seattopd`
---
-ALTER TABLE `seattopd`
-  ADD UNIQUE KEY `index` (`pdid`,`seat`,`district`,`year`);
-
---
--- Indexes for table `street`
---
-ALTER TABLE `street`
-  ADD PRIMARY KEY (`seq`),
-  ADD UNIQUE KEY `index` (`name`,`part`);
-
---
--- Indexes for table `TABLE13`
---
-ALTER TABLE `TABLE13`
-  ADD UNIQUE KEY `index` (`roadgroupid`,`year`) USING BTREE;
-
---
--- Indexes for table `TABLE13b`
---
-ALTER TABLE `TABLE13b`
-  ADD UNIQUE KEY `index` (`roadgroupid`,`year`) USING BTREE;
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `delivery`
---
-ALTER TABLE `delivery`
-  MODIFY `deliveryid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-
---
--- AUTO_INCREMENT for table `roadgrouptostreet`
---
-ALTER TABLE `roadgrouptostreet`
-  MODIFY `seq` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1726;
-
---
--- AUTO_INCREMENT for table `street`
---
-ALTER TABLE `street`
-  MODIFY `seq` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=543;
-COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

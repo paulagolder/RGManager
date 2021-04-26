@@ -101,9 +101,17 @@ class RoadgroupController extends AbstractController
     {
       return $this->render('roadgroup/showone.html.twig',  [    'rgyear'=>$this->rgyear,'message' =>  'No roadgroups not Found',]);
     }
-    if(!$roadgroup->getKML())
+    $currentkml = $roadgroup->getKML();
+    $foundkml = $this->mapserver->findmap($roadgroup->getRoadgroupid(),$this->rgyear);
+    if(!$currentkml || strcmp($currentkml, $foundkml) !== 0)
     {
-     // $roadgroup->setKML($this->mapserver->findmap($roadgroup->getRoadgroupid(),$this->rgyear));
+      $roadgroup->setKml($foundkml);
+      $roadgroup->setGeodata(null);
+      $roadgroup->setDistance(-1);
+      $entityManager = $this->getDoctrine()->getManager();
+      $entityManager->persist($roadgroup);
+      $entityManager->flush();
+
     }
     $swdid = $roadgroup->getRgsubgroupid();
     $wdid = $roadgroup->getRggroupid();
@@ -122,13 +130,59 @@ class RoadgroupController extends AbstractController
     else
       $back =  "/rggroup/showall/";
     $extrastreets =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreets($this->rgyear);
-
+    $geodata= $roadgroup->getGeodata();
+    if($geodata === null)
+    {
+      if($roadgroup->getKML())
+      {
+      $geodata= $this->mapserver->loadRoute($roadgroup->getKML());
+      $roadgroup->setGeodata($geodata);
+      $roadgroup->setDistance($geodata["dist"]);
+      $entityManager = $this->getDoctrine()->getManager();
+      $entityManager->persist($roadgroup);
+      $entityManager->flush();
+      }
+      else
+      {
+        $dist = 0;
+        $minlat=360;
+        $minlong =360;
+        $maxlat=-360;
+        $maxlong=-360;
+        foreach($streets as $astreet)
+        {
+          $lat = floatval($astreet->getLatitude());
+          $long = floatval($astreet->getLongitude());
+          if($lat> 0)
+          {
+            if($minlat > $lat && $lat > 0)$minlat = $lat;
+            if($minlong > $long && $long != 0)$minlong = $long;
+            if($maxlong <  $long && $long != 0)$maxlong = $long;
+            if($maxlat <  $lat  &&  $lat > 0)$maxlat = $lat;
+          }
+          $geodata = array();
+          $geodata["dist"]=$dist;
+          $geodata["maxlat"]=$maxlat;
+          $geodata["midlat"]="".($maxlat+$minlat)/2;
+          $geodata["minlat"]=$minlat;
+          $geodata["maxlong"]=$maxlong;
+          $geodata["midlong"]="".($minlong+$maxlong)/2;
+          $geodata["minlong"]=$minlong;
+          $roadgroup->setGeodata($geodata);
+          $roadgroup->setDistance($geodata["dist"]);
+          $entityManager = $this->getDoctrine()->getManager();
+          $entityManager->persist($roadgroup);
+          $entityManager->flush();
+        }
+      }
+    }
     return $this->render('roadgroup/showone.html.twig',
     [
     'rgyear'=>$this->rgyear,
     'message' =>  '' ,
     'seats'=>$seats,
     'total'=>$totalhouseholds,
+    'geodata'=>$geodata,
     'roadgroup' => $roadgroup ,
     'streets'=> $streets,
     'sparestreets'=>$extrastreets,

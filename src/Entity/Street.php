@@ -77,13 +77,15 @@ class Street
 
     public function load($starray)
     {
-       $this->Name = $starray["name"];
-       $this->Households = $starray["households"];
+      $this->Name = $starray["name"];
+      $this->Households = $starray["households"];
       $this->Qualifier = $starray["qualifier"];
-       $this->Note = $starray["note"];
-       $this->PD= $starray["pd"];
-        $this->Part= $starray["part"];
-
+      $this->Note = $starray["note"];
+      $this->PD= $starray["pd"];
+      $this->Part= $starray["part"];
+      $this->ELectors= $starray["electors"];
+      $this->Latitude= $starray["latitude"];
+      $this->Longitude= $starray["longitude"];
     }
 
 

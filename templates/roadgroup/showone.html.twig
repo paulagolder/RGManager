@@ -34,9 +34,10 @@
 <div class="heading row">
     <div class="label"> Road Group </div>
     <div class="value"> {{roadgroup.RoadgroupId}}:</div>
-    <div class="value"> {{roadgroup.Name }}</div>
-   <div class="value small"> H:{{roadgroup.Households }}</div>
-     <div class="value small"> T:{{total }}</div>
+    <div class="value"> {{roadgroup.Name}}</div>
+   <div class="value small"> H:{{roadgroup.Households}}</div>
+     <div class="value small"> T:{{total}}</div>
+       <div class="value small"> D:{{geodata.dist}}</div>
     <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
   </div>
   <div class="subheading row">
@@ -92,16 +93,16 @@
 </div>
 {% set jslocation = roadgroup.getjson() %}
 <script  type="text/javascript" >
-  var mymap = myRgMap("{{jslocation}}");
+  var mymap = myRgMapb("{{geodata.midlat}}","{{geodata.midlong}}");
   var kml = "{{roadgroup.kml}}";
   var path = "{{mappath}}roadgroups/"+kml;
   if(kml)
   {
   var style = {"color":  "#0000FF" , "weight": 14 ,  "clickable": true ,"opacity": 0.3, "fillOpacity": 0.1 };
-  /*makeKMLLayer(mymap, path,style,true,kml);*/
+
   makeOutlineKml(mymap, path,style,false,kml);
   }
-  setBounds(mymap,"{{jslocation}}");
+  setBoundsb(mymap,"{{geodata.maxlat}}","{{geodata.maxlong}}","{{geodata.minlat}}","{{geodata.minlong}}");
 </script>
 {% endif %}
 </div>

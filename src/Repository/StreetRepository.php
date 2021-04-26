@@ -61,7 +61,18 @@ class StreetRepository  extends EntityRepository
        return $street;
     }
 
-      public function findOnebySeq($seq)
+    public function findAllbyName($stname)
+    {
+      $sn= $stname;
+      $nl= "";
+      $qb = $this->createQueryBuilder("p");
+      $qb->Where('p.Name = :sn');
+      $qb->setParameter('sn', $sn);
+      $streets =  $qb->getQuery()->getResult();
+      return $streets;
+    }
+
+    public function findOnebySeq($seq)
     {
        $qb = $this->createQueryBuilder("p");
        $qb->Where('p.Seq = :sq');
@@ -104,7 +115,7 @@ class StreetRepository  extends EntityRepository
     }
 
 
-    public function findAllbyName($sn)
+    public function xfindAllbyName($sn)
     {
 
         $conn = $this->getEntityManager()->getConnection();

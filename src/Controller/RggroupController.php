@@ -67,7 +67,7 @@ class RggroupController extends AbstractController
       {
         $rgid = $rgs[$j]->getRoadgroupId();
         $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
-        $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getBounds());
+        $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getGeodata());
         $hh = $rgs[$j]->getHouseholds();
         $sumhh += $hh;
       //  $mpath = $maproot."roadgroups/".$rgid.".kml";
@@ -130,7 +130,7 @@ class RggroupController extends AbstractController
       $calchh= 0;
       foreach ($roadgroups as $aroadgroup)
       {
-        $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getBounds());
+        $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getGeodata());
         $totalhh += $aroadgroup->getHouseholds();
         if(!$this->mapserver->ismap($aroadgroup->getKML()))
         {
@@ -246,7 +246,7 @@ class RggroupController extends AbstractController
     $bounds = $this->mapserver->newBounds();
     foreach ($roadgroups as &$aroadgroup)
     {
-      $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getBounds());
+      $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getGeodata());
       $est = $this->getDoctrine()->getRepository("App:Roadgroup")->countHouseholds($aroadgroup->getRoadgroupId(),$this->rgyear);
       $aroadgroup->{"calculated"} = $est;
     }
