@@ -75,7 +75,7 @@ class PollingDistrictController extends AbstractController
     foreach ($rglist as $rg)
     {
       $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rg["roadgroupid"],$this->rgyear);
-      $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getBounds());
+      $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getGeodata());
       $kml = $aroadgroup->getKML();
       if(!$this->mapserver->ismap($kml))
       {

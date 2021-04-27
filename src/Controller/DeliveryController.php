@@ -124,7 +124,7 @@ class DeliveryController extends AbstractController
         foreach($rgs as $rg)
         {
         $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rg["roadgroupid"],$this->rgyear);
-        $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getBounds());
+        $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getGeodata());
          $totalhouseholds += $rg["households"];
 
         }

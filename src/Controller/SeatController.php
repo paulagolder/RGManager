@@ -150,7 +150,7 @@ class SeatController extends AbstractController
         foreach ($roadgrouplinks as $aroadgrouplink)
         {
            $aroadgroup =  $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($aroadgrouplink["roadgroupid"],$this->rgyear);
-           $bounds = $this->mapserver->expandbounds($bounds,$aroadgroup->getBounds());
+           $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getGeodata());
            dump($bounds);
            $kml = $aroadgroup->getKML();
            if($aroadgroup)
