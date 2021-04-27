@@ -78,7 +78,7 @@
     {
       var path = null;
       {#var path = "http://rgmanager.lerot.org/maps/"+did+"_"+aseat+".kml";#}
-      var path = "{{mappath}}{{aseat.kml}}";
+      var path = "{{mappath}}{{district.districtid}}/{{aseat.kml}}";
       if(path)
       {
          var h2s = document.getElementById("{{aseat.seatid}}");

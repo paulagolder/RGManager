@@ -69,7 +69,7 @@ class DistrictController extends AbstractController
         foreach($seats as &$seat)
         {
           $kml = $seat->getKML();
-          if(!$this->mapserver->ismap($kml))
+          if(!$kml)
           {
              $seat->setKML($this->mapserver->findseat($seat->getSeatId(),$this->rgyear,$district->getDistrictId()));
           }

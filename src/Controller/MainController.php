@@ -49,7 +49,7 @@ class MainController extends AbstractController
          $years = $this->getDoctrine()->getRepository("App:Roadgrouptostreet")->getYears();
          if(!$this->rgyear)
          {
-            $this->rgyear = '2000';
+            $this->rgyear  = date('Y');
             $cookie = new Cookie('rgyear',	$this->rgyear,	time() + ( 24 * 60 * 60));
 		        $res = new Response();
             $res->headers->setCookie( $cookie );
@@ -84,7 +84,7 @@ class MainController extends AbstractController
 		    $res = new Response();
         $res->headers->setCookie( $cookie );
         $res->send();
-        return $this->redirect("/rggroup/showall/");
+        return $this->redirect("/rggroup/showall");
     }
 
 }
