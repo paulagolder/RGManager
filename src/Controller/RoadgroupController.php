@@ -103,6 +103,8 @@ class RoadgroupController extends AbstractController
     }
     $currentkml = $roadgroup->getKML();
     $foundkml = $this->mapserver->findmap($roadgroup->getRoadgroupid(),$this->rgyear);
+    dump($foundkml);
+    dump($roadgroup);
     if(!$currentkml || strcmp($currentkml, $foundkml) !== 0)
     {
       $roadgroup->setKml($foundkml);

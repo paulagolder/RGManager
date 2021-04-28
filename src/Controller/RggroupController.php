@@ -74,7 +74,8 @@ class RggroupController extends AbstractController
         $kml = $rgs[$j]->getKML();
         if($kml)
         {
-          $mpath = $maproot."roadgroups/".$kml;
+          $mpath = $maproot."/roadgroups/".$kml;
+          $mpath = str_replace("//","/",$mpath);
           if(file_exists($mpath))
           {
             $rgs[$j]->setKML( $kml);
