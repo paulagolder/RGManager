@@ -220,12 +220,12 @@ function myStMap(location)
   var mylocation = JSON.parse(location_dc);
   var lat = mylocation.latitude;
   var long = mylocation.longitude;
-  var zoom = 18;
+  var zoom = 20;
   if( lat === undefined  || lat < 40)
   {
     long =-1.8304;
     lat = 52.6854 ;
-    zoom = 12;
+    zoom = 20;
   }
 
   if(zoom <1 ) zoom = 1;
@@ -236,7 +236,7 @@ function myStMap(location)
   L.tileLayer(
     'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; ' + mapLink + ' Contributors',
-      maxZoom: 20,
+      "maxNativeZoom": 19, "maxZoom": 20,
     }).addTo(mymap);
 
 
@@ -383,13 +383,68 @@ function addMyKMLLayer(mymap,kmllayer,color)
 
 function redecode(mystr)
 {
+    if(typeof mystr === 'object') return mystr;
+    if (!mystr.includes('&') ) return mystr;
     var instr = mystr.replace(/&amp;/g  , '&');
     instr = instr.replace(/&gt;/g  , '>');
     instr = instr.replace(/&lt;/g   , '<');
     instr = instr.replace(/&quot;/g  ,  '"');
     instr = instr.replace(/&#39;/g   ,"'");
+    instr = instr.replace(/&#039;/g   ,",");
+
+
     return instr;
 }
 
 
+function drawPath(amap,mypath,style=null)
+{
+  var polyline = null;
+  if(style == null)
+  {
+     style = {
+      color: "#008000",
+      weight: 10,
+      opacity: 0.4
+    };
 
+  }
+  if(typeof mypath !== 'object')
+  {
+  var dpath =redecode(mypath);
+  var points = JSON.parse(dpath);
+  if(points.length<1) return;
+  for(point of points)
+  {
+    var track = point.steps;
+     polyline = L.polyline(track, style).addTo(amap);
+  }
+}
+else
+{
+  var track = mypath.steps;
+  polyline = L.polyline(track, style).addTo(amap);
+}
+return polyline ;
+
+}
+
+
+function setEndMarkers(amap,branch)
+{
+    var markers =[];
+    var track = branch.steps;
+    var l = track.length;
+  var start=track[0];
+  if(!start) return;
+  if(start.length<2) return;
+  scircle = L.circleMarker(start).addTo(amap);
+  scircle.setStyle({color: 'green'});
+  if(l<2) return;
+  var end = track[l-1];
+  ecircle = L.circleMarker(end).addTo(amap);
+  ecircle.setStyle({color: 'red'});
+  markers["start"] = scircle;
+  markers["end"]=ecircle;
+  return markers;
+}

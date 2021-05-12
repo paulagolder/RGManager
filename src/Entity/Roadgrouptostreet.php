@@ -12,6 +12,7 @@ class Roadgrouptostreet
 {
 
 
+
 /**
      * @ORM\Id
      * @ORM\Column(name="street",type="string", length=10)
@@ -42,7 +43,7 @@ class Roadgrouptostreet
       /**
      * @ORM\Column(name="year",type="integer", length=4)
      */
-    private $Tear;
+    private $Year;
 
 
 

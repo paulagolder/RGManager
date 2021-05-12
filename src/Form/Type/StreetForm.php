@@ -24,6 +24,7 @@ class StreetForm extends AbstractType
         $builder ->add('Electors', IntegerType::class,['label' => 'Electors','required' => false,]);
         $builder ->add('Latitude', TextType::class,['label' =>  'Latitude','required' => false,]);
         $builder ->add('Longitude', TextType::class,['label' => 'Longitude','required' => false,]);
+        $builder ->add('Path', TextType::class,['label' => 'Path','required' => false,]);
         $builder ->add('Note', TextType::class,['label' => 'Comment','required' => false,]);
     }
 

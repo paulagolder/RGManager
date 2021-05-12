@@ -56,6 +56,7 @@
       </div>
       <div class="pd" ><a class="button" href = "/pollingdistrict/show/{{street.pd}}" >{{street.pd}}</a></div>
       <div  class="num" >{{street.households}}</div>
+       <div  class="num" >{{street.countsteps}}</div>
       <div class="button"> <a class="button" href = "/street/edit/{{street.name }}/{{street.part}}" >Edit</a> </div>
          <div class="button"> <a class="button" href = "/street/remove/{{roadgroup.RoadgroupId}}/{{street.name}}/{{street.part}}" >Remove</a> </div>
          <div  class="text" >{{street.note}}</div>
@@ -98,11 +99,16 @@
   var path = "{{mappath}}/roadgroups/"+kml;
   if(kml)
   {
-  var style = {"color":  "#0000FF" , "weight": 14 ,  "clickable": true ,"opacity": 0.3, "fillOpacity": 0.1 };
-
-  makeOutlineKml(mymap, path,style,false,kml);
+    var style = {"color":  "#0000FF" , "weight": 14 ,  "clickable": true ,"opacity": 0.3, "fillOpacity": 0.1 };
+    makeOutlineKml(mymap, path,style,false,kml);
   }
   setBoundsb(mymap,"{{geodata.maxlat}}","{{geodata.maxlong}}","{{geodata.minlat}}","{{geodata.minlong}}");
+   {% for street in streets %}
+      drawPath(mymap,"{{street.getPath()}}");
+   {% endfor %}
+
+
+
 </script>
 {% endif %}
 </div>

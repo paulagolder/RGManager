@@ -24,9 +24,8 @@ class RoadgrouptostreetRepository  extends EntityRepository
         $sql = 'Select * from  roadgrouptostreet   WHERE  street= "'.$stname.'" and part= "'.$stpart.'" and year="'.$year.'";';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
-        $pd= $stmt->fetchAll();
-    //       $pd =  $stmt->getOneOrNullResult();
-       return $pd;
+        $rg= $stmt->fetchAll();
+       return $rg;
 
      }
 

@@ -175,10 +175,28 @@ class StreetController extends AbstractController
     if ($rdpart=="null" or $rdpart =="/" )  $rdpart = "";
     $request = $this->requestStack->getCurrentRequest();
     if(!$rdname) return $this->redirect("/rggroup/showall");
-
+     $rg = $this->getDoctrine()->getRepository('App:Roadgrouptostreet')->getRoadgroup($rdname,$rdpart,$this->rgyear);
+     if(count($rg)<1)
+       $rgid= null;
+     else
+       $rgid = $rg[0]["roadgroupid"];
     $streets = $this->getDoctrine()->getRepository('App:Street')->findAllbyName($rdname);
     $street = $this->getDoctrine()->getRepository('App:Street')->findOnebyName($rdname,$rdpart);
+    $path = $street->getDecodedPath();
+    dump($path);
+    $tracks=$path;
+
     //$rgarry = $this->getDoctrine()->getRepository('App:Roadgrouptostreet')->getRoadgroup($rdname,$rdpart);
+    if($street->getLatitude()<40)
+    {
+     if($rgid)
+     {
+       $aroadgroup =  $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
+       $gd= $aroadgroup->getGeodata();
+       $street->setLatitude($gd["midlat"]);
+       $street->setLongitude($gd["midlong"]);
+     }
+    }
     $streetcount = sizeof($streets);
     if(! isset($street))
     {
@@ -190,20 +208,34 @@ class StreetController extends AbstractController
       $form->handleRequest($request);
       if ($form->isValid())
       {
+       dump($street->getPath());
+       $path = $street->getDecodedPath();
+       dump($path);
+$tracks=$path;
+$newtracks =[];
+foreach($tracks as $track)
+{
+  if(count($track->steps)>1)  $newtracks[] = $track;
+}
+$newpath = json_encode($newtracks);
+dump($newtracks);
+        $street->setPath($newpath);
         if($street->getPart() == null)$street->setPart("");
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($street);
         $entityManager->flush();
         $rdid = $street->getStreetId();
-        return $this->redirect('/street/viewgroup/'.$rdname);
+        return $this->redirect('/street/edit/'.$rdid);
       }
     }
 
     return $this->render('street/edit.html.twig', array(
      'rgyear'=>$this->rgyear,
+     'roadgroupid' =>$rgid,
       'form' => $form->createView(),
       'streetcount'=>$streetcount,
       'street'=>$street,
+      'tracks'=>$tracks,
       'back'=>"/street/viewgroup/$rdname",
       ));
   }

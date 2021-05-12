@@ -103,8 +103,6 @@ class RoadgroupController extends AbstractController
     }
     $currentkml = $roadgroup->getKML();
     $foundkml = $this->mapserver->findmap($roadgroup->getRoadgroupid(),$this->rgyear);
-    dump($foundkml);
-    dump($roadgroup);
     if(!$currentkml || strcmp($currentkml, $foundkml) !== 0)
     {
       $roadgroup->setKml($foundkml);
@@ -320,25 +318,27 @@ class RoadgroupController extends AbstractController
   public function newstreet($rgid)
   {
     $request = $this->requestStack->getCurrentRequest();
-    $roadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
+    $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
     $astreet = new Street();
-    $astreet->setRoadgroupId($rgid);
-    $astreet->setSubwardId($roadgroup->getRgsubgroupid());
-    $astreet->setWardId($roadgroup->getRggroupid());
-    $astreet->setRoadgroupId($rgid);
+    $gd= $aroadgroup->getGeodata();
+    $astreet->setLatitude($gd["midlat"]);
+    $astreet->setLongitude($gd["midlong"]);
     $form = $this->createForm(StreetForm::class, $astreet);
     if ($request->getMethod() == 'POST')
     {
       $form->handleRequest($request);
       if ($form->isValid())
       {
-        // $person->setContributor($user->getUsername());
-        // $person->setUpdateDt($time);
+       $astreet->setPath("");
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($astreet);
         $entityManager->flush();
         $pid = $astreet->getStreetId();
         return $this->redirect("/roadgroup/showone/".$rgid);
+        $rgst = new RoadgrouptoStreet();
+        $rgst.setStreet($pid);
+        $rgst.setRoadgroupId($rgid);
+
       }
     }
 
@@ -346,6 +346,7 @@ class RoadgroupController extends AbstractController
       'rgyear'=>$this->rgyear,
       'form' => $form->createView(),
       'street'=>$astreet,
+      'roadgroupid'=>$rgid,
       'back'=>'/roadgroup/showone/'.$rgid,
       ));
   }

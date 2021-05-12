@@ -13,9 +13,15 @@
   margin-left: 2em;
 }
 
+
+#streetedit div.button.isactive
+{
+  visibility: hidden;
+}
+
+
 #streetedit div.button.right
 {
-
   margin-left: auto;
 }
 
@@ -55,6 +61,11 @@ input#street_form_Note
   width: 60em;
 }
 
+input#street_form_Path
+{
+  width: 6em;
+  visibility: hidden;
+}
 
 #streetedit div.map div#stmapid
 {
@@ -69,4 +80,48 @@ input#street_form_Note
 }
 
 
+#streetedit  div.branches
+{
+ color: green;
+
+}
+
+
+#streetedit  div.blabel
+{
+  width: 7em;
+
+}
+
+
+
+#streetedit   div.branches div.input
+{
+  width: 3em;
+}
+
+
+
+
+
+
+#myForm  form h1
+{
+  color:green;
+  font-size:0.5em;
+}
+
+#myForm  form div
+{
+  color:blue;
+  font-size:0.5em;
+}
+
+#myForm label.inline-label {
+  white-space: nowrap;
+  max-width: 6em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  float:left;
+}
 

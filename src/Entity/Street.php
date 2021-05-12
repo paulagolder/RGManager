@@ -15,11 +15,11 @@ class Street
  /**
      * @ORM\Id
      * @ORM\Column(name="seq",type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $Seq;
 
     /**
-     * @ORM\Id
      * @ORM\Column(name="name",type="string", length=10)
      */
     private $Name;
@@ -27,7 +27,6 @@ class Street
 
 
     /**
-     * @ORM\Id
      * @ORM\Column(name="part",type="string", length=40, nullable=true)
      */
     private $Part;
@@ -75,6 +74,12 @@ class Street
     private $Longitude;
 
 
+      /**
+     * @ORM\Column(name="path",type="text",    nullable=true)
+     */
+    private $Path;
+
+
     public function load($starray)
     {
       $this->Name = $starray["name"];
@@ -86,6 +91,7 @@ class Street
       $this->ELectors= $starray["electors"];
       $this->Latitude= $starray["latitude"];
       $this->Longitude= $starray["longitude"];
+      $this->Path= $starray["path"];
     }
 
 
@@ -235,6 +241,51 @@ class Street
         return $this;
     }
 
+    public function getPath()
+    {
+      $text =  $this->Path;
+
+       $text = "[".$text."]";
+         $text = str_replace( ",null","",   $text);
+            $text = str_replace( "null,","",   $text);
+        $text = str_replace( "[[[","[[",   $text);
+           $text = str_replace( "[[{","[{",   $text);
+        $text = str_replace( "]]]","]]",   $text);
+         $text = str_replace( "}]]","}]",   $text);
+
+        if(strpos($text,"{")=== false)
+        {
+           $armarry = json_decode($text);
+           $newpath = '[{"start":"1","end":"99","steps":'.json_encode($armarry).'}]';
+          return $newpath;
+        }
+        else
+        {
+        //is object
+         return $text;
+        }
+
+    }
+
+    /*
+    [{"start":x,"end":y,"steps":[[],[]]}]
+    */
+
+    public function getDecodedPath()
+    {
+        $text =  $this->getPath();
+         return json_decode($text);
+    }
+
+    public function setPath($text): self
+    {
+        $text = "[".$text."]";
+        $text = str_replace( "[[[","[[",   $text);
+        $text = str_replace( "]]]","]]",   $text);
+        $this->Path = $text;
+        return $this;
+    }
+
     public function getjson()
     {
        $str ="{";
@@ -275,6 +326,16 @@ class Street
       $qual = htmlspecialchars($this->Qualifier, ENT_QUOTES);
      $xmlout = "<street Name='$this->Name' Households='$this->Households' Qualifier='$qual'  />\n  ";
      return $xmlout;
+   }
+
+
+   public function countSteps()
+   {
+     $path = json_decode($this->getPath());
+     if($path)
+       return count($path);
+     else
+       return 0;
    }
 }
 
