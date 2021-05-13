@@ -51,6 +51,19 @@
        <div class="button small"> <input type="submit" name="Delete" Value="Delete"/> </div>
     </div>
    </form>
+    <div class="map" >
+      <div id="stmapid"></div>
+    </div>
+     {% set jslocation = street.getjson() %}
+      <script  type="text/javascript" >
+         var mymap = myStMap("{{jslocation}}");
+         mymap.on('click', onMapClick);
+         {% for street in streets %}
+         drawPath(mymap,"{{street.getPath()}}");
+             {% endfor %}
+      </script>
+
+
 {% endif %}
 </div>
 {% endblock %}

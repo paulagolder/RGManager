@@ -33,14 +33,14 @@
 
 #streetedit div.form form div label.required
 {
-  width: 10em;
+  width: 7em;
   color: red;
   display: inline-block;
 }
 
 #streetedit div.form form div label
 {
-  width: 10em;
+  width: 7em;
   color: green;
   display: inline-block;
 }
@@ -56,9 +56,11 @@
  width: 100%;
 }
 
-input#street_form_Note
+#street_form_Note
 {
-  width: 60em;
+  margin: 1px;
+  height: 6em;
+  width: 18em;
 }
 
 input#street_form_Path
@@ -67,9 +69,15 @@ input#street_form_Path
   visibility: hidden;
 }
 
+#streetedit > div.formmap > div.form
+{
+
+  width: 28em;
+}
+
 #streetedit div.map div#stmapid
 {
-  height: 400px;
+  height: 600px;
   width: 100%;
 }
 
@@ -83,7 +91,7 @@ input#street_form_Path
 #streetedit  div.branches
 {
  color: green;
-
+ width: 30em;
 }
 
 
@@ -97,7 +105,7 @@ input#street_form_Path
 
 #streetedit   div.branches div.input
 {
-  width: 3em;
+  width: 2.2em;
 }
 
 

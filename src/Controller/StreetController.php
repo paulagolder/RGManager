@@ -46,6 +46,7 @@ class StreetController extends AbstractController
   public function Showall()
   {
     $streets = $this->getDoctrine()->getRepository("App:Street")->findAll();
+    $this->fixPath($streets);
     if (!$streets)
     {
       return $this->render('street/showall.html.twig', [ 'message' =>  'Streets not Found',]);
@@ -74,9 +75,11 @@ class StreetController extends AbstractController
     {
       case  "duplicates":
         $streets = $this->getDoctrine()->getRepository("App:Street")->findDuplicates();
+            $this->fixPath($streets);
         break;
       default :
         $streets = $this->getDoctrine()->getRepository("App:Street")->findAll();
+            $this->fixPath($streets);
         break;
     }
 
@@ -98,6 +101,7 @@ class StreetController extends AbstractController
   public function ShowProblems($problemtype='')
   {
     $streets = $this->getDoctrine()->getRepository("App:Street")->findProblems($problemtype);
+        $this->fixPath($streets);
     if (!$streets) {
       return $this->render('street/showproblems.html.twig', [ 'message' =>  'Streets not Found',]);
     }
@@ -115,7 +119,15 @@ class StreetController extends AbstractController
 
   public function StreetViewGroup($name)
   {
-    $streets = $this->getDoctrine()->getRepository('App:Street')->findNamed($name,$this->rgyear );
+   // $streets = $this->getDoctrine()->getRepository('App:Street')->findNamed($name,$this->rgyear );
+   $streets = $this->getDoctrine()->getRepository('App:Street')->findAllbyName($name);
+    $streets = $this->fixPath($streets);
+    foreach($streets as $astreet)
+    {
+        $rg = $this->getDoctrine()->getRepository('App:Roadgrouptostreet')->getRoadgroup($astreet->getName(),$astreet->getPart(),$this->rgyear);
+        dump($rg);
+        $astreet->roadgroupid =$rg[0]["roadgroupid"];
+    }
     return $this->render('street/viewgroup.html.twig', array(
       'rgyear'=>$this->rgyear,
       'message'=>"",
@@ -128,6 +140,7 @@ class StreetController extends AbstractController
   {
     $searchfield = ($_POST['searchfield']);
     $streets = $this->getDoctrine()->getRepository('App:Street')->namesearch($searchfield);
+        $this->fixPath($streets);
     return $this->render('street/showall.html.twig', array(
       'rgyear'=>$this->rgyear,
       'message'=>"",
@@ -146,6 +159,7 @@ class StreetController extends AbstractController
       foreach($streetlist as $seq)
       {
         $street = $this->getDoctrine()->getRepository('App:Street')->findOneBySeq($seq);
+        $street->fixPath();
         $nstreet->merge($street);
       }
       $entityManager = $this->getDoctrine()->getManager();
@@ -162,6 +176,7 @@ class StreetController extends AbstractController
       {
 
         $astreet = $this->getDoctrine()->getRepository('App:Street')->findOnebySeq($seq);
+        $astreet->fixPath();
         $gstreet = $astreet->getName();
         $entityManager->remove($astreet);
       }
@@ -181,6 +196,7 @@ class StreetController extends AbstractController
      else
        $rgid = $rg[0]["roadgroupid"];
     $streets = $this->getDoctrine()->getRepository('App:Street')->findAllbyName($rdname);
+        $this->fixPath($streets);
     $street = $this->getDoctrine()->getRepository('App:Street')->findOnebyName($rdname,$rdpart);
     $path = $street->getDecodedPath();
     dump($path);
@@ -243,11 +259,12 @@ dump($newtracks);
   public function StreetDelete($stname,$stpart)
   {
 
-      $street = $this->getDoctrine()->getRepository('App:Street')->findOnebyName($stname,$stpart);
-      if($street==null)  return;
+      $astreet = $this->getDoctrine()->getRepository('App:Street')->findOnebyName($stname,$stpart);
+         $astreet->fixPath();
+      if($astreet==null)  return;
       $back =  "/rggroup/showall/";
     $entityManager = $this->getDoctrine()->getManager();
-    $entityManager->remove($street);
+    $entityManager->remove($satreet);
     $entityManager->flush();
     return $this->redirect($back);
   }
@@ -256,25 +273,26 @@ dump($newtracks);
   {
     if($stname)
     {
-      $street = $this->getDoctrine()->getRepository('App:Street')->findOnebyName($stname,$stpart);
-      if(!$street) return $this->redirect("/street/showall");
+      $astreet = $this->getDoctrine()->getRepository('App:Street')->findOnebyName($stname,$stpart);
+         $astreet->fixPath();
+      if(!$astreet) return $this->redirect("/street/showall");
     }
     else
-      return $this->redirect("/street/editgroup/".$street->getName());
+      return $this->redirect("/street/editgroup/".$astreet->getName());
     $nstreet = new Street();
-    $nstreet->merge($street);
+    $nstreet->merge($astreet);
     $nstreet->setSeq(0);
-    $street->setPart($street->getPart() ."a");
-    $street->setNote($street->getNote() ." Review Household Count");
+    $street->setPart($astreet->getPart() ."a");
+    $street->setNote($astreet->getNote() ." Review Household Count");
     $nstreet->setPart($nstreet->getPart() ."b");
-    $nstreet->setNote($street->getNote() ." Review Household Count");
+    $nstreet->setNote($astreet->getNote() ." Review Household Count");
     $entityManager = $this->getDoctrine()->getManager();
-    $entityManager->persist($street);
+    $entityManager->persist($astreet);
     $entityManager->persist($nstreet);
     $entityManager->flush();
     //now change roadgroupto street to match
     //
-    return $this->redirect("/street/editgroup/".$street->getName());
+    return $this->redirect("/street/editgroup/".$astreet->getName());
   }
 
 
@@ -295,12 +313,23 @@ dump($newtracks);
     if($stid)
     {
       $astreet = $this->getDoctrine()->getRepository('App:Street')->findOnebyStreetId($stid);
+         $astreet->fixPath();
     }
     else
       return;
 
-    $street = $this->getDoctrine()->getRepository('App:Roadgroup')->addStreet($astreet,$rgid,$this->rgyear);
+  $this->getDoctrine()->getRepository('App:Roadgroup')->addStreet($astreet,$rgid,$this->rgyear);
+
 
     return $this->redirect("/roadgroup/showone/".$rgid);
+  }
+
+  function fixPath($streets)
+  {
+    foreach($streets as $street)
+    {
+      $street->setPath( $street->getpath());
+    }
+    return $streets;
   }
 }

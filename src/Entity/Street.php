@@ -282,7 +282,15 @@ class Street
         $text = "[".$text."]";
         $text = str_replace( "[[[","[[",   $text);
         $text = str_replace( "]]]","]]",   $text);
+        $text = str_replace( "[[{","[{",   $text);
+        $text = str_replace( "}]]","}]",   $text);
         $this->Path = $text;
+        return $this;
+    }
+
+     public function fixPath()
+    {
+        $this->Path = $this->getPath();
         return $this;
     }
 
@@ -332,8 +340,17 @@ class Street
    public function countSteps()
    {
      $path = json_decode($this->getPath());
+     $k=0;
      if($path)
-       return count($path);
+     {
+
+     foreach($path as $branch)
+     {
+        dump($branch);
+       if(count($branch->steps)>0) $k++;
+     }
+       return $k;
+       }
      else
        return 0;
    }

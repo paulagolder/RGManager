@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 
@@ -25,7 +26,7 @@ class StreetForm extends AbstractType
         $builder ->add('Latitude', TextType::class,['label' =>  'Latitude','required' => false,]);
         $builder ->add('Longitude', TextType::class,['label' => 'Longitude','required' => false,]);
         $builder ->add('Path', TextType::class,['label' => 'Path','required' => false,]);
-        $builder ->add('Note', TextType::class,['label' => 'Comment','required' => false,]);
+        $builder ->add('Note', TextAreaType::class,['label' => 'Comment','required' => false,]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

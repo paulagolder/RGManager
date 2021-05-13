@@ -24,6 +24,7 @@ class AppExtension extends AbstractExtension
     {
         return [
             new TwigFilter('price', [$this, 'formatPrice']),
+            new TwigFilter('jsondecode', [$this,'jsonDecode']),
         ];
     }
 
@@ -43,6 +44,11 @@ class AppExtension extends AbstractExtension
         return $price;
     }
 
+
+    public function jsonDecode($string)
+    {
+        return json_decode($string);
+    }
 
     public function calculateArea(int $width, int $length)
     {
@@ -106,4 +112,5 @@ class AppExtension extends AbstractExtension
 
 
     }
-}
+
+ }

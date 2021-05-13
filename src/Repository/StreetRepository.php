@@ -38,9 +38,7 @@ class StreetRepository  extends EntityRepository
         $qb->select(['s.Name', 's.Part', 'count(s) as Count']);
        // $qb->from('App:Street', 's');
          $qb->groupBy('s.Name');
-        $qb->addGroupBy('s.Part');
          $qb->Having('count(s)  > 1');
-
        $qb->orderBy("count(s)", "DESC");
        $streets =  $qb->getQuery()->getResult();
        return $streets;
@@ -107,7 +105,7 @@ class StreetRepository  extends EntityRepository
        $yb = ' and rg.year="'.$year.'"  ';
 
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'SELECT s.*,rg.roadgroupid FROM street as s left join roadgrouptostreet as rg on (s.name = rg.street and s.part = rg.part) where s.name = "'.$sn.'"  '.$yb.' ;';
+        $sql = 'SELECT s.* FROM street as s left join roadgrouptostreet as rg on (s.name = rg.street and s.part = rg.part) where s.name = "'.$sn.'"  '.$yb.' ;';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $streets= $stmt->fetchAll();
@@ -115,16 +113,7 @@ class StreetRepository  extends EntityRepository
     }
 
 
-    public function xfindAllbyName($sn)
-    {
 
-        $conn = $this->getEntityManager()->getConnection();
-        $sql = 'SELECT s.* FROM street as s where s.name = "'.$sn.'" ;';
-        $stmt = $conn->prepare($sql);
-        $stmt->execute();
-        $streets= $stmt->fetchAll();
-        return $streets;
-    }
 
     public function namesearch($streetname)
     {

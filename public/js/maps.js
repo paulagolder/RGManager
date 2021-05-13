@@ -216,16 +216,24 @@ function myWMap(location)
 
 function myStMap(location)
 {
+  if(location)
+  {
   var location_dc =redecode(location);
   var mylocation = JSON.parse(location_dc);
   var lat = mylocation.latitude;
   var long = mylocation.longitude;
+}else
+{
+  var lat = null;
+  var long = null;
+}
+
   var zoom = 20;
   if( lat === undefined  || lat < 40)
   {
     long =-1.8304;
     lat = 52.6854 ;
-    zoom = 20;
+    zoom = 14;
   }
 
   if(zoom <1 ) zoom = 1;
@@ -411,18 +419,26 @@ function drawPath(amap,mypath,style=null)
   }
   if(typeof mypath !== 'object')
   {
+    mypath = mypath.replace( "[[{","[{");
+    mypath = mypath.replace( "}]]","}]");
+    if(mypath.length >4)
+    {
   var dpath =redecode(mypath);
   var points = JSON.parse(dpath);
   if(points.length<1) return;
   for(point of points)
   {
+
     var track = point.steps;
      polyline = L.polyline(track, style).addTo(amap);
+  }
   }
 }
 else
 {
+
   var track = mypath.steps;
+
   polyline = L.polyline(track, style).addTo(amap);
 }
 return polyline ;

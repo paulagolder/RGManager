@@ -61,6 +61,10 @@ services:
 #         $mappath : '%MAPPATH%'
 
 
+ #   App\Twig\Extension\JsonDecode:
+ #      class: App\Twig\Extension\JsonDecode
+    #   tags:
+  #        - { name: twig.extension }
 
 
 
