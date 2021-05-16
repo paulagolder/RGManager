@@ -53,6 +53,11 @@ div.heading div.label {
   padding-right : 0.25em;
 }
 
+div.heading.red div.label {
+  color : red;
+  font-size : 1.2em;
+  padding-right : 0.25em;
+}
 
 div.heading div.value
 {

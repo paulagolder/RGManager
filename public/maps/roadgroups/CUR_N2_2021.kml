@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+ <name>CUR_N2_2021.kml</name>
+<Style id="blueLine">
+  <LineStyle>
+    <color>7fff0000</color>
+    <width>4</width>
+  </LineStyle>
+</Style>
+<Placemark>
+  <name>Lincoln Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8195462226868,52.697671839749
+-1.8201148509979,52.697450774692
+-1.8202865123749,52.697405261159
+-1.8205869197845,52.697333739797
+-1.8207585811615,52.697327237849
+-1.8209195137024,52.697379253404
+-1.8211126327515,52.69746377855
+-1.821209192276,52.697580813097
+-1.8212950229645,52.697704349222
+-1.8214344978333,52.697860394355
+-1.8214559555054,52.698022940775
+-1.8214344978333,52.698172482946
+-1.8214023113251,52.698367537183
+-1.8212735652924,52.698627608143
+-1.8212628364563,52.69892018612
+-1.8210911750793,52.699043718455
+-1.8209195137024,52.699128240378
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Lincoln Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.821037530899,52.69910223365
+-1.8211019039154,52.699219263804
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Lincoln Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8214881420136,52.698042446304
+-1.8218100070953,52.698042446304
+-1.8220138549805,52.697990431539
+-1.8220996856689,52.697964424133
+-1.8221747875214,52.697912409275
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Lincoln Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.821386218071,52.698518398846
+-1.8219709396362,52.698550907689
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Salisbury Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8212682008743,52.698673475966
+-1.8211314082146,52.698671850529
+-1.8210482597351,52.698668599655
+-1.8209409713745,52.698678352276
+-1.8208014965057,52.698710860999
+-1.820667386055,52.698738493395
+-1.820482313633,52.698767751207
+-1.8203723430634,52.698810012456
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Winchester Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8213245272636,52.69779085478
+-1.8202677369118,52.698031423649
+-1.8199163675308,52.698050268832
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Winchester Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8204528093338,52.698436161526
+-1.8202677369118,52.698044427334
+    </coordinates>
+  </LineString>
+</Placemark>
+</Document>
+</kml>

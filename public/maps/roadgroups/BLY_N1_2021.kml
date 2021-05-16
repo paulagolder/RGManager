@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+ <name>BLY_N1_2021.kml</name>
+<Style id="blueLine">
+  <LineStyle>
+    <color>7fff0000</color>
+    <width>4</width>
+  </LineStyle>
+</Style>
+<Placemark>
+  <name>Austin Cote Lane</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8029019726329,52.681717841619
+-1.8025047887599,52.682046306175
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Burton Old Road East</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8030041457619,52.683840114039
+-1.8037448400114,52.68399620873
+-1.8042708402756,52.684087263708
+-1.804764636442,52.684191326308
+-1.8052154938113,52.684308396436
+-1.8056448817821,52.684399450763
+-1.8060313309558,52.68442546625
+-1.8066217394156,52.68449700876
+-1.8069759844915,52.684510016477
+-1.8074268418608,52.684555543454
+-1.8076415358462,52.684568551153
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Cornfield Drive</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.802466589949,52.682142548261
+-1.80274569213,52.682233607104
+-1.8029925902132,52.682207590311
+-1.8032931617928,52.682194581909
+-1.8034863863796,52.682266128073
+-1.8036903456657,52.682285640643
+-1.8039265090497,52.682389707536
+-1.8041304683358,52.682500278337
+-1.8041841418321,52.682604344719
+-1.8042163459299,52.682864509587
+-1.8041519377343,52.683014103684
+-1.8039909172453,52.68322223375
+-1.8038084273577,52.683313290342
+-1.8035937333723,52.683404346744
+-1.8033683046876,52.683527922986
+-1.8032502229957,52.68372954663
+-1.8032180188979,52.683846617996
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Cornfield Drive</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8041626724336,52.682571824001
+-1.8043558970204,52.682487270022
+-1.8044525093138,52.682396211708
+-1.8045169175095,52.682324665757
+-1.804538386908,52.682220598709
+-1.8045276522087,52.682155556679
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Cornfield Drive</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8045276522087,52.682220598709
+-1.8047316114949,52.682220598709
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Cornfield Drive</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8035078557782,52.682259623881
+-1.8035937333723,52.682175069298
+-1.8037225497635,52.682051489228
+-1.8037654885606,52.68193441305
+-1.8037976926584,52.681797823779
+-1.8037976926584,52.681680746921
+-1.8037440191621,52.681589686925
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Cornfield Drive</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8037869579592,52.681680746921
+-1.8038406314555,52.681622208374
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Lambourne Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8057020008564,52.684419648335
+-1.8056751787663,52.684668420682
+-1.8054646253586,52.684745653639
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Livingstone Drive</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8041010606749,52.684055430055
+-1.803973586121,52.684257051264
+-1.8042446372776,52.684349731669
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Maybank Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8047574427026,52.68424142667
+-1.8046393610106,52.684400771863
+-1.8046876671573,52.684582879942
+-1.8048272182478,52.684787750624
+-1.804972136688,52.684950345719
+-1.8051009530792,52.685109688325
+-1.8051975653726,52.685168222198
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Maybank Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8051063204288,52.685161718438
+-1.8050472795828,52.685184481593
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Maybank Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8046822998077,52.684602391477
+-1.8044998099201,52.684612147241
+-1.8042797485851,52.684647918358
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Maybank Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8046017895632,52.684384512176
+-1.8044676058223,52.684361748604
+-1.8043817282281,52.684312969481
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Netherbridge Avenue</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8033514140371,52.683470708042
+-1.8032548017436,52.683340627607
+-1.8031528221006,52.683230058933
+-1.8031098833035,52.683165018406
+-1.803029373059,52.68309022168
+-1.8029059240174,52.683041441137
+-1.8027932096751,52.682995912581
+-1.8026429238853,52.682953636023
+-1.8025087401444,52.682930871705
+-1.8023047808583,52.682927619659
+-1.802192066516,52.682973148286
+-1.8020686174744,52.683047945213
+-1.8019881072299,52.683132498106
+-1.8019290663839,52.683210546785
+-1.8018807602372,52.683269083203
+-1.8020364133766,52.683308107438
+-1.8021813318167,52.683366643725
+-1.8022296379634,52.683386155804
+-1.8023262502568,52.683363391711
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Netherbridge Avenue</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8022350053131,52.683405667873
+-1.8021813318167,52.683444691986
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Netherbridge Avenue</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8019022296357,52.683256075117
+-1.8017841479437,52.683239815004
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Netherbridge Avenue</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.802294046159,52.682911359424
+-1.8022242706138,52.682729244374
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Netherbridge Avenue</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.802251107362,52.682804041718
+-1.8023262502568,52.682778025265
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Netherbridge Avenue</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8028683525699,52.683038189099
+-1.803131352702,52.68283331021
+-1.8031689241495,52.682804041718
+-1.803249434394,52.682813797884
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Netherbridge Avenue</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8031581894502,52.682826806102
+-1.8030562098072,52.682787781437
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>The Crossings</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8064547716426,52.684502572608
+-1.8064225675448,52.684575740954
+-1.8063487664874,52.684638340441
+-1.8062508123565,52.68470012686
+-1.8061394398516,52.684734271949
+-1.8059918377367,52.684746466617
+-1.8058576539958,52.684759474259
+    </coordinates>
+  </LineString>
+</Placemark>
+</Document>
+</kml>

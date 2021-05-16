@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+ <name>CUR_C3_2021.kml</name>
+<Style id="blueLine">
+  <LineStyle>
+    <color>7fff0000</color>
+    <width>4</width>
+  </LineStyle>
+</Style>
+<Placemark>
+  <name>Barn Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8251037597656,52.697625056544
+-1.8245378136635,52.698180965792
+-1.8245485424995,52.698247609408
+-1.8248999118805,52.698369518198
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Barn Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8245968222618,52.698111071159
+-1.824443936348,52.698052554635
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Fallow Field</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8243205547333,52.697286295874
+-1.8234515190125,52.698095781693
+-1.8238699436188,52.698294087174
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Fallow Field</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8234622478485,52.69811528719
+-1.8233603239059,52.698086028941
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Ploughmans Walk</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8223303556442,52.696827905681
+-1.8229955434799,52.697052224887
+-1.8230921030045,52.697123746711
+-1.8231135606766,52.697218025299
+-1.8230706453323,52.697309052708
+-1.8229579925537,52.697422836703
+-1.8228453397751,52.697520365605
+-1.8227487802505,52.6976374
+-1.8226683139801,52.697715422756
+-1.822829246521,52.697812951004
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Ploughmans Walk</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.822657585144,52.69769591708
+-1.8223839998245,52.697601639524
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Shepherd Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8226361274719,52.696369510675
+-1.8225181102753,52.696593832237
+-1.8223571777344,52.696805148596
+-1.8222069740295,52.696967698945
+-1.8220621347427,52.69710098978
+-1.8216705322266,52.697364319257
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Shepherd Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8219387531281,52.697188766449
+-1.8214988708496,52.696662103787
+    </coordinates>
+  </LineString>
+</Placemark>
+</Document>
+</kml>

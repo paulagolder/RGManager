@@ -211,7 +211,6 @@ class MapServer
     if(!$kmlfile) return $geodata;
     $kmlpath =  $this->maproot."/roadgroups/".$kmlfile;
     $kmlpath = str_replace("//","/",$kmlpath);
-    dump($kmlpath);
     $xmlstr = file_get_contents($kmlpath);
     $kml = new \SimpleXMLElement($xmlstr);
     $dist = 0;
@@ -221,19 +220,16 @@ class MapServer
     $maxlong=-306;
     foreach ($kml->Document->Placemark as $placemark)
     {
-      // echo '<script>console.log(" placemark '.$placemark->name.'\n")</script></br>';
-
-      $k=0;
-
+     $k=0;
       $coordinatesstr = $placemark->LineString->coordinates ;
       $value =  explode(PHP_EOL,  $coordinatesstr);
       $coords   = array();
       foreach($value as $coord)
       {
         $args     = explode(",", $coord);
-        if(count($args)==3)
+        if(isset($args[1]))
         {
-          $coords[] = array($args[0], $args[1], $args[2]);
+          $coords[] = array($args[0], $args[1]);
           if($k>0)
           {
             $dist += $this->getDistanceBetweenTwoPoints($coords[$k], $coords[$k-1]);
@@ -245,13 +241,11 @@ class MapServer
           $k++;
         }
       }
-
     }
     $geodata["dist"]=number_format((float)$dist, 2, '.', '');
     $geodata["maxlat"]=$maxlat;
     $geodata["midlat"]="".($maxlat+$minlat)/2;
     $geodata["minlat"]=$minlat;
-
     $geodata["maxlong"]=$maxlong;
     $geodata["midlong"]="".($minlong+$maxlong)/2;
     $geodata["minlong"]=$minlong;

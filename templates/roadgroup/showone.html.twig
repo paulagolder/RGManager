@@ -30,14 +30,20 @@
   <H1> No streets found </H1>
 
   {% else %}
-
+{% if needsupdating %}
+<div class="red heading row">
+<div class="label"> Road Group </div>
+{% else %}
 <div class="heading row">
-    <div class="label"> Road Group </div>
+ <div class="label"> Road Group </div>
+{% endif %}
+
     <div class="value"> {{roadgroup.RoadgroupId}}:</div>
     <div class="value"> {{roadgroup.Name}}</div>
    <div class="value small"> H:{{roadgroup.Households}}</div>
      <div class="value small"> T:{{total}}</div>
        <div class="value small"> D:{{geodata.dist}}</div>
+         <div class="value small"> TD:{{totaldist}}</div>
     <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
   </div>
   <div class="subheading row">
@@ -77,6 +83,7 @@
   </div>
 
     <div  class="altbutton row"  >
+      <div class="button"> <a class="small button" href = "/roadgroup/newkml/{{roadgroup.RoadgroupId}}" >New Map</a> </div>
        <div class="button"> <a class="small button" href = "http://www.bikehike.co.uk/mapview.php" target = "_blank"  >Create Route</a> </div>
       <form action="{{ path('do-upload') }}" method="post" enctype="multipart/form-data">
         <input type="hidden" name="utoken" value="{{ csrf_token('upload-map') }}" />

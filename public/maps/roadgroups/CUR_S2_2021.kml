@@ -1,46 +1,101 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
-  <Document>
-    <name>cur_s2_2021</name>
-	<Style id="blueLine">
-      <LineStyle>
-        <color>7fff0000</color>
-        <width>4</width>
-      </LineStyle>
-    </Style>
-    <Placemark>
-      <styleUrl>#blueLine</styleUrl>
-      <LineString>
-        <coordinates>
--1.826430,52.692280,84.39 
--1.826490,52.692320,84.76 
--1.824220,52.694040,80.81 
--1.823940,52.694310,80.06 
--1.823730,52.694590,79.19 
--1.823620,52.694810,78.77 
--1.823550,52.695090,78.92 
--1.821069,52.694274,77 
--1.822270,52.694742,77.72 
--1.821852,52.695399,78.29 
--1.822324,52.694742,77.79 
--1.822410,52.694703,77.89 
--1.823558,52.695113,79.05 
--1.823460,52.695590,81.03 
--1.823550,52.695060,78.79 
--1.823620,52.694810,78.77 
--1.823670,52.694710,78.95 
--1.825550,52.695020,81.69 
--1.823670,52.694710,78.95 
--1.823730,52.694590,79.19 
--1.823940,52.694310,80.06 
--1.824220,52.694040,80.81 
--1.824710,52.693670,80.72 
--1.827060,52.694540,83.47 
--1.824760,52.693690,80.87 
--1.824710,52.693670,80.72 
--1.826450,52.692350,84.73 
-        </coordinates>
-      </LineString>
-    </Placemark>
-  </Document>
+<Document>
+ <name>CUR_S2_2021.kml</name>
+<Style id="blueLine">
+  <LineStyle>
+    <color>7fff0000</color>
+    <width>4</width>
+  </LineStyle>
+</Style>
+<Placemark>
+  <name>Handel Walk</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8211287260056,52.694272535973
+-1.8216705322266,52.694457854074
+-1.8218529224396,52.694597654928
+-1.8224000930786,52.694795976301
+-1.8226093053818,52.694730953
+-1.8233978748322,52.694974789882
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Handel Walk</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8220567703247,52.694765395042
+-1.821756362915,52.695272573827
+-1.8220353126526,52.695292080586
+-1.8223571777344,52.694739385714
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Pones Green</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8238431215286,52.694727701832
+-1.8244278430939,52.694766715828
+-1.8254739046097,52.694935776072
+-1.8256026506424,52.69498129218
+-1.825538277626,52.695108086802
+-1.8247228860855,52.695033310531
+-1.823912858963,52.694857748348
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Ponesfield Road</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8260371685028,52.692541541578
+-1.824631690979,52.693575452454
+-1.8240308761597,52.694154171753
+-1.8236231803894,52.694609338845
+-1.8234086036682,52.695090510326
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Ponesfield Road</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8261229991913,52.692580557527
+-1.8246102333069,52.693672989952
+-1.8239879608154,52.694232200734
+-1.8237197399139,52.69456382235
+-1.8236124515533,52.694869432196
+-1.8235266208649,52.695422125421
+-1.8234837055206,52.695662707345
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Ponesfield Road</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8233335018158,52.695662707345
+-1.8234300613403,52.695383112012
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Stychbrook Gardens</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8270134925842,52.694544315266
+-1.8248462677002,52.693751019794
+    </coordinates>
+  </LineString>
+</Placemark>
+</Document>
 </kml>

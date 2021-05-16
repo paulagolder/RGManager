@@ -91,6 +91,11 @@ class Roadgroup
    */
   private $Geodata;
 
+      /**
+     * @ORM\Column(name="updated",type="datetime",    nullable=true)
+     */
+    private $Updated;
+
   public function getRoadgroupId()
    {
      return $this->RoadgroupId;
@@ -271,6 +276,22 @@ public function setGeodata($text)
    $this->Geodata= $text_json;
 }
 
+   public function getUpdated()
+   {
+     if($this->Updated)
+       return $this->Updated;
+     else
+     {
+        $format = 'Y-m-d H:i:s';
+       return \DateTime::createFromFormat($format, '1944-07-08 00:00:01');
+     }
+   }
+
+   public function setUpdated($dt)
+   {
+     $this->Updated = $dt;
+     return $this;
+   }
 
 
    public function getjson()

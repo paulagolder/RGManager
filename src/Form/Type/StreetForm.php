@@ -11,6 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 
 class StreetForm extends AbstractType
@@ -25,9 +26,11 @@ class StreetForm extends AbstractType
         $builder ->add('Electors', IntegerType::class,['label' => 'Electors','required' => false,]);
         $builder ->add('Latitude', TextType::class,['label' =>  'Latitude','required' => false,]);
         $builder ->add('Longitude', TextType::class,['label' => 'Longitude','required' => false,]);
+        $builder ->add('Updated', DateTimeType::class,['label' => 'Updated','required' => false, 'disabled' => true,]);
         $builder ->add('Path', TextType::class,['label' => 'Path','required' => false,]);
         $builder ->add('Note', TextAreaType::class,['label' => 'Comment','required' => false,]);
     }
+
 
     public function configureOptions(OptionsResolver $resolver)
     {

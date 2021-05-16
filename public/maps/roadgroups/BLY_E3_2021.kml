@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+ <name>BLY_E3_2021.kml</name>
+<Style id="blueLine">
+  <LineStyle>
+    <color>7fff0000</color>
+    <width>4</width>
+  </LineStyle>
+</Style>
+<Placemark>
+  <name>Darnford Lane</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8067604544014,52.67850654362
+-1.8064063105865,52.678285381516
+-1.805901923941,52.678142276028
+-1.8051399781574,52.678018684548
+-1.8043780323738,52.677830044246
+-1.8036590131132,52.677667422642
+-1.8028112142836,52.677387712068
+-1.8016307349005,52.677127514576
+-1.8007936677016,52.676867315535
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Gable Croft</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8024717803485,52.677336994006
+-1.8023912931178,52.677506121741
+-1.8023000742564,52.677688258569
+-1.8021927579488,52.677873647061
+-1.8021390997951,52.677958209971
+-1.802010320226,52.678088306437
+-1.8018708090262,52.678150102122
+-1.8017956876109,52.678237916893
+-1.8017366636417,52.678328983876
+-1.801683005488,52.678407041139
+-1.8016776396726,52.678533883895
+-1.8016293473342,52.678631454994
+-1.8015864208112,52.678725773517
+-1.8015381284728,52.6787875683
+-1.8014791045036,52.678810334777
+-1.8013181300423,52.678790820655
+-1.8012483744424,52.678745287668
+-1.8010605709042,52.678641212092
+-1.801001546935,52.67856965999
+-1.8008942306275,52.678520874398
+-1.8008244750276,52.678481845886
+-1.8006849638277,52.678455826858
+-1.8006205740432,52.678439564958
+-1.8004435021357,52.678387526837
+-1.8003576490897,52.678364760139
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Gable Croft</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8004220388742,52.678400536373
+-1.8003683807205,52.678439564958
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Gable Croft</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8014254463498,52.678829848891
+-1.801811785057,52.679002223185
+-1.8020371493029,52.6790119802
+-1.8020371493029,52.679077026912
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Gable Croft</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8020156860414,52.679037998896
+-1.8020586125644,52.678969699785
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Gable Croft</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8017044687495,52.678390779221
+-1.8019137355492,52.678410293522
+-1.8021283681643,52.67842005067
+-1.8021766605027,52.678400536373
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Gable Croft</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8021069049028,52.67842005067
+-1.8021015390874,52.678462331616
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Keepers Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8050581033604,52.678719268797
+-1.805294199237,52.6787875683
+-1.8055195634829,52.678868877093
+-1.8056644404981,52.678953438076
+-1.8058415124056,52.679018484875
+-1.8059112680055,52.67903474656
+-1.8060668766514,52.678917662296
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Keepers Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8058951705593,52.679057512909
+-1.8057878542518,52.679109550232
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Ryknild Street</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8066778445995,52.678537136268
+-1.8062754084462,52.67881358713
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Ryknild Street</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8054868040621,52.679389249781
+-1.8057443632003,52.679210372369
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Sheriffs Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8036898204392,52.677662239069
+-1.8032927501012,52.677961462388
+-1.8031800679783,52.678117578088
+-1.8031371414553,52.678348498205
+-1.8030083618862,52.678553398132
+-1.8031907996091,52.67863470736
+-1.8033517740704,52.678680240462
+-1.8035127485317,52.678709511717
+-1.8037434785929,52.678670483373
+-1.8038776239774,52.678628202628
+-1.8040171351772,52.678524126773
+-1.8041083540386,52.67847534113
+-1.8041942070846,52.678465583995
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Sheriffs Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8040278668079,52.678527379147
+-1.8039420137619,52.678446069719
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Sheriffs Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8030405567785,52.67856965999
+-1.8028688506864,52.678670483373
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Tudor Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8012221364436,52.677062464961
+-1.8011577466591,52.677251108578
+-1.8012865262281,52.67744625629
+-1.8012006731821,52.677660917766
+-1.8010075038285,52.677914607241
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Tudor Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8010396987208,52.677823539394
+-1.8008679926287,52.677784510258
+-1.8007177497981,52.677764995677
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Warren Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8051976145603,52.678026510664
+-1.8051063956988,52.678309469539
+-1.8050151768374,52.678446069719
+-1.8050473717297,52.678647716823
+-1.8050044452067,52.678768054167
+-1.804639569761,52.679073774579
+-1.8045376192688,52.67918110145
+-1.8043337182845,52.679265661829
+-1.8041459147463,52.679317698904
+-1.8040332326233,52.679353474357
+-1.8038507949005,52.679353474357
+-1.8036522597315,52.679350222044
+-1.8035664066855,52.679333960477
+-1.8033517740704,52.679272166467
+-1.8032015312398,52.67924940023
+-1.8030029960708,52.679233138625
+-1.802906411394,52.679194110749
+-1.8028312899787,52.679200615398
+-1.8027561685635,52.679288428057
+-1.8026488522559,52.679353474357
+-1.8025576333945,52.679418520561
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Warren Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8026488522559,52.679369735917
+-1.8025200726869,52.679324203534
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Warren Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.802863484871,52.679207120045
+-1.8026703155174,52.679138821199
+    </coordinates>
+  </LineString>
+</Placemark>
+</Document>
+</kml>

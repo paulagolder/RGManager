@@ -312,8 +312,6 @@ class SeatController extends AbstractController
             $form->handleRequest($request);
             if ($form->isValid())
             {
-               // $person->setContributor($user->getUsername());
-               // $person->setUpdateDt($time);
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($ward);
                 $entityManager->flush();

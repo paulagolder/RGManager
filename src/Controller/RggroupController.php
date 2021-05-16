@@ -217,8 +217,6 @@ class RggroupController extends AbstractController
       $form->handleRequest($request);
       if ($form->isValid())
       {
-        // $person->setContributor($user->getUsername());
-        // $person->setUpdateDt($time);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($rggroup);
         $entityManager->flush();

@@ -1,5 +1,8 @@
 
 
+
+
+
 #streetedit div.heading div.label
 {
   color: green;
@@ -13,6 +16,11 @@
   margin-left: 2em;
 }
 
+#streetedit > div.formmap > div.form > form > div:nth-child(13)
+{
+  visibility: hidden;
+
+}
 
 #streetedit div.button.isactive
 {

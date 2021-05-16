@@ -206,6 +206,10 @@ roadgroups_upload:
     path: /roadgroup/upload
     controller: App\Controller\RoadgroupController::upload
 
+roadgroups_newkml:
+    path: /roadgroup/newkml/{rgid}
+    controller: App\Controller\RoadgroupController::exportkml
+
 roadgroups_pdsd:
     path: /roadgroup/showpds
     controller: App\Controller\RoadgroupController::showpds

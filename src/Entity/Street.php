@@ -79,6 +79,13 @@ class Street
      */
     private $Path;
 
+    /**
+     * @ORM\Column(name="updated",type="datetime",    nullable=true)
+     */
+    private $Updated;
+
+
+
 
     public function load($starray)
     {
@@ -92,6 +99,7 @@ class Street
       $this->Latitude= $starray["latitude"];
       $this->Longitude= $starray["longitude"];
       $this->Path= $starray["path"];
+       $this->Updated= $starray["updated"];
     }
 
 
@@ -294,6 +302,24 @@ class Street
         return $this;
     }
 
+     public function getUpdated()
+   {
+     if($this->Updated)
+       return $this->Updated;
+     else
+     {
+        $format = 'Y-m-d H:i:s';
+       return \DateTime::createFromFormat($format, '1944-07-08 00:00:01');
+     }
+   }
+
+   public function setUpdated($dt)
+   {
+     $this->Updated = $dt;
+     return $this;
+   }
+
+
     public function getjson()
     {
        $str ="{";
@@ -346,7 +372,6 @@ class Street
 
      foreach($path as $branch)
      {
-        dump($branch);
        if(count($branch->steps)>0) $k++;
      }
        return $k;
@@ -354,5 +379,86 @@ class Street
      else
        return 0;
    }
+
+
+    public function getDistance()
+   {
+     $path = json_decode($this->getPath());
+     $k=0;
+     $dist=0;
+     if($path)
+     {
+
+     foreach($path as $branch)
+     {
+      $geodata = $this->loadBranch($branch->steps);
+      $dist += $geodata["dist"];
+     }
+       return $dist;
+       }
+     else
+       return 0;
+   }
+
+
+   public function loadBranch($steps)
+  {
+    $geodata=[];
+    $geodata["dist"]=0;
+    $geodata["maxlat"]="0";
+    $geodata["midlat"]="0";
+    $geodata["minlat"]="0";
+    $geodata["maxlong"]="0";
+    $geodata["midlong"]="0";
+    $geodata["minlong"]="0";
+    if(!$steps) return $geodata;
+    $dist = 0;
+    $minlat=360;
+    $minlong =360;
+    $maxlat=-360;
+    $maxlong=-306;
+
+    $previous=null;
+    foreach ($steps as $coords)
+    {
+          if($previous)
+          {
+            $dist += $this->getDistanceBetweenTwoPoints($previous, $coords);
+          }
+           $previous=$coords;
+           if(isset($coords[1]))
+           {
+            if($maxlat <$coords[1])$maxlat=$coords[1];
+            if($maxlong <$coords[0])$maxlong=$coords[0];
+            if($minlat >$coords[1])$minlat=$coords[1];
+            if($minlong >$coords[0])$minlong=$coords[0];
+  }
+    }
+    $geodata["dist"]=number_format((float)$dist, 3, '.', '');
+    $geodata["maxlat"]=$maxlat;
+    $geodata["midlat"]="".($maxlat+$minlat)/2;
+    $geodata["minlat"]=$minlat;
+    $geodata["maxlong"]=$maxlong;
+    $geodata["midlong"]="".($minlong+$maxlong)/2;
+    $geodata["minlong"]=$minlong;
+    return  $geodata;
+  }
+
+  public function getDistanceBetweenTwoPoints($point1 , $point2)
+  {
+    // array of lat-long i.e  $point1 = [lat,long]
+    $earthRadius = 6371;  // earth radius in km
+    $point1Lat = $point1[1];
+    $point2Lat =$point2[1];
+    $deltaLat = deg2rad($point2Lat - $point1Lat);
+    $point1Long =$point1[0];
+    $point2Long =$point2[0];
+    $deltaLong = deg2rad($point2Long - $point1Long);
+    $a = sin($deltaLat/2) * sin($deltaLat/2) + cos(deg2rad($point1Lat)) * cos(deg2rad($point2Lat)) * sin($deltaLong/2) * sin($deltaLong/2);
+    $c = 2 * atan2(sqrt($a), sqrt(1-$a));
+
+    $distance = $earthRadius * $c;
+    return $distance;    // in km
+  }
 }
 

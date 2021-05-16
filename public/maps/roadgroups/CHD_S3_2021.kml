@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+ <name>CHD_S3_2021.kml</name>
+<Style id="blueLine">
+  <LineStyle>
+    <color>7fff0000</color>
+    <width>4</width>
+  </LineStyle>
+</Style>
+<Placemark>
+  <name>Anson Avenue</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8353283405304,52.687163509629
+-1.8346846103668,52.687469171278
+-1.833997964859,52.68763175639
+-1.8334937095642,52.687865877887
+-1.8327105045319,52.688431666324
+-1.8319809436798,52.688795848106
+-1.8315088748932,52.689537208778
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Brook Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8337941169739,52.687763145041
+-1.8343681097031,52.68815984898
+-1.8346738815308,52.687984259156
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Brook Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8343788385391,52.688169603949
+-1.8344271183014,52.688198868844
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Brook Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8341428041458,52.688042789176
+-1.8340998888016,52.688091564132
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Darwin Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8335312604904,52.687831430402
+-1.8333971500397,52.687727376476
+-1.833268404007,52.687668846034
+-1.8331289291382,52.687613567211
+-1.8329840898514,52.687561540019
+-1.8328821659088,52.687512764471
+-1.8328016996384,52.6874769957
+-1.8327480554581,52.687424968346
+-1.8327534198761,52.687382696075
+-1.8328124284744,52.68732741689
+-1.8328982591629,52.687285144524
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Little Barrow Walk</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8346416950226,52.687503669857
+-1.8350306153297,52.687780063969
+-1.8347597122192,52.687942647923
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Lomax Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8312326073647,52.688383247396
+-1.8321499228477,52.687874362736
+-1.8323135375977,52.687924763717
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Lomax Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8321552872658,52.687875988575
+-1.8321070075035,52.687819084173
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Prince Ruperts Way</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8342500925064,52.687542029806
+-1.8336975574493,52.687171334106
+-1.8335956335068,52.687187592756
+-1.8334937095642,52.687181089297
+-1.8332523107529,52.687041264694
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>The Windings</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8319487571716,52.688784162633
+-1.8315410614014,52.688621581812
+-1.831294298172,52.68844274221
+-1.8310636281967,52.688296418354
+-1.830757856369,52.688049292506
+    </coordinates>
+  </LineString>
+</Placemark>
+</Document>
+</kml>

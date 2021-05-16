@@ -80,6 +80,8 @@ var estyle = {
 function onMapClick(e)
 {
   bn = selectedbranch;
+  if(bn>0)
+  {
   lat = e.latlng.lat;
   lng = e.latlng.lng;
   document.getElementById("street_form_Latitude").value=lat;
@@ -107,6 +109,7 @@ function onMapClick(e)
   polyline =drawPath(mymap,selpath,estyle);
   markers= setEndMarkers(mymap,selpath);
   //  document.getElementById("pathsteps").innerHTML =countpath();
+  }
 }
 
 function undopath()
@@ -120,7 +123,10 @@ function undopath()
   var newpath = JSON.stringify(points);
   document.getElementById("street_form_Path").value  = newpath;
   mymap.removeLayer(polyline);
+  if(markers)
+  {
   mymap.removeLayer(markers["end"]);
+  }
   polyline =drawPath(mymap,selpath,estyle);
   markers= setEndMarkers(mymap,selpath);
   //document.getElementById("pathsteps").innerHTML = countpath();
@@ -170,6 +176,8 @@ function selectbranch(bn)
     document.getElementById("branch"+selectedbranch).getElementsByTagName("button")[0].style.visibility="visible";
     document.getElementById("buttonlist").getElementsByClassName("button isactive")[0].style.visibility="hidden";
     document.getElementById("buttonlist").getElementsByClassName("button isactive")[1].style.visibility="hidden";
+    var el = document.getElementById("stmapid");
+    el.style.cursor="move";
   }
   selectedbranch = bn;
   var apath =  document.getElementById("street_form_Path").value ;
@@ -182,6 +190,8 @@ function selectbranch(bn)
   document.getElementById("buttonlist").getElementsByClassName("button isactive")[0].style.visibility="visible";
   document.getElementById("buttonlist").getElementsByClassName("button isactive")[1].style.visibility="visible";
   document.getElementById("buttonlist").getElementsByClassName("button isactive")[2].style.visibility="visible";
+  var el = document.getElementById("stmapid");
+  el.style.cursor="crosshair";
 }
 
 function addbranch()
@@ -236,6 +246,8 @@ function addbranch()
   var element = document.getElementById("branchlist");
   element.appendChild(tag);
   selectbranch(nb);
+  var el = document.getElementById("stmapid");
+  el.style.cursor="move";
 }
 
 function openForm() {
@@ -302,6 +314,7 @@ function closeForm() {
       {{ form_row(form.Electors) }}
       {{ form_row(form.Latitude) }}
       {{ form_row(form.Longitude) }}
+      <div>UPDATED:   {{form.Updated.vars.data|date }}</div>
       <button type="submit">{{'Register!'}}</button>
      {{ form_row(form.Path) }}
        <div  class="form row" >
@@ -311,7 +324,6 @@ function closeForm() {
      {% if tracks is defined  %}
       <div class="branches" id="branchlist">
    {% for track in tracks %}
-   {% dump(tracks)  %}
       <div class="steps row branches" id="branch{{loop.index}}">
          <div class="blabel">Branch No: {{ loop.index }}</div>
          <div class="bstart">Start:</div><div id="binput{{loop.index}}" class="input" > {{track.start}}</div>
@@ -348,7 +360,6 @@ function closeForm() {
          var mymap = myStMap("{{jslocation}}");
          mymap.on('click', onMapClick);
          drawPath(mymap,"{{street.getPath()}}");
-       //  setEndMarkers(mymap,"{{street.getPath()}}");
       </script>
 </div>
 </div>

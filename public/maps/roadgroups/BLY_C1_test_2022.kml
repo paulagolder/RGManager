@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
 <Document>
- <name>BLY_C1_2021.kml</name>
+ <name>BLY_C1_2022</name>
 <Style id="blueLine">
   <LineStyle>
     <color>7fff0000</color>
@@ -205,11 +205,9 @@
 	   <coordinates>
 -1.8085438013077,52.680696658806
 -1.8085867166519,52.680508030069
--1.808600127697,52.680475685647
--1.8086658418179,52.680434219707
--1.8087248504162,52.680407388783
--1.808790564537,52.680396005962
--1.8089367449284,52.680393566786
+-1.8086725473404,52.680433228792
+-1.808790564537,52.680394201988
+-1.8089246749878,52.680397454223
     </coordinates>
   </LineString>
 </Placemark>
@@ -218,8 +216,16 @@
   <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
--1.808602809906,52.68048056399
--1.8084686994553,52.680434219707
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Sunbury Avenue</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8085933241025,52.680469003332
+-1.8084590954928,52.680439733256
     </coordinates>
   </LineString>
 </Placemark>

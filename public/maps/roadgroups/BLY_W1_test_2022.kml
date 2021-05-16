@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
 <Document>
- <name>BLY_W1_2021.kml</name>
+ <name>BLY_W1_2022</name>
 <Style id="blueLine">
   <LineStyle>
     <color>7fff0000</color>
@@ -9,8 +9,7 @@
   </LineStyle>
 </Style>
 <Placemark>
-  <name>Boley Lane</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Boley Lane</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8153838814469,52.680852764731
@@ -20,8 +19,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Broad Lane</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Broad Lane</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8122617730754,52.678355002979
@@ -30,8 +28,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Broadlands Rise</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Broadlands Rise</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8147618744516,52.679233138625
@@ -52,8 +49,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Broadlands Rise</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Broadlands Rise</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8158404033424,52.680325904998
@@ -65,8 +61,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Broadlands Rise</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Broadlands Rise</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8152394320202,52.679893354911
@@ -78,8 +73,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Broadlands Rise</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Broadlands Rise</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8152179687586,52.679603901709
@@ -89,8 +83,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Holywell Rise</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Holywell Rise</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8143218775906,52.677525636438
@@ -110,8 +103,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Holywell Rise</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Holywell Rise</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8139891970372,52.676627951377
@@ -120,8 +112,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Manor Rise</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Manor Rise</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8155291860505,52.678719268797
@@ -140,8 +131,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Manor Rise</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Manor Rise</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8160282068807,52.678810334777
@@ -154,8 +144,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Mawgan Drive</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Mawgan Drive</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8139033439912,52.67749961684
@@ -177,8 +166,14 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Newlyn Close</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Mawgan Drive</name>  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Newlyn Close</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.814413096452,52.679369735917
@@ -198,8 +193,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Newlyn Close</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Newlyn Close</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8136833455607,52.679021737213
@@ -209,8 +203,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Newlyn Close</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Newlyn Close</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8135817975046,52.678816839483
@@ -219,8 +212,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Pentire Road</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Pentire Road</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8138282225759,52.679760011539
@@ -258,8 +250,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Pentire Road</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Pentire Road</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8149174830975,52.677763064546
@@ -270,8 +261,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Pentire Road</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Pentire Road</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8151321157126,52.677964714804
@@ -281,8 +271,14 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>The Brambles</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Pentire Road</name>  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>The Brambles</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8154326013737,52.678231412101
@@ -296,8 +292,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>The Brambles</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>The Brambles</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8160013778038,52.678010248604
@@ -306,8 +301,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Tregony Rise</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Tregony Rise</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8134472496841,52.677489859487
@@ -325,8 +319,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Tregony Rise</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Tregony Rise</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8130555451615,52.67698247413
@@ -337,8 +330,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Trenance Close</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Trenance Close</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8152287003894,52.678963195102
@@ -352,8 +344,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Trenance Close</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Trenance Close</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8144023648213,52.678355002979
@@ -363,8 +354,7 @@
   </LineString>
 </Placemark>
 <Placemark>
-  <name>Trenance Close</name>
-  <styleUrl>#blueLine</styleUrl>
+  <name>Trenance Close</name>  <styleUrl>#blueLine</styleUrl>
   <LineString>
 	   <coordinates>
 -1.8144828520519,52.678361507753

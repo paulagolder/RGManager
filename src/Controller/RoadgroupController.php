@@ -102,9 +102,11 @@ class RoadgroupController extends AbstractController
       return $this->render('roadgroup/showone.html.twig',  [    'rgyear'=>$this->rgyear,'message' =>  'No roadgroups not Found',]);
     }
     $currentkml = $roadgroup->getKML();
-    $foundkml = $this->mapserver->findmap($roadgroup->getRoadgroupid(),$this->rgyear);
-    if(!$currentkml || strcmp($currentkml, $foundkml) !== 0)
+    /*   $foundkml = $this->mapserver->findmap($roadgroup->getRoadgroupid(),$this->rgyear);
+   if(!$currentkml || strcmp($currentkml, $foundkml) !== 0)
     {
+      $time = new \DateTime();
+      $roadgroup->setUpdated(null);
       $roadgroup->setKml($foundkml);
       $roadgroup->setGeodata(null);
       $roadgroup->setDistance(-1);
@@ -112,16 +114,26 @@ class RoadgroupController extends AbstractController
       $entityManager->persist($roadgroup);
       $entityManager->flush();
 
-    }
+    }*/
     $swdid = $roadgroup->getRgsubgroupid();
     $wdid = $roadgroup->getRggroupid();
     $stlist = [];
     $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($rgid,$this->rgyear);
     $totalhouseholds = 0;
+    $totaldist = 0;
+    $rgdate = $roadgroup->getUpdated();
+    $needsupdating = false;
+    $format = 'Y-m-d H:i:s';
+    $rgdate = $roadgroup->getUpdated();
     foreach($streets as $astreet)
     {
       $stlist[]= $astreet->getName();
+      $sdate =new \DateTime( $astreet->getUpdated());
+      if ($sdate > $rgdate) {
+        $needsupdating = true;
+      }
       $totalhouseholds += $astreet->getHouseholds();
+      $totaldist += $astreet->getDistance();
     }
     if($swdid)
       $back = "/rgsubgroup/show/".$swdid;
@@ -168,6 +180,8 @@ class RoadgroupController extends AbstractController
           $geodata["maxlong"]=$maxlong;
           $geodata["midlong"]="".($minlong+$maxlong)/2;
           $geodata["minlong"]=$minlong;
+          $time = new \DateTime();
+          $roadgroup->setUpdated($time);
           $roadgroup->setGeodata($geodata);
           $roadgroup->setDistance($geodata["dist"]);
           $entityManager = $this->getDoctrine()->getManager();
@@ -180,8 +194,10 @@ class RoadgroupController extends AbstractController
     [
     'rgyear'=>$this->rgyear,
     'message' =>  '' ,
+    'needsupdating'=>$needsupdating,
     'seats'=>$seats,
     'total'=>$totalhouseholds,
+    'totaldist'=>$totaldist,
     'geodata'=>$geodata,
     'roadgroup' => $roadgroup ,
     'streets'=> $streets,
@@ -258,6 +274,7 @@ class RoadgroupController extends AbstractController
       $form->handleRequest($request);
       if ($form->isValid())
       {
+        $roadgroup->setUpdated(null);
         $wdid = $roadgroup->getRggroupid();
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($roadgroup);
@@ -281,26 +298,25 @@ class RoadgroupController extends AbstractController
   public function StreetEdit($pid)
   {
     $request = $this->requestStack->getCurrentRequest();
-    //$user = $this->getUser();
-    // $time = new \DateTime();
+
     if($pid>0)
     {
-      $street = $this->getDoctrine()->getRepository('App:Street')->findOne($pid);
+      $astreet = $this->getDoctrine()->getRepository('App:Street')->findOne($pid);
     }
-    if(! isset($street))
+    if(! isset($astreet))
     {
-      $street = new Street();
+      $astreet = new Street();
     }
-    $form = $this->createForm(StreetForm::class, $street);
+    $form = $this->createForm(StreetForm::class, $astreet);
     if ($request->getMethod() == 'POST')
     {
       $form->handleRequest($request);
       if ($form->isValid())
       {
-        // $person->setContributor($user->getUsername());
-        // $person->setUpdateDt($time);
+        $time = new \DateTime();
+        $astreet->setUpdated($time);
         $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($street);
+        $entityManager->persist($astreet);
         $entityManager->flush();
         $pid = $street->getStreetId();
         return $this->redirect("/street/edit/".$pid);
@@ -329,7 +345,8 @@ class RoadgroupController extends AbstractController
       $form->handleRequest($request);
       if ($form->isValid())
       {
-       $astreet->setPath("");
+        $astreet->setPath("");
+        $astreet->setUpdated(null);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($astreet);
         $entityManager->flush();
@@ -380,7 +397,111 @@ class RoadgroupController extends AbstractController
 
   }
 
+  public function newkml($rgid)
+  {
+    $roadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
+    if(!$roadgroup)
+    {
+      return $this->render('roadgroup/showone.html.twig',  [    'rgyear'=>$this->rgyear,'message' =>  'No roadgroups not Found',]);
+    }
 
+    $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($rgid,$this->rgyear);
+    $totalhouseholds = 0;
+    $totaldist = 0;
+    $newkml = "";
+    foreach($streets as $astreet)
+    {
+      $path = $astreet->getDecodedpath();
+      foreach($path as $branch)
+      {
+        if(count($branch->steps)>1)
+        {
+
+       // $geodata = $this->loadBranch($branch->steps);
+       // $dist += $geodata["dist"];
+        $newkml .=  "<Placemark>\n";
+        $newkml .=  "  <name>".$astreet->getName()."</name>\n";
+        $newkml .=  "  <styleUrl>#blueLine</styleUrl>\n";
+        $newkml .=  "  <LineString>\n";
+        $newkml .=  "	   <coordinates>\n";
+        foreach($branch->steps as $step)
+        {
+          $newkml .="".$step[1].",".$step[0]."\n";
+        }
+        $newkml .=  "    </coordinates>\n";
+        $newkml .=  "  </LineString>\n";
+        $newkml .=  "</Placemark>\n";
+      }
+      }
+      $totaldist += $astreet->getDistance();
+    }
+
+   // if(!$currentkml || strcmp($currentkml, $foundkml) !== 0)
+    {
+     // $roadgroup->setKml($foundkml);
+    //  $roadgroup->setGeodata(null);
+    //  $roadgroup->setDistance($totaldist);
+    //  $entityManager = $this->getDoctrine()->getManager();
+    //  $entityManager->persist($roadgroup);
+   //   $entityManager->flush();
+    }
+    return $newkml;
+  }
+
+
+
+  public function exportkml($rgid)
+  {
+    $year=$this->rgyear;
+    $roadgroup= $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
+    $kmlname = $rgid."_".$year.".kml";
+    $file = "maps/roadgroups/".$kmlname;
+    $xmlout = "";
+    $xmlout .= "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    $xmlout .= "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n";
+    $xmlout .=  "<Document>\n";
+    $xmlout .=  " <name>".$kmlname."</name>\n";
+    $xmlout .=  "<Style id=\"blueLine\">\n";
+    $xmlout .=  "  <LineStyle>\n";
+    $xmlout .=  "    <color>7fff0000</color>\n";
+    $xmlout .=  "    <width>4</width>\n";
+    $xmlout .=  "  </LineStyle>\n";
+    $xmlout .=  "</Style>\n";
+
+    $xmlout .=  $this->newkml($rgid);
+
+    $xmlout .=  "</Document>\n";
+    $xmlout .=  "</kml>\n";
+    $handle = fopen($file, "w") or die("ERROR: Cannot open the file.");
+    fwrite($handle, $xmlout) or die ("ERROR: Cannot write the file.");
+    fclose($handle);
+    $this->addFlash('notice','kml file saved'.$file );
+    $roadgroup->setKml($kmlname);
+    $time = new \DateTime();
+    $roadgroup->setUpdated($time);
+    $roadgroup->setGeodata(null);
+    $roadgroup->setDistance(-1);
+    $entityManager = $this->getDoctrine()->getManager();
+    $entityManager->persist($roadgroup);
+    $entityManager->flush();
+    $this->updateGeodata($rgid);
+    return $this->redirect("/roadgroup/showone/".$rgid);
+  }
+
+
+  function updateGeodata($rgid)
+  {
+    $year=$this->rgyear;
+    $roadgroup= $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
+    dump($roadgroup->getGeodata());
+    $geodata= $this->mapserver->loadRoute($roadgroup->getKML());
+    dump($geodata);
+    $roadgroup->setGeodata($geodata);
+    $roadgroup->setDistance($geodata["dist"]);
+    $entityManager = $this->getDoctrine()->getManager();
+    $entityManager->persist($roadgroup);
+    $entityManager->flush();
+}
 
 
 }

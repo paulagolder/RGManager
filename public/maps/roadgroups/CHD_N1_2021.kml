@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+ <name>CHD_N1_2021.kml</name>
+<Style id="blueLine">
+  <LineStyle>
+    <color>7fff0000</color>
+    <width>4</width>
+  </LineStyle>
+</Style>
+<Placemark>
+  <name>Garrick Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8429753184319,52.693390486215
+-1.8436163663864,52.693151517411
+-1.8439382314682,52.692988952852
+-1.8441957235336,52.692995455446
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Garrick Road</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8423664569855,52.692841983809
+-1.8434178829193,52.693888892493
+-1.8435037136078,52.69390839987
+-1.8436110019684,52.693914902327
+-1.8438255786896,52.694171748606
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Irving Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8465292453766,52.693410959034
+-1.8461644649506,52.693033810571
+-1.8459713459015,52.692861491654
+-1.8458104133606,52.692715182606
+-1.8456816673279,52.692656658849
+-1.8456226587296,52.692588381034
+-1.8456387519836,52.692523354444
+-1.8456548452377,52.692494092447
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Irving Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8456333875656,52.692620894293
+-1.8455421924591,52.692659910171
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Kean Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.847143471241,52.69194689965
+-1.8467545509338,52.69220213183
+-1.8465667963028,52.692262281871
+-1.8469879031181,52.692818259413
+-1.8471086025238,52.692936932065
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Kean Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8465533852577,52.692263907547
+-1.8464326858521,52.692154987144
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Longstaff Croft</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8416744470596,52.693092333822
+-1.8432301282883,52.692533108439
+-1.8434232473373,52.692487589778
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Siddons Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8436431884766,52.693921404783
+-1.8439167737961,52.693807611662
+-1.8441313505173,52.69375559185
+-1.8442761898041,52.693703571977
+-1.8443834781647,52.693667808278
+-1.8445605039597,52.693706823221
+-1.8446516990662,52.693810862898
+-1.8447214365005,52.693901897412
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Siddons Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8446624279022,52.693872636339
+-1.8445336818695,52.693892143723
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Stafford Road</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8473017215729,52.691889340117
+-1.8479937314987,52.692692423376
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Terry Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8463575839996,52.69327115438
+-1.8457514047623,52.693514999416
+-1.8456548452377,52.693541009473
+-1.8455636501312,52.693541009473
+-1.8455100059509,52.693537758217
+-1.8454778194427,52.693524753189
+-1.8451130390167,52.693196374963
+-1.8449413776398,52.693261400551
+-1.8447321653366,52.693326426041
+-1.844630241394,52.693378446364
+-1.8445444107056,52.693404456502
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Terry Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8446409702301,52.693388200168
+-1.8447053432465,52.693449974207
+    </coordinates>
+  </LineString>
+</Placemark>
+<Placemark>
+  <name>Terry Close</name>
+  <styleUrl>#blueLine</styleUrl>
+  <LineString>
+	   <coordinates>
+-1.8451184034348,52.69321913393
+-1.8450808525085,52.693150856994
+    </coordinates>
+  </LineString>
+</Placemark>
+</Document>
+</kml>

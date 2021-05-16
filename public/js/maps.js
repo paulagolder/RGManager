@@ -426,12 +426,16 @@ function drawPath(amap,mypath,style=null)
   var dpath =redecode(mypath);
   var points = JSON.parse(dpath);
   if(points.length<1) return;
+  var bn = 1;
   for(point of points)
   {
-
     var track = point.steps;
      polyline = L.polyline(track, style).addTo(amap);
+
+     polyline.bindPopup("Branch:"+bn);
+     bn=bn+1;
   }
+
   }
 }
 else
