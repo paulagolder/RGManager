@@ -501,7 +501,7 @@ class RoadgroupController extends AbstractController
     $entityManager = $this->getDoctrine()->getManager();
     $entityManager->persist($roadgroup);
     $entityManager->flush();
-}
+   }
 
 
 }

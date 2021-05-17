@@ -22,6 +22,7 @@ class SeatForm extends AbstractType
         $builder ->add('Households', IntegerType::class,['label' => 'Households','required' => false,]);
         $builder ->add('Electors', IntegerType::class,['label' => 'Electors','required' => false,]);
         $builder ->add('Seats', IntegerType::class,['label' => 'Seats','required' => false,]);
+         $builder ->add('KML', TextType::class,['label' => 'KML','required' => false,]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

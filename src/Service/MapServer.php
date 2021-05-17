@@ -197,32 +197,51 @@ class MapServer
 
 
 
-  public function loadRoute($kmlfile)
+  public function loadRoute($path,$kmlfile)
   {
     $geodata=[];
     $geodata["dist"]=-1;
     $geodata["maxlat"]="0";
     $geodata["midlat"]="0";
     $geodata["minlat"]="0";
-
     $geodata["maxlong"]="0";
     $geodata["midlong"]="0";
     $geodata["minlong"]="0";
     if(!$kmlfile) return $geodata;
-    $kmlpath =  $this->maproot."/roadgroups/".$kmlfile;
+    $kmlpath =  $this->maproot.$path.$kmlfile;
     $kmlpath = str_replace("//","/",$kmlpath);
     $xmlstr = file_get_contents($kmlpath);
     $kml = new \SimpleXMLElement($xmlstr);
+    if($kml->Document)
+    {
+      $kmldoc = $kml->Document;
+    }
+    else if ($kml->Folder)
+    {
+      $kmldoc = $kml->Folder;
+    }
+    else
+      return $geodata;
     $dist = 0;
     $minlat=360;
     $minlong =360;
     $maxlat=-360;
     $maxlong=-306;
-    foreach ($kml->Document->Placemark as $placemark)
+    foreach ($kmldoc->Placemark as $placemark)
     {
      $k=0;
-      $coordinatesstr = $placemark->LineString->coordinates ;
-      $value =  explode(PHP_EOL,  $coordinatesstr);
+     if($placemark->LineString)
+     {
+        $coordinatesstr = $placemark->LineString->coordinates ;
+        $value =  explode(PHP_EOL,  $coordinatesstr[0]);
+     }
+      else
+      {
+        $coordinatesstr = $placemark->Polygon->outerBoundaryIs->LinearRing->coordinates;
+        $valueb= $coordinatesstr->__toString();
+        $value = preg_split("@[\s+　]@u", trim($valueb));
+      }
+
       $coords   = array();
       foreach($value as $coord)
       {

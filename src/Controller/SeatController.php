@@ -30,12 +30,6 @@ use App\Entity\District;
 use App\Entity\Rgsubgroup;
 use App\Entity\Roadgroup;
 
-//use App\Service\PDF;
-//use Fpdf\Fpdf;
-//use Dompdf\Exception;
-
-//require('fpdf.php');
-
 class SeatController extends AbstractController
 {
 
@@ -138,13 +132,8 @@ class SeatController extends AbstractController
         {
             return $this->render('seat/showone.html.twig', [ 'message' =>  'seat not Found',]);
         }
-        if(!$seat->getKML())
-        {
-             $seat->setKML($this->mapserver->findseat($seat->getSeatId(),$this->rgyear,$district->getDistrictId()));
-
-         }
         $roadgrouplinks = $this->getDoctrine()->getRepository("App:Seat")->findRoadgroups($dtid,$stid,$this->rgyear);
-
+   dump($roadgrouplinks);
         $rglist = array();
         $bounds =$this->mapserver->newbounds();
         foreach ($roadgrouplinks as $aroadgrouplink)
@@ -155,10 +144,6 @@ class SeatController extends AbstractController
            $kml = $aroadgroup->getKML();
            if($aroadgroup)
            {
-            if(!$this->mapserver->ismap($kml))
-           {
-             //$aroadgroup->setKML($this->mapserver->findmap($aroadgroup->getRoadgroupId(),$this->rgyear));
-           }
            $swid =  $aroadgroup->getRgsubgroupid();
            $wid = $aroadgroup->getRggroupid();
            if(!array_key_exists($wid, $rglist))
@@ -174,7 +159,7 @@ class SeatController extends AbstractController
             $rglist[$wid] =  $wrglist;
           }
         }
-
+        dump($rglist);
         return $this->render('seat/showone.html.twig',
             [
                 'rgyear' => $this->rgyear,
@@ -267,11 +252,17 @@ class SeatController extends AbstractController
            $form->handleRequest($request);
             if ($form->isValid())
             {
+
+                //$kml =  findseat($stid,$year="",$dtid);
+                $geodata =  $this->mapserver->loadRoute($dtid."/",$seat->getKML());
+                dump($geodata);
+                $seat->setGeodata($geodata);
+                dump($seat);
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($seat);
                 $entityManager->flush();
-                $stid = $seat->getDistrictId();
-                return $this->redirect('/district/show/'.$dtid);
+                $dtid = $seat->getDistrictId();
+                return $this->redirect('/seat/edit/'.$dtid."/".$stid);
             }
         }
 
@@ -424,5 +415,8 @@ for($i=0;$i<=1;$i++)
         }
       return $xmlout;;
       }
+
+
+
 
 }

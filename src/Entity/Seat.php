@@ -37,6 +37,12 @@ class Seat
      */
     private $KML;
 
+       /**
+   * @ORM\Column(name="geodata",type="string", length=300, nullable=true)
+   */
+  private $Geodata;
+
+
      public function getKML()
     {
         return $this->KML;
@@ -132,6 +138,22 @@ class Seat
     }
 
 
+public function getGeodata_json()
+{
+ return  $this->Geodata;
+}
+
+public function getGeodata()
+{
+ return  json_decode($this->Geodata,true);
+}
+
+ public function setGeodata($text): self
+    {
+        $this->Geodata = json_encode($text);
+        return $this;
+    }
+
    public function getjson()
    {
    $str ="{";
@@ -159,7 +181,6 @@ class Seat
 
    public function __toString()
    {
-
         return $this->Name.";".$this->KML;
     }
 }

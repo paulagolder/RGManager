@@ -14,7 +14,6 @@
    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
    <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
    <script src="{{asset('js/L.KML.js')}}"></script>
-
 {% endblock %}
 
 {% block middle %}
@@ -30,9 +29,6 @@
   <div class="value">{{seat.name}}</div>
   <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
 </div>
-
-
-
    {% for key,value in roadgrouplist %}
     {% for key2,value2 in value %}
 

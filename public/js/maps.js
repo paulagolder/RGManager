@@ -23,6 +23,50 @@ function getColor(i)
 
 //alert(rgbToHex(0, 51, 255)); // #0033ff
 
+function xsetBoundsGeodata(amap,geodata)
+{
+  if(geodata=="") return;
+  var mybounds_dc =redecode(geodata);
+  var mybounds = JSON.parse(mybounds_dc);
+  if(mybounds["minlat"]===null) return;
+  var bounds =[];
+  bounds.push([ mybounds["maxlat"], mybounds["minlong"]]);
+  bounds.push([ mybounds["minlat"],mybounds["maxlong"]]);
+  amap.fitBounds(bounds);
+}
+
+function rgMap(geodata)
+{
+
+  if(geodata!="")
+  {
+  var mybounds_dc =redecode(geodata);
+  var mybounds = JSON.parse(mybounds_dc);
+  var lat =mybounds["midlat"];
+  var long = mybounds["midlong"];
+}
+else
+{
+  long =-1.8304;
+  lat = 52.6854 ;
+}
+  var zoom = 12;
+  if( (typeof lat === "undefined") || lat < 40)
+  {
+    long =-1.8304;
+    lat = 52.6854 ;
+    zoom = 12;
+  }
+  if(zoom <1 ) zoom = 1;
+  var mymap = L.map('rgmapid').setView([ lat , long], zoom);
+  mapLink =
+  '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+  L.tileLayer(
+    'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; ' + mapLink + ' Contributors',
+    }).addTo(mymap);
+    return mymap;
+}
 
   function mySwMap(location)
   {
@@ -138,6 +182,18 @@ function setBounds2(amap, amybounds)
 {
 
   var mybounds_dc =redecode(amybounds);
+  var mybounds = JSON.parse(mybounds_dc);
+  if(mybounds["minlat"]===null) return;
+  var bounds =[];
+  bounds.push([ mybounds["maxlat"], mybounds["minlong"]]);
+  bounds.push([ mybounds["minlat"],mybounds["maxlong"]]);
+  amap.fitBounds(bounds);
+}
+
+function setBoundsGeodata(amap,geodata)
+{
+  if(geodata=="") return;
+  var mybounds_dc =redecode(geodata);
   var mybounds = JSON.parse(mybounds_dc);
   if(mybounds["minlat"]===null) return;
   var bounds =[];

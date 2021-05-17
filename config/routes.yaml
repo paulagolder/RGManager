@@ -114,6 +114,12 @@ seats_edit:
    path: /seat/edit/{dtid}/{stid}
    controller: App\Controller\SeatController::edit
 
+seats_newseat:
+   path: /seat/new/{dtid}/{stid}
+   controller: App\Controller\SeatController::edit
+   defaults:
+        stid: -1
+
 seats_showall:
    path: /seat/showall/{dtid}
    controller: App\Controller\SeatController::showall
