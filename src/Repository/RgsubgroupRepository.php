@@ -16,17 +16,16 @@ class RgsubgroupRepository  extends EntityRepository
        $qb = $this->createQueryBuilder("p");
        $qb->where("p.Rgsubgroupid = :swdid");
        $qb->setParameter('swdid', $swdid);
-       $qb->orderBy("p.Rgsubgroupid", "ASC");
-       $subward =  $qb->getQuery()->getOneOrNullResult();
-       return $subward;
+       $subgroup =  $qb->getQuery()->getOneOrNullResult();
+       return $subgroup;
     }
 
     public function findAll()
     {
        $qb = $this->createQueryBuilder("p");
        $qb->orderBy("p.Rgsubgroupid", "ASC");
-       $subwards =  $qb->getQuery()->getResult();
-       return $subwards;
+       $subgroups =  $qb->getQuery()->getResult();
+       return $subgroups;
     }
 
 
@@ -37,8 +36,8 @@ class RgsubgroupRepository  extends EntityRepository
        $qb->where("p.Rggroupid = :wdid");
        $qb->setParameter('wdid', $wdid);
        $qb->orderBy("p.Rgsubgroupid", "ASC");
-       $subwards =  $qb->getQuery()->getResult();
-       return $subwards;
+       $subgroups =  $qb->getQuery()->getResult();
+       return $subgroups;
     }
 
        public function xfindChildren($wdid)
@@ -48,8 +47,8 @@ class RgsubgroupRepository  extends EntityRepository
               $sql = 'select sw.*, sum(rg.households) as total from rgsubgroup as sw left join roadgroup as rg on rg.rgsubgroupid = sw.rgsubgroupid where sw.rggroupid ="'.$wdid.'" group by sw.rgsubgroupid';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
-        $subwards= $stmt->fetchAll();
-        return $subwards;
+        $subgroups= $stmt->fetchAll();
+        return $subgroups;
      }
 
 

@@ -1,0 +1,11 @@
+RD-Group, RD-Sugroup, Roadgroup, Name,  Households , Deliveries, Date, Agent 
+
+  RG_LEO,Leomansley,1715,  
+ ,,RG_LEO_A,Outer,50
+ ,,RG_LEO_C,Central,1665
+ 
+  RG_STJ,St Johns,1760,  
+ ,,RG_STJ_C,Central,925
+ ,,RG_STJ_E,East,438
+ ,,RG_STJ_W,West,397
+ 

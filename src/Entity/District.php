@@ -21,10 +21,26 @@ class District
      */
     private $Name;
 
+      /**
+     * @ORM\Column(name="electors",type="integer", length=50)
+     */
+    private $Electors;
+
+
+      /**
+     * @ORM\Column(name="households",type="integer", length=50)
+     */
+    private $Households;
+
      /**
      * @ORM\Column(name="kml",type="string", length=50)
      */
     private $KML;
+
+  /**
+   * @ORM\Column(name="geodata",type="string", length=300, nullable=true)
+   */
+  private $Geodata;
 
      public function getKML()
     {
@@ -59,6 +75,48 @@ class District
         $this->Name = $Name;
         return $this;
     }
+
+     public function getHouseholds()
+    {
+        return $this->Households;
+    }
+
+    public function setHouseholds($number): self
+    {
+        $this->Households = $number;
+        return $this;
+    }
+
+  public function getElectors()
+    {
+        return $this->Electors;
+    }
+
+    public function setElectors($number): self
+    {
+        $this->Electors = $number;
+        return $this;
+    }
+
+
+
+
+public function getGeodata_json()
+{
+ return  $this->Geodata;
+}
+
+public function getGeodata()
+{
+ return  json_decode($this->Geodata,true);
+}
+
+ public function setGeodata($text): self
+    {
+        $this->Geodata = json_encode($text);
+        return $this;
+    }
+
 
    public function getjson()
    {

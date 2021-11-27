@@ -8,9 +8,9 @@ parameters:
   mappath: '%env(resolve:MAPPATH)%'
   maproot: '%env(resolve:MAPROOT)%'
   topmap: '%env(resolve:TOPMAP)%'
+  publicfolder: '%kernel.project_dir%/public/'
 
-#new-maps-folder: 'http://lerot.org/RoadGroups/maps'
-# mappath : "http://lerot.org/RoadGroups/maps/"
+
 
 services:
     # default configuration for services in *this* file

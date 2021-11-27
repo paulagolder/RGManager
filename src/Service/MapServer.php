@@ -71,7 +71,7 @@ class MapServer
     if(file_exists($key1))  return trim($key);
     else
     {
-      echo '<script>console.log(" Not Found rg : '.$key0.'")</script>';
+      echo '<script>console.log(" Not Found map  : '.$key0.'")</script>';
       return null;
     }
 
@@ -270,6 +270,66 @@ class MapServer
     $geodata["minlong"]=$minlong;
     return  $geodata;
   }
+
+
+
+  function hexColor($color)
+  {
+    $rgb = dechex(($color[0]<<16)|($color[1]<<8)|$color[2]);
+    return("#".substr("000000".$rgb, -6));
+  }
+
+  function makeColor($intval)
+  {
+    $r = 255;
+    $b = 255;
+    $g  = 255;
+    if($intval==0)
+    {
+      $r = 0;
+      $b = 0;
+      $g  = 255;
+    }else
+    {
+      if($intval>140)
+      {
+        $d= $intval -140;
+        $r = 0;
+        $b = 0;
+        $g  =255;
+      }else if($intval >70)
+      {
+        $r = 0;
+        $b = 255;
+        $g  = 0;
+      }else
+      {
+        $d= $intval -140;
+        $r = 255;
+        $b = 0;
+        $g  = 0;
+
+      }
+
+    }
+    return $this->rgbToHex($r,$g,$b);
+  }
+
+  function componentToHex($c)
+  {
+    $hex = dechex($c);
+    if( strlen($hex)< 2)
+      return "0".$hex;
+    else
+      return $hex;
+  }
+
+  function rgbToHex($r, $g, $b)
+  {
+    return "#".$this->componentToHex($r).$this->componentToHex($g).$this->componentToHex($b);
+  }
+
+
 
 }
 

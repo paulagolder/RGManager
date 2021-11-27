@@ -2,17 +2,19 @@
 
 {% extends 'dvymaster.html.twig' %}
 
-
 {% block stylesheets %}
 {{ parent() }}
 <link href="{{ asset('/css/delivery.css') }}" rel="stylesheet" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+<link href="{{ asset('/css/tree.css') }}" rel="stylesheet" />
 {% endblock %}
 {% block js %}
 {{ parent() }}
 <script src="{{asset('js/maps.js')}}"></script>
 <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
 <script src="{{asset('js/L.KML.js')}}"></script>
+<script src="{{asset('js/tree.js')}}"></script>
+
 {% endblock %}
 
 
@@ -29,75 +31,78 @@
   {% else %}
 
 <div class="heading row">
-    <div class="label"> Road Group </div>
+    <div class="label"> Deliveryxx</div>
     <div class="value"> {{delivery.deliveryId}}:</div>
     <div class="value"> {{delivery.Name}}</div>
     <div class="value">({{delivery.Households}})</div>
     <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
   </div>
+
+
   <div class="subheading row">
-  <div class="rgid" >ID</div>
+    <div class="rgid" >RoundID</div>
     <div class="name" >Name</div>
-    <div  class="num" >House-holds</div>
-    <div  class="button" ></div>
+    <div  class="num" >Roadgroups</div>
+    <div  class="num" >Housholds</div>
   </div>
-  <div class="list" >
-    {% for key ,asubgroup in rggroups %}
-          <div class="group row">
-             <div class="rgid" >{{key}}: </div>
-              <div class="name" >{{ asubgroup.group.Name}}</div>
-             <div class="num" >{{ asubgroup.group.Households}}</div>
-             <div class="button" ><a class="button" href = "/delivery/viewdetail/{{delivery.deliveryId}}/{{key}}" >View</a></div>
-             <div class="largebutton" ><a class="button" href = "/delivery/removeroadgroup/{{delivery.deliveryId}}/{{key}}" >Remove from Schedule</a></div>
-          </div>
-      {% if rgid is defined %}
-      {% if key in rgid %}
-      {% for key2 ,arggroup in asubgroup["children"] %}
-        <div class="subgroup row">
-            <div class="rgid" >{{key2}}:</div>
-            <div class="button" ><a class="button" href = "/delivery/viewdetail/{{delivery.deliveryId}}/{{key2}}" >View</a></div>
 
-        </div>
-        {% if key2 in rgid %}
-        {% for key3 ,arg in arggroup["children"] %}
-            <div class=" roadgroup row">
-              <div class="rgid" >{{key3}}: </div><div class="num" >{{arg.households }}</div>
-              <div class="largebutton" ><a class="button" href = "/delivery/removeroadgroup/{{delivery.deliveryId}}/{{key3}}" >Remove from Schedule</a></div>
-            </div>
-        {% endfor %}
-        {% endif %}
-      {% endfor %}
-      {% endif %}
-      {% endif %}
+
+  <ul id="tree"  >
+    {% for key ,asubgroup in roundstree %}
+    <li><span class="box"> {{key}}:{{ asubgroup.group.Name}}</span>
+      <ul class="nested">
+        {% for key2 ,arggroup in asubgroup["children"] %}
+        <li ><span class="box"> {{key2}}:{{arggroup.group.Name}}</span>
+          <ul class="nested">
+            {% for key3 ,arg in arggroup["children"] %}
+            <li>
+              <div class=" roadgroup row">
+                <div class="rgid" >{{key3}}: </div>
+                <div class="text" >{{arg.name }}</div>
+                <div class="num" >{{arg.households }}</div>
+                <div class="largebutton" ><a class="button" href = "/delivery/viewround/{{delivery.deliveryId}}/{{key3}}" >View Round</a></div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+          {% endfor %}
+        </li>
+      </ul>
+    </li>
     {% endfor %}
-  </div>
+  </ul>
 
-  <div class="subheading row">
+
+
+</div>
+  <div class="largebutton" ><a class="button" href = "/delivery/addround/{{delivery.deliveryId}}" >Add New Round</a></div>
+<div class="subheading row">
     <div class="name" >Unused Roadgroups</div>
   </div>
-     <div class="group row">
-             <div class="rgid" >ALL: </div>
-             <div class="largebutton" ><a class="button" href = "/delivery/addroadgroup/{{delivery.deliveryId}}/ALL" >Add to Schedule</a></div>
-          </div>
-        <form class="form1" name="form1" method="post"  action="/delivery/parseroadgroups/{{delivery.deliveryId}}">
-             <div class="group row">
 
-             <div class="inputfield" > <input type="text" id="rgids" name="rgids">Comma separated roadgroup ids</div>
-          </div>
-           <input type="submit" name="deliveries" value="Submit" />
-</form>
-  {% for key ,asubgroup in rgsparegroups %}
-          <div class="group row">
-             <div class="rgid" >{{key}}: </div>
-              <div class="name" >{{ asubgroup.group.Name}}</div>
-             <div class="num" >{{ asubgroup.group.Households}}</div>
-             <div class="largebutton" ><a class="button" href = "/delivery/addroadgroup/{{delivery.deliveryId}}/{{key}}" >Add to Schedule</a></div>
-          </div>
+  <ul id="tree"  >
+    {% for key ,asubgroup in rgstree %}
+    <li><span class="box"> {{key}}:{{ asubgroup.group.Name}}</span>
+    <ul class="nested">
+      {% for key2 ,arggroup in asubgroup["children"] %}
+      <li ><span class="box"> {{key2}}:{{arggroup.group.Name}}</span>
+        <ul class="nested">
+        {% for key3 ,arg in arggroup["children"] %}
+        <li>
+            <div class=" roadgroup row">
+              <div class="rgid" >{{key3}}: </div><div class="num" >{{arg.households }}</div>
+            </div>
+        </li>
         {% endfor %}
-
-
-
-
+        </ul>
+      {% endfor %}
+      </li>
+    </ul>
+     </li>
+    {% endfor %}
+    </ul>
 {% endif %}
-</div>
+<script>
+  toggle();
+</script>
 {% endblock %}

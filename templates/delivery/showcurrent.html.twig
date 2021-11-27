@@ -1,4 +1,4 @@
-{# views/seat/showone.html.twig #}
+{# views/delivery/showcurrent.html.twig #}
 
 {% extends 'rgmaster.html.twig' %}
 
@@ -40,10 +40,6 @@
        <div class="name" >{{delivery.target}}/{{delivery.completed}}</div>
        <div><a class="button" href = "/delivery/manage/{{delivery.deliveryid}}" >MANAGE</a>   </div>
        <div><a class="button" href = "/delivery/edit/{{delivery.deliveryid}}" >EDIT</a>   </div>
-        <div><a class="button" href = "/delivery/mapschedule/{{delivery.deliveryid}}" >MAP</a>   </div>
-       <div><a class="button" href = "/delivery/schedule/{{delivery.deliveryid}}" >SCHEDULE</a>   </div>
-        <div><a class="button" href = "/delivery/export/{{delivery.deliveryid}}" >EXPORT RGML</a>   </div>
-       <div class="button"> <a class="button" href = "/delivery/exportcsv/{{delivery.deliveryid}}" >Export CSV</a> </div>
      </div>
   {% endfor %}
   </div>

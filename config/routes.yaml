@@ -7,16 +7,16 @@ selectyear:
   controller: App\Controller\MainController::selectyear
 
 district_showone:
-   path: /district/show/{drid}
+   path: /district/show/{dtid}
    controller: App\Controller\DistrictController::showone
 
-district_exportxml:
-    path: /district/exportxml/{drid}
-    controller: App\Controller\DistrictController::exportxml
+district_edit:
+   path: /district/edit/{dtid}
+   controller: App\Controller\DistrictController::edit
 
-district_exportcsv:
-    path: /district/exportcsv/{drid}
-    controller: App\Controller\DistrictController::exportcsv
+district_heatmap:
+   path: /district/heatmap/{dtid}
+   controller: App\Controller\DistrictController::heatmap
 
 pollingdistrict_showone:
    path: /pollingdistrict/show/{pdid}
@@ -31,7 +31,7 @@ delivery_mapone:
    path: /delivery/mapschedule/{dvyid}
    controller: App\Controller\DeliveryController::mapschedule
 
-delivery_viewdetail:
+xxdelivery_viewdetail:
    path: /delivery/viewdetail/{dvyid}/{rgsel}
    controller: App\Controller\DeliveryController::viewdetail
 
@@ -68,17 +68,38 @@ delivery_showcurrent:
    path: /delivery/showcurrent
    controller: App\Controller\DeliveryController::showcurrent
 
-delivery_removeroadgroup:
-   path: /delivery/removeround/{dvyid}/{rgid}
-   controller: App\Controller\DeliveryController::removeround
+
 
 delivery_removeroadgroupfrommap:
    path: /delivery/removeroadgroup/{dvyid}/{rgsel}
    controller: App\Controller\DeliveryController::removeroadgroup
 
-delivery_addroadgroups:
-   path: /delivery/addroadgroup/{dvyid}/{rgsel}
+delivery_addround:
+   path: /delivery/addround/{dvyid}/
+   controller: App\Controller\DeliveryController::addround
+   requirements: { dvyid: \d+ }
+
+delivery_deleteround:
+   path: /delivery/deleteround/{dvyid}/{rndid}
+   controller: App\Controller\DeliveryController::deleteround
+
+delivery_viewround:
+   path: /delivery/viewround/{dvyid}/{rndid}
+   controller: App\Controller\DeliveryController::viewround
+
+delivery_addroadgroup:
+   path: /delivery/addroadgroup/{dvyid}/{rndid}/{rgid}
    controller: App\Controller\DeliveryController::addroadgroup
+
+delivery_addallroadgroups:
+   path: /delivery/addallroadgroups/{dvyid}/{rndid}/{rgsubgid}
+   controller: App\Controller\DeliveryController::addallroadgroups
+
+
+delivery_removeroadgroup:
+   path: /delivery/removeroadgroup/{dvyid}/{rndid}/{rgid}
+   controller: App\Controller\DeliveryController::removeroadgroup
+
 
 delivery_addroadgroupstomap:
    path: /delivery/addround/{dvyid}/{rgid}

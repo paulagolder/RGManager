@@ -17,6 +17,8 @@
              <div class="id indent">{{district.DistrictId}}</div>
              <div class="name">{{district.name}}</div>
              <div class="button"> <a class="button" href = "district/show/{{district.DistrictId}}" >View</a> </div>
+             <div class="button"> <a class="button" href = "district/edit/{{district.DistrictId}}" >Edit</a> </div>
+             <div class="button wide"> <a class="button" href = "district/heatmap/{{district.DistrictId}}" >Heat Map</a> </div>
           </div>
         {% endfor %}
         </div>
@@ -31,7 +33,7 @@
          {% for year in years %}
           <div class="button"> <a class="button" href = "selectyear/{{year["year"]}}" >{{year["year"]}}</a> </div>
           {% endfor %}
-        <div class="button"> <a class="button" href = "rggroup/heatmap" >Heat Map</a> </div>
+
       </div>
         <div/>
         <div  class="subheading" >Uploading maps to server</div>

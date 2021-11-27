@@ -27,15 +27,20 @@ class Delivery
      */
     private $TargetDate;
 
-    /**
-     * @ORM\Column(name="district",type="string", length=20)
+        /**
+     * @ORM\Column(name="createdate",type="datetime")
      */
-    private $District;
+    private $CreateDate;
+
+    /**
+     * @ORM\Column(name="districtid",type="string", length=20)
+     */
+    private $DistrictId;
 
         /**
-     * @ORM\Column(name="seat",type="string", length=20)
+     * @ORM\Column(name="seatids",type="string", length=20)
      */
-    private $Seat;
+    private $SeatIds;
 
      /**
      * @ORM\Column(name="comment",type="string", length=50)
@@ -49,7 +54,9 @@ class Delivery
     public $KML;
 
 
+
     public $Households;
+    public $Deliveries;
 
     public function getDeliveryId()
     {
@@ -91,25 +98,25 @@ class Delivery
         return $this;
     }
 
-     public function getDistrict(): ?string
+     public function getDistrictId(): ?string
     {
-        return $this->District;
+        return $this->DistrictId;
     }
 
-    public function setDistrict(string $Text): self
+    public function setDistrictId(string $Text): self
     {
-        $this->District = $Text;
+        $this->DistrictId = $Text;
         return $this;
     }
 
-     public function getSeat(): ?string
+     public function getSeatIds(): ?string
     {
-        return $this->Seat;
+        return $this->SeatIds;
     }
 
-    public function setSeat(string $Text): self
+    public function setSeatIds(string $Text): self
     {
-        $this->Seat = $Text;
+        $this->SeatIds = $Text;
         return $this;
     }
 
@@ -123,6 +130,17 @@ class Delivery
         $this->TargetDate = $text;
         return $this;
     }
+
+        public function getCreateDate()
+    {
+        return $this->CreateDate;
+    }
+
+    public function setCreateDate($date): self
+    {
+        $this->CreateDate = $date;
+        return $this;
+     }
 
 
       public function getComment(): ?string

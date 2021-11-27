@@ -336,12 +336,6 @@ public function setGeodata($text)
      $streets =$this->streets;
      $csvout = "";
       $csvout .= "   ,,$this->RoadgroupId:".$this->getName()." , $this->Households \n  ";
-     foreach ($streets as $astreet )
-     {
-    // dump($astreet);
-    //    $xmlout .="        ".$astreet->makexml();
-     }
-
      return  $csvout;
    }
 

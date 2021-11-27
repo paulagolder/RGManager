@@ -17,13 +17,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Response;
 //use Dompdf\Dompdf;
 
-use App\Form\Type\WardForm;
-use App\Form\Type\NewSubwardForm;
-use App\Form\Type\SubwardForm;
+use App\Form\Type\DistrictForm;
 use App\Entity\District;
-use App\Entity\Rggroup;
-use App\Entity\Rgsubgroup;
-use App\Entity\Roadgroup;
+
 
 use App\Service\MapServer;
 
@@ -51,10 +47,10 @@ class DistrictController extends AbstractController
        $this->rgyear  = $this->requestStack->getCurrentRequest()->cookies->get('rgyear');
     }
 
-    public function showone($drid)
+    public function showone($dtid)
     {
 
-        $district = $this->getDoctrine()->getRepository("App:District")->findOne($drid);
+        $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
         if (!$district)
         {
             return $this->render('district/showone.html.twig', [ 'message' =>  'district not Found',]);
@@ -65,7 +61,7 @@ class DistrictController extends AbstractController
              $district->setKML($this->mapserver->finddistrict($district->getDistrictId(),$this->rgyear));
           }
 
-        $seats = $this->getDoctrine()->getRepository("App:Seat")->findChildren($drid);
+        $seats = $this->getDoctrine()->getRepository("App:Seat")->findChildren($dtid);
         foreach($seats as &$seat)
         {
           $kml = $seat->getKML();
@@ -73,7 +69,7 @@ class DistrictController extends AbstractController
           {
              $seat->setKML($this->mapserver->findseat($seat->getSeatId(),$this->rgyear,$district->getDistrictId()));
           }
-           $count = $this->getDoctrine()->getRepository("App:Seat")->countHouseholds($drid, $seat->getSeatId(), $this->rgyear);
+           $count = $this->getDoctrine()->getRepository("App:Seat")->countHouseholds($dtid, $seat->getSeatId(), $this->rgyear);
 
            $seat->setHouseholds($count);
 
@@ -89,36 +85,39 @@ class DistrictController extends AbstractController
             ]);
     }
 
-     public function wardEdit($pid)
+     public function Edit($dtid)
     {
         $request = $this->requestStack->getCurrentRequest();
-        if($pid>0)
+        if($dtid)
         {
-            $ward = $this->getDoctrine()->getRepository('App:Rggroup')->findOne($pid);
+              $adistrict = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
+              dump($adistrict);
         }
-        if(! isset($ward))
+        if(! isset($adistrict))
         {
-            $ward = new ward();
+            $adistrict= new district();
         }
-        $form = $this->createForm(wardForm::class, $ward);
+        $form = $this->createForm(districtForm::class, $adistrict);
         if ($request->getMethod() == 'POST')
         {
             $form->handleRequest($request);
             if ($form->isValid())
             {
+                $geodata =  $this->mapserver->loadRoute("districts/",$adistrict->getKML());
+                $adistrict->setGeodata($geodata);
                 $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($ward);
+                $entityManager->persist($adistrict);
                 $entityManager->flush();
-                $pid = $ward->getRggroupid();
-                return $this->redirect("/rggroup/edit/".$pid);
+                $dtid = $adistrict->getDistrictid();
+                return $this->redirect("/district/edit/".$dtid);
             }
         }
-        return $this->render('ward/edit.html.twig', array(
+        return $this->render('district/edit.html.twig', array(
            'rgyear' => $this->rgyear,
             'form' => $form->createView(),
-            'objid'=>$pid,
-            'ward'=>$ward,
-            'returnlink'=>'/rggroup/problems',
+            'dtid'=>$dtid,
+            'district'=>$adistrict,
+            'returnlink'=>'/',
             ));
     }
 
@@ -253,20 +252,20 @@ class DistrictController extends AbstractController
 
     }
 
-    public function Exportxml($drid)
+    public function Exportxml($dtid)
     {
-            $district = $this->getDoctrine()->getRepository("App:District")->findOne($drid);
+            $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
              $kml = $district->getKML();
           if(!$kml)
           {
              $district->setKML($this->mapserver->finddistrict($district->getDistrictId(),$this->rgyear));
           }
-           // $file = "maps/".$drid."_".$this->rgyear.".rgml";
+           // $file = "maps/".$dtid."_".$this->rgyear.".rgml";
               $file = "rgml/roadgroups.rgml";
             $xmlout = "";
             $xmlout .= "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
             $xmlout .= "<?xml-stylesheet type='text/xsl' href='./Stylesheets/rgml.xsl' ?>\n";
-            $xmlout .= "<electiondistrict Name='Lichfield City Labour Party' DistrictId='".$drid."' KML='".$district->getKML()."' >\n";
+            $xmlout .= "<electiondistrict Name='Lichfield City Labour Party' DistrictId='".$dtid."' KML='".$district->getKML()."' >\n";
 
             $xmlout .= $this->makexml();
             $xmlout .= "</electiondistrict>\n";
@@ -277,10 +276,10 @@ class DistrictController extends AbstractController
             return $this->redirect("/");
     }
 
-      public function Exportcsv($drid)
+      public function Exportcsv($dtid)
     {
-            $district = $this->getDoctrine()->getRepository("App:District")->findOne($drid);
-            $file = "documents/".$drid."_".$this->rgyear.".csv";
+            $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
+            $file = "documents/".$dtid."_".$this->rgyear.".csv";
             $csvout = "";
 
             $csvout .= "RD-Groups, RD-Sugroups, Roadgroups, Households \n\n";
@@ -290,7 +289,7 @@ class DistrictController extends AbstractController
             $handle = fopen($file, "w") or die("ERROR: Cannot open the file.");
             fwrite($handle, $csvout) or die ("ERROR: Cannot write the file.");
             fclose($handle);
-            $this->addFlash('notice','csv file saved'.$file );
+            $this->addFlash('notice','csv file saved: '.$file );
             return $this->redirect("/");
     }
 
@@ -376,4 +375,99 @@ class DistrictController extends AbstractController
       return $csvout;
       }
 
+    public function showrgs($dtid)
+    {
+
+        $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
+        $seat= $this->getDoctrine()->getRepository("App:Seat")->findOne($dtid,$stid);
+        if (!$seat)
+        {
+            return $this->render('seat/showone.html.twig', [ 'message' =>  'seat not Found',]);
+        }
+        $roadgrouplinks = $this->getDoctrine()->getRepository("App:Seat")->findRoadgroups($dtid,$stid,$this->rgyear);
+
+        $rglist = array();
+        $bounds =$this->mapserver->newbounds();
+        foreach ($roadgrouplinks as $aroadgrouplink)
+        {
+           $aroadgroup =  $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($aroadgrouplink["roadgroupid"],$this->rgyear);
+           $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getGeodata());
+           dump($bounds);
+           $kml = $aroadgroup->getKML();
+           if($aroadgroup)
+           {
+           $swid =  $aroadgroup->getRgsubgroupid();
+           $wid = $aroadgroup->getRggroupid();
+           if(!array_key_exists($wid, $rglist))
+           {
+              $rglist[$wid] = array();
+           }
+           $wrglist = $rglist[$wid];
+           if(!array_key_exists($swid, $wrglist))
+           {
+              $wrglist[$swid] =array();
+           }
+           $wrglist[$swid][]=$aroadgroup;
+            $rglist[$wid] =  $wrglist;
+          }
+        }
+        dump($rglist);
+        return $this->render('seat/showone.html.twig',
+            [
+                'rgyear' => $this->rgyear,
+                'message' =>  '' ,
+                'district'=> $district,
+                'seat' => $seat,
+                'bounds'=>$bounds,
+                'roadgrouplist'=>$rglist,
+                'back'=>"/district/show/".$dtid,
+            ]);
+    }
+
+   public function heatmap($dtid)
+    {
+            $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
+    $mappath= $this->container->get('parameter_bag')->get('mappath');
+    $maproot = $this->container->get('parameter_bag')->get('maproot');
+    $topmap = $this->container->get('parameter_bag')->get('topmap');
+    $rggroups = $this->getDoctrine()->getRepository("App:Rggroup")->findAll();
+    if (!$rggroups)
+    {
+      return $this->render('rggroup/showall.html.twig', [ 'message' =>  'RGgroups not Found',]);
+    }
+    $rglist= array();
+    foreach($rggroups as $arggroup)
+    {
+      $subgroups = $this->getDoctrine()->getRepository("App:Rgsubgroup")->findChildren($arggroup->getRggroupid());
+      foreach ($subgroups as $asubgroup)
+      {
+        $swid =  $asubgroup->getRgsubgroupid();
+        $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($swid,$this->rgyear);
+        foreach ($roadgroups as $aroadgroup)
+        {
+          if(!$this->mapserver->ismap($aroadgroup->getKML()))
+          {
+            $aroadgroup->setKML($this->mapserver->findmap($aroadgroup->getRoadgroupid(),$this->rgyear));
+          }
+          $labness = intval($aroadgroup->getPrioritygroup());
+          $aroadgroup->setPrioritygroup($labness);
+          $rg = array();
+          $rg["kml"] = $aroadgroup->getKML();
+          $rg["priority"] = $labness;
+          $rg["color"] = $this->mapserver->makeColor($labness);
+          // dump($rg);
+          $rglist[]=$rg;
+        }
+      }
+    }
+    dump($district);
+    return $this->render('district/heatmap.html.twig',
+    [
+    'rgyear'=>$this->rgyear,
+    'message' =>  '' ,
+    'district'=>$district,
+    'rglist'=>$rglist,
+    'back'=>"/",
+    ]);
+  }
 }

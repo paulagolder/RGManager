@@ -5,7 +5,7 @@
 
 
 
-div#seat div.row div.row div.name
+div#district div.row div.row div.name
 {
   max-width: 15em;
   width: 15em;
@@ -14,7 +14,7 @@ div#seat div.row div.row div.name
   text-overflow: ellipsis;
 }
 
-div#seat div.row.indent.id div.row
+div#district div.row.indent.id div.row
 {
    margin-bottom: 5px;
 }
@@ -25,13 +25,9 @@ div#seat div.row.indent.id div.row
    height : 500px;
 }
 
-div#swmapid
-{
-  width: 100%;
-  height : 500px;
-}
 
-div#seat div.row.indent.id
+
+div#district div.row.indent.id
 {
 
   flex-wrap: nowrap;
@@ -39,7 +35,7 @@ div#seat div.row.indent.id
 }
 
 
-div#seat div.row.indent.id div.id
+div#district div.row.indent.id div.id
 {
    min-width : 8em;
 }

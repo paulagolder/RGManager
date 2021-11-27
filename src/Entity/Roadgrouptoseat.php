@@ -16,22 +16,15 @@ class Roadgrouptoseat
      */
     private $SeatId;
 
-
-
      /**
      * @ORM\Column(name="districtid",type="string", length=50)
      */
     private $RoadgroupId;
 
-
       /**
      * @ORM\Column(name="date",type="integer", length=50)
      */
     private $Date;
-
-
-
-
 
       public function getSeatId()
     {
@@ -43,7 +36,6 @@ class Roadgrouptoseat
         $this->SeatId = $ID;
         return $this;
     }
-
 
     public function getRoadgroupId()
     {
@@ -66,9 +58,6 @@ class Roadgrouptoseat
         $this->Date = $date;
         return $this;
     }
-
-
-
 
 }
 

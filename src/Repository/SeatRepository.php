@@ -49,13 +49,16 @@ class SeatRepository  extends EntityRepository
      public function findRoadgroups($dtid,$stid,$year)
      {
         $conn = $this->getEntityManager()->getConnection();
-        // $sql = 'SELECT rg.* FROM seattopd as rg where rg.seatid = "' .$stid.'" and  rg.districtid ="'.$dtid.'";';
-        // SELECT * FROM roadgroup WHERE `roadgroupid` IN (SELECT roadgroupid from street where pd = "RS")
         $sql = 'select r.* from roadgroup as r where roadgroupid in (select DISTINCT roadgroupid from roadgrouptostreet as rs join street as s on (rs.street = s.name and ( rs.part = s.part or ( rs.part is null or rs.part = "" )) and rs.year="'.$year.'" ) where s.pd in (SELECT pdid FROM `seattopd` sp WHERE sp.seat="'.$stid.'" and sp.district ="'.$dtid.'" and sp.year = "'.$year.'")) and r.year = "'.$year.'"';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $roadgroups= $stmt->fetchAll(\Doctrine\ORM\Query::HYDRATE_ARRAY);
-        return $roadgroups;
+        $rarray = array();
+        foreach($roadgroups as $roadgroup)
+        {
+          $rarray[$roadgroup["roadgroupid"]]=$roadgroup;
+        }
+        return $rarray;
      }
 
      public function findSeatsforRoadgroup($rgid, $dtid, $year)

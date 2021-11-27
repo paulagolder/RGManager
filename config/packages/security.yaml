@@ -12,7 +12,7 @@ security:
                 property: email
     firewalls:
         dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js|maps)/
+            pattern: ^/(_(profiler|wdt)|css|images|js|maps|rgml|csv)/
             security: false
         main:
             anonymous: true

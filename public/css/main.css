@@ -396,6 +396,13 @@ div.row div.shorttext
   text-overflow: ellipsis;
 }
 
+div.row div.mediumtext
+{
+  width: 20em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 
 div.row div.button
@@ -410,9 +417,59 @@ div.row div.button.wide
   margin-left: 1em;
 }
 
+
+
 div.map div.mapdiv
 {
   height:400px;
   width: 100%;
 }
 
+
+
+.colour_0
+{
+  background-color: #FF000088;
+}
+
+.colour_1
+{
+  background-color: #00FF0088;
+}
+
+.colour_2
+{
+  background-color:  #0000FF88;
+}
+
+
+.colour_3
+{
+  background-color:  #FFFF0088;
+}
+
+
+
+.colour_4
+{
+  background-color:  #FF00FF88;
+}
+
+
+.colour_5
+{
+  background-color:  #00FFFF88;
+}
+
+
+
+.colour_6
+{
+  background-color: #00800088;
+}
+
+
+.colour_7
+{
+  background-color:  #80000088;
+}

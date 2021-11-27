@@ -203,10 +203,20 @@ public function setGeodata($text)
 
    public  function copy($obj)
    {
+   if(is_null($obj)) return;
+   if(is_object($obj))
+   {
    $this->Name = $obj->Name;
    $this->Rggroupid = $obj->Rggroupid;
    $this->KML = $obj->KML;
    $this->Households = 0;
+   }else
+   {
+   $this->Name = $obj["name"];
+   $this->Rggroupid = $obj["Rggroupid"];
+   $this->KML = $obj["KML"];
+   $this->Households = 0;
+   }
    }
 
    public function makexml()

@@ -123,7 +123,7 @@ class SeatController extends AbstractController
             ]);
     }
 
-     public function showrgs($dtid,$stid)
+    public function showrgs($dtid,$stid)
     {
 
         $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
@@ -133,14 +133,13 @@ class SeatController extends AbstractController
             return $this->render('seat/showone.html.twig', [ 'message' =>  'seat not Found',]);
         }
         $roadgrouplinks = $this->getDoctrine()->getRepository("App:Seat")->findRoadgroups($dtid,$stid,$this->rgyear);
-   dump($roadgrouplinks);
+
         $rglist = array();
         $bounds =$this->mapserver->newbounds();
         foreach ($roadgrouplinks as $aroadgrouplink)
         {
            $aroadgroup =  $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($aroadgrouplink["roadgroupid"],$this->rgyear);
            $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getGeodata());
-           dump($bounds);
            $kml = $aroadgroup->getKML();
            if($aroadgroup)
            {
@@ -338,52 +337,6 @@ class SeatController extends AbstractController
     }
 
 
-/*      public function topdf($list)
-    {
-     $image = "./maps/BLY_C2.png";
-     $file = "./maps/lichfielddc.pdf";
-// Instanciation of inherited class
-$pdf = new FPDF();
-$pdf->AddPage();
-$pdf->SetMargins(5, 5 , 5, 5);
-$pdf->SetFont('Helvetica','',12);
-$cellw =($this->A4w-(5+5+5))/2-4;
-$cellh =($this->A4h-(5+5+5))/2-8;
-$p=0;
-while($p < count($list))
-{
-for($i=0;$i<=1;$i++)
-{
-  for($j=0;$j<=1;$j++)
-  {
-   $x = 5+$j*(5+$cellw);
-   $y = 5+$i*(5+$cellh);
-    $image = "./maps/".$list[p].".png";
-   $pdf->setXY($x,$y);
-    $pdf->Image($image,$x,$y,$cellw,$cellh);
-   $pdf->Cell($cellw,$cellh,'',1,1,'C');
-   $p++;
-   $ip++;
-  }
-}
- if($p<count($list))
-   {
-   $pdf->AddPage();
-   }
-}
-//$pdf->Output();
-
-
-
-             $pdf->Output($file,'F');
-            // file_put_contents($file, $output);
-          //  $handle = fopen($file, "w") or die("ERROR: Cannot open the file.");
-           // fwrite($handle, $xmlout) or die ("ERROR: Cannot write the file.");
-          //  fclose($handle);
-            $this->addFlash('notice','PDF file saved..' );
-            return $this->redirect("/");
-    }
-*/
     public function makexml()
     {
          $xmlout = "";

@@ -1,0 +1,61 @@
+{# views/delivery/edit.html.twig #}
+
+{% extends 'rgmaster.html.twig' %}
+
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/district.css') }}" rel="stylesheet" />
+{% endblock %}
+{% block js %}
+   {{ parent() }}
+   <script src="{{asset('js/maps.js')}}"></script>
+   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+   <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
+   <script src="{{asset('js/L.KML.js')}}"></script>
+{% endblock %}
+
+
+{% block middle %}
+<div id="middle" >
+<div id="districtedit"  >
+<div>
+ <div class="heading  row" >
+ <div class="label">Edit District:</div>
+ <div class="title" > {{district.name}}</div>
+ <div class="button  right"> <a class="button" href ="/" >{{'back'}} </a> </div>
+</div>
+<div class="formmap">
+<div  class="form" >
+    {{ form_start(form) }}
+    {{ form_row(form.DistrictId) }}
+    {{ form_row(form.Name) }}
+    {{ form_row(form.Households) }}
+    {{ form_row(form.Electors) }}
+    {{ form_row(form.KML) }}
+
+    <button type="submit">{{'Register!'}}</button>
+    {{ form_end(form) }}
+</div>
+
+</div>
+</div>
+</div>
+<div class="map" >
+  <div id="rgmapid" ></div>
+</div>
+
+ {% set geodata = district.getGeodata_json %}
+ <script  type="text/javascript" >
+     var mymap = rgMap("{{geodata}}");
+ {% if  district.kml %}
+      var aspath = "{{mappath}}outlines/{{district.kml}}";
+      if("{{district.kml}}")
+      {
+         var style = {"color":  "#000000" , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.2};
+         makeOutlineKml(mymap,aspath,style,false,"{{district.name}}")
+      }
+      setBoundsGeodata(mymap, "{{geodata}}");
+  {% endif %}
+   </script>
+{% endblock %}

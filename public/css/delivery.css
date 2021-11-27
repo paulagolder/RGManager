@@ -19,7 +19,7 @@ div#delivery   div.group  div
 
 div#delivery   div div.name
 {
-  width: 140px;
+  width: 150px;
 }
 
 div#delivery   div  div.button
@@ -53,7 +53,7 @@ div#delivery   div.subgroup.row  div.num
 
 div#delivery   div.roadgroup.row
 {
-  xmargin-left: 5em;
+  margin-left: 5em;
 }
 
 div#delivery   div.roadgroup.row div.name
@@ -62,6 +62,11 @@ div#delivery   div.roadgroup.row div.name
   text-align:right;
 }
 
+
+ div.delivery div.list div.roadgroup.row
+ {
+   margin-left: 10em;
+ }
 
 
  div.map

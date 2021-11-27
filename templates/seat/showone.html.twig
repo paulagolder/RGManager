@@ -29,13 +29,23 @@
   <div class="value">{{seat.name}}</div>
   <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
 </div>
+
+   {% if (roadgrouplist | length) > 10   %}
+           {% set hidden = 1 %}
+           <div class="row" >
+   {% else %}
+         {% set hidden = 0 %}
+           <div class="notrow" >
+    {% endif %}
    {% for key,value in roadgrouplist %}
+
     {% for key2,value2 in value %}
 
      <div  class="row indent id">
         <div  id="{{key2}}" class="rgid" >
          <a class="routebutton"  href ="/rgsubgroup/show/{{ key2}}" >{{ key2}}</a>
          </div>
+         {% if hidden == 1 %}
            <div  class="row">
              {% for key3,value3 in value2 %}
              <div class="name" >
@@ -43,10 +53,11 @@
              :{{ value3.Name }}  </div>
           {% endfor %}
       </div>
+       {% endif %}
      </div>
     {% endfor %}
    {% endfor %}
-
+</div>
 <div class="map" >
   <div id="swmapid" ></div>
 </div>

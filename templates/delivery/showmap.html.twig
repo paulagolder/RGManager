@@ -2,11 +2,11 @@
 
 {% extends 'dvymaster.html.twig' %}
 
-
 {% block stylesheets %}
 {{ parent() }}
 <link href="{{ asset('/css/delivery.css') }}" rel="stylesheet" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+<link href="{{ asset('/css/tree.css') }}" rel="stylesheet" />
 {% endblock %}
 {% block js %}
 {{ parent() }}
@@ -14,14 +14,12 @@
 <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
 <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
 <script src="{{asset('js/L.KML.js')}}"></script>
-
+<script src="{{asset('js/tree.js')}}"></script>
 {% endblock %}
 
 
 {% block middle %}
 <div class="delivery">
-
-
   {% if message %}
   <div class="heading row">
     <div class="label">Delivery </div>
@@ -31,7 +29,7 @@
   {% else %}
 
 <div class="heading row">
-    <div class="label">Delivery</div>
+    <div class="label">Deliveryxy</div>
     <div class="value">{{delivery.deliveryId}}:</div>
     <div class="value">{{delivery.Name }}</div>
     <div class="value">({{delivery.Households }})</div>
@@ -39,45 +37,44 @@
     <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
   </div>
   <div class="subheading row">
-  <div class="rgid" >ID</div>
+  <div class="rgid" >RoundID</div>
     <div class="name" >Name</div>
+    <div  class="num" >Roadgroups</div>
     <div  class="num" >House-holds</div>
     <div  class="button" ></div>
   </div>
-  <div class="list" >
-    {% for key ,asubgroup in rggroups %}
-          <div class="group row">
-             <div class="rgid" >{{key}}: </div>
-              <div class="name" >{{ asubgroup.group.Name}}</div>
-             <div class="num" >{{ asubgroup.group.Households}}</div>
-             <div class="button" ><a class="button" href = "/delivery/viewdetail/{{delivery.deliveryId}}/{{key}}" >View</a></div>
-          </div>
-      {% if rgid is defined %}
-      {% if key in rgid %}
-      {% for key2 ,arggroup in asubgroup["children"] %}
-        <div class="subgroup row">
-            <div class="rgid" >{{key2}}:</div>
-            <div class="button" ><a class="button" href = "/delivery/viewdetail/{{delivery.deliveryId}}/{{key2}}" >View</a></div>
-
-        </div>
-        {% if key2 in rgid %}
-        {% for key3 ,arg in arggroup["children"] %}
-            <div class=" roadgroup row">
-              <div class="rgid" >{{key3}}: </div><div class="num" >{{arg.households }}</div>
-              <div class="button" ><a class="button" href = "/delivery/editround/{{delivery.deliveryId}}/{{key2}}" >EditRound</a></div>
-            </div>
-        {% endfor %}
-        {% endif %}
-      {% endfor %}
-      {% endif %}
-      {% endif %}
+ <ul id="tree"  >
+    {% for key ,asubgroup in roundstree %}
+    <li><span class="box"> {{key}}:{{ asubgroup.group.Name}}</span>
+      <ul class="nested">
+        {% for key2 ,arggroup in asubgroup["children"] %}
+        <li ><span class="box"> {{key2}}:{{arggroup.group.Name}}</span>
+          <ul class="nested">
+            {% for key3 ,arg in arggroup["children"] %}
+            <li>
+              <div class=" roadgroup row">
+                <div class="rgid" >{{key3}}: </div>
+                <div class="text" >{{arg.name }}</div>
+                <div class="num" >{{arg.households }}</div>
+                <div class="largebutton" ><a class="button" href = "/delivery/viewround/{{delivery.deliveryId}}/{{key3}}" >View Round</a></div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+          {% endfor %}
+        </li>
+      </ul>
+    </li>
     {% endfor %}
-  </div>
+  </ul>
 {% endif %}
 </div>
 <div class="map" >
   <div id="wmapid" ></div>
 </div>
+<script>
+  toggle();
+</script>
 {% set jslocation = delivery.getjson() %}
 {% set abounds = bounds | json_encode | raw %}
 <script >
@@ -88,17 +85,17 @@ var bounds = null;
 var wardlayer = null;
 var fgroup =  new L.featureGroup();
 
-
-{% for key,arg in allrgs %}
 var i=0;
- var htmltext = "<html> <h1>{{key}}</h1><div> <a class=\"button\" href = \"/delivery/addround/{{delivery.deliveryId}}/{{key}}\" >ADD</a></div>";
-{% if key in rgs|keys  %}
- var htmltext = "<html> <h1>{{key}}</h1><div> <a class=\"button\" href = \"/delivery/removeround/{{delivery.deliveryId}}/{{key}}\" >REMOVE</a></div>";
-i=1;
+{% for key,rnd in rounds %}
+var htmltext = "<html> <h1>{{rnd.name}}</h1><div> <a class=\"button\" href = \"/delivery/addround/{{delivery.deliveryId}}/{{key}}\" >ADD</a></div>";
+{% if key in rounds|keys  %}
+var htmltext = "<html> <h1>{{rnd.name}}</h1><div> <a class=\"button\" href = \"/delivery/viewround/{{delivery.deliveryId}}/{{key}}\" >VIEW</a></div>";
+
 {% endif %}
-{% if arg.kml  %}
+{% for keyrg, rg in rnd.roadgroups %}
+{% if rg.kml  %}
     var style = {"color":  getColor(i) , "weight": 4 ,  "clickable": true ,"opacity": 1.0, "fillOpacity": 1.0 };
-      var  kml = "{{arg.kml}}";
+      var  kml = "{{rg.kml}}";
       var path = "{{mappath}}roadgroups/"+kml;
 
       if(kml)
@@ -106,6 +103,8 @@ i=1;
         makeKMLLayer(mymap,path,style,true,htmltext);
       }
   {% endif %}
+  {% endfor %}
+    i=i+1;
  {% endfor %}
 
 var kml = "{{delivery.KML}}";
@@ -117,8 +116,6 @@ var kml = "{{delivery.KML}}";
       }
    setMarkers(mymap,"{{abounds}}");
    setBounds2(mymap,"{{abounds}}");
-
-
 </script>
 
 {% endblock %}

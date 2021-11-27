@@ -16,19 +16,33 @@
  <div class="title" > {{delivery.name}}</div>
  <div class="button  right"> <a class="button" href ="{{returnlink}}" >back</a> </div>
 </div>
+ <div class="heading  row" >
+   <div><a class="button" href = "/delivery/mapschedule/{{delivery.deliveryid}}" >MAP</a>   </div>
+       <div><a class="button" href = "/delivery/schedule/{{delivery.deliveryid}}" >SCHEDULE</a>   </div>
+        <div><a class="button" href = "/delivery/export/{{delivery.deliveryid}}" >SAVE RGML</a>   </div>
+        {% if delivery.rgml %}
+        <div> <a class="button" href = "{{delivery.rgml}}" download >DownLoad RGML</a> </div>
+        {% endif %}
+       <div> <a class="button" href = "/delivery/exportcsv/{{delivery.deliveryid}}" >SAVE CSV</a> </div>
+               {% if delivery.csv %}
+        <div> <a class="button" href = "{{delivery.csv}}" download >DownLoad CSV</a> </div>
+        {% endif %}
+        <div class="button  right"> <a class="delete button" href ="/delivery/delete/{{delivery.Deliveryid}}" >{{'delete'}} </a> </div>
+     </div>
+     </div>
 <div class="formmap">
 <div  class="form" >
     {{ form_start(form) }}
     {{ form_row(form.Deliveryid) }}
     {{ form_row(form.Name) }}
-    {{ form_row(form.District) }}
-    {{ form_row(form.Seat) }}
+    {{ form_row(form.DistrictId) }}
+    {{ form_row(form.SeatIds) }}
     {{ form_row(form.TargetDate) }}
     {{ form_row(form.Comment) }}
     <button type="submit">{{'Register!'}}</button>
     {{ form_end(form) }}
 </div>
-<div class="button  right"> <a class="deletebutton" href ="/delivery/delete/{{delivery.Deliveryid}}" >{{'delete'}} </a> </div>
+
 </div>
 </div>
 </div>

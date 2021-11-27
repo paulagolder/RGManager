@@ -281,7 +281,7 @@ class RggroupController extends AbstractController
       foreach ($subgroups as $asubgroup)
       {
         $swid =  $asubgroup->getRgsubgroupid();
-        $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($swid);
+        $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($swid,$this->rgyear);
         foreach ($roadgroups as $aroadgroup)
         {
           if(!$this->mapserver->ismap($aroadgroup->getKML()))
@@ -470,61 +470,6 @@ return $this->redirect("/");
   }
 
 
-  function hexColor($color)
-  {
-    $rgb = dechex(($color[0]<<16)|($color[1]<<8)|$color[2]);
-    return("#".substr("000000".$rgb, -6));
-  }
-
-  function makeColor($intval)
-  {
-    $r = 255;
-    $b = 255;
-    $g  = 255;
-    if($intval==0)
-    {
-      $r = 0;
-      $b = 0;
-      $g  = 255;
-    }else
-    {
-      if($intval>140)
-      {
-        $d= $intval -140;
-        $r = 0;
-        $b = 0;
-        $g  =255;
-      }else if($intval >70)
-      {
-        $r = 0;
-        $b = 255;
-        $g  = 0;
-      }else
-      {
-        $d= $intval -140;
-        $r = 255;
-        $b = 0;
-        $g  = 0;
-
-      }
-
-    }
-    return $this->rgbToHex($r,$g,$b);
-  }
-
-  function componentToHex($c)
-  {
-    $hex = dechex($c);
-    if( strlen($hex)< 2)
-      return "0".$hex;
-    else
-      return $hex;
-  }
-
-  function rgbToHex($r, $g, $b)
-  {
-    return "#".$this->componentToHex($r).$this->componentToHex($g).$this->componentToHex($b);
-  }
 
 
 

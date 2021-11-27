@@ -92,8 +92,18 @@ class RoadgroupRepository extends EntityRepository
         return $roadgroups;
      }
 
+       public function findSpareRoadgroups($dvyid)
+     {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT DISTINCT r.roadgroupid,r.name  FROM roadgroup as r left join roundtoroadgroup as w on r.roadgroupid = w.roadgroupid where w.deliveryid ="'.$dvyid.'" and w.roadgroupid is null';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $roadgroups= $stmt->fetchAll();
+        return $roadgroups;
+     }
 
-     public function findDeliveryRoadgroups($delivery,$year)
+
+     public function xxfindDeliveryRoadgroups($delivery,$year)
      {
         $conn = $this->getEntityManager()->getConnection();
             $sqlpd = 'select p.pollingdistrictid  from pollingdistrict  as p, seattopd as s where s.pdid =  p.pollingdistrictid and s.year = "'.$year.'" and s.district = "'.$delivery->district.'" ';

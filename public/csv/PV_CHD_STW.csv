@@ -1,0 +1,43 @@
+RD-Group, Name, RD-Sugroup,Name, Roadgroup, Name,  Households , Deliveries, Date, Agent, Completed 
+
+  RG_CHD,Chadsmead,,,,,1863,  
+ ,,RG_CHD_C,Central,,,707
+ ,,,,CHD_C1,Oakenfield..etc,254
+ ,,,,CHD_C2,Swallow Croft..etc,189
+ ,,,,CHD_C3,Leasowe..etc,133
+ ,,,,CHD_C4,Dimbles Lane..etc,131
+ ,,RG_CHD_N,North,,,686
+ ,,,,CHD_N2,Grange Lane..etc,178
+ ,,,,CHD_N3,Pauls Walk..etc,296
+ ,,,,CHD_N4,Weston Road..etc,212
+ ,,RG_CHD_S,South,,,470
+ ,,,,CHD_S1,Charters..etc,97
+ ,,,,CHD_S2,Gaia Lane..etc,116
+ ,,,,CHD_S3,Anson Ave..etc,121
+ ,,,,CHD_S4,Beacon St..etc,136
+ ,,RG_CHD_X,Outside City,,,0
+ ,,,,CHD_X1,Outside City..etc,
+ 
+  RG_STW,Stowe,,,,,2582,  
+ ,,RG_STW_C,Central,,,389
+ ,,,,STW_C1,Stowe St..etc,140
+ ,,,,STW_C2,St Michael Road..etc,149
+ ,,,,STW_C3,Wissage Rd..etc,100
+ ,,RG_STW_E,East,,,687
+ ,,,,STW_E2,Rocklands Cres..etc,140
+ ,,,,STW_E3,Valley Lane..etc,145
+ ,,,,STW_E4,Hobs Road..etc,154
+ ,,,,STW_E5,Scotch Orchard..etc,138
+ ,,,,STW_E6,Eastern Ave..etc,110
+ ,,RG_STW_N,North,,,646
+ ,,,,STW_N1,Gilbert Road..etc,205
+ ,,,,STW_N2,Chadswell Heights..etc,141
+ ,,,,STW_N3,York Close..etc,132
+ ,,,,STW_N4,Fecknam Way..etc,168
+ ,,RG_STW_S,South,,,139
+ ,,,,STW_S1,Maxwell Close..etc,139
+ ,,RG_STW_W,West,,,721
+ ,,,,STW_W1,Close..etc,160
+ ,,,,STW_W2,Bird St..etc,337
+ ,,,,STW_W3,Wade Street..etc,224
+ 

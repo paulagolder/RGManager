@@ -1,0 +1,31 @@
+RD-Group, RD-Sugroup, Roadgroup, Name,  Households , Deliveries, Date, Agent 
+
+  RG_LEO,Leomansley,,,,,1715,  
+ ,,RG_LEO_A,Outer,,,50
+ ,,,,LEO_A1,Hallam Park..etc,50
+ ,,RG_LEO_C,Central,,,1665
+ ,,,,LEO_C1,Walsall Rd..etc,259
+ ,,,,LEO_C2,Christchurch Ln..etc,266
+ ,,,,LEO_C3,Walnut Walk..etc,187
+ ,,,,LEO_C4,Whithouse Dr..etc,171
+ ,,,,LEO_C5,Blakeman Way..etc,164
+ ,,,,LEO_C6,St Foy Ave..etc,142
+ ,,,,LEO_C7,Deykin Rd (part) ..etc,176
+ ,,,,LEO_C8,Sandfield Meadow..etc,197
+ ,,,,LEO_C9,Lawrence Way..etc,103
+ 
+  RG_STJ,St Johns,,,,,1760,  
+ ,,RG_STJ_C,Central,,,925
+ ,,,,STJ_C1,Scott Close..etc,156
+ ,,,,STJ_C2,Chapel Lane..etc,157
+ ,,,,STJ_C3,Dovehouse Fields..etc,104
+ ,,,,STJ_C4,Trafalgar Way..etc,176
+ ,,,,STJ_C5,Shortbutts Lane..etc,200
+ ,,,,STJ_C6,Bham Rd..etc,132
+ ,,RG_STJ_E,East,,,438
+ ,,,,STJ_E2,Cherry Orchard..etc,231
+ ,,,,STJ_E3,Beech Gds..etc,207
+ ,,RG_STJ_W,West,,,397
+ ,,,,STJ_W1,Chesterfield Rd..etc,170
+ ,,,,STJ_W2,Agincourt..etc,227
+ 

@@ -33,6 +33,7 @@ class AppExtension extends AbstractExtension
         return [
             new TwigFunction('area', [$this, 'calculateArea']),
             new TwigFunction('findmap', [$this, 'findMap']),
+
         ];
     }
 
