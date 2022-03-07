@@ -1,0 +1,49 @@
+
+
+
+ input.hidden
+ {
+   visibility: hidden;
+   width:0;
+ }
+
+
+ input.target
+{
+  margin-left:1em;
+  width:3em;
+  color:red;
+}
+
+input.completed
+{
+  margin-left:1em;
+  width:3em;
+  color:red;
+}
+
+input.agent
+{
+  margin-left:1em;
+  width:3em;
+  color:red;
+}
+
+ div.round div.list div.roadgroup.row
+ {
+   margin-left: 10em;
+ }
+
+
+ div.map
+{
+  width: 100%;
+  height: 500px;
+}
+
+
+ div#wmapid
+ {
+   width: 100%;
+   height: 500px;
+ }

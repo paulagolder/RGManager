@@ -1,0 +1,101 @@
+{# views/round/managesubgroup.html.twig #}
+
+{% extends 'dvymaster.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="{{ asset('/css/round.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+<link href="{{ asset('/css/tree.css') }}" rel="stylesheet" />
+{% endblock %}
+{% block js %}
+{{ parent() }}
+<script src="{{asset('js/maps.js')}}"></script>
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+<script src="{{asset('js/L.KML.js')}}"></script>
+<script src="{{asset('js/tree.js')}}"></script>
+
+{% endblock %}
+
+
+{% block middle %}
+<div class="round">
+
+
+  {% if message %}
+  <div class="heading row">
+    <div class="label">Delivery </div>
+  </div>
+  <H1> No deliverys found </H1>
+
+  {% else %}
+
+  <div class="heading row">
+    <div class="label"> Delivery</div>
+    <div class="value"> {{delivery.deliveryId}}:</div>
+    <div class="value"> {{delivery.Name}}</div>
+    <div class="value">HH:{{delivery.Households}}</div>
+    <div class="value">TG:{{delivery.Target}}</div>
+    <div class="value">CD:{{delivery.Completed}}</div>
+    <div class="value">RG:{{delivery.Roadgroups}}</div>
+    <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+</div>
+
+
+  <div class="heading medium row">
+    <div class="label"> Round Group</div>
+    <div class="value"> {{rndgroup.Rndgroupid}}:</div>
+    <div class="value"> {{rndgroup.Name}}</div>
+    <div class="value">HH:{{rndgroup.Households}}</div>
+    <div class="value">TG:{{rndgroup.Target}}</div>
+    <div class="value">CD:{{rndgroup.Completed}}</div>
+    <div class="value">RG:{{rndgroup.Roadgroups}}</div>
+  </div>
+
+  <div class="heading medium row">
+    <div class="label"> Round Sub Group</div>
+    <div class="value"> {{rndsubgroup.Rndgroupid}}:</div>
+    <div class="value"> {{rndsubgroup.Name}}</div>
+    <div class="value">HH:{{rndsubgroup.Households}}</div>
+    <div class="value">TG:{{rndsubgroup.Target}}</div>
+    <div class="value">CD:{{rndsubgroup.Completed}}</div>
+    <div class="value">RG:{{rndsubgroup.Roadgroups}}</div>
+  </div>
+
+  <div class="subheading row">
+    <div class="rgid" >RoundID</div>
+    <div class="name" >Name</div>
+    <div  class="num" >House-holds</div>
+    <div  class="num" >Road-groups</div>
+    <div  class="num" >Target</div>
+    <div  class="num" >Compl-eted</div>
+    <div  class="num" >Agent</div>
+
+  </div>
+
+  <form action="/round/updateround/{{delivery.deliveryId}}/{{rndgroup.Rndgroupid}}/{{rndsubgroup.Rndgroupid}}" method="POST" >
+  <div id="tree"  >
+    {% set colouri =0  %}
+    {% for key, arnd in roundstree %}
+    {% set colouri = colouri +1 %}
+      <div class="row" >
+        <div class="rgid colour_{{colouri}}">{{key}}</div>
+        <div class="name"> {{ arnd.name}}</div>
+        <div class="num">{{arnd.households}}</div>
+        <div class="num">{{arnd.roadgroups}}</div>
+        <input class="hidden" type="text" name="rndid[]" value="{{arnd.roundid}}">
+        <input class="target" type="text" name="target[]" value="{{arnd.target}}">
+        <input class="completed" type="text" name="completed[]" value="{{arnd.completed}}">
+        <input class="agent" type="text" name="agent[]" value="{{arnd.agent}}">
+
+        <div class="button wide"><a class="button wide" href = "/delivery/scheduleround/{{delivery.deliveryId}}/{{key}}" >Update Round</a></div>
+      </div>
+    {% endfor %}
+    <button type="submit" name="submit">Update</button>
+  </form>
+</div>
+
+
+
+  {% endif %}
+{% endblock %}

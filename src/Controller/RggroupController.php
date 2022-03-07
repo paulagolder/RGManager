@@ -67,7 +67,8 @@ class RggroupController extends AbstractController
       {
         $rgid = $rgs[$j]->getRoadgroupId();
         $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
-        $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getGeodata());
+        dump( $aroadgroup->getGeodata());
+        $bounds = $this->mapserver->expandboundsobj($bounds, $aroadgroup->getGeodata());
         $hh = $rgs[$j]->getHouseholds();
         $sumhh += $hh;
       //  $mpath = $maproot."roadgroups/".$rgid.".kml";
@@ -85,9 +86,10 @@ class RggroupController extends AbstractController
 
       }
       $rggroup->total= $sumhh;
-      $rggroup->rgcount= count($rgs);
+      $rggroup->roadgroups= count($rgs);
       $rggroup->rgfound= $nrg;
-      $rggroup->roadgroups= $rgs;
+      $rggroup->roadgrouplist= $rgs;
+      $rggroup->roadgroups= count($rgs);
       $rggroups[$i]=$rggroup;
     }
 
@@ -131,7 +133,7 @@ class RggroupController extends AbstractController
       $calchh= 0;
       foreach ($roadgroups as $aroadgroup)
       {
-        $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getGeodata());
+        $bounds = $this->mapserver->expandboundsobj($bounds, $aroadgroup->getGeodata());
         $totalhh += $aroadgroup->getHouseholds();
         if(!$this->mapserver->ismap($aroadgroup->getKML()))
         {
@@ -245,7 +247,7 @@ class RggroupController extends AbstractController
     $bounds = $this->mapserver->newBounds();
     foreach ($roadgroups as &$aroadgroup)
     {
-      $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getGeodata());
+      $bounds = $this->mapserver->expandboundsobj($bounds, $aroadgroup->getGeodata());
       $est = $this->getDoctrine()->getRepository("App:Roadgroup")->countHouseholds($aroadgroup->getRoadgroupId(),$this->rgyear);
       $aroadgroup->{"calculated"} = $est;
     }
@@ -390,54 +392,7 @@ class RggroupController extends AbstractController
 
 
 
-
-  /*      public function topdf($list)
-   *    {
-   *    $image = "./maps/BLY_C2.png";
-   *    $file = "./maps/lichfielddc.pdf";
-   * // Instanciation of inherited class
-   * $pdf = new FPDF();
-   * $pdf->AddPage();
-   * $pdf->SetMargins(5, 5 , 5, 5);
-   * $pdf->SetFont('Helvetica','',12);
-   * $cellw =($this->A4w-(5+5+5))/2-4;
-   * $cellh =($this->A4h-(5+5+5))/2-8;
-   * $p=0;
-   * while($p < count($list))
-   * {
-   * for($i=0;$i<=1;$i++)
-   * {
-   *  for($j=0;$j<=1;$j++)
-   *  {
-   *  $x = 5+$j*(5+$cellw);
-   *  $y = 5+$i*(5+$cellh);
-   *    $image = "./maps/".$list[p].".png";
-   *  $pdf->setXY($x,$y);
-   *    $pdf->Image($image,$x,$y,$cellw,$cellh);
-   *  $pdf->Cell($cellw,$cellh,'',1,1,'C');
-   *  $p++;
-   *  $ip++;
-}
-}
-if($p<count($list))
-{
-$pdf->AddPage();
-}
-}
-//$pdf->Output();
-
-
-
-$pdf->Output($file,'F');
-// file_put_contents($file, $output);
-//  $handle = fopen($file, "w") or die("ERROR: Cannot open the file.");
-// fwrite($handle, $xmlout) or die ("ERROR: Cannot write the file.");
-//  fclose($handle);
-$this->addFlash('notice','PDF file saved..' );
-return $this->redirect("/");
-}
-*/
-  public function makexml()
+  public function xmakexml()
   {
     $xmlout = "";
     $rggroups = $this->getDoctrine()->getRepository("App:Rggroup")->findAll();

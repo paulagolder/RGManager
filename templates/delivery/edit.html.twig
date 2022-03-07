@@ -16,15 +16,14 @@
  <div class="title" > {{delivery.name}}</div>
  <div class="button  right"> <a class="button" href ="{{returnlink}}" >back</a> </div>
 </div>
- <div class="heading  row" >
-   <div><a class="button" href = "/delivery/mapschedule/{{delivery.deliveryid}}" >MAP</a>   </div>
-       <div><a class="button" href = "/delivery/schedule/{{delivery.deliveryid}}" >SCHEDULE</a>   </div>
+<div class="heading  row" >
+       <div><a class="button" href = "/delivery/scheduledelivery/{{delivery.deliveryid}}" >SCHEDULE</a>   </div>
         <div><a class="button" href = "/delivery/export/{{delivery.deliveryid}}" >SAVE RGML</a>   </div>
-        {% if delivery.rgml %}
+        {% if delivery.rgml is defined %}
         <div> <a class="button" href = "{{delivery.rgml}}" download >DownLoad RGML</a> </div>
         {% endif %}
        <div> <a class="button" href = "/delivery/exportcsv/{{delivery.deliveryid}}" >SAVE CSV</a> </div>
-               {% if delivery.csv %}
+       {% if delivery.csv is defined %}
         <div> <a class="button" href = "{{delivery.csv}}" download >DownLoad CSV</a> </div>
         {% endif %}
         <div class="button  right"> <a class="delete button" href ="/delivery/delete/{{delivery.Deliveryid}}" >{{'delete'}} </a> </div>
@@ -35,6 +34,7 @@
     {{ form_start(form) }}
     {{ form_row(form.Deliveryid) }}
     {{ form_row(form.Name) }}
+    {{ form_row(form.Year) }}
     {{ form_row(form.DistrictId) }}
     {{ form_row(form.SeatIds) }}
     {{ form_row(form.TargetDate) }}
@@ -42,7 +42,7 @@
     <button type="submit">{{'Register!'}}</button>
     {{ form_end(form) }}
 </div>
-
+<div class="button  right"> <a class="delete" href ="/delivery/makerounds/{{delivery.Deliveryid}}" >Make all rounds</a> </div>
 </div>
 </div>
 </div>

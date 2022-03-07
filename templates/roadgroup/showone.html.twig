@@ -1,4 +1,4 @@
-{# views/street/showroadgroup.html.twig #}
+{# views/roadgroup/showone.html.twig #}
 
 {% extends 'rgmaster.html.twig' %}
 
@@ -30,26 +30,26 @@
   <H1> No streets found </H1>
 
   {% else %}
-{% if needsupdating %}
-<div class="red heading row">
-<div class="label"> Road Group </div>
-{% else %}
+
 <div class="heading row">
  <div class="label"> Road Group </div>
-{% endif %}
 
     <div class="value"> {{roadgroup.RoadgroupId}}:</div>
     <div class="value"> {{roadgroup.Name}}</div>
-   <div class="value small"> H:{{roadgroup.Households}}</div>
-     <div class="value small"> T:{{total}}</div>
-       <div class="value small"> D:{{geodata.dist}}</div>
-         <div class="value small"> TD:{{totaldist}}</div>
+   <div class="value small"> HH:{{roadgroup.Households}}</div>
+     <div class="value small"> EL:{{roadgroup.Electors}}</div>
+       <div class="value small"> DT:{{geodata.dist}}</div>
+         <div class="value small"> TD:{{roadgroup.streets}}</div>
+          <div class="button  right"> <a class="button" href = "/roadgroup/newkml/{{roadgroup.RoadgroupId}}" >update </a> </div>
     <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
   </div>
   <div class="subheading row">
     <div class="name" >Name/part</div>
     <div class="pd" >PD</div>
     <div  class="num" >House-holds</div>
+     <div  class="num" >Electors</div>
+         <div  class="num" >Dist</div>
+      <div  class="num" >Steps</div>
     <div  class="button" ></div>
   </div>
   <div class="list" >
@@ -62,7 +62,18 @@
       </div>
       <div class="pd" ><a class="button" href = "/pollingdistrict/show/{{street.pd}}" >{{street.pd}}</a></div>
       <div  class="num" >{{street.households}}</div>
-       <div  class="num" >{{street.countsteps}}</div>
+        <div  class="num" >{{street.electors}}</div>
+          {% if street.geodata %}
+        <div  class="num" >{{street.geodata.dist}}</div>
+           {% else %}
+    <div  class="num" >???</div>
+    {% endif %}
+        {% if street.steps is defined  %}
+        <div  class="num" >{{street.steps}}</div>
+        {% else %}
+        <div  class="num" >?</div>
+        {% endif %}
+       <div  class="num" ></div>
       <div class="button"> <a class="button" href = "/street/edit/{{street.name }}/{{street.part}}" >Edit</a> </div>
          <div class="button"> <a class="button" href = "/street/remove/{{roadgroup.RoadgroupId}}/{{street.name}}/{{street.part}}" >Remove</a> </div>
          <div  class="text" >{{street.note}}</div>
@@ -84,7 +95,6 @@
 
     <div  class="altbutton row"  >
       <div class="button"> <a class="small button" href = "/roadgroup/newkml/{{roadgroup.RoadgroupId}}" >New Map</a> </div>
-       <div class="button"> <a class="small button" href = "http://www.bikehike.co.uk/mapview.php" target = "_blank"  >Create Route</a> </div>
       <form action="{{ path('do-upload') }}" method="post" enctype="multipart/form-data">
         <input type="hidden" name="utoken" value="{{ csrf_token('upload-map') }}" />
         <input type="hidden" name="rgid" value="{{roadgroup.RoadgroupId}}" />
@@ -101,7 +111,8 @@
 </div>
 {% set jslocation = roadgroup.getjson() %}
 <script  type="text/javascript" >
-  var mymap = myRgMapb("{{geodata.midlat}}","{{geodata.midlong}}");
+   var mymap = myRgMapb("{{geodata.midlat}}","{{geodata.midlong}}");
+
   var kml = "{{roadgroup.kml}}";
   var path = "{{mappath}}/roadgroups/"+kml;
   if(kml)
@@ -110,6 +121,7 @@
     makeOutlineKml(mymap, path,style,false,kml);
   }
   setBoundsb(mymap,"{{geodata.maxlat}}","{{geodata.maxlong}}","{{geodata.minlat}}","{{geodata.minlong}}");
+  var style = {"color":  "#FF0000" , "weight": 14 ,  "clickable": true ,"opacity": 0.3, "fillOpacity": 0.1 };
    {% for street in streets %}
       drawPath(mymap,"{{street.getPath()}}");
    {% endfor %}

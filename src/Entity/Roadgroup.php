@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\RoadgroupRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @ORM\Entity(repositoryClass=RoadgroupRepository::class)
@@ -53,6 +54,7 @@ class Roadgroup
    */
   private $Streets;
 
+  private $Streetlist;
 
   /**
    * @ORM\Column(name="electors",type="integer", nullable=true)
@@ -95,6 +97,14 @@ class Roadgroup
      * @ORM\Column(name="updated",type="datetime",    nullable=true)
      */
     private $Updated;
+
+
+    private $em;
+    public function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+    }
+
 
   public function getRoadgroupId()
    {
@@ -187,6 +197,17 @@ class Roadgroup
    public function setStreets(?int $number): self
    {
      $this->Streets = $number;
+     return $this;
+   }
+
+    public function getStreetslist()
+   {
+     return $this->Streetlist;
+   }
+
+   public function setStreetlist($arry)
+   {
+     $this->Streetlist = $arry;
      return $this;
    }
 
@@ -308,16 +329,16 @@ public function setGeodata($text)
 
 
 
-   public function makexml()
+   public function makexml($inset="  ")
    {
      $streets =$this->streets;
      $xmlout = "";
-     $xmlout .= "      <roadgroup RoadgroupId='$this->RoadgroupId' Name='".$this->getName()."' KML='$this->KML' Households='$this->Households'  Bounds='".$this->getGeodata_json()."' >\n";
+     $xmlout .= $inset."<roadgroup RoadgroupId='$this->RoadgroupId' Name='".$this->getName()."' KML='$this->KML' Households='$this->Households'  Bounds='".$this->getGeodata_json()."' >\n";
      foreach ($streets as $astreet)
      {
-        $xmlout .="        ".$astreet->makexml();
+        $xmlout .=$inset."  ".$astreet->makexml();
      }
-     $xmlout .= "      </roadgroup>\n";
+     $xmlout .= $inset."</roadgroup>\n";
      return $xmlout;
    }
 
@@ -338,5 +359,6 @@ public function setGeodata($text)
       $csvout .= "   ,,$this->RoadgroupId:".$this->getName()." , $this->Households \n  ";
      return  $csvout;
    }
+
 
 }

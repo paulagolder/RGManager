@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<kml xmlns="http://www.opengis.net/kml/2.2">
+
+
+<Document>
+
+
+ <name>ROUND_22_2022.kml</name>
+
+
+<Style id="blueLine">
+
+
+  <LineStyle>
+
+
+    <color>7fff0000</color>
+
+
+    <width>4</width>
+
+
+  </LineStyle>
+
+
+</Style>
+
+
+<Placemark>
+
+
+  <name>Birmingham Road</name>
+
+
+  <styleUrl>#blueLine</styleUrl>
+
+
+  <LineString>
+
+
+\t   <coordinates>
+
+
+-1.8245565891266,52.681797823779
+
+
+-1.8257904052734,52.680548987779
+
+
+-1.8268525600433,52.679918051848
+
+
+    </coordinates>
+
+
+  </LineString>
+
+
+</Placemark>
+
+
+<Placemark>
+
+
+  <name>Levetts Fields</name>
+
+
+  <styleUrl>#blueLine</styleUrl>
+
+
+  <LineString>
+
+
+\t   <coordinates>
+
+
+-1.82373046875,52.682397553214
+
+
+-1.8226361274719,52.681867459989
+
+
+    </coordinates>
+
+
+  </LineString>
+
+
+</Placemark>
+
+
+<Placemark>
+
+
+  <name>Maxwell Close</name>
+
+
+  <styleUrl>#blueLine</styleUrl>
+
+
+  <LineString>
+
+
+\t   <coordinates>
+
+
+-1.8213272094727,52.68302194925
+
+
+-1.8215847015381,52.682752029142
+
+
+-1.8217885494232,52.682527636457
+
+
+-1.8217885494232,52.682478855286
+
+
+-1.821380853653,52.68230324262
+
+
+    </coordinates>
+
+
+  </LineString>
+
+
+</Placemark>
+
+
+<Placemark>
+
+
+  <name>Maxwell Close</name>
+
+
+  <styleUrl>#blueLine</styleUrl>
+
+
+  <LineString>
+
+
+\t   <coordinates>
+
+
+-1.8217992782593,52.682488611525
+
+
+-1.8220889568329,52.682573165501
+
+
+-1.8222069740295,52.682573165501
+
+
+-1.8223088979721,52.682475603206
+
+
+    </coordinates>
+
+
+  </LineString>
+
+
+</Placemark>
+
+
+<Placemark>
+
+
+  <name>Rotten Row</name>
+
+
+  <styleUrl>#blueLine</styleUrl>
+
+
+  <LineString>
+
+
+\t   <coordinates>
+
+
+-1.8212521076202,52.683027152532
+
+
+-1.8205761909485,52.682649914373
+
+
+-1.8201577663422,52.682415764911
+
+
+-1.8198251724243,52.682357227349
+
+
+    </coordinates>
+
+
+  </LineString>
+
+
+</Placemark>
+
+
+<Placemark>
+
+
+  <name>Station Road</name>
+
+
+  <styleUrl>#blueLine</styleUrl>
+
+
+  <LineString>
+
+
+\t   <coordinates>
+
+
+-1.819760799408,52.682318202265
+
+
+-1.819943189621,52.682240151991
+
+
+-1.8203186988831,52.682162101577
+
+
+-1.8210160732269,52.681986487637
+
+
+-1.8214344978333,52.681862907033
+
+
+-1.8218100070953,52.681765343152
+
+
+-1.8220782279968,52.68173282181
+
+
+-1.8225181102753,52.681823881507
+
+
+-1.8226361274719,52.681778351682
+
+
+    </coordinates>
+
+
+  </LineString>
+
+
+</Placemark>
+
+
+<Placemark>
+
+
+  <name>Wissage Road</name>
+
+
+  <styleUrl>#blueLine</styleUrl>
+
+
+  <LineString>
+
+
+\t   <coordinates>
+
+
+-1.8136024475098,52.684243357514
+
+
+-1.8137097358704,52.68503032196
+
+
+    </coordinates>
+
+
+  </LineString>
+
+
+</Placemark>
+
+
+<Placemark>
+
+
+  <name>Aiden Court Road</name>
+
+
+  <styleUrl>#blueLine</styleUrl>
+
+
+  <LineString>
+
+
+\t   <coordinates>
+
+
+-1.8206325173378,52.683230729673
+
+
+-1.8203750252724,52.683074632247
+
+
+-1.8205466866493,52.682999835366
+
+
+    </coordinates>
+
+
+  </LineString>
+
+
+</Placemark>
+
+
+<Placemark>
+
+
+  <name>Church Street</name>
+
+
+  <styleUrl>#blueLine</styleUrl>
+
+
+  <LineString>
+
+
+\t   <coordinates>
+
+
+-1.8202704191208,52.68389023515
+
+
+-1.8199968338013,52.68391625094
+
+
+    </coordinates>
+
+
+  </LineString>
+
+
+</Placemark>
+
+
+<Placemark>
+
+
+  <name>Deans Croft</name>
+
+
+  <styleUrl>#blueLine</styleUrl>
+
+
+  <LineString>
+
+
+\t   <coordinates>
+
+
+-1.8193960189819,52.683601458824
+
+
+-1.8201819062233,52.683394956571
+
+
+-1.8199217319489,52.683040485861
+
+
+-1.8200370669365,52.682993331283
+
+
+    </coordinates>
+
+
+  </LineString>
+
+
+</Placemark>
+
+
+<Placemark>
+
+
+  <name>Rotten Row</name>
+
+
+  <styleUrl>#blueLine</styleUrl>
+
+
+  <LineString>
+
+
+\t   <coordinates>
+
+
+-1.8211877346039,52.683007640294
+
+
+-1.8200290203094,52.68244178158
+
+
+-1.8195569515228,52.682357227349
+
+
+    </coordinates>
+
+
+  </LineString>
+
+
+</Placemark>
+
+
+<Placemark>
+
+
+  <name>Southern Cross</name>
+
+
+  <styleUrl>#blueLine</styleUrl>
+
+
+  <LineString>
+
+
+\t   <coordinates>
+
+
+-1.8195140361786,52.682378040694
+
+
+-1.8192082643509,52.682647963113
+
+
+    </coordinates>
+
+
+  </LineString>
+
+
+</Placemark>
+
+
+<Placemark>
+
+
+  <name>Sturgeons Hill</name>
+
+
+  <styleUrl>#blueLine</styleUrl>
+
+
+  <LineString>
+
+
+\t   <coordinates>
+
+
+-1.8189239501953,52.682114620821
+
+
+-1.8178510665894,52.681952015168
+
+
+-1.8172824382782,52.681867459989
+
+
+-1.8171966075897,52.681886972737
+
+
+-1.8167728185654,52.681769896118
+
+
+    </coordinates>
+
+
+  </LineString>
+
+
+</Placemark>
+
+
+</Document>
+
+
+</kml>

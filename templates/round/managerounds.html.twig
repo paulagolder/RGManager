@@ -1,0 +1,68 @@
+{# round/managerounds.html.twig #}
+
+{% extends 'dvymaster.html.twig' %}
+
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="{{ asset('/css/delivery.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+{% endblock %}
+{% block js %}
+{{ parent() }}
+<script src="{{asset('js/maps.js')}}"></script>
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+<script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
+<script src="{{asset('js/L.KML.js')}}"></script>
+
+{% endblock %}
+
+
+{% block middle %}
+<div class="delivery">
+
+
+  {% if message %}
+  <div class="heading row">
+    <div class="label">Delivery </div>
+  </div>
+  <H1> No deliverys found </H1>
+
+  {% else %}
+
+<div class="heading row">
+    <div class="label"> Delivery </div>
+    <div class="value"> {{delivery.deliveryId}}:</div>
+    <div class="value"> {{delivery.Name }}</div>
+     <div class="value">({{delivery.Completed}}/{{delivery.Households}})</div>
+    <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+</div>
+<div class="heading row">
+    <div class="label"> Manage Rounds</div>
+</div>
+  <div class="subheading row">
+  <div class="rgid" >Round-group</div>
+    <div class="name" >Name</div>
+    <div  class="num" >House-holds</div>
+     <div  class="num" >target</div>
+      <div  class="num" >deliveries</div>
+    <div  class="button" ></div>
+  </div>
+  <div class="list" >
+    {% for key ,around in roundstree %}
+          <div class="group row">
+             <div class="rgid" >{{around["group"].RndgroupId}}: </div>
+              <div class="name" >{{around["group"].Name}}</div>
+                <div class="num" >{{around["group"].Households}}</div>
+             <div class="num" >{{around["group"].Target}}</div>
+               <div class="num" >{{around["group"].Completed}}</div>
+             <div class="button" ><a class="button" href = "/round/managegroup/{{delivery.deliveryId}}/{{around["group"].RndgroupId}}" >View</a></div>
+          </div>
+
+    {% endfor %}
+  </div>
+{% endif %}
+</div>
+
+
+{% endblock %}

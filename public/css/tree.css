@@ -26,6 +26,7 @@ padding: 0;
   display: inline-block;
   margin-right: 6px;
 }
+
 .caret-down::before {
   transform: rotate(90deg);
 }

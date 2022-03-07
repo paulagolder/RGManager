@@ -6,6 +6,8 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
+use stdClass;
+use DOMDocument;
 
 class MapServer
 {
@@ -149,30 +151,73 @@ class MapServer
 
   public function newbounds()
   {
-    $bounds = array();
-    $bounds["minlat"] = null;
-    $bounds["maxlat"] = null;
-    $bounds["maxlong"] = null;
-    $bounds["minlong"] = null;
+    $bounds = new stdClass();
+    $bounds->minlat = null;
+    $bounds->maxlat = null;
+    $bounds->maxlong = null;
+    $bounds->minlong = null;
+    return $bounds;
+  }
+
+  public function makebounds($sbounds)
+  {
+    $bounds = $this->newbounds();
+    if(is_null($sbounds)) return $bounds;
+    if(! is_object($sbounds))
+    {
+      if(is_array($sbounds))
+      {
+        $bounds = (object)$sbounds;
+      }
+      else
+        $bounds = json_decode($sbounds);
+    }
+      else
+        $bounds= $sbounds;
+    $bounds->minlat  =  $bounds->minlat;
+    $bounds->maxlat = $bounds->maxlat;
+    $bounds->maxlong  = $bounds->maxlong;
+    $bounds->minlong  = $bounds->minlong ;
+    return $bounds;
+  }
+
+  public function makebounds_fromarray($obounds)
+  {
+    $bounds = $this->newbounds();
+    if($obounds == null) return $bounds;
+   // $obounds = json_decode($sbounds);
+    $bounds["minlat"] =  $obounds["minlat"];
+    $bounds["maxlat"] = $obounds["maxlat"] ;
+    $bounds["maxlong"] = $obounds["maxlong"];
+    $bounds["minlong"] = $obounds["minlong"];
     return $bounds;
   }
 
 
 
 
-  public function expandbounds($rootbounds, $bounds)
+
+  public function expandboundsobj($rootbounds, $sbounds)
   {
-    if (!$bounds) return $rootbounds;
-    if(!array_key_exists("minlat", $rootbounds)) return $rootbounds;
-    if(!array_key_exists("minlat", $bounds)) return $rootbounds;
-    if($rootbounds["minlat"] === null)  $rootbounds["minlat"] =  $bounds["minlat"];
-    if($rootbounds["maxlong"] === null)  $rootbounds["maxlong"] =  $bounds["maxlong"];
-    if(($bounds["minlat"] !== null) && ($rootbounds["minlat"] >  $bounds["minlat"])) $rootbounds["minlat"] = $bounds["minlat"];
-    if(($bounds["maxlong"] !== null) && ($rootbounds["maxlong"] <  $bounds["maxlong"])) $rootbounds["maxlong"] = $bounds["maxlong"];
-    if($rootbounds["maxlat"] === null)  $rootbounds["maxlat"] =  $bounds["maxlat"];
-    if($rootbounds["minlong"] === null)  $rootbounds["minlong"] =  $bounds["minlong"];
-    if(($bounds["maxlat"] !== null) && ( $rootbounds["maxlat"] < $bounds["maxlat"]))  $rootbounds["maxlat"]= $bounds["maxlat"];
-    if(($bounds["minlong"] !== null) && ( $rootbounds["minlong"] > $bounds["minlong"]))  $rootbounds["minlong"] = $bounds["minlong"];
+    if (!$sbounds) return $rootbounds;;
+    if(! is_object($sbounds))
+      if(is_array($sbounds))
+      {
+        $bounds = (object)$sbounds;
+      }
+      else
+        $bounds = json_decode($sbounds);
+    else
+      $bounds= $sbounds;
+
+    if($rootbounds->minlat === null)  $rootbounds->minlat =  $bounds->minlat;
+    if($rootbounds->maxlong === null)  $rootbounds->maxlong =  $bounds->maxlong;
+    if(($bounds->minlat !== null) && ($rootbounds->minlat >  $bounds->minlat)) $rootbounds->minlat = $bounds->minlat;
+    if(($bounds->maxlong !== null) && ($rootbounds->maxlong <  $bounds->maxlong)) $rootbounds->maxlong = $bounds->maxlong;
+    if($rootbounds->maxlat === null)  $rootbounds->maxlat =  $bounds->maxlat;
+    if($rootbounds->minlong === null)  $rootbounds->minlong =  $bounds->minlong;
+    if(($bounds->maxlat !== null) && ( $rootbounds->maxlat < $bounds->maxlat))  $rootbounds->maxlat= $bounds->maxlat;
+    if(($bounds->minlong !== null) && ( $rootbounds->minlong > $bounds->minlong))  $rootbounds->minlong = $bounds->minlong;
     return $rootbounds;
   }
 
@@ -181,11 +226,11 @@ class MapServer
   {
     // array of lat-long i.e  $point1 = [lat,long]
     $earthRadius = 6371;  // earth radius in km
-    $point1Lat = $point1[1];
-    $point2Lat =$point2[1];
+    $point1Lat = $point1[0];
+    $point2Lat =$point2[0];
     $deltaLat = deg2rad($point2Lat - $point1Lat);
-    $point1Long =$point1[0];
-    $point2Long =$point2[0];
+    $point1Long =$point1[1];
+    $point2Long =$point2[1];
     $deltaLong = deg2rad($point2Long - $point1Long);
     $a = sin($deltaLat/2) * sin($deltaLat/2) + cos(deg2rad($point1Lat)) * cos(deg2rad($point2Lat)) * sin($deltaLong/2) * sin($deltaLong/2);
     $c = 2 * atan2(sqrt($a), sqrt(1-$a));
@@ -194,81 +239,74 @@ class MapServer
     return $distance;    // in km
   }
 
-
-
-
-  public function loadRoute($path,$kmlfile)
+  public function newkml($name)
   {
-    $geodata=[];
-    $geodata["dist"]=-1;
-    $geodata["maxlat"]="0";
-    $geodata["midlat"]="0";
-    $geodata["minlat"]="0";
-    $geodata["maxlong"]="0";
-    $geodata["midlong"]="0";
-    $geodata["minlong"]="0";
-    if(!$kmlfile) return $geodata;
-    $kmlpath =  $this->maproot.$path.$kmlfile;
-    $kmlpath = str_replace("//","/",$kmlpath);
-    $xmlstr = file_get_contents($kmlpath);
-    $kml = new \SimpleXMLElement($xmlstr);
-    if($kml->Document)
-    {
-      $kmldoc = $kml->Document;
-    }
-    else if ($kml->Folder)
-    {
-      $kmldoc = $kml->Folder;
-    }
-    else
-      return $geodata;
-    $dist = 0;
-    $minlat=360;
-    $minlong =360;
-    $maxlat=-360;
-    $maxlong=-306;
-    foreach ($kmldoc->Placemark as $placemark)
-    {
-     $k=0;
-     if($placemark->LineString)
-     {
-        $coordinatesstr = $placemark->LineString->coordinates ;
-        $value =  explode(PHP_EOL,  $coordinatesstr[0]);
-     }
-      else
-      {
-        $coordinatesstr = $placemark->Polygon->outerBoundaryIs->LinearRing->coordinates;
-        $valueb= $coordinatesstr->__toString();
-        $value = preg_split("@[\s+　]@u", trim($valueb));
-      }
 
-      $coords   = array();
-      foreach($value as $coord)
+    $newkml = "";
+    $totaldist =0;
+    foreach($streets as $astreet)
+    {
+      $path = $astreet->getDecodedpath();
+      foreach($path as $branch)
       {
-        $args     = explode(",", $coord);
-        if(isset($args[1]))
+        if(count($branch->steps)>1)
         {
-          $coords[] = array($args[0], $args[1]);
-          if($k>0)
+
+          // $geodata = $this->loadBranch($branch->steps);
+          // $dist += $geodata["dist"];
+          $newkml .=  "<Placemark>\n";
+          $newkml .=  "  <name>".$astreet->getName()."</name>\n";
+          $newkml .=  "  <styleUrl>#blueLine</styleUrl>\n";
+          $newkml .=  "  <LineString>\n";
+          $newkml .=  "	   <coordinates>\n";
+          foreach($branch->steps as $step)
           {
-            $dist += $this->getDistanceBetweenTwoPoints($coords[$k], $coords[$k-1]);
-            if($maxlat < $coords[$k][1])$maxlat= $coords[$k][1];
-            if($maxlong < $coords[$k][0])$maxlong= $coords[$k][0];
-            if($minlat > $coords[$k][1])$minlat= $coords[$k][1];
-            if($minlong > $coords[$k][0])$minlong= $coords[$k][0];
+            $newkml .="".$step[1].",".$step[0]."\n";
           }
-          $k++;
+          $newkml .=  "    </coordinates>\n";
+          $newkml .=  "  </LineString>\n";
+          $newkml .=  "</Placemark>\n";
         }
       }
+      $totaldist += $astreet->getDistance();
     }
-    $geodata["dist"]=number_format((float)$dist, 2, '.', '');
-    $geodata["maxlat"]=$maxlat;
-    $geodata["midlat"]="".($maxlat+$minlat)/2;
-    $geodata["minlat"]=$minlat;
-    $geodata["maxlong"]=$maxlong;
-    $geodata["midlong"]="".($minlong+$maxlong)/2;
-    $geodata["minlong"]=$minlong;
-    return  $geodata;
+    return $newkml;
+  }
+
+  function makekmldoc($kmlname)
+  {
+    $xmlout = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    $xmlout .= "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n";
+    $xmlout .=  "<Document>\n";
+    $xmlout .=  " <name>".$kmlname."</name>\n";
+    $xmlout .=  "<Style id=\"blueLine\">\n";
+    $xmlout .=  "  <LineStyle>\n";
+    $xmlout .=  "    <color>7fff0000</color>\n";
+    $xmlout .=  "    <width>4</width>\n";
+    $xmlout .=  "  </LineStyle>\n";
+    $xmlout .=  "</Style>\n";
+    $xmlout .=  "</Document>\n";
+    $xmlout .=  "</kml>\n";
+    $doc = new DOMDocument();
+    $doc->loadXML($xmlout);
+    return $doc;
+  }
+
+
+
+  public function mergeRoute($kmldom,$addfile)
+  {
+      $kmldoc = $kmldom;
+    $addpath =  $this->maproot."roadgroups/".$addfile;
+    $addpath = str_replace("//","/",$addpath);
+    $xmlstr2 = file_get_contents($addpath);
+    $addkml = new \SimpleXMLElement($xmlstr2);
+
+    foreach ($addkml->Placemark as $placemark)
+    {
+      $kmldoc->appendChild($placemark);
+    }
+   return $kmldoc;
   }
 
 
@@ -329,6 +367,125 @@ class MapServer
     return "#".$this->componentToHex($r).$this->componentToHex($g).$this->componentToHex($b);
   }
 
+
+  function makebounds_streetlist($streets)
+  {
+      $bounds =$this->newbounds();
+      foreach( $streets as $street)
+      {
+        if( array_key_exists("children",$street))
+        {
+          $dbounds = $this->makebounds_roadgroups($street["children"]);
+          $bounds = $this->expandbounds($bounds, $dbounds);
+        }
+        else
+        {
+          if( array_key_exists("roadgrouplist",$street))
+          {
+            foreach($street["roadgrouplist"] as $roadgroup)
+            {
+              $dbounds = $this->makebounds($roadgroup["geodata"]);
+              $bounds = $this->expandbounds($bounds, $dbounds);
+            }
+          }
+          elseif(  property_exists($street,"Geodata"))
+          {
+            $dbounds = $this->makebounds($street->getGeodata());
+            $bounds = $this->expandboundsobj($bounds, $dbounds);
+          }
+        }
+      }
+      return $bounds;
+    }
+
+
+
+    public function make_geodata_steps($steps)
+    {
+      $geodata=[];
+      $geodata["dist"]=-1;
+      $geodata["maxlat"]=0;
+      $geodata["midlat"]=0;
+      $geodata["minlat"]=0;
+      $geodata["maxlong"]=0;
+      $geodata["midlong"]=0;
+      $geodata["minlong"]=0;
+      $dist = 0;
+      $minlat=360;
+      $minlong =360;
+      $maxlat=-360;
+      $maxlong=-306;
+      $nsteps =0;
+      $oldcoords = $steps[0];
+     foreach($steps as $step)
+     {
+       $coords= $step;
+         $lat = $coords[0];
+         $long= $coords[1];
+         $dist += $this->getDistanceBetweenTwoPoints($coords, $oldcoords);
+         if($maxlat < $lat)$maxlat= $lat;
+         if($maxlong < $long)$maxlong= $long;
+         if($minlat > $lat)$minlat= $lat;
+         if($minlong > $long)$minlong= $long;
+         $oldcoords = $coords;
+         $nsteps ++;
+     }
+      $geodata["dist"]=   intval($dist*1000)/1000;
+      $geodata["maxlat"]=$maxlat;
+      $geodata["midlat"]=($maxlat+$minlat)/2;
+      $geodata["minlat"]=$minlat;
+      $geodata["maxlong"]=$maxlong;
+      $geodata["midlong"]=($minlong+$maxlong)/2;
+      $geodata["minlong"]=$minlong;
+      $geodata["steps"]=$nsteps;
+      return  $geodata;
+    }
+
+    public function make_geodata_steps_obj($tracks)
+    {
+      dump($tracks);
+      $geodata=[];
+      $geodata["dist"]=-1;
+      $geodata["maxlat"]=0;
+      $geodata["midlat"]=0;
+      $geodata["minlat"]=0;
+      $geodata["maxlong"]=0;
+      $geodata["midlong"]=0;
+      $geodata["minlong"]=0;
+      $dist = 0;
+      $minlat=360;
+      $minlong =360;
+      $maxlat=-360;
+      $maxlong=-306;
+      $nsteps =0;
+      foreach($tracks as $track)
+      {
+        dump($track);
+      $oldcoords = ($track->steps)[0];
+      foreach($track->steps as $step)
+      {
+        $coords= $step;
+        $lat = $coords[0];
+        $long= $coords[1];
+        $dist += $this->getDistanceBetweenTwoPoints($coords, $oldcoords);
+        if($maxlat < $lat)$maxlat= $lat;
+        if($maxlong < $long)$maxlong= $long;
+        if($minlat > $lat)$minlat= $lat;
+        if($minlong > $long)$minlong= $long;
+        $oldcoords = $coords;
+        $nsteps ++;
+      }
+      }
+      $geodata["dist"]=   intval($dist*1000)/1000;
+      $geodata["maxlat"]=$maxlat;
+      $geodata["midlat"]=($maxlat+$minlat)/2;
+      $geodata["minlat"]=$minlat;
+      $geodata["maxlong"]=$maxlong;
+      $geodata["midlong"]=($minlong+$maxlong)/2;
+      $geodata["minlong"]=$minlong;
+      $geodata["steps"]=$nsteps;
+      return  $geodata;
+    }
 
 
 }

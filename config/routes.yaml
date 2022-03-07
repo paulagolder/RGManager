@@ -22,24 +22,31 @@ pollingdistrict_showone:
    path: /pollingdistrict/show/{pdid}
    controller: App\Controller\PollingDistrictController::showone
 
-delivery_showone:
-   path: /delivery/schedule/{dvyid}
-   controller: App\Controller\DeliveryController::schedule
+delivery_schedule:
+   path: /delivery/scheduledelivery/{dvyid}
+   controller: App\Controller\DeliveryController::scheduledelivery
+
+delivery_schedulegroup:
+   path: /delivery/schedulegroup/{dvyid}/{grpid}
+   controller: App\Controller\DeliveryController::schedulegroup
+
+delivery_schedulesubgroup:
+   path: /delivery/schedulesubgroup/{dvyid}/{grpid}/{sgrpid}
+   controller: App\Controller\DeliveryController::schedulesubgroup
+
+delivery_schedulerounds:
+   path: /delivery/schedulerounds/{dvyid}/{sgrpid}
+   controller: App\Controller\DeliveryController::schedulerounds
+
+delivery_scheduleround:
+   path: /delivery/scheduleround/{dvyid}/{rndid}
+   controller: App\Controller\DeliveryController::scheduleround
 
 
-delivery_mapone:
-   path: /delivery/mapschedule/{dvyid}
-   controller: App\Controller\DeliveryController::mapschedule
 
-xxdelivery_viewdetail:
-   path: /delivery/viewdetail/{dvyid}/{rgsel}
-   controller: App\Controller\DeliveryController::viewdetail
 
-delivery_manage:
-   path: /delivery/manage/{dvyid}/{rgsel}
-   controller: App\Controller\DeliveryController::manage
-   defaults:
-        rgsel: ALL
+
+
 
 delivery_update:
    path: /delivery/update/{dvyid}/{rgsel}
@@ -79,13 +86,16 @@ delivery_addround:
    controller: App\Controller\DeliveryController::addround
    requirements: { dvyid: \d+ }
 
+delivery_makerounds:
+   path: /delivery/makerounds/{dvyid}/
+   controller: App\Controller\DeliveryController::makerounds
+
+
 delivery_deleteround:
    path: /delivery/deleteround/{dvyid}/{rndid}
    controller: App\Controller\DeliveryController::deleteround
 
-delivery_viewround:
-   path: /delivery/viewround/{dvyid}/{rndid}
-   controller: App\Controller\DeliveryController::viewround
+
 
 delivery_addroadgroup:
    path: /delivery/addroadgroup/{dvyid}/{rndid}/{rgid}
@@ -113,6 +123,33 @@ delivery_exportcsv:
     path: /delivery/exportcsv/{dvyid}
     controller: App\Controller\DeliveryController::exportcsv
 
+
+delivery_manage:
+   path: /round/manage/{dvyid}
+   controller: App\Controller\RoundController::manage
+
+
+round_manage_round:
+   path: /round/managegroup/{dvyid}/{grpid}
+   controller: App\Controller\RoundController::managegroup
+   defaults:
+        rgsel: ALL
+
+round_manage_subgroup:
+   path: /round/managesubgroup/{dvyid}/{grpid}/{sgrpid}
+   controller: App\Controller\RoundController::managesubgroup
+
+round_update:
+   path: /round/updateround/{dvyid}/{grpid}/{sgrpid}
+   controller: App\Controller\RoundController::updateround
+
+round_delete:
+   path: /round/deleteround/{dvyid}/{rndid}
+   controller: App\Controller\RoundController::deleteround
+
+round_updatestats:
+   path: /round/update/{dvyid}/{rndid}
+   controller: App\Controller\RoundController::updatefromroadgroups
 
 seats_showone:
    path: /seat/show/{dtid}/{stid}

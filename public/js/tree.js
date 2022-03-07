@@ -10,4 +10,10 @@ function toggle()
   this.classList.toggle("caret-down");
  })
 }
+var toggler = document.getElementsByClassName("topbox");
+var i;
+for (i = 0; i < toggler.length; i++) {
+  toggler[i].classList.toggle("active");
+}
+
 }

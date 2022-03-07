@@ -1,4 +1,4 @@
-{# views/delivery/showone.html.twig #}
+{# views/delivery/manage.html.twig #}
 
 {% extends 'dvymaster.html.twig' %}
 
@@ -34,7 +34,7 @@
     <div class="label"> Road Group </div>
     <div class="value"> {{delivery.deliveryId}}:</div>
     <div class="value"> {{delivery.Name }}</div>
- <div class="value">({{delivery.Completed}}/{{delivery.Households}})</div>
+ <div class="value">({{delivery.Delivered}}/{{delivery.Households}})</div>
     <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
   </div>
   <div class="subheading row">
@@ -48,7 +48,7 @@
           <div class="group row">
              <div class="rgid" >{{key}}: </div>
               <div class="name" >{{ asubgroup.group.Name}}</div>
-             <div class="num" >({{ asubgroup.group.Completions}}/{{ asubgroup.group.Households}})</div>
+             <div class="num" >({{ asubgroup.group.Completed}}/{{ asubgroup.group.Households}})</div>
              <div class="button" ><a class="button" href = "/delivery/manage/{{delivery.deliveryId}}/{{key}}" >View</a></div>
           </div>
       {% if rgid is defined %}
@@ -57,7 +57,7 @@
         <div class="subgroup row">
             <div class="rgid" ></div>
             <div class="name" >{{arggroup.group.name}}</div>
-             <div class="num" >({{ arggroup.group.Completions}}/{{ arggroup.group.Households}})</div>
+             <div class="num" >({{ arggroup.group.Completed}}/{{ arggroup.group.Households}})</div>
             <div class="button" ><a class="button" href = "/delivery/manage/{{delivery.deliveryId}}/{{key2}}" >View</a></div>
 
         </div>
@@ -73,7 +73,7 @@
                <div class="hidden" > <input type="hidden" name="rgid[]" value = "{{key3 }}"/></div>
               <div class="num" > <input type="text" name="issued[]" value = "{{arg.issuedate }}"/></div>
               <div class="rgid" > <input type="text" name="agent[]" value = "{{arg.agent }}"/></div>
-               <div class="rgid" > <input type="text" name="achieved[]" value = "{{arg.completed }}"/></div>
+               <div class="rgid" > <input type="text" name="achieved[]" value = "{{arg.delivered }}"/></div>
             </div>
         {% endfor %}
         {% endif %}
@@ -113,7 +113,7 @@ var i=0;
  {% if arg.issuedate|length %}
     i=2;
  {%   endif %}
-  {% if arg.completed|length  %}
+  {% if arg.delivered|length  %}
     i=1;
   {% endif %}
     var style = {"color":  getColor(i) , "weight": 4 ,  "clickable": true ,"opacity": 1.0, "fillOpacity": 1.0 };

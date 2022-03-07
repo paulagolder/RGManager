@@ -5,30 +5,28 @@ namespace App\Entity;
 use App\Repository\RggroupRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=RggroupRepository::class)
- */
-class Rggroup
+
+class Rndgroup
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(name="rggroupid",type="string")
-     */
-    private $Rggroupid;
+
+    public $Rndgroupid;
+
+    public $Name;
+
+    public $KML;
+
+    public $Households;
+
+    public $Completed;
+
+    public $Roadgroups;
+
+    public $Target;
+
+    public $Geodata;
 
 
-
-    /**
-     * @ORM\Column(name="name",type="string", length=50)
-     */
-    private $Name;
-
-    /**
-     * @ORM\Column(name="kml",type="string", length=50)
-     */
-    private $KML;
-
-     public function getKML(): ?string
+    public function getKML(): ?string
     {
         return $this->KML;
     }
@@ -40,35 +38,17 @@ class Rggroup
     }
 
 
-    /**
-     * @ORM\Column(name="households",type="integer",  nullable=true)
-     */
-    private $Households;
-
-
-    /**
-     * @ORM\Column(name="electors",type="integer",  nullable=true)
-     */
-    private $Electors;
-
-   private $Geodata;
-
-   private $Roadgroups;
-
-   private $Completed;
-
-   private $Target;
 
 
 
-    public function getRggroupid()
+    public function getRndgroupid()
     {
-        return $this->Rggroupid;
+        return $this->Rndgroupid;
     }
 
-    public function setRggroupid($ID): self
+    public function setRndgroupid($ID): self
     {
-        $this->Rggroupid = $ID;
+        $this->Rndgroupid = $ID;
         return $this;
     }
 
@@ -98,12 +78,13 @@ class Rggroup
 
     public function addHouseholds($number): self
     {
-        $this->Households += $number;
+        $this->Households =  $this->Households + $number;
 
         return $this;
     }
 
-     public function getCompleted()
+
+      public function getCompleted()
     {
         return $this->Completed;
     }
@@ -115,7 +96,7 @@ class Rggroup
         return $this;
     }
 
-    public function addCompleted($number): self
+     public function addCompleted($number): self
     {
         $this->Completed += $number;
 
@@ -123,26 +104,7 @@ class Rggroup
     }
 
 
-     public function getTarget()
-    {
-        return $this->Target;
-    }
-
-    public function setTarget($number): self
-    {
-        $this->Target = $number;
-
-        return $this;
-    }
-
-    public function addTarget($number): self
-    {
-        $this->Target += $number;
-
-        return $this;
-    }
-
-    public function getRoadgroups()
+     public function getRoadgroups()
     {
         return $this->Roadgroups;
     }
@@ -154,34 +116,33 @@ class Rggroup
         return $this;
     }
 
-    public function addRoadgroups($number): self
+     public function addRoadgroups($number): self
     {
-        $this->Roadgroups += $number;
+        $this->Roadgroups =  $this->Roadgroups + $number;
 
         return $this;
     }
 
 
-
-
-     public function getElectors()
+       public function getTarget()
     {
-        return $this->Electors;
+        return $this->Target;
     }
 
-    public function setElectors($number): self
+    public function setTarget($number): self
     {
-        $this->Electors = $number;
+        $this->Target = $number;
 
         return $this;
     }
 
-     public function addElectors($number): self
+     public function addTarget($number): self
     {
-        $this->Electors += $number;
+        $this->Target += $number;
 
         return $this;
     }
+
 
 
 public function getGeodata_json()
@@ -200,13 +161,6 @@ public function setGeodata($text)
    $this->Geodata= $text_json;
 }
 
-
-
-
-
-
-
-
  public function initGeodata()
     {
           $geodata = array();
@@ -220,7 +174,25 @@ public function setGeodata($text)
           $this->Geodata = json_encode($geodata);
     }
 
-     public function expandbounds($bounds)
+     public function expandbounds($bounds_str)
+     {
+       if (!$bounds_str) return ;
+     $bounds =  json_decode($bounds_str);
+     $thisbounds= $this->getGeodata();
+      if(!array_key_exists("minlat",  $this->getGeodata())) return;
+          if(!array_key_exists("minlat", $bounds)) return;
+        if($thisbounds["minlat"] === null)  $thisbounds["minlat"] =  $bounds->minlat;
+        if($thisbounds["maxlong"] === null)  $thisbounds["maxlong"] =  $bounds->maxlong;
+        if(($bounds->minlat !== null) && ($thisbounds["minlat"] >  $bounds->minlat)) $thisbounds["minlat"] = $bounds->minlat;
+        if(($bounds->maxlong !== null) && ($thisbounds["maxlong"] <  $bounds->maxlong)) $thisbounds["maxlong"] = $bounds->maxlong;
+         if($thisbounds["maxlat"] === null)  $thisbounds["maxlat"] =  $bounds->maxlat;
+        if($thisbounds["minlong"] === null)  $thisbounds["minlong"] =  $bounds->minlong;
+      if(($bounds->maxlat !== null) && ( $thisbounds["maxlat"] < $bounds->maxlat))  $thisbounds["maxlat"]= $bounds->maxlat;
+      if(($bounds->minlong !== null) && ( $thisbounds["minlong"] > $bounds->minlong))  $thisbounds["minlong"] = $bounds->minlong;
+      $this->setGeodata($thisbounds);
+     }
+
+  public function expandbounds_x($bounds)
      {
      if (!$bounds) return ;
      $thisbounds= $this->getGeodata();
@@ -237,6 +209,13 @@ public function setGeodata($text)
       $this->setGeodata($thisbounds);
      }
 
+     public function getBounds()
+     {
+
+        return $this->getGeodata();
+
+     }
+
 
    public function getjson()
    {
@@ -244,7 +223,7 @@ public function setGeodata($text)
 
    $str ="{";
    $str .=  '"name":"'.$this->Name.'",';
-   $str .=  '"rggroupid":"'.$this->Rggroupid.'",';
+   $str .=  '"rndgroupid":"'.$this->Rndgroupid.'",';
    $str .=  '"kml":"'.$kml.'" ';
    $str .="}";
    return  $str;
@@ -255,16 +234,22 @@ public function setGeodata($text)
    if(is_null($obj)) return;
    if(is_object($obj))
    {
-   $this->Name = $obj->Name;
-   $this->Rggroupid = $obj->Rggroupid;
-   $this->KML = $obj->KML;
-   $this->Households = 0;
+   $this->Name = $obj->getName();
+   $this->Rndgroupid = $obj->getRggroupid();
+   $this->KML = $obj->getKML();
+   $this->Households =$obj->getHouseholds();
+   $this->Target = 0;
+    $this->Completed = 0;
+    $this->Roadgroups =0;
    }else
    {
    $this->Name = $obj["name"];
-   $this->Rggroupid = $obj["Rggroupid"];
+   $this->Rndgroupid = $obj["Rggroupid"];
    $this->KML = $obj["KML"];
-   $this->Households = 0;
+   $this->Households =$obj["Households"];
+   $this->Target =$obj["Target"];
+    $this->Completed =$obj["Completed"];
+     $this->Roadgroups =$obj["Roadgroups"];
    }
    }
 
@@ -272,7 +257,7 @@ public function setGeodata($text)
    {
      $subgroups=$this->subgroups;
      $xmlout = "";
-     $xmlout .= "  <rggroup RggroupId='$this->Rggroupid' Name='$this->Name' Households='$this->Households' KML='$this->KML' >\n  ";
+     $xmlout .= "  <rggroup Rndgroupid='$this->Rndgroupid' Name='$this->Name' Households='$this->Households' KML='$this->KML' Bounds='$this->getGeodata()' >\n  ";
      foreach ($subgroups as $asubgroup )
      {
      $xmlout .= $asubgroup->makexml();
@@ -285,7 +270,7 @@ public function setGeodata($text)
    {
      $subgroups=$this->subgroups;
      $csvout = "";
-     $csvout  .= "$this->Rggroupid: $this->Name,,,$this->Households \n  ";
+     $csvout  .= "$this->Rndgroupid: $this->Name,,,$this->Households \n  ";
      foreach ($subgroups as $asubgroup )
      {
      $csvout  .= "\n ";

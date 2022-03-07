@@ -37,8 +37,8 @@
      <div class="row "  >
        <div class="rgid" id="{{delivery.deliveryid}}" >{{delivery.deliveryid}}</div>
        <div class="name" >{{delivery.name}}</div>
-       <div class="name" >{{delivery.target}}/{{delivery.completed}}</div>
-       <div><a class="button" href = "/delivery/manage/{{delivery.deliveryid}}" >MANAGE</a>   </div>
+       <div class="name" >{{delivery.target}}/{{delivery.delivered}}</div>
+       <div><a class="button" href = "/round/manage/{{delivery.deliveryid}}" >MANAGE</a>   </div>
        <div><a class="button" href = "/delivery/edit/{{delivery.deliveryid}}" >EDIT</a>   </div>
      </div>
   {% endfor %}

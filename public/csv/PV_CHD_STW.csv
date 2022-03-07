@@ -1,6 +1,6 @@
-RD-Group, Name, RD-Sugroup,Name, Roadgroup, Name,  Households , Deliveries, Date, Agent, Completed 
+RD-Group, Name, RD-Sugroup,Name, Roadgroup, Name,  Households , Deliveries, Date, Agent, Delivered
 
-  RG_CHD,Chadsmead,,,,,1863,  
+  RG_CHD,Chadsmead,,,,,1863,
  ,,RG_CHD_C,Central,,,707
  ,,,,CHD_C1,Oakenfield..etc,254
  ,,,,CHD_C2,Swallow Croft..etc,189
@@ -17,8 +17,8 @@ RD-Group, Name, RD-Sugroup,Name, Roadgroup, Name,  Households , Deliveries, Date
  ,,,,CHD_S4,Beacon St..etc,136
  ,,RG_CHD_X,Outside City,,,0
  ,,,,CHD_X1,Outside City..etc,
- 
-  RG_STW,Stowe,,,,,2582,  
+
+  RG_STW,Stowe,,,,,2582,
  ,,RG_STW_C,Central,,,389
  ,,,,STW_C1,Stowe St..etc,140
  ,,,,STW_C2,St Michael Road..etc,149
@@ -40,4 +40,4 @@ RD-Group, Name, RD-Sugroup,Name, Roadgroup, Name,  Households , Deliveries, Date
  ,,,,STW_W1,Close..etc,160
  ,,,,STW_W2,Bird St..etc,337
  ,,,,STW_W3,Wade Street..etc,224
- 
+

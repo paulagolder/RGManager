@@ -18,6 +18,7 @@ class DeliveryForm extends AbstractType
     {
         $builder ->add('Deliveryid', TextType::class,['label' => 'DeliveryId','required' => false,]);
         $builder ->add('Name', TextType::class ,['label' => 'Delivery Name',]);
+        $builder ->add('Year', TextType::class ,['label' => 'Delivery Year',]);
         $builder ->add('DistrictId', TextType::class ,['label' => 'DistrictId',]);
         $builder ->add('SeatIds', TextType::class ,['label' => 'SeatIds','required' => false,]);
         $builder ->add('KML', TextType::class ,['label' => 'KML','required' => false,]);

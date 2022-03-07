@@ -84,8 +84,7 @@ function onMapClick(e)
   {
   lat = e.latlng.lat;
   lng = e.latlng.lng;
-  document.getElementById("street_form_Latitude").value=lat;
-  document.getElementById("street_form_Longitude").value=lng;
+
   var apath =  document.getElementById("street_form_Path").value ;
   var points = JSON.parse(apath);
   var selpath = points[bn-1];
@@ -312,8 +311,7 @@ function closeForm() {
       {{ form_row(form.PD) }}
       {{ form_row(form.Households) }}
       {{ form_row(form.Electors) }}
-      {{ form_row(form.Latitude) }}
-      {{ form_row(form.Longitude) }}
+
       <div>UPDATED:   {{form.Updated.vars.data|date }}</div>
       <button type="submit">{{'Register!'}}</button>
      {{ form_row(form.Path) }}

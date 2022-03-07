@@ -98,7 +98,7 @@ class SeatRepository  extends EntityRepository
       return $harray[0]["nos"];
       }
       else
-        return -999;
+        return 0;
      }
 
       public function removepd($dtid,$stid,$pdid,$year)

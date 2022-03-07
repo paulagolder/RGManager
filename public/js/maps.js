@@ -12,6 +12,8 @@ window.colors[8]="#00008088";
 window.colors[9]="#80800088";
 window.colors[10]="#80008088";
 window.colors[11]="#00808088";
+window.colors[12]="#5a5a5a88";
+
 
 function getColor(i)
 {
@@ -240,11 +242,14 @@ function drawBox(amap,mybounds)
 
 function myWMap(location)
 {
+  if(location !== undefined && location !== null)
+  {
   var location_dc =redecode(location);
   var mylocation = JSON.parse(location_dc);
   var lat = mylocation.latitude;
   var long = mylocation.longitude;
   var zoom = 12;
+  }
   if( lat === undefined  || lat < 40)
   {
     long =-1.8304;
@@ -467,7 +472,7 @@ function drawPath(amap,mypath,style=null)
   if(style == null)
   {
      style = {
-      color: "#008000",
+      color: "#800000",
       weight: 10,
       opacity: 0.4
     };

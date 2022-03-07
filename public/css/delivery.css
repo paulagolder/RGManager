@@ -63,6 +63,26 @@ div#delivery   div.roadgroup.row div.name
 }
 
 
+ input.target
+{
+  margin-left:1em;
+  width:3em;
+  color:red;
+}
+
+input.completed
+{
+  margin-left:1em;
+  width:3em;
+  color:red;
+}
+input.agent
+{
+  margin-left:1em;
+  width:3em;
+  color:red;
+}
+
  div.delivery div.list div.roadgroup.row
  {
    margin-left: 10em;

@@ -11,8 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Street
 {
 
-
- /**
+    /**
      * @ORM\Id
      * @ORM\Column(name="seq",type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -62,16 +61,11 @@ class Street
     private $Electors;
 
 
-
-    /**
-     * @ORM\Column(name="latitude",type="string", length=20,  nullable=true)
+   /**
+     * @ORM\Column(name="geodata",type="string", length=200,  nullable=true)
      */
-    private $Latitude;
+    private $Geodata;
 
-    /**
-     * @ORM\Column(name="longitude",type="string", length=20,   nullable=true)
-     */
-    private $Longitude;
 
 
       /**
@@ -87,6 +81,7 @@ class Street
 
 
 
+
     public function load($starray)
     {
       $this->Name = $starray["name"];
@@ -96,8 +91,7 @@ class Street
       $this->PD= $starray["pd"];
       $this->Part= $starray["part"];
       $this->ELectors= $starray["electors"];
-      $this->Latitude= $starray["latitude"];
-      $this->Longitude= $starray["longitude"];
+      $this->Geodata= $starray["geodata"];
       $this->Path= $starray["path"];
        $this->Updated= $starray["updated"];
     }
@@ -227,27 +221,8 @@ class Street
         return $this;
     }
 
-    public function getLatitude()
-    {
-        return $this->Latitude;
-    }
 
-    public function setLatitude(?string $number): self
-    {
-        $this->Latitude = $number;
-        return $this;
-    }
 
-    public function getLongitude()
-    {
-        return $this->Longitude;
-    }
-
-    public function setLongitude(?string $number): self
-    {
-        $this->Longitude = $number;
-        return $this;
-    }
 
     public function getPath()
     {
@@ -325,8 +300,15 @@ class Street
        $str ="{";
        $str .=  '"name":"'.$this->Name.'",';
        $str .=  '"part":"'.$this->Part.'",';
-       $str .=  '"longitude":"'.$this->Longitude.'",';
-       $str .=  '"latitude":"'.$this->Latitude.'"';
+       if($this->getGeodata())
+       {
+       $str .=  '"longitude":"'.$this->getGeodata()['midlong'].'",';
+       $str .=  '"latitude":"'.$this->getGeodata()['midlat'].'"';
+       }else
+       {
+        $str .=  '"longitude":"45",';
+       $str .=  '"latitude":"0"';
+       }
        $str .="}";
        return  $str;
     }
@@ -339,8 +321,7 @@ class Street
      if($this->Households == null) $this->Households = $astreet->Households;
      if($this->Electors == null) $this->Electors  = $astreet->Electors ;
      if($this->PD == null) $this->PD  = $astreet->PD ;
-     if($this->Longitude == null) $this->Longitude  = $astreet->Longitude ;
-     if($this->Latitude == null) $this->Latitude  = $astreet->Latitude ;
+     if($this->Geodata == null) $this->Geodata  = $astreet->Geodata;
      if($this->Note)
      {
      if(!(str_contains($this->Note,$astreet->Note)))
@@ -354,105 +335,123 @@ class Street
      }
     }
 
-   public function makexml()
+   public function makexml($inset)
    {
      $anote = htmlspecialchars($this->Note, ENT_QUOTES);
       $qual = htmlspecialchars($this->Qualifier, ENT_QUOTES);
-     $xmlout = "<street Name='$this->Name' Households='$this->Households' Qualifier='$qual'  />\n  ";
+     $xmlout = $inset."<street   Name='$this->Name' Households='$this->Households' Qualifier='$qual' Note='$anote'   />\n  ";
      return $xmlout;
    }
 
 
-   public function countSteps()
-   {
-     $path = json_decode($this->getPath());
-     $k=0;
-     if($path)
-     {
-
-     foreach($path as $branch)
-     {
-       if(count($branch->steps)>0) $k++;
-     }
-       return $k;
-       }
-     else
-       return 0;
-   }
 
 
     public function getDistance()
    {
-     $path = json_decode($this->getPath());
-     $k=0;
-     $dist=0;
-     if($path)
+     if($this->getGeodata())
      {
+      $dist = $this->getGeodata()["dist"];
 
-     foreach($path as $branch)
-     {
-      $geodata = $this->loadBranch($branch->steps);
-      $dist += $geodata["dist"];
-     }
        return $dist;
        }
-     else
+       else
        return 0;
+
+   }
+
+     public function getSteps()
+   {
+     if($this->getGeodata())
+     {
+      $dist = $this->getGeodata()["steps"];
+
+       return $dist;
+       }
+       else
+       return 0;
+
    }
 
 
-   public function loadBranch($steps)
-  {
-    $geodata=[];
-    $geodata["dist"]=0;
-    $geodata["maxlat"]="0";
-    $geodata["midlat"]="0";
-    $geodata["minlat"]="0";
-    $geodata["maxlong"]="0";
-    $geodata["midlong"]="0";
-    $geodata["minlong"]="0";
-    if(!$steps) return $geodata;
-    $dist = 0;
-    $minlat=360;
-    $minlong =360;
-    $maxlat=-360;
-    $maxlong=-306;
+public function getGeodata_json()
+{
+ return  $this->Geodata;
+}
 
-    $previous=null;
-    foreach ($steps as $coords)
+public function getGeodata()
+{
+ return  json_decode($this->Geodata,true);
+}
+
+public function setGeodata($text)
+{
+  $text_json = json_encode($text);
+   $this->Geodata= $text_json;
+}
+
+  public function makeGeodata()
+  {
+  $steps = $this->getDecodedPath()[0]->steps;
+  if($steps)
+  {
+  $this->setGeodata($this->make_geodata_steps($steps));
+  }
+
+  }
+
+
+  public function make_geodata_steps($steps)
     {
-          if($previous)
-          {
-            $dist += $this->getDistanceBetweenTwoPoints($previous, $coords);
-          }
-           $previous=$coords;
-           if(isset($coords[1]))
-           {
-            if($maxlat <$coords[1])$maxlat=$coords[1];
-            if($maxlong <$coords[0])$maxlong=$coords[0];
-            if($minlat >$coords[1])$minlat=$coords[1];
-            if($minlong >$coords[0])$minlong=$coords[0];
-  }
+      $geodata=[];
+      $geodata["dist"]=-1;
+      $geodata["maxlat"]=0;
+      $geodata["midlat"]=0;
+      $geodata["minlat"]=0;
+      $geodata["maxlong"]=0;
+      $geodata["midlong"]=0;
+      $geodata["minlong"]=0;
+      $dist = 0;
+      $minlat=360;
+      $minlong =360;
+      $maxlat=-360;
+      $maxlong=-306;
+      $nsteps =0;
+      $oldcoords = $steps[0];
+     foreach($steps as $step)
+     {
+       $coords= $step;
+         $lat = $coords[0];
+         $long= $coords[1];
+         $dist += $this->getDistanceBetweenTwoPoints($coords, $oldcoords);
+         if($maxlat < $lat)$maxlat= $lat;
+         if($maxlong < $long)$maxlong= $long;
+         if($minlat > $lat)$minlat= $lat;
+         if($minlong > $long)$minlong= $long;
+         $oldcoords = $coords;
+         $nsteps ++;
+     }
+      $geodata["dist"]=   intval($dist*1000)/1000;
+      $geodata["maxlat"]=$maxlat;
+      $geodata["midlat"]=($maxlat+$minlat)/2;
+      $geodata["minlat"]=$minlat;
+      $geodata["maxlong"]=$maxlong;
+      $geodata["midlong"]=($minlong+$maxlong)/2;
+      $geodata["minlong"]=$minlong;
+      $geodata["steps"]=$nsteps;
+      return  $geodata;
     }
-    $geodata["dist"]=number_format((float)$dist, 3, '.', '');
-    $geodata["maxlat"]=$maxlat;
-    $geodata["midlat"]="".($maxlat+$minlat)/2;
-    $geodata["minlat"]=$minlat;
-    $geodata["maxlong"]=$maxlong;
-    $geodata["midlong"]="".($minlong+$maxlong)/2;
-    $geodata["minlong"]=$minlong;
-    return  $geodata;
-  }
+
+
 
   public function getDistanceBetweenTwoPoints($point1 , $point2)
   {
     // array of lat-long i.e  $point1 = [lat,long]
     $earthRadius = 6371;  // earth radius in km
-    $point1Lat = $point1[1];
-    $point2Lat =$point2[1];
+    $point1Lat = $point1[0];
+    $point2Lat =$point2[0];
     $deltaLat = deg2rad($point2Lat - $point1Lat);
-    $point1Long =$point1[0];
-    $point2Long =$point2[0];
+    $point1Long =$point1[1];
+    $point2Long =$point2[1];
     $deltaLong = deg2rad($point2Long - $point1Long);
     $a = sin($deltaLat/2) * sin($deltaLat/2) + cos(deg2rad($point1Lat)) * cos(deg2rad($point2Lat)) * sin($deltaLong/2) * sin($deltaLong/2);
     $c = 2 * atan2(sqrt($a), sqrt(1-$a));

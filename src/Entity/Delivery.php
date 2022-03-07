@@ -22,6 +22,13 @@ class Delivery
      */
     private $Name;
 
+
+     /**
+     * @ORM\Column(name="year",type="string", length=50)
+     */
+    private $Year;
+
+
      /**
      * @ORM\Column(name="targetdate",type="string", length=50)
      */
@@ -54,9 +61,26 @@ class Delivery
     public $KML;
 
 
-
+   /**
+     * @ORM\Column(name="households",type="integer")
+     */
     public $Households;
-    public $Deliveries;
+
+      /**
+     * @ORM\Column(name="Completed",type="integer")
+     */
+    public $Completed;
+
+
+     /**
+     * @ORM\Column(name="target",type="integer")
+     */
+     public $Target;
+
+     /**
+     * @ORM\Column(name="roadgroups",type="integer")
+     */
+      public $Roadgroups;
 
     public function getDeliveryId()
     {
@@ -120,6 +144,17 @@ class Delivery
         return $this;
     }
 
+         public function getYear(): ?string
+    {
+        return $this->Year;
+    }
+
+    public function setYear(string $text): self
+    {
+        $this->Year = $text;
+        return $this;
+    }
+
      public function getTargetDate(): ?string
     {
         return $this->TargetDate;
@@ -130,6 +165,8 @@ class Delivery
         $this->TargetDate = $text;
         return $this;
     }
+
+
 
         public function getCreateDate()
     {
@@ -151,6 +188,49 @@ class Delivery
     public function setComment(string $text): self
     {
         $this->Comment = $text;
+        return $this;
+    }
+
+     public function getRoadgroups()
+    {
+        return $this->Roadgroups;
+    }
+
+    public function setRoadgroups($num): self
+    {
+        $this->Roadgroups = $num;
+        return $this;
+    }
+
+      public function getHouseholds()
+    {
+        return $this->Households;
+    }
+
+    public function setHouseholds($number): self
+    {
+        $this->Households = $number;
+        return $this;
+    }
+      public function getTarget()
+    {
+        return $this->Target;
+    }
+
+    public function setTarget($number): self
+    {
+        $this->Target = $number;
+        return $this;
+    }
+
+       public function getCompleted()
+    {
+        return $this->Completed;
+    }
+
+    public function setCompleted($number): self
+    {
+        $this->Completed = $number;
         return $this;
     }
 

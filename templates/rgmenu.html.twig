@@ -39,7 +39,7 @@
         <div  class="subheading" >Uploading maps to server</div>
         <div>
          <div  class="altbutton row"  >
-       <div class="button"> <a class="small button" href = "http://www.bikehike.co.uk/mapview.php" target = "_blank"  >Create Route</a> </div>
+
       <form action="{{ path('do-upload') }}" method="post" enctype="multipart/form-data">
         <input type="hidden" name="token" value="{{ csrf_token('upload') }}" />
 

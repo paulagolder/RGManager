@@ -34,7 +34,7 @@ class Rgsubgroup
    */
   private $Households;
 
-  private $Completions;
+
   /**
    * @ORM\Column(name="electors",type="integer",  nullable=true)
    */
@@ -42,19 +42,48 @@ class Rgsubgroup
 
 
   /**
-   * @ORM\Column(name="roads",type="integer",  nullable=true)
-   */
-  private $Roads;
-
-
-  /**
    * @ORM\Column(name="roadgroups",type="integer",  nullable=true)
    */
-  private $roadgroups;
-
+  private $Roadgroups;
 
 
   private $Geodata;
+
+  private $Completed;
+    private $Target;
+  private $KML;
+
+     public function getKML(): ?string
+    {
+        return $this->KML;
+    }
+
+    public function setKML($text): self
+    {
+        $this->KML = $text;
+        return $this;
+    }
+
+
+
+    public function getCompleted()
+    {
+        return $this->Completed;
+    }
+
+    public function setCompleted($number): self
+    {
+        $this->Completed = $number;
+
+        return $this;
+    }
+
+    public function addCompleted($number): self
+    {
+        $this->Completed += $number;
+
+        return $this;
+    }
 
 
   public function getRgsubgroupid()
@@ -113,27 +142,45 @@ class Rgsubgroup
 
         return $this;
     }
-
-
-      public function getCompletions()
+   public function getTarget()
     {
-        return $this->Completions;
+        return $this->Target;
     }
 
-    public function setCompletions($number): self
+    public function setTarget($number): self
     {
-        $this->Completions = $number;
+        $this->Target = $number;
 
         return $this;
     }
 
-     public function addCompletions($number): self
+    public function addTarget($number): self
     {
-        $this->Completions += $number;
+        $this->Target += $number;
 
         return $this;
     }
 
+
+
+public function getRoadgroups()
+    {
+        return $this->Roadgroups;
+    }
+
+    public function setRoadgroups($number): self
+    {
+        $this->Roadgroups = $number;
+
+        return $this;
+    }
+
+    public function addRoadgroups($number): self
+    {
+        $this->Roadgroups += $number;
+
+        return $this;
+    }
 
 
 
@@ -149,29 +196,14 @@ class Rgsubgroup
      return $this;
    }
 
-   public function getRoads()
-   {
-     return $this->Roads;
-   }
+     public function addElectors($number): self
+    {
+        $this->Electors += $number;
 
-   public function setRoads($number): self
-   {
-     $this->Roads = $number;
+        return $this;
+    }
 
-     return $this;
-   }
 
-   public function getRoadgroups()
-   {
-     return $this->Roadgroups;
-   }
-
-   public function setRoadgroups($number): self
-   {
-     $this->Roadgroups = $number;
-
-     return $this;
-   }
 
 
    public function setRoadgrouplist($list): self

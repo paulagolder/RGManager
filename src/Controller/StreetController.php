@@ -35,11 +35,13 @@ class StreetController extends AbstractController
 
   private $requestStack ;
   private $rgyear ;
+  private $mapserver ;
 
   public function __construct( RequestStack $request_stack,  MapServer $mapserver)
   {
     $this->requestStack = $request_stack;
     $mapserver->load();
+    $this->mapserver = $mapserver;
     $this->rgyear  = $this->requestStack->getCurrentRequest()->cookies->get('rgyear');
   }
 
@@ -126,7 +128,8 @@ class StreetController extends AbstractController
     {
       $rg = $this->getDoctrine()->getRepository('App:Roadgrouptostreet')->getRoadgroup($astreet->getName(),$astreet->getPart(),$this->rgyear);
       dump($rg);
-      $astreet->roadgroupid =$rg[0]["roadgroupid"];
+      if($rg)
+         $astreet->roadgroupid =$rg[0]["roadgroupid"];
     }
     return $this->render('street/viewgroup.html.twig', array(
       'rgyear'=>$this->rgyear,
@@ -199,16 +202,7 @@ class StreetController extends AbstractController
     $astreet = $this->getDoctrine()->getRepository('App:Street')->findOnebyName($rdname,$rdpart);
     $path = $astreet->getDecodedPath();
     $tracks=$path;
-    if($astreet->getLatitude()<40)
-    {
-      if($rgid)
-      {
-        $aroadgroup =  $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
-        $gd= $aroadgroup->getGeodata();
-        $astreet->setLatitude($gd["midlat"]);
-        $astreet->setLongitude($gd["midlong"]);
-      }
-    }
+
     $streetcount = sizeof($streets);
     if(! isset($astreet))
     {
@@ -230,10 +224,14 @@ class StreetController extends AbstractController
           if(count($track->steps)>1)  $newtracks[] = $track;
         }
         $newpath = json_encode($newtracks);
+        dump($newpath);
         dump($newtracks);
+        $geodata = $this->mapserver->make_geodata_steps_obj($newtracks);
+        dump($geodata);
         $time = new \DateTime();
         $astreet->setUpdated($time);
         $astreet->setPath($newpath);
+        $astreet->setGeodata($geodata);
         if($astreet->getPart() == null)$astreet->setPart("");
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($astreet);
@@ -242,7 +240,7 @@ class StreetController extends AbstractController
         return $this->redirect('/street/edit/'.$rdid);
       }
     }
-
+    dump($astreet->getGeodata());
     return $this->render('street/edit.html.twig', array(
       'rgyear'=>$this->rgyear,
       'roadgroupid' =>$rgid,

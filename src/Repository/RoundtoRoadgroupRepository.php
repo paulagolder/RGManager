@@ -43,6 +43,17 @@ class RoundtoRoadgroupRepository  extends EntityRepository
     }
 
 
+ public function removelinks($rndid)
+    {
+
+       $qb = $this->createQueryBuilder("c")
+    ->delete('App:RoundtoRoadgroup', 'c')
+    ->where('c.RoundId = :rndid')
+    ->setParameter(':rndid', $rndid);
+     $query = $qb->getQuery();
+     $n = $query->execute();
+      return $n;
+    }
 
 
 }

@@ -22,8 +22,7 @@
 
         lat = e.latlng.lat;
         lng = e.latlng.lng;
-        document.getElementById("street_form_Latitude").value=lat;
-        document.getElementById("street_form_Longitude").value=lng;
+
       }
     </script>
 {% endblock %}
@@ -58,7 +57,7 @@
           <div class="name">{{street.name}}/{{street.part}}</div>
             <div class="rgid"><a class="routebutton" href = "/pollingdistrict/show/{{street.pd}}">{{street.pd}}</a></div>
           <div class="rgid">
-          <a class="routebutton" href = "/roadgroup/showone/{{street.roadgroupid}}">{{street.roadgroupid}}</a>
+         {# <a class="routebutton" href = "/roadgroup/showone/{{street.roadgroupid}}">{{street.roadgroupid}}</a>#}
           </div>
           <div class="num">{{street.households}}</div>
           <div class="num">{{street.electors}}</div>

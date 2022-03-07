@@ -167,6 +167,6 @@ class RoadgroupRepository extends EntityRepository
            return $harray[0]["nos"];
         }
         else
-          return -999;
+          return 0;
      }
 }

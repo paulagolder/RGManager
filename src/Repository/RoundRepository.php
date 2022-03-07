@@ -20,7 +20,7 @@ class RoundRepository  extends EntityRepository
        return $Round;
     }
 
-      public function findRounds($dvyid)
+      public function xfindRounds($dvyid)
     {
        $qb = $this->createQueryBuilder("p");
        $qb->where("p.DeliveryId = :dvid");
@@ -45,6 +45,81 @@ class RoundRepository  extends EntityRepository
        $Rounds =  $qb->getQuery()->getResult();
        return $Rounds;
     }
+
+
+  public function findRounds_array($dyid)
+  {
+    $conn = $this->getEntityManager()->getConnection();
+
+    $sql = 'select r.* from round as r where r.deliveryid = '.$dyid;
+    $stmt = $conn->executeQuery($sql);
+    $rounds= $stmt->fetchAll();
+
+    $rndsarray = array();
+    foreach($rounds as $rnd)
+    {
+      $rndid= $rnd["roundid"];
+      $rndsarray[$rndid] = $rnd;
+      $sql = 'select rg.* from roundtoroadgroup as rtrg, roadgroup as rg where  rtrg.roundid = '.$rndid.'  and rtrg.roadgroupid = rg.roadgroupid ';
+      $stmt = $conn->executeQuery($sql);
+      $roadgroups= $stmt->fetchAll();
+      $rndsarray[$rndid]["roadgrouplist"]=$roadgroups;
+    }
+
+    return $rndsarray;
+  }
+
+   public function findRounds($delivery)
+  {
+     $conn = $this->getEntityManager()->getConnection();
+       $qb = $this->createQueryBuilder("p");
+       $qb->where("p.DeliveryId = :dvid");
+       $qb->setParameter('dvid', $delivery->getDeliveryId());
+       $qb->orderBy("p.RoundId", "ASC");
+       $rounds =  $qb->getQuery()->getResult();
+
+
+    return $rounds;
+  }
+
+  public function getRound($dvyid,$rndid)
+  {
+    $conn = $this->getEntityManager()->getConnection();
+    $queryBuilder = $conn->createQueryBuilder();
+    $queryBuilder ->select('*');
+    $queryBuilder ->from('round');
+    $queryBuilder ->where('roundid = ?');
+    $queryBuilder ->setParameter(0, $rndid);
+    $queryBuilder ->where('deliveryid = ?');
+    $queryBuilder ->setParameter(0, $dvyid);
+    $stm = $queryBuilder->execute();
+    $rounds = $stm->fetchAll();
+    dump($rounds);
+    if(count($rounds)>0)
+      return $rounds[0];
+    else
+      return null;
+  }
+
+  public function delete($rndid)
+  {
+    $qb = $this->createQueryBuilder("c")
+    ->delete('App:Round', 'c')
+    ->where('c.RoundId = :rndid ')
+    ->setParameter(':rndid', $rndid);
+    $query = $qb->getQuery();
+    $query->execute();
+  }
+
+   public function deleteRounds($dvyid)
+  {
+    $qb = $this->createQueryBuilder("c")
+    ->delete('App:Round', 'c')
+    ->where('c.DeliveryId = :dvyid ')
+    ->setParameter(':dvyid', $dvyid);
+    $query = $qb->getQuery();
+    $query->execute();
+  }
 
 
      public function findCandidateRoundRoadgroups($round,$year)
@@ -80,7 +155,7 @@ class RoundRepository  extends EntityRepository
       public function getRoadgroups($rnid)
      {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'select rg.*  from roundtoroadgroup as r , roadgroup rg  where r.roundid ='.$rnid.' and r.roadgroupid = rg.roadgroupid ';
+        $sql = 'select rg.*  from roundtoroadgroup as r , roadgroup rg  where r.roundid ='.$rnid.' and r.roadgroupid = rg.roadgroupid order by rg.roadgroupid';
       //  $em->createQuery
       //$users = $query->getResult();
         $stmt = $conn->executeQuery($sql);

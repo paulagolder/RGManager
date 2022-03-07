@@ -1,0 +1,163 @@
+{# views/delivery/scheduledelivery.html.twig #}
+
+{% extends 'dvymaster.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="{{ asset('/css/delivery.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+<link href="{{ asset('/css/tree.css') }}" rel="stylesheet" />
+{% endblock %}
+{% block js %}
+{{ parent() }}
+<script src="{{asset('js/maps.js')}}"></script>
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+<script src="{{asset('js/L.KML.js')}}"></script>
+<script src="{{asset('js/tree.js')}}"></script>
+
+{% endblock %}
+
+
+{% block middle %}
+<div class="delivery">
+
+
+  {% if message %}
+  <div class="heading row">
+    <div class="label">Delivery </div>
+  </div>
+  <H1> No deliverys found </H1>
+
+  {% else %}
+
+<div class="heading row">
+    <div class="label"> Delivery</div>
+    <div class="value"> {{delivery.deliveryId}}:</div>
+    <div class="value"> {{delivery.Name}}</div>
+    <div class="value">HH:{{delivery.Households}}</div>
+    <div class="value">TG:{{delivery.Target}}</div>
+    <div class="value">CD:{{delivery.Completed}}</div>
+    <div class="value">RG:{{delivery.Roadgroups}}</div>
+    <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+</div>
+
+
+<div class="subheading row">
+    <div class="rgid" >Round-groups</div>
+    <div class="name" >Name</div>
+    <div  class="num" >House-holds</div>
+    <div  class="num" >Target</div>
+    <div  class="num" >Compl-eted</div>
+    <div  class="num" >Road-groups</div>
+</div>
+
+
+  <div id="tree"  >
+    {% set colouri =0  %}
+    {% for key ,asubgroup in roundstree %}
+    {% set colouri = colouri +1 %}
+    <div class="row" >
+      <div class="rgid colour_{{colouri}}">{{key}}</div>
+      <div class="name"> {{ asubgroup.group.Name}}</div>
+      <div class="num">{{asubgroup.group.Households}}</div>
+      <div class="num">{{asubgroup.group.Target}}</div>
+      <div class="num">{{asubgroup.group.Completed}}</div>
+      <div class="num">{{asubgroup.group.Roadgroups}}</div>
+      <div class="button wide"><a class="button wide" href = "/delivery/schedulegroup/{{delivery.deliveryId}}/{{key}}" >Schedule Group</a></div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="largebutton" ><a class="button" href = "/delivery/addround/{{delivery.deliveryId}}" >Add New Round</a></div>
+<div class="subheading row">
+    <div class="name" >Unused Roadgroups</div>
+  </div>
+
+  <ul id="tree"  >
+    {% for key ,asubgroup in rgstree %}
+    <li><span class="box"> {{key}}:{{ asubgroup.group.Name}}</span>
+    <ul class="nested">
+      {% for key2 ,arggroup in asubgroup["children"] %}
+      <li ><span class="box"> {{key2}}:{{arggroup.group.Name}}</span>
+        <ul class="nested">
+        {% for key3 ,arg in arggroup["children"] %}
+        <li>
+            <div class=" roadgroup row">
+              <div class="rgid" >{{key3}}: </div><div class="num" >{{arg.households }}</div>
+            </div>
+        </li>
+        {% endfor %}
+        </ul>
+      {% endfor %}
+      </li>
+    </ul>
+     </li>
+    {% endfor %}
+    </ul>
+{% endif %}
+<div class="map" >
+  <div id="wmapid" ></div>
+</div>
+<script>
+  toggle();
+</script>
+{% set jslocation = delivery.getjson() %}
+{% set abounds = bounds | json_encode | raw %}
+<script >
+
+var mymap = myWMap("{{jslocation}}");
+var fgroup =  new L.featureGroup();
+
+var i=1;
+{% for key ,arndgroup in roundstree %}
+{% for key2 ,arndsubgroup in arndgroup["children"] %}
+{% for key3 ,arnd in arndsubgroup["children"] %}
+{% for key4 ,arg in arnd.roadgrouplist %}
+
+var htmltext = "<html> <h1>{{arg.name}}</h1><div> <a class=\"button\" href = \"/delivery/scheduleround/{{delivery.deliveryId}}/{{key3}}\" >VIEW</a></div>";
+
+{% if arg.kml  %}
+    var style = {"color":  getColor(i) , "weight": 4 ,  "clickable": true ,"opacity": 1.0, "fillOpacity": 1.0 };
+      var  kml = "{{arg.kml}}";
+      var path = "{{mappath}}roadgroups/"+kml;
+      if(kml)
+      {
+        makeKMLLayer(mymap,path,style,true,htmltext);
+      }
+  {% endif %}
+  {% endfor %}
+  {% endfor %}
+
+ {% endfor %}
+ i=i+1;
+ {% endfor %}
+
+ i=12;
+ {% for key ,asubgroup in rgstree %}
+ {% for key2 ,arggroup in asubgroup["children"] %}
+ {% for key3 ,arg in arggroup["children"] %}
+ var htmltext = '<html> <h1>{{key3}}</h1>';
+   var style = {"color":  getColor(i) , "weight": 4 ,  "clickable": true ,"opacity": 1.0, "fillOpacity": 1.0 };
+   var  kml = "{{arg.kml}}";
+   var path = "{{mappath}}roadgroups/"+kml;
+   if(kml)
+   {
+   makeKMLLayer(mymap,path,style,true,htmltext);
+   }
+   {% endfor %}
+   {% endfor %}
+   {% endfor %}
+
+
+var kml = "{{delivery.KML}}";
+      var path = "{{mappath}}outlines/"+kml;
+      if(kml)
+      {
+          var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.9, "fillOpacity": 0.0 };
+          makeOutlineKml(mymap,path,style,false,"{{delivery.name}}")
+      }
+   setMarkers(mymap,"{{abounds}}");
+   setBounds2(mymap,"{{abounds}}");
+</script>
+
+{% endblock %}

@@ -78,7 +78,7 @@ class RoadgroupController extends AbstractController
 
       $roadgroups[$key] = $roadgroup;
     }
-
+dump($roadgroups);
     return $this->render('roadgroup/showall.html.twig',
     [
     'rgyear'=>$this->rgyear,
@@ -94,7 +94,6 @@ class RoadgroupController extends AbstractController
 
   public function Showone($rgid)
   {
-
     $seats= null;
     $roadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
     if(!$roadgroup)
@@ -102,39 +101,21 @@ class RoadgroupController extends AbstractController
       return $this->render('roadgroup/showone.html.twig',  [    'rgyear'=>$this->rgyear,'message' =>  'No roadgroups not Found',]);
     }
     $currentkml = $roadgroup->getKML();
-    /*   $foundkml = $this->mapserver->findmap($roadgroup->getRoadgroupid(),$this->rgyear);
-   if(!$currentkml || strcmp($currentkml, $foundkml) !== 0)
-    {
-      $time = new \DateTime();
-      $roadgroup->setUpdated(null);
-      $roadgroup->setKml($foundkml);
-      $roadgroup->setGeodata(null);
-      $roadgroup->setDistance(-1);
-      $entityManager = $this->getDoctrine()->getManager();
-      $entityManager->persist($roadgroup);
-      $entityManager->flush();
-
-    }*/
     $swdid = $roadgroup->getRgsubgroupid();
     $wdid = $roadgroup->getRggroupid();
     $stlist = [];
     $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($rgid,$this->rgyear);
+    foreach($streets as &$astreet)
+    {
+      if($astreet->getGeodata()==null)
+      {
+        $astreet->makeGeodata();
+      }
+   }
+    $bounds = $this->mapserver->makebounds_streetlist($streets);
     $totalhouseholds = 0;
     $totaldist = 0;
-    $rgdate = $roadgroup->getUpdated();
-    $needsupdating = false;
-    $format = 'Y-m-d H:i:s';
-    $rgdate = $roadgroup->getUpdated();
-    foreach($streets as $astreet)
-    {
-      $stlist[]= $astreet->getName();
-      $sdate =new \DateTime( $astreet->getUpdated());
-      if ($sdate > $rgdate) {
-        $needsupdating = true;
-      }
-      $totalhouseholds += $astreet->getHouseholds();
-      $totaldist += $astreet->getDistance();
-    }
+
     if($swdid)
       $back = "/rgsubgroup/show/".$swdid;
     else if($wdid)
@@ -142,63 +123,39 @@ class RoadgroupController extends AbstractController
     else
       $back =  "/rggroup/showall/";
     $extrastreets =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreets($this->rgyear);
+   // dump($extrastreets);
+    //if($this->needsUpdating($rgid))
+    {
+      $this->makeGeodata($rgid);
+    }
+  //  else
+    {
     $geodata= $roadgroup->getGeodata();
-    if($geodata === null)
+    //if($geodata === null)
     {
       if($roadgroup->getKML())
       {
-      $geodata= $this->mapserver->loadRoute($roadgroup->getKML());
+        $geodata= $this->makeGeodata($rgid);
       $roadgroup->setGeodata($geodata);
       $roadgroup->setDistance($geodata["dist"]);
       $entityManager = $this->getDoctrine()->getManager();
       $entityManager->persist($roadgroup);
       $entityManager->flush();
       }
-      else
-      {
-        $dist = 0;
-        $minlat=360;
-        $minlong =360;
-        $maxlat=-360;
-        $maxlong=-360;
-        foreach($streets as $astreet)
-        {
-          $lat = floatval($astreet->getLatitude());
-          $long = floatval($astreet->getLongitude());
-          if($lat> 0)
-          {
-            if($minlat > $lat && $lat > 0)$minlat = $lat;
-            if($minlong > $long && $long != 0)$minlong = $long;
-            if($maxlong <  $long && $long != 0)$maxlong = $long;
-            if($maxlat <  $lat  &&  $lat > 0)$maxlat = $lat;
-          }
-          $geodata = array();
-          $geodata["dist"]=$dist;
-          $geodata["maxlat"]=$maxlat;
-          $geodata["midlat"]="".($maxlat+$minlat)/2;
-          $geodata["minlat"]=$minlat;
-          $geodata["maxlong"]=$maxlong;
-          $geodata["midlong"]="".($minlong+$maxlong)/2;
-          $geodata["minlong"]=$minlong;
-          $time = new \DateTime();
-          $roadgroup->setUpdated($time);
-          $roadgroup->setGeodata($geodata);
-          $roadgroup->setDistance($geodata["dist"]);
-          $entityManager = $this->getDoctrine()->getManager();
-          $entityManager->persist($roadgroup);
-          $entityManager->flush();
-        }
-      }
     }
+
+      }
+      $geodata= $roadgroup->getGeodata();
+    dump($geodata);
     return $this->render('roadgroup/showone.html.twig',
     [
     'rgyear'=>$this->rgyear,
     'message' =>  '' ,
-    'needsupdating'=>$needsupdating,
     'seats'=>$seats,
     'total'=>$totalhouseholds,
     'totaldist'=>$totaldist,
     'geodata'=>$geodata,
+    'bounds' =>$bounds,
     'roadgroup' => $roadgroup ,
     'streets'=> $streets,
     'sparestreets'=>$extrastreets,
@@ -207,6 +164,11 @@ class RoadgroupController extends AbstractController
     ]);
 
   }
+
+
+
+
+
 
 
 
@@ -337,8 +299,7 @@ class RoadgroupController extends AbstractController
     $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
     $astreet = new Street();
     $gd= $aroadgroup->getGeodata();
-    $astreet->setLatitude($gd["midlat"]);
-    $astreet->setLongitude($gd["midlong"]);
+
     $form = $this->createForm(StreetForm::class, $astreet);
     if ($request->getMethod() == 'POST')
     {
@@ -406,9 +367,8 @@ class RoadgroupController extends AbstractController
     }
 
     $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($rgid,$this->rgyear);
-    $totalhouseholds = 0;
-    $totaldist = 0;
     $newkml = "";
+    $totaldist =0;
     foreach($streets as $astreet)
     {
       $path = $astreet->getDecodedpath();
@@ -434,16 +394,6 @@ class RoadgroupController extends AbstractController
       }
       }
       $totaldist += $astreet->getDistance();
-    }
-
-   // if(!$currentkml || strcmp($currentkml, $foundkml) !== 0)
-    {
-     // $roadgroup->setKml($foundkml);
-    //  $roadgroup->setGeodata(null);
-    //  $roadgroup->setDistance($totaldist);
-    //  $entityManager = $this->getDoctrine()->getManager();
-    //  $entityManager->persist($roadgroup);
-   //   $entityManager->flush();
     }
     return $newkml;
   }
@@ -475,7 +425,7 @@ class RoadgroupController extends AbstractController
     $handle = fopen($file, "w") or die("ERROR: Cannot open the file.");
     fwrite($handle, $xmlout) or die ("ERROR: Cannot write the file.");
     fclose($handle);
-    $this->addFlash('notice','kml file saved'.$file );
+    $this->addFlash('notice 2','kml file saved'.$file );
     $roadgroup->setKml($kmlname);
     $time = new \DateTime();
     $roadgroup->setUpdated($time);
@@ -489,18 +439,123 @@ class RoadgroupController extends AbstractController
   }
 
 
+
+
+  public function writekml($newkml,$kmlname)
+  {
+
+    $file = "maps/roadgroups/".$kmlname;
+    $xmlout = "";
+    $xmlout .= "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    $xmlout .= "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n";
+    $xmlout .=  "<Document>\n";
+    $xmlout .=  " <name>".$kmlname."</name>\n";
+    $xmlout .=  "<Style id=\"blueLine\">\n";
+    $xmlout .=  "  <LineStyle>\n";
+    $xmlout .=  "    <color>7fff0000</color>\n";
+    $xmlout .=  "    <width>4</width>\n";
+    $xmlout .=  "  </LineStyle>\n";
+    $xmlout .=  "</Style>\n";
+
+    $xmlout .=  $newkml;
+
+    $xmlout .=  "</Document>\n";
+    $xmlout .=  "</kml>\n";
+    $handle = fopen($file, "w") or die("ERROR: Cannot open the file.");
+    fwrite($handle, $xmlout) or die ("ERROR: Cannot write the file.");
+    fclose($handle);
+    $this->addFlash('notice 1','kml file saved'.$file );
+
+    return true;
+  }
+
+
   function updateGeodata($rgid)
   {
     $year=$this->rgyear;
     $roadgroup= $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
-    dump($roadgroup->getGeodata());
-    $geodata= $this->mapserver->loadRoute($roadgroup->getKML());
-    dump($geodata);
+    $geodata = $this->makeGeodata($rgid);
     $roadgroup->setGeodata($geodata);
     $roadgroup->setDistance($geodata["dist"]);
     $entityManager = $this->getDoctrine()->getManager();
     $entityManager->persist($roadgroup);
     $entityManager->flush();
+   }
+
+
+   public function needsUpdating($rgid)
+   {
+     $roadgroup= $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
+     $streetdate =  new \DateTime("1/1/2000");
+     $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($rgid,$this->rgyear);
+
+     foreach($streets as $astreet)
+     {
+       if($streetdate > $astreet->getupdated() ) $streetdate = $astreet->getupdated();
+     }
+     if($streetdate > $roadgroup->getUpdated()) return true;
+     return false;
+   }
+
+
+   public function makeGeodata($rgid)
+   {
+     $roadgroup= $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
+     $streets =  $this->getDoctrine()->getRepository("App:Street")->findgroup($rgid,$this->rgyear);
+     $totalhouseholds = 0;
+     $totalelectors = 0;
+     $totaldist = 0;
+     $totalstreets = 0;
+
+     $dist = 0;
+     $minlat=360;
+     $minlong =360;
+     $maxlat=-360;
+     $maxlong=-360;
+     foreach($streets as $astreet)
+     {
+       $totalhouseholds += $astreet->getHouseholds();
+       $totalelectors += $astreet->getElectors();
+
+       $totalstreets ++;
+       $astreet->makeGeodata();
+       $stgd = $astreet->getGeodata();
+       if($stgd !=null)
+       {
+       $totaldist += $stgd["dist"];
+       $aminlat = floatval($stgd["minlat"]);
+       $aminlong = floatval($stgd["minlong"]);
+       $amaxlat = floatval($stgd["maxlat"]);
+       $amaxlong = floatval($stgd["maxlong"]);
+       if($aminlong> -360)
+       {
+         if($minlat > $aminlat && $aminlat != 0)$minlat = $aminlat;
+         if($minlong > $aminlong && $aminlong != 0)$minlong = $aminlong;
+         if($maxlong <  $amaxlong && $amaxlong != 0)$maxlong = $amaxlong;
+         if($maxlat <  $amaxlat  &&  $amaxlat != 0)$maxlat = $amaxlat;
+       }
+     }
+
+     }
+     $geodata = array();
+     $geodata["dist"]=$totaldist;
+     $geodata["maxlat"]=$maxlat;
+     $geodata["midlat"]=($maxlat+$minlat)/2;
+     $geodata["minlat"]=$minlat;
+     $geodata["maxlong"]=$maxlong;
+     $geodata["midlong"]=($minlong+$maxlong)/2;
+     $geodata["minlong"]=$minlong;
+     $time = new \DateTime();
+     $roadgroup->setUpdated($time);
+     $roadgroup->setGeodata($geodata);
+     $roadgroup->setDistance($totaldist);
+     $roadgroup->setHouseholds($totalhouseholds);
+     $roadgroup->setElectors($totalelectors);
+     $roadgroup->setStreets($totalstreets);
+     $entityManager = $this->getDoctrine()->getManager();
+     $entityManager->persist($roadgroup);
+     $entityManager->flush();
+     return $geodata;
    }
 
 

@@ -128,7 +128,7 @@ class StreetRepository  extends EntityRepository
 
 
 
-     public function findLooseStreets($year)
+     public function findLooseStreets_b($year)
      {
         $conn = $this->getEntityManager()->getConnection();
          $sql = 'select  st.*   from street as st  where concat (st.name,"-",st.part) not in ( SELECT concat (s.name,"-",s.part)  FROM street as s, roadgrouptostreet as rg WHERE s.name = rg.street and (s.part = rg.part or rg.part is null  or rg.part = "" ) and rg.year = "'.$year.'")  order by st.pd , st.name ';
@@ -138,6 +138,18 @@ class StreetRepository  extends EntityRepository
         return $streets;
       //  return null;
      }
+
+
+       public function findLooseStreets($year)
+     {
+        $conn = $this->getEntityManager()->getConnection();
+         $sql = 'SELECT * FROM `street` as s left OUTER join roadgrouptostreet as rs on s.name = rs.street and (s.part=rs.part or (s.part is null and rs.part = "")) and rs.year= '.$year.' WHERE rs.seq is null   ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $streets= $stmt->fetchAll();
+        return $streets;
+     }
+
 
 
  public function findGroup($roadgroupid, $year)

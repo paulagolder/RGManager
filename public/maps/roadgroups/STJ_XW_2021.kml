@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
-    <name>STJ_XW_2021</name>
+    <name>knolllane</name>
 	<Style id="blueLine">
       <LineStyle>
         <color>7fff0000</color>
@@ -12,15 +12,12 @@
       <styleUrl>#blueLine</styleUrl>
       <LineString>
         <coordinates>
--1.825930,52.663630,102.35 
--1.826200,52.663410,103.1 
--1.826810,52.663000,102.81 
+-1.829530,52.661500,96.6 
+-1.828820,52.661900,98.54 
 -1.828000,52.662330,100.47 
--1.829200,52.661690,97.11 
--1.828000,52.662330,100.47 
+-1.827280,52.662730,101.49 
 -1.826810,52.663000,102.81 
--1.826200,52.663410,103.1 
--1.825870,52.663670,102.28 
+-1.826430,52.663260,103.58 
         </coordinates>
       </LineString>
     </Placemark>

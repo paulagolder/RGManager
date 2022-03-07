@@ -1,4 +1,4 @@
-{# views/delivery/.html.twig #}
+{# views/round/manageround.html.twig #}
 
 {% extends 'dvymaster.html.twig' %}
 
@@ -37,6 +37,12 @@
  <div class="value">({{delivery.Completed}}/{{delivery.Households}})</div>
     <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
   </div>
+
+  <div class="heading row">
+   <div class="label"> Manage Round  </div>
+   <div class="rgid" >{{round.RoundId}}: </div>
+   <div class="name" >{{ round.Name}}</div>
+  </div>
   <div class="subheading row">
   <div class="rgid" >ID</div>
     <div class="name" >Name</div>
@@ -44,18 +50,13 @@
     <div  class="button" ></div>
   </div>
   <div class="list" >
-    {% for key ,around in rounds %}
           <div class="group row">
-             <div class="rgid" >{{key}}: </div>
-              <div class="name" >{{ around.Name}}</div>
-             <div class="num" >({{ around.Deliveries}}/{{ around.Households}})</div>
-             <div class="button" ><a class="button" href = "/delivery/manage/{{delivery.deliveryId}}/{{key}}" >View</a></div>
+             <div class="rgid" >{{round.RoundId}}: </div>
+             <div class="name" >{{round.Name}}</div>
+             <div class="num" >({{round.Completed}}/{{round.Households}})</div>
+             <div class="button" ><a class="button" href = "/round/manageround/{{delivery.deliveryId}}/{{round.RoundId}}" >View</a></div>
           </div>
-
-    {% endfor %}
   </div>
 {% endif %}
 </div>
-
-
 {% endblock %}
