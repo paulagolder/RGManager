@@ -28,7 +28,7 @@
 {% endblock %}
 {% block middle %}
 <div class="heading row">
-<div class="label">View A Street </div>
+<div class="label">View A Street. </div>
 <div class="button  right"> <a class="button" href = "/street/showall" >Back</a> </div>
 
 </div>
@@ -41,40 +41,52 @@
    <div class="subheading row">
      <div class="checkbox" ></div>
      <div class="name" >Name/part</div>
-     <div class="pd" >PD</div>
-     <div  class="rgid" >Road group ID</div>
+     <div class="button"  >PD</div>
+     <div  class="button" >Road group ID</div>
      <div  class="num" >House-holds</div>
      <div  class="num" >Electors</div>
+       <div  class="num" >Steps</div>
      <div  class="button" ></div>
      <div  class="text" >Note</div>
    </div>
+    {% set jslocation = null %}
    <form action="/street/groupops" method="post">
 
     <div class="list" >
        {% for street in streets %}
        <div class="street row" >
           <div class="checkbox" > <input type="checkbox" id="{{street.seq}}" name="selectstreets[]" value="{{street.seq}}"></div>
-          <div class="name">{{street.name}}/{{street.part}}</div>
-            <div class="rgid"><a class="routebutton" href = "/pollingdistrict/show/{{street.pd}}">{{street.pd}}</a></div>
-          <div class="rgid">
-         {# <a class="routebutton" href = "/roadgroup/showone/{{street.roadgroupid}}">{{street.roadgroupid}}</a>#}
-          </div>
+          <div class="name"  id="x{{street.seq}}">{{street.name}}/{{street.part}}</div>
+             <div class="button"><a class="button" href = "/pollingdistrict/show/{{street.pdid}}">{{street.pdid}}</a></div>
+             {% if  street.roadgroupid == "None" %}
+
+                     <div class="button"><a class="button" href = "">NONE</a></div>
+             {% else %}
+            <div class="button"><a class="button" href = "/roadgroup/showone/{{street.roadgroupid}}">{{street.roadgroupid}}</a></div>
+            {%  endif %}
+
+
           <div class="num">{{street.households}}</div>
           <div class="num">{{street.electors}}</div>
+             {% dump(street.Geodata) %}
           {% if street.path %}
+
            {% dump(street.path ) %}
             {% if street.path |length > 4 %}
             {% dump((street.path | jsondecode).0) %}
             {% if ((street.path | jsondecode).0.steps|length) >2  %}
           <div class="num">{{((street.path | jsondecode).0.steps| length) }}</div>
+             {% else %}
+              <div class="num">?</div>
              {% endif %}
           {% endif %}
           {% else %}
               <div class="num">0</div>
               {% endif %}
-          <div class="button"><a class="button" href = "/street/edit/{{street.name}}/{{street.part}}">Edit</a></div>
+          <div class="button"><a class="button" href = "/street/editbyseq/{{street.seq}}">Edit</a></div>
           <div class="text">{{street.note}}</div>
        </div>
+
        {% endfor %}
     </div>
     <div class="subheading  row">
@@ -83,16 +95,34 @@
        <div class="button small"> <input type="submit" name="Delete" Value="Delete"/> </div>
     </div>
    </form>
-   <div class="map" >
-      <div id="stmapid"></div>
-    </div>
+ <div class="map" >
+  <div id="goodmapid" ></div>
+</div>
+  {% set sggeodata = streets[0].geodata | json_encode | raw  %}
+  {% dump(sggeodata) %}
+<script >
+    var mymap = myGoodMap("{{sggeodata}}");
 
-      <script  type="text/javascript" >
-         var mymap = myStMap("");
+
+          var i=0;
          mymap.on('click', onMapClick);
          {% for street in streets %}
-          drawPath(mymap,"{{street.path}}");
-         {% endfor %}
+var estyle = {
+  color:  getColor(i),
+  weight: 5,
+  opacity: 1
+}
+          var h2s = document.getElementById("x{{street.seq}}");
+         if(h2s)
+            h2s.style.backgroundColor = getColor(i)
+             var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
+                drawPath(mymap,"{{street.getPath()}}",estyle);
+
+            i=i+1;
+            if(i>11)i=0;
+             {% endfor %}
+                  setMarkers(mymap,"{{sggeodata}}");
+     setBounds2(mymap,"{{sggeodata}}");
       </script>
 {% endif %}
 </div>

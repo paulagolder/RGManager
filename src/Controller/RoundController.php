@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use App\Entity\Delivery;
 use App\Entity\Round;
+use App\Entity\Geodata;
 use App\Entity\Rggroup;
 use App\Entity\Rgsubgroup;
 use App\Form\Type\DeliveryForm;
@@ -67,7 +68,7 @@ class RoundController extends AbstractController
     $round->{"countrgs"}=count($roadgroups);
     $rgstree = $this->spareRoadgroups($dvyid);
     dump($rgstree);
-    $bounds =$this->mapserver->newbounds();
+     $bounds =$this->mapserver->newGeodata();
     $countrgs =0;
     foreach($roadgroups as $aroadgroup)
     {
@@ -122,28 +123,6 @@ class RoundController extends AbstractController
     ]);
   }
 
-  public function manage($dvyid)
-  {
-    $delivery = $this->getDoctrine()->getRepository("App:Delivery")->findOne($dvyid);
-    $district = $this->getDoctrine()->getRepository("App:District")->findOne($delivery->getDistrictId());
-    if (!$delivery)
-    {
-      return $this->render('Delivery/showone.html.twig', [ 'message' =>  'Delivery not Found',]);
-    }
-    $rounds =  $this->getDoctrine()->getRepository("App:Round")->findRounds($delivery);
-    dump($rounds);
-    $roundstree =     $this->treeserver->makeroundtree_object($rounds);
-    dump($roundstree);
-    return $this->render('round/managerounds.html.twig',
-    [
-    'rgyear' => $this->rgyear,
-    'message' =>  '' ,
-    'delivery'=>$delivery,
-    'roundstree'=>$roundstree,
-    //'dgs'=>$dgs,,
-    'back'=>"/delivery/showcurrent"
-    ]);
-  }
 
   public function managegroup($dvyid, $grpid)
   {
@@ -154,11 +133,25 @@ class RoundController extends AbstractController
       return $this->render('Delivery/showone.html.twig', [ 'message' =>  'Delivery not Found',]);
     }
     $rounds =  $this->getDoctrine()->getRepository("App:Round")->findRounds($delivery);
-    dump($rounds);
     $roundstree =     $this->treeserver->makeroundtree_object($rounds);
-    dump($roundstree);
+    $colour = array();
     $subroundstree = $roundstree[$grpid]["children"];
+    $i=0;
+    foreach($subroundstree as $key =>$rg)
+    {
+      foreach($rg["children"] as $key=>$rnd)
+      {
+        $agent = $rnd->Agent;
+        if(!array_key_exists($agent, $colour))
+        {
+          $colour[$agent]= $this->mapserver->getColor($i);
+          $i = $i + 1;
+        }
+
+      }
+    }
     dump($subroundstree);
+    dump($colour);
     return $this->render('round/managegroup.html.twig',
     [
     'rgyear' => $this->rgyear,
@@ -166,7 +159,8 @@ class RoundController extends AbstractController
     'delivery'=>$delivery,
     'rndgroup'=>   $roundstree[$grpid]["group"],
     'roundstree'=>$subroundstree,
-    'back'=>"/delivery/showcurrent"
+    'color'=>$colour,
+    'back'=>"/delivery/manage/$dvyid"
     ]);
   }
 
@@ -179,22 +173,35 @@ class RoundController extends AbstractController
       return $this->render('Delivery/showone.html.twig', [ 'message' =>  'Delivery not Found',]);
     }
     $rounds =  $this->getDoctrine()->getRepository("App:Round")->findRounds($delivery);
-    dump($rounds);
     $roundstree =     $this->treeserver->makeroundtree_object($rounds);
-    dump($roundstree);
     $subroundstree = $roundstree[$grpid]["children"];
     $subsubroundstree = $subroundstree[$sgrpid]["children"];
-    dump($roundstree);
+    $colour = array();
+    $subroundstree = $roundstree[$grpid]["children"];
+    $i=0;
+    foreach($subroundstree as $key =>$rg)
+    {
+      foreach($rg["children"] as $key=>$rnd)
+      {
+        $agent = $rnd->Agent;
+        if(!array_key_exists($agent, $colour))
+        {
+          $colour[$agent]= $this->mapserver->getColor($i);
+          $i = $i + 1;
+        }
+      }
+    }
+
     return $this->render('round/managesubgroup.html.twig',
     [
     'rgyear' => $this->rgyear,
     'message' =>  '' ,
     'delivery'=>$delivery,
     'rndgroup'=>   $roundstree[$grpid]["group"],
-     'rndsubgroup' => $roundstree[$grpid]["children"][$sgrpid]["group"],
+    'rndsubgroup' => $roundstree[$grpid]["children"][$sgrpid]["group"],
     'roundstree'=>$subsubroundstree,
-    'bounds'=> null,
-    'back'=>"/delivery/showcurrent"
+    'color'=>$colour,
+    'back'=>"/round/managegroup/".$dvyid."/".$grpid,
     ]);
   }
 
@@ -220,76 +227,82 @@ class RoundController extends AbstractController
 
   }
 
+  public function updatesubgroup($dvyid,$grpid,$sgrpid)
+  {
+    $rndid = $_POST['rndid'];
+    $target = $_POST['target'];
+    $completed = $_POST['completed'];
+    $agent = $_POST['agent'];
+    $entityManager = $this->getDoctrine()->getManager();
+
+    foreach( $rndid as $key => $id )
+    {
+      $round= $this->getDoctrine()->getRepository("App:Round")->findOne($rndid[$key]);
+      $round->setTarget($target[$key]);
+      $round->setCompleted($completed[$key]);
+      $round->setAgent($agent[$key]);
+      $entityManager->persist($round);
+      $entityManager->flush();
+    }
+    return $this->managesubgroup($dvyid,$grpid,$sgrpid);
+
+  }
+
+  public function updategroup($dvyid,$grpid)
+  {
+    $rndid = $_POST['rndid'];
+    $target = $_POST['target'];
+    $completed = $_POST['completed'];
+    $agent = $_POST['agent'];
+    $entityManager = $this->getDoctrine()->getManager();
+
+    foreach( $rndid as $key => $id )
+    {
+      $round= $this->getDoctrine()->getRepository("App:Round")->findOne($rndid[$key]);
+      $round->setTarget($target[$key]);
+      $round->setCompleted($completed[$key]);
+      $round->setAgent($agent[$key]);
+      $entityManager->persist($round);
+      $entityManager->flush();
+    }
+    return $this->managegroup($dvyid,$grpid);
+
+  }
 
   public function updatefromroadgroups($dvyid,$rndid)
   {
     $round= $this->getDoctrine()->getRepository("App:Round")->findOne($rndid);
     $rgs =$this->getDoctrine()->getRepository("App:RoundtoRoadgroup")->findRoadgroups($rndid,$this->rgyear);
-
     $nrg=0;
     $kmldom =   $this->mapserver->makekmldoc($round->getRoundId());
     $totalhouseholds = 0;
     $totalelectors = 0;
-    $totaldist = 0;
-    $totalstreets = 0;
-
-    $dist = 0;
-    $minlat=360;
-    $minlong =360;
-    $maxlat=-360;
-    $maxlong=-360;
+    $geodata = new Geodata;
 
     foreach($rgs as $rtrg)
     {
       $rg = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rtrg->getRoadgroupId(),$this->rgyear);
+      dump($rg);
       $nrg++;
       $rgkml= $rg->getKML();
       $kmldom = $this->mapserver->MergeRoute($kmldom,$rgkml);
       $totalhouseholds += $rg->getHouseholds();;
       $totalelectors += $rg->getElectors();
-      $stgd = $rg->getGeodata();
-      if($stgd != null)
-      {
-      $totaldist += $stgd["dist"];
-      $aminlat = floatval($stgd["minlat"]);
-      $aminlong = floatval($stgd["minlong"]);
-      $amaxlat = floatval($stgd["maxlat"]);
-      $amaxlong = floatval($stgd["maxlong"]);
-      if($aminlong> -360)
-      {
-        if($minlat > $aminlat && $aminlat != 0)$minlat = $aminlat;
-        if($minlong > $aminlong && $aminlong != 0)$minlong = $aminlong;
-        if($maxlong <  $amaxlong && $amaxlong != 0)$maxlong = $amaxlong;
-        if($maxlat <  $amaxlat  &&  $amaxlat != 0)$maxlat = $amaxlat;
-      }
-      }
-
+      $stgd = $rg->getGeodata_obj();
+      $geodata->mergeGeodata_obj($stgd);
     }
-    $geodata = array();
-    $geodata["dist"]=$totaldist;
-    $geodata["maxlat"]=$maxlat;
-    $geodata["midlat"]=($maxlat+$minlat)/2;
-    $geodata["minlat"]=$minlat;
-    $geodata["maxlong"]=$maxlong;
-    $geodata["midlong"]=($minlong+$maxlong)/2;
-    $geodata["minlong"]=$minlong;
     $time = new \DateTime();
     $round->setUpdated($time);
-    $round->setGeodata($geodata);
-    $round->setDistance($totaldist);
     $round->setHouseholds($totalhouseholds);
    // $round->setElectors($totalelectors);
-    $round->setRoadgroups($nrg);
     $rndkml = $this->exportKML($rndid);
-    dump($kmldom);
-    dump($rndkml);
     $round->setKML($rndkml);
     $round->setGeodata($geodata);
     $entityManager = $this->getDoctrine()->getManager();
-      $entityManager->persist($round);
-      $entityManager->flush();
-      $rndgroupid =$round->getRggroupId();
-      $rndsubgroupid =$round->getRgsubgroupId();
+    $entityManager->persist($round);
+    $entityManager->flush();
+    $rndgroupid =$round->getRggroupId();
+    $rndsubgroupid =$round->getRgsubgroupId();
 
       return $this->redirect("/delivery/scheduleround/$dvyid/$rndid");
 
@@ -299,7 +312,6 @@ class RoundController extends AbstractController
   public function newkml($rndid)
   {
     $roadgroups = $this->getDoctrine()->getRepository("App:RoundtoRoadgroup")->findRoadgroups($rndid);
-    dump($roadgroups);
     if(!$roadgroups)
     {
       return $this->render('roadgroup/showone.html.twig',  [    'rgyear'=>$this->rgyear,'message' =>  'No roadgroups not Found',]);
@@ -308,21 +320,14 @@ class RoundController extends AbstractController
     foreach($roadgroups as $roadgroup)
     {
     $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($roadgroup->getRoadgroupId(),$this->rgyear);
-
     $totaldist =0;
     foreach($streets as $astreet)
     {
-      dump($astreet->getName());
       $path = $astreet->getDecodedpath();
-
       foreach($path as $branch)
       {
-
         if(count($branch->steps)>1)
         {
-
-          // $geodata = $this->loadBranch($branch->steps);
-          // $dist += $geodata["dist"];
           $newkml .=  "<Placemark>\n";
           $newkml .=  "  <name>".$astreet->getName()."</name>\n";
           $newkml .=  "  <styleUrl>#blueLine</styleUrl>\n";
@@ -336,7 +341,6 @@ class RoundController extends AbstractController
           $newkml .=  "  </LineString>\n";
           $newkml .=  "</Placemark>\n";
         }
-
       }
       $totaldist += $astreet->getDistance();
     }
@@ -351,6 +355,40 @@ class RoundController extends AbstractController
     $around=  $this->getDoctrine()->getRepository("App:Round")->delete($rndid);
     $done = $this->getDoctrine()->getRepository("App:RoundtoRoadgroup")->removelinks($rndid);
     return $this->redirect( "/delivery/scheduledelivery/".$dvyid);
+  }
+
+  public function zeroround($dvyid,$rndid)
+  {
+    $entityManager = $this->getDoctrine()->getManager();
+    $around= $this->getDoctrine()->getRepository("App:Round")->findOne($rndid,$this->rgyear);
+    $grp = $around->getRggroupId();
+    $sgrp = $around->getRgsubgroupId();
+      $around->setTarget(0);
+      $around->setCompleted(0);
+      $around->setAgent("XX");
+      $entityManager->persist($around);
+      $entityManager->flush();
+
+    return $this->redirect( "/delivery/schedulesubgroup/$dvyid/$grp/$sgrp");
+
+  }
+
+  public function zerosubgroup($dvyid,$grpid,$sgrpid)
+  {
+    $entityManager = $this->getDoctrine()->getManager();
+    $rounds= $this->getDoctrine()->getRepository("App:Round")->findSubgroupRounds($dvyid,$grpid,$sgrpid);
+    foreach($rounds as $around)
+    {
+
+    $around->setTarget(0);
+    $around->setCompleted(0);
+    $around->setAgent("XX");
+    $entityManager->persist($around);
+    }
+    $entityManager->flush();
+
+    return $this->redirect("/delivery/schedulegroup/$dvyid/$grpid");
+
   }
 
   public function exportkml($rndid)
@@ -379,7 +417,6 @@ class RoundController extends AbstractController
 
     $xmlout .=  "</Document>\n";
     $xmlout .=  "</kml>";
-    dump($xmlout);
     $handle = fopen($file, "w") or die("ERROR: Cannot open the file.");
     fwrite($handle, $xmlout) or die ("ERROR: Cannot write the file.");
     fclose($handle);
@@ -387,13 +424,11 @@ class RoundController extends AbstractController
     $round->setKml($kmlname);
     $time = new \DateTime();
     $round->setUpdated($time);
-
     $round->setGeodata(null);
     $round->setDistance(-1);
     $entityManager = $this->getDoctrine()->getManager();
     $entityManager->persist($round);
     $entityManager->flush();
-   // $this->updateGeodata($rndid);
     return $kmlname;
   }
 
@@ -410,62 +445,6 @@ class RoundController extends AbstractController
     $entityManager->flush();
   }
 
-  public function xmakeGeodata($rgid)
-  {
-    $roadgroup= $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
-    $streets =  $this->getDoctrine()->getRepository("App:Street")->findgroup($rgid,$this->rgyear);
-    $totalhouseholds = 0;
-    $totalelectors = 0;
-    $totaldist = 0;
-    $totalstreets = 0;
-
-    $dist = 0;
-    $minlat=360;
-    $minlong =360;
-    $maxlat=-360;
-    $maxlong=-360;
-    foreach($streets as $astreet)
-    {
-      $totalhouseholds += $astreet->getHouseholds();
-      $totalelectors += $astreet->getElectors();
-
-      $totalstreets ++;
-      $astreet->makeGeodata();
-      $stgd = $astreet->getGeodata();
-      $totaldist += $stgd["dist"];
-      $aminlat = floatval($stgd["minlat"]);
-      $aminlong = floatval($stgd["minlong"]);
-      $amaxlat = floatval($stgd["maxlat"]);
-      $amaxlong = floatval($stgd["maxlong"]);
-      if($aminlong> -360)
-      {
-        if($minlat > $aminlat && $aminlat != 0)$minlat = $aminlat;
-        if($minlong > $aminlong && $aminlong != 0)$minlong = $aminlong;
-        if($maxlong <  $amaxlong && $amaxlong != 0)$maxlong = $amaxlong;
-        if($maxlat <  $amaxlat  &&  $amaxlat != 0)$maxlat = $amaxlat;
-      }
-    }
-
-    $geodata = array();
-    $geodata["dist"]=$totaldist;
-    $geodata["maxlat"]=$maxlat;
-    $geodata["midlat"]=($maxlat+$minlat)/2;
-    $geodata["minlat"]=$minlat;
-    $geodata["maxlong"]=$maxlong;
-    $geodata["midlong"]=($minlong+$maxlong)/2;
-    $geodata["minlong"]=$minlong;
-    $time = new \DateTime();
-    $round->setUpdated($time);
-    $roadgroup->setGeodata($geodata);
-    $roadgroup->setDistance($totaldist);
-    $roadgroup->setHouseholds($totalhouseholds);
-    $roadgroup->setElectors($totalelectors);
-    $roadgroup->setStreets($totalstreets);
-    $entityManager = $this->getDoctrine()->getManager();
-    $entityManager->persist($roadgroup);
-    $entityManager->flush();
-    return $geodata;
-  }
 
 }
 

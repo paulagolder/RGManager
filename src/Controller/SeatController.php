@@ -29,6 +29,7 @@ use App\Entity\Seat;
 use App\Entity\District;
 use App\Entity\Rgsubgroup;
 use App\Entity\Roadgroup;
+use App\Entity\Geodata;
 
 class SeatController extends AbstractController
 {
@@ -133,13 +134,13 @@ class SeatController extends AbstractController
             return $this->render('seat/showone.html.twig', [ 'message' =>  'seat not Found',]);
         }
         $roadgrouplinks = $this->getDoctrine()->getRepository("App:Seat")->findRoadgroups($dtid,$stid,$this->rgyear);
-
+        dump($district);
         $rglist = array();
-        $bounds =$this->mapserver->newbounds();
+         $geodata = new Geodata;
         foreach ($roadgrouplinks as $aroadgrouplink)
         {
            $aroadgroup =  $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($aroadgrouplink["roadgroupid"],$this->rgyear);
-           $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getGeodata());
+           $geodata->mergeGeodata_obj($aroadgroup->getGeodata_obj());
            $kml = $aroadgroup->getKML();
            if($aroadgroup)
            {
@@ -158,6 +159,7 @@ class SeatController extends AbstractController
             $rglist[$wid] =  $wrglist;
           }
         }
+        $seat->setGeodata($geodata);
         dump($rglist);
         return $this->render('seat/showone.html.twig',
             [
@@ -165,7 +167,6 @@ class SeatController extends AbstractController
                 'message' =>  '' ,
                 'district'=> $district,
                 'seat' => $seat,
-                'bounds'=>$bounds,
                 'roadgrouplist'=>$rglist,
                 'back'=>"/district/show/".$dtid,
             ]);
@@ -187,15 +188,17 @@ class SeatController extends AbstractController
         }
         $pds = $this->getDoctrine()->getRepository("App:Seat")->findPollingdistricts($dtid,$stid,$this->rgyear);
         $rgs = [];
+           $geodata = new Geodata;
         foreach($pds as $key =>  $pd)
         {
            $thh = 0;
-          $pdid = $pd["pollingdistrictid"];
+          $pdid = $pd["pdid"];
          $rglist = $this->getDoctrine()->getRepository("App:Roadgroup")->findAllinPollingDistrict($pdid, $this->rgyear);
          $roadgroups = [];
          foreach ($rglist as $rg)
          {
             $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rg["roadgroupid"],$this->rgyear);
+            $geodata->mergeGeodata_obj($aroadgroup->getGeodata_obj());
             $kml = $aroadgroup->getKML();
             if(!$this->mapserver->ismap($kml))
             {
@@ -209,6 +212,7 @@ class SeatController extends AbstractController
           $pd["households"] = $thh;
           $pds[$key]=$pd;
         }
+        $seat->setGeodata($geodata);
 
         $sparepds = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findSpares($district->getDistrictId(),$this->rgyear );
 
@@ -253,10 +257,10 @@ class SeatController extends AbstractController
             {
 
                 //$kml =  findseat($stid,$year="",$dtid);
-                $geodata =  $this->mapserver->loadRoute($dtid."/",$seat->getKML());
-                dump($geodata);
-                $seat->setGeodata($geodata);
-                dump($seat);
+               // $geodata =  $this->mapserver->loadRoute($dtid."/",$seat->getKML());
+               // dump($geodata);
+               // $seat->setGeodata($geodata);
+               // dump($seat);
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($seat);
                 $entityManager->flush();
@@ -286,7 +290,8 @@ class SeatController extends AbstractController
      public function addpd($dtid,$stid)
   {
     $pdid = $_POST["selpd"];
-    $this->getDoctrine()->getRepository('App:Seat')->addpd($dtid,$stid,$pdid,$this->rgyear);
+    $par = explode("-",$pdid);
+    $this->getDoctrine()->getRepository('App:Seat')->addpd($dtid,$stid,$pdid,$par[1],$this->rgyear);
     return $this->redirect('/seat/showpds/'.$dtid."/".$stid);
   }
 

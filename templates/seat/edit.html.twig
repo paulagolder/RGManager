@@ -43,12 +43,13 @@
 </div>
 </div>
 <div class="map" >
-  <div id="rgmapid" ></div>
+  <div id="goodmapid" ></div>
 </div>
 
- {% set geodata = seat.getGeodata_json %}
- <script  type="text/javascript" >
-      var mymap = rgMap("{{geodata}}");
+     {% set geodata = seat.getGeodata_obj | json_encode | raw   %}
+     {% dump(geodata) %}
+<script >
+  var mymap = myGoodMap("{{geodata}}");
  {% if  seat.kml %}
       var aspath = "{{mappath}}outlines/{{seat.kml}}";
       if("{{seat.kml}}")

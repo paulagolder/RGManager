@@ -31,46 +31,114 @@
   {% else %}
 
 <div class="heading row">
-    <div class="label"> Delivery </div>
-    <div class="value"> {{delivery.deliveryId}}:</div>
-    <div class="value"> {{delivery.Name }}</div>
- <div class="value">{{delivery.Households}}</div>
-  <div class="value">{{delivery.Target}}</div>
-   <div class="value">{{delivery.Completed}}</div>
-    <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
-  </div>
-  <div class="heading medium row">
-    <div class="label"> Managing Round Group</div>
-    <div class="value"> {{rndgroup.rndgroupid}}:</div>
-    <div class="value"> {{rndgroup.Name }}</div>
-    <div class="value">{{delivery.Households}})</div>
-     <div class="value">{{delivery.target}}</div>
-      <div class="value">{{delivery.Completed}}</div>
-    <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
-  </div>
-  <div class="subheading row">
+    <div class="label">Delivery</div>
+    <div class="value">{{delivery.deliveryId}}:</div>
+    <div class="value">{{delivery.Name }}</div>
+    <div class="value">{{delivery.Households}}</div>
+    <div class="value">{{delivery.Target}}</div>
+    <div class="value">{{delivery.Completed}}</div>
+    <div class="button  right"> <a class="button" href = "{{back}}" >BACK</a> </div>
+     <div class="button  right"> <a class="button" href = "/delivery/updategroup/{{delivery.deliveryId}}/{{rndgroup.rndgroupid}}" >Update</a> </div>
+</div>
+<div class="heading medium row">
+    <div class="label">Managing Round Group</div>
+    <div class="value">{{rndgroup.rndgroupid}}:</div>
+    <div class="value">{{rndgroup.Name}}</div>
+    <div class="value">{{delivery.Households}}</div>
+    <div class="value">{{delivery.target}}</div>
+    <div class="value">{{delivery.Completed}}</div>
+</div>
+<div class="row">
+<div class="tablesection" >
+<div class="subheading row">
   <div class="rgid" >Round-group</div>
-    <div class="name" >Name</div>
-    <div  class="num" >House-holds</div>
-     <div  class="num" >target</div>
-      <div  class="num" >deliveries</div>
-    <div  class="button" ></div>
-  </div>
-  <div class="list" >
-    {% for key ,around in roundstree %}
-          <div class="group row">
-             <div class="rgid" >{{around["group"].RndgroupId}}: </div>
-              <div class="name" >{{around["group"].Name}}</div>
-                <div class="num" >{{around["group"].Households}}</div>
-             <div class="num" >{{around["group"].Target}}</div>
-               <div class="num" >{{around["group"].Completed}}</div>
-             <div class="button" ><a class="button" href = "/round/managesubgroup/{{delivery.deliveryId}}/{{rndgroup.rndgroupid}}/{{around["group"].RndgroupId}}" >View</a></div>
-          </div>
+  <div class="name" >Name</div>
+  <div  class="num" >House-holds</div>
+  <div  class="num" >target</div>
+  <div  class="num" >deliveries</div>
+  <div  class="button" ></div>
+</div>
+       <form action="/round/updategroup/{{delivery.deliveryId}}/{{rndgroup.rndgroupid}}" method="POST" >
+<div class="list" >
+    {% for key ,agroup in roundstree %}
+     <div class="group row">
+         <div class="rgid" >{{agroup["group"].RndgroupId}}: </div>
+         <div class="name" >{{agroup["group"].Name}}</div>
+         <div class="num" >{{agroup["group"].Households}}</div>
+         <div class="num" >{{agroup["group"].Target}}</div>
+         <div class="num" >{{agroup["group"].Completed}}</div>
+         <div class="button" ><a class="button" href = "/round/managesubgroup/{{delivery.deliveryId}}/{{rndgroup.rndgroupid}}/{{agroup['group'].RndgroupId}}" >View</a></div>
+     </div>
 
+  <div id="tree"  >
+    {% for key2, asubgroup in agroup %}
+    {% for key3, arnd in asubgroup %}
+      {% set ag = arnd.agent %}
+       {% set ncol= color[ag] %}
+      <div class="row" >
+        <div class="rgid">{{arnd.label}}</div>
+        <div class="name">{{arnd.name}}</div>
+        <div class="num">{{arnd.households}}</div>
+        <input class="hidden" type="hidden" name="rndid[]" value="{{arnd.roundid}}"/>
+        <input class="target" type="text" name="target[]" value="{{arnd.target}}"/>
+        <input class="completed" type="text" name="completed[]" value="{{arnd.completed}}"/>
+        <input class="agent" style="background-color:{{ncol}}" type="text" name="agent[]" value="{{arnd.agent}}"/>
+      </div>
     {% endfor %}
+    {% endfor %}
+    </div>
+    {% endfor %}
+    <div class="button"><button type="submit" name="submit">Update</button></div>
+  </form>
   </div>
+  </div>
+  <div class="mapsection" style="background-color:pink;">
+<div class="map" >
+  <div id="goodmapid" ></div>
+</div>
+{% dump(rndgroup) %}
+     {% set geodata = rndgroup.getGeodata_json() %}
+  {% dump(geodata) %}
+<script >
+var mymap = myGoodMap("{{geodata}}");
+
+  var i=1;
+  {% for key2 , arndgrp in roundstree %}
+  {% for key3 , arnd in arndgrp.children %}
+  var htmltext = "<html> <h1>{{arnd.name}}</h1><div> <a class=\"button\" href = \"/delivery/scheduleround/{{delivery.deliveryId}}/{{key2}}\" >VIEW</a></div>";
+
+    {% if arnd.kml  %}
+    {% if "xx" in arnd.agent or "XX" in arnd.agent or arnd.agent == "" %}
+      var style = {"color":   "#666666" , "weight": 4 ,  "clickable": true ,"opacity": 1.0, "fillOpacity": 1.0 };
+    {% else %}
+    {% set ag = arnd.agent %}
+       {% set ncol= color[ag] %}
+        var style = {"color":  "{{ncol}}" , "weight": 4 ,  "clickable": true ,"opacity": 1.0, "fillOpacity": 1.0 };
+    {% endif %}
+
+    var  kml = "{{arnd.kml}}";
+    var path = "{{mappath}}rounds/"+kml;
+    if(kml)
+    {
+       makeKMLLayer(mymap,path,style,true,htmltext);
+    }
+    {% endif %}
+
+    i=i+1;
+    {% endfor %}
+    {% endfor %}
+
+
+    setMarkers(mymap,"{{geodata}}");
+    setBoundsGeodata(mymap,"{{geodata}}");
+  </script>
+</div>
+</div>
 {% endif %}
 </div>
+
+
+
 
 
 {% endblock %}

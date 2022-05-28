@@ -118,10 +118,8 @@ public function getGeodata()
     }
 
 
-   public function getjson()
+   public function xgetjson()
    {
-
-
    $str ="{";
    $str .=  '"name":"'.$this->Name.'",';
    $str .=  '"districtid":"'.$this->DistrictId.'",';

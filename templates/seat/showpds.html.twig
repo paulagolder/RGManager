@@ -1,4 +1,4 @@
-{# views/seat/showone.html.twig #}
+{# views/seat/showpds.html.twig #}
 
 {% extends 'rgmaster.html.twig' %}
 
@@ -33,14 +33,12 @@
 
 
    {% for key,value in pds %}
-
-
      <div  class="row indent id">
-        <div  id="{{value.pollingdistrictid}}" class="rgid" >
-         <a class="routebutton"  href ="/pollingdistrict/show/{{value.pollingdistrictid}}" >{{value.pollingdistrictid}}</a> </div>
+        <div  id="{{value.pdid}}" class="rgid" >
+         <a class="routebutton"  href ="/pollingdistrict/show/{{value.pdid}}" >{{value.pdid}}</a> </div>
           <div class="bnum"> H:{{value.households}}</div>
-          <div  class="button" > <a class="button"  href ="/pollingdistrict/show/{{value.pollingdistrictid}}" >View</a> </div>
-           <div class="button"> <a class="button" href = "/seat/removepd/{{seat.districtid}}/{{seat.seatid}}/{{value.pollingdistrictid}}" >Remove</a> </div>
+          <div  class="button" > <a class="button"  href ="/pollingdistrict/show/{{value.pdid}}" >View</a> </div>
+           <div class="button"> <a class="button" href = "/seat/removepd/{{seat.districtid}}/{{seat.seatid}}/{{value.pdid}}" >Remove</a> </div>
        </div>
           {% endfor %}
 
@@ -49,7 +47,7 @@
       <button type="submit">Add Polling District</button>
     <select name="selpd">
 {% for apd in sparepds %}
-    <option value="{{apd.pollingdistrictid}}">{{apd.pollingdistrictid}}</option>
+    <option value="{{apd.pdid}}">{{apd.pdid}}</option>
 {% endfor %}
 </select>
   </form>
@@ -61,12 +59,14 @@
 
 
 <div class="map" >
-  <div id="swmapid" ></div>
+  <div id="goodmapid" ></div>
 </div>
+{% dump(seat) %}
+     {% set geodata = seat.getGeodata_json() %}
+  {% dump(geodata) %}
+<script >
+var mymap = myGoodMap("{{geodata}}");
 
-  {% set jslocation = seat.getjson() %}
-  <script  type="text/javascript" >
-      var mymap = mySwMap("{{jslocation}}");
       {% if  seat.kml %}
       var aspath = "{{mappath}}outlines/{{seat.kml}}";
       if("{{seat.kml}}")
@@ -98,7 +98,8 @@
            i=i+1;
            if(i>11) i=0;
  {% endfor %}
-
+   setMarkers(mymap,"{{geodata}}");
+   setBounds2(mymap,"{{geodata}}");
 
    </script>
    {% endif %}

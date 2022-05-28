@@ -1,4 +1,4 @@
-{# round/managerounds.html.twig #}
+{# delivery/managerounds.html.twig #}
 
 {% extends 'dvymaster.html.twig' %}
 
@@ -34,8 +34,9 @@
     <div class="label"> Delivery </div>
     <div class="value"> {{delivery.deliveryId}}:</div>
     <div class="value"> {{delivery.Name }}</div>
-     <div class="value">({{delivery.Completed}}/{{delivery.Households}})</div>
+     <div class="value">({{delivery.Target}}/{{delivery.Completed}})</div>
     <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+     <div class="button  right"> <a class="button" href = "/delivery/agents/{{delivery.deliveryId}}" >Agents </a> </div>
 </div>
 <div class="heading row">
     <div class="label"> Manage Rounds</div>
@@ -61,6 +62,58 @@
 
     {% endfor %}
   </div>
+ <div class="map" >
+  <div id="goodmapid" ></div>
+</div>
+{% dump(delivery) %}
+     {% set geodata = delivery.getGeodata_json() %}
+  {% dump(geodata) %}
+<script >
+var mymap = myGoodMap("{{geodata}}");
+  var i=1;
+  {% for key2 , agrp in roundstree %}
+  {% for key3 , asubgrp in agrp.children %}
+  {% for key4 ,arnd in asubgrp.children %}
+  var htmltext = "<html> <h1>{{arnd.name}}</h1><div> <a class=\"button\" href = \"/delivery/scheduleround/{{delivery.deliveryId}}/{{key4}}\" >VIEW</a></div>";
+
+    {% if arnd.kml  %}
+     var  kml = "{{arnd.kml}}";
+      var path = "{{mappath}}rounds/"+kml;
+    {% if "xx" in arnd.agent or "XX" in arnd.agent %}
+       kml= null;
+    {% elseif  arnd.agent == "" or arnd.agent == null %}
+      var style = {"color":   "#FF0000" , "weight": 4 ,  "clickable": true ,"opacity": 1.0, "fillOpacity": 1.0 };
+    {% else %}
+      var style = {"color":  getColor(i) , "weight": 4 ,  "clickable": true ,"opacity": 1.0, "fillOpacity": 1.0 };
+         i=i+1;
+        if(i>6) i=1;
+   {% endif %}
+
+    if(kml)
+    {
+       makeKMLLayer(mymap,path,style,true,htmltext);
+    }
+
+
+
+
+    {% endif %}
+
+
+    {% endfor %}
+      {% endfor %}
+        {% endfor %}
+    var kml = "{{delivery.KML}}";
+    var path = "{{mappath}}outlines/"+kml;
+    if(kml)
+    {
+    var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.9, "fillOpacity": 0.0 };
+    makeOutlineKml(mymap,path,style,false,"{{delivery.name}}")
+    }
+
+
+    setBoundsGeodata(mymap,"{{geodata}}");
+  </script>
 {% endif %}
 </div>
 

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Round;
+use App\Entity\Roadgroup;
 use App\Entity\RoundtoRoadgroup;
 use Doctrine\ORM\EntityRepository;
 
@@ -77,8 +78,21 @@ class RoundRepository  extends EntityRepository
        $qb->setParameter('dvid', $delivery->getDeliveryId());
        $qb->orderBy("p.RoundId", "ASC");
        $rounds =  $qb->getQuery()->getResult();
+    return $rounds;
+  }
 
-
+    public function findSubgroupRounds($delivery,$group,$subgroup)
+  {
+     $conn = $this->getEntityManager()->getConnection();
+       $qb = $this->createQueryBuilder("p");
+       $qb->where("p.DeliveryId = :dvid");
+       $qb->setParameter('dvid', $delivery);
+          $qb->andwhere("p.RggroupId = :rggroupid");
+       $qb->setParameter('rggroupid', $group);
+         $qb->andwhere("p.RgsubgroupId = :rgsubgroupid");
+       $qb->setParameter('rgsubgroupid', $subgroup);
+       $qb->orderBy("p.RoundId", "ASC");
+       $rounds =  $qb->getQuery()->getResult();
     return $rounds;
   }
 
@@ -152,17 +166,16 @@ class RoundRepository  extends EntityRepository
      }
 
 
-      public function getRoadgroups($rnid)
+      public function getRoadgroups($rnid , $thisyear)
      {
         $conn = $this->getEntityManager()->getConnection();
         $sql = 'select rg.*  from roundtoroadgroup as r , roadgroup rg  where r.roundid ='.$rnid.' and r.roadgroupid = rg.roadgroupid order by rg.roadgroupid';
-      //  $em->createQuery
-      //$users = $query->getResult();
         $stmt = $conn->executeQuery($sql);
-        $roadgroups= $stmt->fetchAll();
+        $roadgroups= $stmt->fetchAll(\Doctrine\ORM\Query::HYDRATE_ARRAY);
         $rgsarray = array();
         foreach($roadgroups as $roadgroup)
         {
+
            $rgsarray[$roadgroup["roadgroupid"]] = $roadgroup;
         }
         return $rgsarray;

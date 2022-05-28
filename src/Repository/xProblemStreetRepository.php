@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityRepository;
 
 
 
-class ProblemStreetRepository  extends EntityRepository
+class xProblemStreetRepository  extends EntityRepository
 {
 
     public function findAll()

@@ -22,6 +22,16 @@ pollingdistrict_showone:
    path: /pollingdistrict/show/{pdid}
    controller: App\Controller\PollingDistrictController::showone
 
+pollingdistrict_showall:
+   path: /pollingdistrict/showall
+   controller: App\Controller\PollingDistrictController::showall
+
+pollingdistrict_showstreets:
+   path: /pollingdistrict/showstreets/{pdid}
+   controller: App\Controller\PollingDistrictController::showstreets
+
+
+
 delivery_schedule:
    path: /delivery/scheduledelivery/{dvyid}
    controller: App\Controller\DeliveryController::scheduledelivery
@@ -43,7 +53,9 @@ delivery_scheduleround:
    controller: App\Controller\DeliveryController::scheduleround
 
 
-
+delivery_agents:
+   path: /delivery/agents/{dvyid}
+   controller: App\Controller\DeliveryController::showagents
 
 
 
@@ -125,9 +137,12 @@ delivery_exportcsv:
 
 
 delivery_manage:
-   path: /round/manage/{dvyid}
-   controller: App\Controller\RoundController::manage
+   path: /delivery/manage/{dvyid}
+   controller: App\Controller\DeliveryController::manage
 
+delivery_updategroup:
+   path: /delivery/updategroup/{dvyid}/{grpid}
+   controller: App\Controller\DeliveryController::updategroup
 
 round_manage_round:
    path: /round/managegroup/{dvyid}/{grpid}
@@ -143,9 +158,25 @@ round_update:
    path: /round/updateround/{dvyid}/{grpid}/{sgrpid}
    controller: App\Controller\RoundController::updateround
 
+round_update_subgroup:
+   path: /round/updatesubgroup/{dvyid}/{grpid}/{sgrpid}
+   controller: App\Controller\RoundController::updatesubgroup
+
+round_update_group:
+   path: /round/updategroup/{dvyid}/{grpid}
+   controller: App\Controller\RoundController::updategroup
+
 round_delete:
    path: /round/deleteround/{dvyid}/{rndid}
    controller: App\Controller\RoundController::deleteround
+
+round_zero:
+   path: /round/zeroround/{dvyid}/{rndid}
+   controller: App\Controller\RoundController::zeroround
+
+round_zerosubgroup:
+   path: /round/zerosubgroup/{dvyid}/{grpid}/{sgrpid}
+   controller: App\Controller\RoundController::zerosubgroup
 
 round_updatestats:
    path: /round/update/{dvyid}/{rndid}
@@ -186,9 +217,7 @@ seats_addpd:
    path: /seat/addpollingdistrict/{dtid}/{stid}
    controller: App\Controller\SeatController::addpd
 
-pd_showall:
-   path: /pollingdistrict/showall
-   controller: App\Controller\PollingDistrictController::showall
+
 
 rggroups_all:
     path: /rggroup/showall
@@ -206,9 +235,17 @@ rggroups_edit:
     path: /rggroup/edit/{rgid}
     controller: App\Controller\RggroupController::edit
 
+rggroups_heat:
+    path: /rggroup/showheatmap/{rgid}
+    controller: App\Controller\RggroupController::heatmap
+
 rggroups_delete:
     path: /rggroup/delete/{rgid}
     controller: App\Controller\RggroupController::delete
+
+rggroups_update:
+    path: /rggroup/updategroup/{wdid}
+    controller: App\Controller\RggroupController::updategroup
 
 rggroups_export:
     path: /rggroup/export
@@ -226,9 +263,18 @@ rgsubgroups_show_one:
     path: /rgsubgroup/show/{swdid}
     controller: App\Controller\RggroupController::showsubgroup
 
+rgsubgroups_update:
+    path: /rgsubgroup/update/{swdid}
+    controller: App\Controller\RggroupController::updatesubgroup
+
 rgsubgroups_new:
     path: /rgsubgroup/new/{wdid}
     controller: App\Controller\RggroupController::newsubgroup
+
+rgsubgroups_add_roadgroup:
+    path:  /rggroup/addroadgroup/{wdid}/{swdid}/{rgid}
+    controller: App\Controller\RggroupController::addroadgroup
+
 
 rgsubgroups_edit:
     path: /rgsubgroup/edit/{swdid}
@@ -258,6 +304,10 @@ roadgroups_edit:
     path: /roadgroup/edit/{rgid}
     controller: App\Controller\RoadgroupController::edit
 
+roadgroups_removefromsubgroup:
+    path: /roadgroup/removefromsubgroup/{rgid}
+    controller: App\Controller\RoadgroupController::removefromsubgroup
+
 roadgroups_delete:
     path: /roadgroup/delete/{rgid}
     controller: App\Controller\RoadgroupController::delete
@@ -270,9 +320,9 @@ roadgroups_upload:
     path: /roadgroup/upload
     controller: App\Controller\RoadgroupController::upload
 
-roadgroups_newkml:
-    path: /roadgroup/newkml/{rgid}
-    controller: App\Controller\RoadgroupController::exportkml
+roadgroups_update:
+    path: /roadgroup/update/{rgid}
+    controller: App\Controller\RoadgroupController::updateroadgroup
 
 roadgroups_pdsd:
     path: /roadgroup/showpds
@@ -299,30 +349,42 @@ streets_problem:
     controller: App\Controller\StreetController::showproblems
 
 street_edit:
-    path: /street/edit/{rdname}/{rdpart}
+    path: /street/edit/{rdseq}
     controller: App\Controller\StreetController::streetedit
     defaults:
         rdpart: /
 
+street_editbyseq:
+    path: /street/editbyseq/{rdseq}
+    controller: App\Controller\StreetController::streetedit
+
+
 street_editgroup:
-    path: /street/editgroup/{name}
-    controller: App\Controller\StreetController::streetviewgroup
+    path: /street/editgroup/{rdseq}
+    controller: App\Controller\StreetController::streetviewgroupbyseq
 
 
 street_viewgroup:
-    path: /street/viewgroup/{name}
-    controller: App\Controller\StreetController::streetviewgroup
+    path: /street/viewgroup/{rdname}
+    controller: App\Controller\StreetController::streetviewgroupbyname
+
+street_viewgroupbyseq:
+    path: /street/viewgroupbyseq/{rdseq}
+    controller: App\Controller\StreetController::streetviewgroupbyseq
+
 
 street_remove:
-     path: /street/remove/{rgid}/{stname}/{stpart}
+     path: /street/remove/{rgid}/{rdseq}
      controller: App\Controller\StreetController::streetremove
-     defaults:
-        stpart: null
+
 
 street_add:
      path: /street/add/{rgid}
      controller: App\Controller\StreetController::streetadd
 
+street_import:
+     path: /street/streetimport
+     controller: App\Controller\StreetController::streetimport
 
 
 street_delete:

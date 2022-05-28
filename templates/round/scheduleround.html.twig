@@ -46,7 +46,6 @@
     <div  class="num" >TG:{{around.target}}</div>
     <div  class="num" >CD:{{around.completed}}</div>
     <div  class="num" >RG:{{around.roadgroups}}</div>
-    <div  class="num" >KML:{{around.kml}}</div>
     <div class="button wide right"> <a class="wide button" href = "/round/update/{{delivery.deliveryId}}/{{around.roundid}}" >Update Round</a> </div>
   </div>
 
@@ -113,19 +112,13 @@
     </ul>
 {% endif %}
 <div class="map" >
-  <div id="wmapid" ></div>
+  <div id="goodmapid" ></div>
 </div>
-{% set jslocation = delivery.getjson() %}
-{% set abounds = bounds | json_encode | raw %}
-<script>
-  toggle();
-</script>
+
+{% set geodata = around.getGeodata_json() %}
+{% dump(geodata) %}
 <script >
-
-  var mymap = myWMap("{{jslocation}}");
-  var wardlayer = null;
-  var fgroup =  new L.featureGroup();
-
+  var mymap = myGoodMap("{{geodata}}");
   var i=0;
 
       {% for keyrg, rg in roadgroups %}
@@ -158,8 +151,8 @@
         {% endfor %}
 
 
-     /* setMarkers(mymap,"{{abounds}}");*/
-      setBounds2(mymap,"{{abounds}}");
+      setMarkers(mymap,"{{geodata}}");
+      setBounds2(mymap,"{{geodata}}");
     </script>
 </div>
 {% endblock %}

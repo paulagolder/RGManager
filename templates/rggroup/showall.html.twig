@@ -18,7 +18,7 @@
 
 {% block middle %}
 <div class="heading  row">
-  <div class="label"> All RG-Groups</div>
+  <div class="label">All RG-Groups::</div>
   <div class="button  right"> <a class="button" href = "/" >{{'back'}} </a> </div>
 </div>
 
@@ -31,10 +31,10 @@
                        <div class="rgid">RG-GroupId</div>
                        <div class="name">Name</div>
                          <div class="num">House-holds</div>
-                         <div class="num">Totaled House-holds</div>
+                         <div class="num">Electors</div>
                          <div class="num">No. Road-groups</div>
                          <div class="num">No. Maps</div>
-                     </div>
+  </div>
 <div class="list">
     <div id="wards" >
        {% for rggroup in rggroups %}
@@ -42,10 +42,11 @@
                        <div class="rgid" id="{{rggroup.rggroupid}}" >{{rggroup.rggroupid}}</div>
                         <div class="name" >{{rggroup.name}}</div>
                          <div class="num" >{{rggroup.households}}</div>
-                         <div class="num" >({{rggroup.total}})</div>
+                         <div class="num" >({{rggroup.electors}})</div>
                          <div class="num"> {{rggroup.roadgroups}}</div>
-                         <div class="num"> {{rggroup.rgfound}}</div>
+                         <div class="num"> {{rggroup.mapsfound}}</div>
                         <a class="button" href = "/rggroup/show/{{rggroup.rggroupid}}" >VIEW</a>
+                        <a class="button" href = "/rggroup/showheatmap/{{rggroup.rggroupid}}" >HEAT</a>
                         <a class="button" href = "/rggroup/edit/{{rggroup.rggroupid}}" >EDIT</a>
                      </div>
        {% endfor %}
@@ -74,21 +75,19 @@
 {% endif %}
 </div>
 <div class="map" >
-  <div id="wmapid" ></div>
+  <div id="goodmapid" ></div>
 </div>
-  {% set abounds = bounds | json_encode | raw %}
+  {% set ageodata = geodata | json_encode|raw  %}
+  {% dump(ageodata) %}
 <script >
-
-var jslocation = '{ "name":"LCC","longitude":"-1.8304","latitude":"52.6854" }';
-
-var mymap = myWMap(jslocation);
+var mymap = myGoodMap("{{ageodata}}");
 
 var i=0;
 
-{% for key,asubgroup in rggroups %}
+{% for key,agroup in rggroups %}
 
  var countsgs = 0;
-{% for roadgroup in asubgroup.roadgroups %}
+{% for roadgroup in agroup.roadgrouplist %}
     var style = {"color":  getColor(i) , "weight": 4 ,  "clickable": true ,"opacity": 1.0, "fillOpacity": 1.0 };
       var  kml = "{{roadgroup.kml}}";
       var path = "{{mappath}}roadgroups/"+kml;
@@ -101,7 +100,7 @@ var i=0;
 
   if(countsgs > 0)
   {
-    var h2s = document.getElementById("{{asubgroup.rggroupid}}");
+    var h2s = document.getElementById("{{agroup.rggroupid}}");
     h2s.style.backgroundColor = getColor(i);
     i=i+1;
     if(i>11)i=0;
@@ -112,8 +111,7 @@ var i=0;
    var style = {"color":  "#0000FF" , "weight": 5 ,  "clickable": true ,"opacity": 0.2, "fillOpacity": 1.0};
    makeOutlineKml(mymap, path,style,false,"All RG-Groups");
 }
-
-  //drawBox(mymap,"{{abounds}}");
-  setBounds2(mymap,"{{abounds}}");
+  setMarkers(mymap,"{{ageodata}}");
+  setBounds2(mymap,"{{ageodata}}");
 </script>
 {% endblock %}

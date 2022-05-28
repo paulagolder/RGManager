@@ -42,12 +42,14 @@
 </div>
 </div>
 <div class="map" >
-  <div id="rgmapid" ></div>
+  <div id="goodmapid" ></div>
 </div>
 
- {% set geodata = district.getGeodata_json %}
+  {% set geodata = district.getGeodata_json() %}
+  {% dump(geodata) %}
+
  <script  type="text/javascript" >
-     var mymap = rgMap("{{geodata}}");
+     var mymap = myGoodMap("{{geodata}}");
  {% if  district.kml %}
       var aspath = "{{mappath}}outlines/{{district.kml}}";
       if("{{district.kml}}")

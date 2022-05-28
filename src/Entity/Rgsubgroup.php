@@ -47,11 +47,56 @@ class Rgsubgroup
   private $Roadgroups;
 
 
+    /**
+   * @ORM\Column(name="streets",type="integer",  nullable=true)
+   */
+  private $Streets;
+
+   /**
+   * @ORM\Column(name="geodata",type="string",  nullable=true)
+   */
   private $Geodata;
 
+
+      /**
+   * @ORM\Column(name="PLVW",type="integer",  nullable=true)
+   */
+  private $PLVW;
+  /**
+   *
+   *                /**
+   * @ORM\Column(name="PLVN",type="integer",  nullable=true)
+   */
+   private $PLVN;
+
+
   private $Completed;
-    private $Target;
+  private $Target;
   private $KML;
+
+
+      public function getPLVW()
+    {
+      return $this->PLVW;
+    }
+
+    public function setPLVW($number): self
+    {
+      $this->PLVW = $number;
+      return $this;
+    }
+
+
+    public function getPLVN()
+    {
+      return $this->PLVN;
+    }
+
+    public function setPLVN($number): self
+    {
+      $this->PLVN = $number;
+      return $this;
+    }
 
      public function getKML(): ?string
     {
@@ -203,7 +248,24 @@ public function getRoadgroups()
         return $this;
     }
 
+  public function getStreets()
+   {
+     return $this->Streets;
+   }
 
+   public function setStreets($number): self
+   {
+     $this->Streets = $number;
+
+     return $this;
+   }
+
+     public function addStreets($number): self
+    {
+        $this->Streets += $number;
+
+        return $this;
+    }
 
 
    public function setRoadgrouplist($list): self
@@ -243,37 +305,15 @@ public function setGeodata($text)
    $this->Geodata= $text_json;
 }
 
+public function getGeodata_obj()
+{
+ $ngeodata = new Geodata;
 
-    public function initGeodata()
-    {
-          $geodata = array();
-          $geodata["dist"]=-1;
-          $geodata["maxlat"]=null;
-          $geodata["midlat"]=null;
-          $geodata["minlat"]=null;
-          $geodata["maxlong"]=null;
-          $geodata["midlong"]=null;
-          $geodata["minlong"]=null;
-          $this->Geodata = json_encode($geodata);
-    }
+ return  $ngeodata->loadGeodata($this->getGeodata());
+}
 
 
-    public function expandbounds($bounds)
-     {
-     if (!$bounds) return ;
-     $thisbounds= $this->getGeodata();
-      if(!array_key_exists("minlat",  $this->getGeodata())) return;
-          if(!array_key_exists("minlat", $bounds)) return;
-        if($thisbounds["minlat"] === null)  $thisbounds["minlat"] =  $bounds["minlat"];
-        if($thisbounds["maxlong"] === null)  $thisbounds["maxlong"] =  $bounds["maxlong"];
-        if(($bounds["minlat"] !== null) && ($thisbounds["minlat"] >  $bounds["minlat"])) $thisbounds["minlat"] = $bounds["minlat"];
-        if(($bounds["maxlong"] !== null) && ($thisbounds["maxlong"] <  $bounds["maxlong"])) $thisbounds["maxlong"] = $bounds["maxlong"];
-         if($thisbounds["maxlat"] === null)  $thisbounds["maxlat"] =  $bounds["maxlat"];
-        if($thisbounds["minlong"] === null)  $thisbounds["minlong"] =  $bounds["minlong"];
-      if(($bounds["maxlat"] !== null) && ( $thisbounds["maxlat"] < $bounds["maxlat"]))  $thisbounds["maxlat"]= $bounds["maxlat"];
-      if(($bounds["minlong"] !== null) && ( $thisbounds["minlong"] > $bounds["minlong"]))  $thisbounds["minlong"] = $bounds["minlong"];
-      $this->setGeodata($thisbounds);
-     }
+
 
 
    public function getjson()

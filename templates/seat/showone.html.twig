@@ -59,14 +59,13 @@
    {% endfor %}
 </div>
 <div class="map" >
-  <div id="swmapid" ></div>
+  <div id="goodmapid" ></div>
 </div>
-
-  {% set jslocation = seat.getjson() %}
-  {% set abounds = bounds | json_encode | raw %}
-
-  <script  type="text/javascript" >
-      var mymap = mySwMap("{{jslocation}}");
+{% dump(seat) %}
+     {% set geodata = seat.getGeodata_json() %}
+  {% dump(geodata) %}
+<script >
+var mymap = myGoodMap("{{geodata}}");
  {% if  seat.kml %}
       var aspath = "{{mappath}}outlines/{{seat.kml}}";
       if("{{seat.kml}}")
@@ -96,9 +95,8 @@
            if(i>11)i=0;
       {% endfor %}
      {% endfor %}
-    {% dump(abounds) %}
-     setMarkers(mymap,"{{abounds}}");
-     setBounds2(mymap,"{{abounds}}");
+     setMarkers(mymap,"{{geodata}}");
+     setBounds2(mymap,"{{geodata}}");
    </script>
    {% endif %}
    </div>

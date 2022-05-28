@@ -25,6 +25,7 @@ class NewRgsubgroupForm extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => Rgsubgroup::class,
+                'csrf_protection' => false,
         ));
     }
 }

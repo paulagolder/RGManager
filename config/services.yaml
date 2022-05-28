@@ -41,6 +41,11 @@ services:
     # please note that last definitions always *replace* previous ones
 
 
+    App\Controller\Roadgroupcontroller:
+        class: App\Controller\Roadgroupcontroller
+
+
+
    # App\Service\FileUploader:
    #     arguments:
     #        $targetDir: '%new-maps-folder%'

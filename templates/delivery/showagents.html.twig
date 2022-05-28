@@ -1,0 +1,82 @@
+{# views/delivery/scheduledelivery.html.twig #}
+
+{% extends 'dvymaster.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="{{ asset('/css/delivery.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+<link href="{{ asset('/css/tree.css') }}" rel="stylesheet" />
+{% endblock %}
+{% block js %}
+{{ parent() }}
+<script src="{{asset('js/maps.js')}}"></script>
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+<script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
+<script src="{{asset('js/L.KML.js')}}"></script>
+<script src="{{asset('js/tree.js')}}"></script>
+
+{% endblock %}
+
+
+{% block middle %}
+<div class="delivery">
+
+
+  {% if message %}
+  <div class="heading row">
+    <div class="label">Delivery </div>
+  </div>
+  <H1> No deliverys found </H1>
+
+  {% else %}
+
+<div class="heading row">
+    <div class="label"> Delivery</div>
+    <div class="value"> {{delivery.deliveryId}}:</div>
+    <div class="value"> {{delivery.Name}}</div>
+    <div class="value">HH:{{delivery.Households}}</div>
+    <div class="value">TG:{{delivery.Target}}</div>
+    <div class="value">CD:{{delivery.Completed}}</div>
+    <div class="value">RG:{{delivery.Roadgroups}}</div>
+    <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+</div>
+
+
+<div class="subheading row">
+    <div class="name" >Agents</div>
+    <div  class="num" >Target</div>
+    <div  class="num" >Completed</div>
+    <div  class="num" >Roadgroups</div>
+</div>
+
+
+  <div id="tree"  >
+    {% for key ,agent in agents %}
+    <div class="row" >
+      <div class="name"> {{agent.label}}</div>
+      <div class="num">{{agent.target}}</div>
+      <div class="num">{{agent.completed}}</div>
+      <div class="num">{{agent.round}}</div>
+    </div>
+    {% endfor %}
+  </div>
+
+
+
+
+
+  <div class="map" >
+    <div id="goodmapid" ></div>
+  </div>
+
+  {% set geodata = delivery.getGeodata_json() %}
+  {% dump(geodata) %}
+  <script >
+    var mymap = myGoodMap("{{geodata}}");
+
+  </script>
+
+
+{% endif %}
+{% endblock %}

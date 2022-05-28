@@ -10,22 +10,12 @@ use Doctrine\ORM\EntityRepository;
 class RggroupRepository  extends EntityRepository
 {
 
-     public function xfindAll()
-     {
-        $conn = $this->getEntityManager()->getConnection();
-       // $sql = 'select w.*, sum(rg.households) as total from rggroup as w left join roadgroup as rg on rg.rggroupid= w.rggroupid group by w.rggroupid';
-        $sql = 'select rg.* from rggroup as rg';
-        $stmt = $conn->prepare($sql);
-        $stmt->execute();
-        $groups= $stmt->fetchAll();
-        return $groups;
-     }
 
     public function findAll()
     {
        $qb = $this->createQueryBuilder("p");
-       $roadgroups =  $qb->getQuery()->getResult();
-       return $roadgroups;
+       $rggroups =  $qb->getQuery()->getResult();
+       return $rggroups;
     }
 
     public function findone($wdid)
@@ -37,23 +27,5 @@ class RggroupRepository  extends EntityRepository
        $group =  $qb->getQuery()->getOneOrNullResult();
        return $group;
     }
-
-     public function countHouseholds($wdid,$year)
-     {
-        $conn = $this->getEntityManager()->getConnection();
-        $sql = ' Select SUM(r.households) as nos FROM roadgroup as rg , roadgrouptostreet as rs , street as r  where rg.roadgroupid= rs.roadgroupid and rs.street = r.name  and rs.part = r.part and rg.rggroupid="'.$wdid.'" and rs.year ="'.$year.'" and rg.year ="'.$year.'" ';
-         $stmt = $conn->prepare($sql);
-         $stmt->execute();
-         $harray= $stmt->fetchAll();
-      if(array_key_exists(0, $harray ))
-      {
-
-      return $harray[0]["nos"];
-      }
-      else
-        return 0;
-     }
-
-
 
 }

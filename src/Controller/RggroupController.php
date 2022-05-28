@@ -19,7 +19,9 @@ use App\Form\Type\RgsubgroupForm;
 use App\Entity\Rggroup;
 use App\Entity\Rgsubgroup;
 use App\Entity\Roadgroup;
+use App\Entity\Geodata;
 use App\Service\MapServer;
+use App\Controller\Roadgroupcontroller;
 
 //use App\Service\PDF;
 //use Fpdf\Fpdf;
@@ -56,22 +58,18 @@ class RggroupController extends AbstractController
     {
       return $this->render('rggroup/showone.html.twig', [  'rgyear'=>$this->rgyear, 'message' =>  'rggroups not Found',]);
     }
-    $bounds = $this->mapserver->newBounds();
-    for($i=0; $i<count($rggroups); $i++)
+    $geodata = new Geodata();
+     for($i=0; $i<count($rggroups); $i++)
     {
       $rggroup = $rggroups[$i];
       $rgs = $this->getDoctrine()->getRepository("App:Roadgroup")->findRoadgroupsinRGGroup($rggroup->getRggroupid(),$this->rgyear);
       $nrg = 0;
-      $sumhh=0;
+      $geodata->mergeGeodata_obj($rggroup->getGeodata_obj());
+
       for($j=0;$j<count($rgs);$j++)
       {
         $rgid = $rgs[$j]->getRoadgroupId();
         $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
-        dump( $aroadgroup->getGeodata());
-        $bounds = $this->mapserver->expandboundsobj($bounds, $aroadgroup->getGeodata());
-        $hh = $rgs[$j]->getHouseholds();
-        $sumhh += $hh;
-      //  $mpath = $maproot."roadgroups/".$rgid.".kml";
         $kml = $rgs[$j]->getKML();
         if($kml)
         {
@@ -79,20 +77,17 @@ class RggroupController extends AbstractController
           $mpath = str_replace("//","/",$mpath);
           if(file_exists($mpath))
           {
-            $rgs[$j]->setKML( $kml);
             $nrg++;
           }
         }
 
       }
-      $rggroup->total= $sumhh;
-      $rggroup->roadgroups= count($rgs);
-      $rggroup->rgfound= $nrg;
+
+      $rggroup->mapsfound= $nrg;
       $rggroup->roadgrouplist= $rgs;
-      $rggroup->roadgroups= count($rgs);
+      $rggroup->setRoadgroups(count($rgs));
       $rggroups[$i]=$rggroup;
     }
-
     $extraroadgroups =  $this->getDoctrine()->getRepository("App:Roadgroup")->findLooseRoadgroups();
     return $this->render('rggroup/showall.html.twig',
     [
@@ -100,7 +95,7 @@ class RggroupController extends AbstractController
     'message' =>  '' ,
     'heading' => 'The rggroups',
     'topmap'=>$topmap,
-    'bounds'=> $bounds,
+    'geodata'=> $geodata->getGeodata_str(),
     'rggroups' => $rggroups,
     'roadgroups' => $extraroadgroups,
     ]);
@@ -114,16 +109,13 @@ class RggroupController extends AbstractController
     {
       return $this->render('rggroup/showone.html.twig', [    'rgyear'=>$this->rgyear,'message' =>  'rggroup not Found',]);
     }
-    if(!$this->mapserver->ismap($rggroup->getKML()))
+    if(!$rggroup->getKML() or !$this->mapserver->ismap($rggroup->getKML()))
     {
       $rggroup->setKML($this->mapserver->findmap($rggroup->getRggroupid(),$this->rgyear));
     }
-      $rggroup->setHouseholds($this->getDoctrine()->getRepository("App:Rggroup")->countHouseholds($rggroup->getRggroupid(), $this->rgyear));
-
     $subgroups = $this->getDoctrine()->getRepository("App:Rgsubgroup")->findChildren($wdid);
-
+     $spareroadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findSpareRoadgroupsinGroup($wdid);
     $sglist = array();
-    $bounds = $this->mapserver->newBounds();
     foreach ($subgroups as $asubgroup)
     {
       $swid =  $asubgroup->getRgsubgroupid();
@@ -131,30 +123,22 @@ class RggroupController extends AbstractController
       $rglist= array();
       $totalhh=0;
       $calchh= 0;
-      foreach ($roadgroups as $aroadgroup)
+     foreach ($roadgroups as $aroadgroup)
       {
-        $bounds = $this->mapserver->expandboundsobj($bounds, $aroadgroup->getGeodata());
-        $totalhh += $aroadgroup->getHouseholds();
-        if(!$this->mapserver->ismap($aroadgroup->getKML()))
-        {
-          //$aroadgroup->setKML($this->mapserver->findmap($aroadgroup->getRoadgroupid(),$this->rgyear));
-        }
         $rglist[$aroadgroup->getRoadgroupid()]=$aroadgroup->getKML();
-        $hh = $this->getDoctrine()->getRepository("App:Roadgroup")->countHouseholds($aroadgroup->getRoadgroupId(),$this->rgyear);
-        $calchh += $hh;
       }
       $sglist[$swid]=$rglist;
       $asubgroup->total= $totalhh;
       $asubgroup->calculated =$calchh;
     }
     $extraroadgroups =  $this->getDoctrine()->getRepository("App:Roadgroup")->findLooseRoadgroups();
+    dump($rggroup);
     return $this->render('rggroup/showone.html.twig',
     [
     'rgyear'=>$this->rgyear,
     'message' =>  '' ,
     'rggroup'=> $rggroup,
     'subgroups'=> $subgroups,
-    'bounds'=> $bounds,
     'roadgroups'=>$extraroadgroups,
     'sglist'=>$sglist,
     'back'=>"/rggroup/showall"
@@ -244,14 +228,7 @@ class RggroupController extends AbstractController
     $rggroupid =  $subgroup->getRggroupid();
     $rggroup = $this->getDoctrine()->getRepository("App:Rggroup")->findOne($rggroupid);
     $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($swdid, $this->rgyear);
-    $bounds = $this->mapserver->newBounds();
-    foreach ($roadgroups as &$aroadgroup)
-    {
-      $bounds = $this->mapserver->expandboundsobj($bounds, $aroadgroup->getGeodata());
-      $est = $this->getDoctrine()->getRepository("App:Roadgroup")->countHouseholds($aroadgroup->getRoadgroupId(),$this->rgyear);
-      $aroadgroup->{"calculated"} = $est;
-    }
-
+    $spareroadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findSpareRoadgroupsinGroup($rggroupid);
     $extrastreets =null;
     return $this->render('subgroup/showone.html.twig',
     [
@@ -260,51 +237,162 @@ class RggroupController extends AbstractController
     'rggroup'=>$rggroup,
     'subgroup'=>$subgroup,
     'roadgroups'=> $roadgroups,
-    'bounds'=> $bounds,
+    'spareroadgroups'=>$spareroadgroups,
     'streets'=>$extrastreets,
     'back'=>"/rggroup/show/".$rggroupid,
     ]);
   }
 
-  public function heatmap()
+
+
+ public function addroadgroup($wdid,$swdid,$rgid)
   {
-    $mappath= $this->container->get('parameter_bag')->get('mappath');
-    $maproot = $this->container->get('parameter_bag')->get('maproot');
-    $topmap = $this->container->get('parameter_bag')->get('topmap');
-    $rggroups = $this->getDoctrine()->getRepository("App:Rggroup")->findAll();
-    if (!$rggroups)
+          $roadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid, $this->rgyear);
+           $roadgroup->setRgsubgroupid ($swdid);
+      $entityManager = $this->getDoctrine()->getManager();
+      $entityManager->persist($roadgroup);
+      $entityManager->flush();
+      return $this->redirect("/rgsubgroup/show/".$swdid);
+  }
+
+
+
+  public function updatesubgroup($swdid)
+  {
+    $this->processupdatesubgroup($swdid);
+     return $this->redirect("/rgsubgroup/show/".$swdid);
+
+  }
+
+   public function processupdatesubgroup($swdid)
+  {
+    $subgroup = $this->getDoctrine()->getRepository("App:Rgsubgroup")->findOne($swdid);
+    $rggroupid =  $subgroup->getRggroupid();
+    $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($swdid, $this->rgyear);
+    $geodata= new Geodata();
+    $hh = 0;
+    $ee=0;
+    $rdds=0;
+    $rgs=0;
+     $totplvw = 0;
+     $totplvn =0;
+   dump("here we are");
+    foreach ($roadgroups as $broadgroup)
     {
-      return $this->render('rggroup/showall.html.twig', [ 'message' =>  'RGgroups not Found',]);
+      $rgid = $broadgroup->getRoadgroupid();
+         dump("here we are 2");
+      $response = $this->forward('App\Controller\RoadgroupController:UpdateRoadgroup', ['rgid'  => $rgid,]);
+         dump("here we are3c");
+      $this->makeGeodataforRoadgroup($rgid);
+      $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
+      $geodata->mergeGeodata_obj($aroadgroup->getGeodata_obj());
+      $rgs ++;
+      $rdds= $rdds+$aroadgroup->getStreets();
+      $rghh = $aroadgroup->getHouseholds();
+      $hh = $hh + $aroadgroup->getHouseholds();
+      $ee =$ee+ $aroadgroup->getElectors();
+      $totplvw += $aroadgroup->getPLVW();
+      $totplvn += $aroadgroup->getPLVN();;
+    }
+      if($geodata->maxlat <-350)
+      {
+        $agroup = $this->getDoctrine()->getRepository("App:Rggroup")->findOne($rggroupid);
+
+          $geodata = $agroup->getGeodata();
+
+      }
+
+      $subgroup->setHouseholds($hh);
+      $subgroup->setElectors($ee);
+      $subgroup->setStreets($rdds);
+      $subgroup->setRoadgroups($rgs);
+      $subgroup->setPLVW($totplvw);
+      $subgroup->setPLVN($totplvn);
+      $subgroup->setGeodata($geodata);
+      $entityManager = $this->getDoctrine()->getManager();
+      $entityManager->persist($subgroup);
+      $entityManager->flush();
+     // $this->updateGroup($rggroupid);
+
+     $rggroup = $this->getDoctrine()->getRepository("App:Rggroup")->findOne($rggroupid );
+     dump($rggroup);
+  }
+
+
+   public function updategroup($wdid)
+  {
+    $agroup = $this->getDoctrine()->getRepository("App:Rggroup")->findOne($wdid);
+    $agroupid =  $agroup->getRggroupid();
+    $subgroups = $this->getDoctrine()->getRepository("App:Rgsubgroup")->findChildren($wdid);
+    $geodata= new Geodata();
+    $hh = 0;
+    $ee=0;
+    $rdds=0;
+    $rgs=0;
+    foreach ($subgroups as $asubgroup)
+    {
+       $swdid = $asubgroup->getRgsubgroupId();
+       $this->processupdatesubgroup($swdid);
+       $geodata->mergeGeodata_obj($asubgroup->getGeodata_obj());
+      $rgs ++;
+      $rdds= $rdds+$asubgroup->getStreets();
+      $hh = $hh + $asubgroup->getHouseholds();
+      $ee =$ee+ $asubgroup->getElectors();
+    }
+      $agroup->setHouseholds($hh);
+      $agroup->setElectors($ee);
+      $agroup->setStreets($rdds);
+      $agroup->setRoadgroups($rgs);
+      if($geodata->maxlat <-350)
+      {
+       dump($agroup->getKml());
+        if($agroup->getKml())
+        {
+          $geodata = $this->mapserver->scanRoute($agroup->getKml());
+        }
+      }
+      $agroup->setGeodata($geodata);
+      $entityManager = $this->getDoctrine()->getManager();
+      $entityManager->persist($agroup);
+      $entityManager->flush();
+     return $this->redirect("/rggroup/show/".$wdid);
+  }
+
+  public function heatmap($rgid)
+  {
+
+    $rggroup = $this->getDoctrine()->getRepository("App:Rggroup")->findOne($rgid);
+    if (!$rggroup)
+    {
+      return $this->render('rggroup/showall.html.twig', [ 'message' =>  'RGgroup not Found',]);
     }
     $rglist= array();
-    foreach($rggroups as $arggroup)
-    {
-      $subgroups = $this->getDoctrine()->getRepository("App:Rgsubgroup")->findChildren($arggroup->getRggroupid());
+
+      $subgroups = $this->getDoctrine()->getRepository("App:Rgsubgroup")->findChildren($rgid);
       foreach ($subgroups as $asubgroup)
       {
         $swid =  $asubgroup->getRgsubgroupid();
         $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($swid,$this->rgyear);
         foreach ($roadgroups as $aroadgroup)
         {
-          if(!$this->mapserver->ismap($aroadgroup->getKML()))
-          {
-            $aroadgroup->setKML($this->mapserver->findmap($aroadgroup->getRoadgroupid(),$this->rgyear));
-          }
-          $labness = intval($aroadgroup->getPrioritygroup());
-          $aroadgroup->setPrioritygroup($labness);
+           if($aroadgroup->getElectors()>0)
+             $labness =  $aroadgroup->getPLVN()/$aroadgroup->getElectors();
+          else
+             $labness=0;
           $rg = array();
           $rg["kml"] = $aroadgroup->getKML();
           $rg["priority"] = $labness;
-          $rg["color"] = $this->makeColor($labness);
-          // dump($rg);
+          $rg["color"] = $this->mapserver->makeColor($labness);
+          $rg['rgid'] = $aroadgroup->getRoadgroupid();
           $rglist[]=$rg;
         }
+        dump($rglist);
       }
-    }
     return $this->render('rggroup/heatmap.html.twig',
     [
     'rgyear'=>$this->rgyear,
     'message' =>  '' ,
+    'rggroup' => $rggroup,
     'rglist'=>$rglist,
     'back'=>"/rggroup/showall"
     ]);
@@ -391,38 +479,48 @@ class RggroupController extends AbstractController
   }
 
 
+  public function makeGeodataforRoadgroup($rgid)
+   {
+     $roadgroup=  $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
+     $streets =  $this->getDoctrine()->getRepository("App:Street")->findgroup($rgid,$this->rgyear);
 
-  public function xmakexml()
-  {
-    $xmlout = "";
-    $rggroups = $this->getDoctrine()->getRepository("App:Rggroup")->findAll();
-    if (!$rggroups) {
-      return "";
-    }
-    foreach (  $rggroups as $arggroup )
-    {
-      $subgroups =   $this->getDoctrine()->getRepository("App:Rgsubgroup")->findChildren($arggroup->getRggroupid());
-      $arggroup->subgroups = $subgroups;
-      foreach($subgroups as $asubgroup)
-      {
-        $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($asubgroup->getRgsubgroupid());
-        $asubgroup->roadgrouplist=$roadgroups;
-        foreach($roadgroups as $aroadgroup)
-        {
-          $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($aroadgroup->getRoadgroupid(),$this->rgyear);
+     $totalhouseholds = 0;
+     $totalelectors = 0;
+     $totalstreets = 0;
+     $totalsteps =0;
+     $totplvw = 0;
+     $totplvn =0;
+     $geodata = new Geodata;
+     foreach($streets as $astreet)
+     {
+       $totalhouseholds += $astreet->getHouseholds();
+       $totalelectors += $astreet->getElectors();
+       $totalsteps += $astreet->getsteps() ;
+       $totalstreets ++;
+       $astreet->makeGeodata();
+       $stgd = $astreet->getGeodata();
+       $geodata->mergeGeodata_array($stgd);
+       $totplvw += $astreet->getPLVW();
+       $totplvn += $astreet->getPLVN();;
+     }
+      $geodata->steps =  $totalsteps;
+      $geodata->streets = $totalstreets;
+      $geodata->roadgroups =1;
+     $time = new \DateTime();
+     $roadgroup->setUpdated($time);
+     $roadgroup->setGeodata($geodata);
+     $roadgroup->setHouseholds($totalhouseholds);
+     $roadgroup->setElectors($totalelectors);
+     $roadgroup->setStreets($totalstreets);
+     $roadgroup->setPLVW($totplvw);
+     $roadgroup->setPLVN($totplvn);
 
-          $aroadgroup->{'streets'}= $streets;
-        }
-      }
-    }
+     $entityManager = $this->getDoctrine()->getManager();
+     $entityManager->persist($roadgroup);
+     $entityManager->flush();
 
-    foreach (  $rggroups as $arggroup )
-    {
-      $xmlout .= $arggroup->makexml();
-      $xmlout .= "\n";
-    }
-    return $xmlout;;
-  }
+   }
+
 
 
 

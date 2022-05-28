@@ -10,30 +10,48 @@ use Doctrine\ORM\EntityRepository;
 class RoadgrouptostreetRepository  extends EntityRepository
 {
 
-     public function remove($rgid,$stname,$stpart, $year)
+     public function remove($rgid,$rdseq, $year)
      {
         $conn = $this->getEntityManager()->getConnection();
-         $sql = 'Delete from  roadgrouptostreet   WHERE roadgroupid = "'.$rgid.'" and street= "'.$stname.'" and part= "'.$stpart.'" and year="'.$year.'";' ;
+         $sql = 'Delete from  roadgrouptostreet   WHERE roadgroupid = "'.$rgid.'" and streetid= "'.$rdseq.'" and year="'.$year.'";' ;
         $stmt = $conn->prepare($sql);
         $stmt->execute();
      }
 
-      public function getRoadgroup($stname,$stpart,$year)
+      public function getRoadgroup($rdid,$year)
      {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'Select * from  roadgrouptostreet   WHERE  street= "'.$stname.'" and part= "'.$stpart.'" and year="'.$year.'";';
+        $sql = 'Select rs.roadgroupid from  roadgrouptostreet  rs WHERE rs.streetid = "'.$rdid.'" and  rs.year="'.$year.'";';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
-        $rg= $stmt->fetchAll();
-       return $rg;
+        $res= $stmt->fetchAll();
+        if(count($res) >0 )
+            $rgid = $res[0]["roadgroupid"];
+          else
+            $rgid ="None";
+       return $rgid;
 
      }
 
+
+      public function findRg($rdid,$year)
+     {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'Select rs.roadgroupid from  roadgrouptostreet  rs WHERE rs.streetid = "'.$rdid.'" and  rs.year="'.$year.'";';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $rg= $stmt->fetch();
+        if($rg)
+            return $rg["roadgroupid"];
+        else
+            return 0;
+
+     }
 
       public function countStreets($year)
      {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'Select rs.roadgroupid, count(*) as nos from  roadgrouptostreet rs  WHERE year = "'.$year.'" group by rs.roadgroupid  order by rs.roadgroupid;' ;
+        $sql = 'Select rs.roadgroupid, count(*) as nos from  roadgrouptostreet rs  WHERE rs.year = "'.$year.'" group by rs.roadgroupid  order by rs.roadgroupid;' ;
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $pd= $stmt->fetchAll();
@@ -44,7 +62,7 @@ class RoadgrouptostreetRepository  extends EntityRepository
        public function countPDs($year)
      {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'Select rs.roadgroupid, count(DISTINCT s.pd) as nos from  roadgrouptostreet rs left join street s on rs.street = s.name and (s.part = rs.part or (rs.part is null  and s.part = "" ) or (s.part is null  and rs.part = "" ) ) WHERE year = "'.$year.'" group by rs.roadgroupid  order by rs.roadgroupid;' ;
+        $sql = 'Select rs.roadgroupid, count(DISTINCT s.pd) as nos from  roadgrouptostreet rs left join street s on rs.streetid = s.seq WHERE rs.year = "'.$year.'" group by rs.roadgroupid  order by rs.roadgroupid;' ;
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $pdres= $stmt->fetchAll();

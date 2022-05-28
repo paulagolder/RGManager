@@ -16,6 +16,7 @@
      bottom: 20;
      left: 15px;
      border: 3px solid #f1f1f1;
+     background-color: green;
      z-index: 9;
    }
 
@@ -274,7 +275,7 @@ function closeForm() {
 
 {% block middle %}
 <div class="form-popup" id="myForm">
-<xform action="/action_page.php" class="form-container">
+
   <h1>House Numbers</h1>
   <div>
      <label class="inline-label" for="startno"><b>Start</b></label>
@@ -296,10 +297,10 @@ function closeForm() {
 
     {% if streetcount is defined and streetcount > 1 %}
       <div class="countwarning"> Multiple appearances of this street</div>
-      <div class="button> "><a class="button small" href = "/street/editgroup/{{street.name}}" >Edit Group </a> </div>
+      <div class="button> "><a class="button small" href = "/street/editgroup/{{street.seq}}" >Edit Group </a> </div>
       <div class="button> "><a class="button small" href = " https://lichfielddc.maps.arcgis.com/apps/webappviewer/index.html?id=f15c49e001cd48239abf6571b5d3f68d" target="_pdmap" >View PD Map</a> </div>
     {% endif %}
-     <div class="button  right"> <a class="button" href = "{{back}}" >Back</a> </div>
+    <div class="button  right"> <a class="button" href = "/street/editbyseq/{{street.seq}}" >Back</a> </div>
      <div class="button"> <a class="button" href = "/roadgroup/showone/{{roadgroupid}}" >Roadgroup</a> </div>
   </div>
   <div class="formmap">
@@ -308,11 +309,9 @@ function closeForm() {
       {{ form_row(form.name) }}
       {{ form_row(form.Part) }}
       {{ form_row(form.Qualifier) }}
-      {{ form_row(form.PD) }}
+      {{ form_row(form.PdId) }}
       {{ form_row(form.Households) }}
       {{ form_row(form.Electors) }}
-
-      <div>UPDATED:   {{form.Updated.vars.data|date }}</div>
       <button type="submit">{{'Register!'}}</button>
      {{ form_row(form.Path) }}
        <div  class="form row" >
@@ -353,11 +352,14 @@ function closeForm() {
 <div class ="row">
       <div class="button"> <a class="small button red" href ="/street/replicate/{{street.streetid}}" >{{'SPLIT ROAD'}} </a> </div>
  </div>
-         {% set jslocation = street.getjson() %}
+
+         {% set stgeodata = geodata | json_encode | raw  %}
       <script  type="text/javascript" >
-         var mymap = myStMap("{{jslocation}}");
+         var mymap = myStMap("{{stgeodata}}");
          mymap.on('click', onMapClick);
          drawPath(mymap,"{{street.getPath()}}");
+         setMarkers(mymap,"{{stgeodata}}");
+         setBounds2(mymap,"{{stgeodata}}");
       </script>
 </div>
 </div>

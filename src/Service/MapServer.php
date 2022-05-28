@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
 use stdClass;
+use App\Entity\Geodata;
 use DOMDocument;
 
 class MapServer
@@ -149,37 +150,20 @@ class MapServer
 
 
 
-  public function newbounds()
+  public function newGeodata()
   {
-    $bounds = new stdClass();
-    $bounds->minlat = null;
-    $bounds->maxlat = null;
-    $bounds->maxlong = null;
-    $bounds->minlong = null;
-    return $bounds;
+     $geodata = new stdClass();
+     $geodata->minlat = null;
+     $geodata->maxlat = null;
+     $geodata->maxlong = null;
+     $geodata->minlong = null;
+     $geodata->midlong = null;
+     $geodata->midlat =null;
+     $geodata->dist = 0;
+    return  $geodata;
   }
 
-  public function makebounds($sbounds)
-  {
-    $bounds = $this->newbounds();
-    if(is_null($sbounds)) return $bounds;
-    if(! is_object($sbounds))
-    {
-      if(is_array($sbounds))
-      {
-        $bounds = (object)$sbounds;
-      }
-      else
-        $bounds = json_decode($sbounds);
-    }
-      else
-        $bounds= $sbounds;
-    $bounds->minlat  =  $bounds->minlat;
-    $bounds->maxlat = $bounds->maxlat;
-    $bounds->maxlong  = $bounds->maxlong;
-    $bounds->minlong  = $bounds->minlong ;
-    return $bounds;
-  }
+
 
   public function makebounds_fromarray($obounds)
   {
@@ -219,6 +203,35 @@ class MapServer
     if(($bounds->maxlat !== null) && ( $rootbounds->maxlat < $bounds->maxlat))  $rootbounds->maxlat= $bounds->maxlat;
     if(($bounds->minlong !== null) && ( $rootbounds->minlong > $bounds->minlong))  $rootbounds->minlong = $bounds->minlong;
     return $rootbounds;
+  }
+
+  public function mergeGeodata($rootgeodata, $ingeodata)
+  {
+    if (!$ingeodata) return $rootgeodata;;
+    if(! is_object($ingeodata))
+      if(is_array($ingeodata))
+      {
+        $ageodata = (object)$ingeodata;
+      }
+      else
+        $ageodata = json_decode($ingeodata);
+      else
+        $ageodata= $ingeodata;
+
+      if($rootgeodata->minlat === null)  $rootgeodata->minlat =  $ageodata->minlat;
+      if($rootgeodata->maxlong === null)  $rootgeodata->maxlong =  $ageodata->maxlong;
+      if(($ageodata->minlat !== null) && ($rootgeodata->minlat >  $ageodata->minlat)) $rootgeodata->minlat = $ageodata->minlat;
+      if(($ageodata->maxlong !== null) && ($rootgeodata->maxlong <  $ageodata->maxlong)) $rootgeodata->maxlong = $ageodata->maxlong;
+      if($rootgeodata->maxlat === null)  $rootgeodata->maxlat =  $ageodata->maxlat;
+      if($rootgeodata->minlong === null)  $rootgeodata->minlong =  $ageodata->minlong;
+      if(($ageodata->maxlat !== null) && ( $rootgeodata->maxlat < $ageodata->maxlat))  $rootgeodata->maxlat= $ageodata->maxlat;
+      if(($ageodata->minlong !== null) && ( $rootgeodata->minlong > $ageodata->minlong))  $rootgeodata->minlong = $ageodata->minlong;
+
+      $rootgeodata->dist =  $rootgeodata->dist +$rootgeodata->dist;
+
+
+
+      return $rootgeodata;
   }
 
 
@@ -309,7 +322,65 @@ class MapServer
    return $kmldoc;
   }
 
+  public function scanRoute($addfile)
+  {
+    $minlat = 360;
+    $maxlat = -360;
+    $minlng = 360;
+    $maxlng = -360;
+    $addpath =  $this->maproot."roadgroups/".$addfile;
+    $addpath = str_replace("//","/",$addpath);
+    $xmlstr2 = file_get_contents($addpath);
+    $addkml = new \SimpleXMLElement($xmlstr2);
 
+    foreach ($addkml->Document->Placemark as $placemark)
+    {
+      $coords = $placemark->Polygon->outerBoundaryIs->LinearRing->coordinates;
+      foreach( $coords as $coord)
+      {
+        $carry = explode(" ",$coord[0]);
+        foreach($carry as $cd)
+        {
+          $latlng = explode(",",$cd);
+          $lat =  floatval($latlng[1]);
+          $lng =  floatval($latlng[0]);
+          if($maxlat < $lat)$maxlat= $lat;
+          if($maxlng < $lng)$maxlng= $lng;
+          if($minlat > $lat)$minlat= $lat;
+          if($minlng > $lng)$minlng= $lng;
+        }
+      }
+    }
+    $geodata = new Geodata;
+    $geodata->maxlat = $maxlat;
+    $geodata->maxlong = $maxlng;
+    $geodata->minlat = $minlat;
+    $geodata->minlong = $minlng;
+    $geodata->midlat = ($minlat+$maxlat)/2;
+    $geodata->midlong = ($minlng+$maxlng)/2;
+      return $geodata;
+  }
+
+  function getColor($i)
+  {
+
+   $colors= [];
+   $colors[0]="#FF000088";
+   $colors[1]="#00FF0088";
+   $colors[2]="#0000FF88";
+   $colors[3]="#FFFF0088";
+   $colors[4]="#FF00FF88";
+   $colors[5]="#00FFFF88";
+   $colors[6]="#80000088";
+   $colors[7]="#00800088";
+   $colors[8]="#00008088";
+   $colors[9]="#80800088";
+   $colors[10]="#80008088";
+   $colors[11]="#00808088";
+   $colors[12]="#5a5a5a88";
+   if($i>12) $i = $i-12;
+    return $colors[$i];
+  }
 
   function hexColor($color)
   {
@@ -319,37 +390,51 @@ class MapServer
 
   function makeColor($intval)
   {
+    $c =[0.206, 0.281, 0.368, 0.457];
+
     $r = 255;
     $b = 255;
     $g  = 255;
-    if($intval==0)
+
+    if($intval<= 0)
+    {
+      $r = 80;
+      $b = 80;
+      $g  = 80;
+    }elseif($intval<$c[0])
     {
       $r = 0;
-      $b = 0;
-      $g  = 255;
-    }else
-    {
-      if($intval>140)
+      $b = 255;
+      $g  = 0;
+    }elseif($intval<$c[1])
       {
-        $d= $intval -140;
+        $r = 0;
+        $b = 128;
+        $g  =129;
+      }
+      elseif($intval <$c[2])
+      {
         $r = 0;
         $b = 0;
-        $g  =255;
-      }else if($intval >70)
+        $g  = 255;
+      }
+      elseif($intval <$c[3])
+      {
+        $r = 128;
+        $b = 0;
+        $g  = 127;
+      } elseif($intval > 1)
       {
         $r = 0;
-        $b = 255;
+        $b = 0;
         $g  = 0;
       }else
       {
-        $d= $intval -140;
-        $r = 255;
+        $r = 225;
         $b = 0;
         $g  = 0;
-
       }
-
-    }
+      dump($r);
     return $this->rgbToHex($r,$g,$b);
   }
 
@@ -370,13 +455,13 @@ class MapServer
 
   function makebounds_streetlist($streets)
   {
-      $bounds =$this->newbounds();
+      $geodata =new Geodata;
       foreach( $streets as $street)
       {
         if( array_key_exists("children",$street))
         {
-          $dbounds = $this->makebounds_roadgroups($street["children"]);
-          $bounds = $this->expandbounds($bounds, $dbounds);
+          $dgeodata = $this->makegeodata_roadgroups($street["children"]);
+          $geodata = $this->expandgeodata($geodata, $dgeodata);
         }
         else
         {
@@ -384,18 +469,18 @@ class MapServer
           {
             foreach($street["roadgrouplist"] as $roadgroup)
             {
-              $dbounds = $this->makebounds($roadgroup["geodata"]);
-              $bounds = $this->expandbounds($bounds, $dbounds);
+              $dgeodata = $this->makegeodata($roadgroup["geodata"]);
+              $geodata = $this->expandgeodata($geodata, $dgeodata);
             }
           }
           elseif(  property_exists($street,"Geodata"))
           {
-            $dbounds = $this->makebounds($street->getGeodata());
-            $bounds = $this->expandboundsobj($bounds, $dbounds);
+            $dgeodata = $street->getGeodata();
+            $geodata = $this->mergeGeodata($geodata, $dgeodata);
           }
         }
       }
-      return $bounds;
+      return $geodata;
     }
 
 

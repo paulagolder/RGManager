@@ -22,17 +22,26 @@
   <div class="value">{{subgroup.rgsubgroupid}}:</div>
   <div class="value">{{rggroup.name}}</div>
   <div class="value">{{subgroup.name}}</div>
+  <div class="button  right"> <a class="button" href = "/rgsubgroup/update/{{subgroup.rgsubgroupid}}" >Update </a> </div>
   <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
 </div>
+ <div class="heading small row">
+      <div class="bnum" >HH:{{subgroup.households}}</div>
+      <div class="bnum" >EE:{{subgroup.electors}}</div>
+      <div class="bnum" >RGS:{{subgroup.roadgroups}}</div>
+      <div class="bnum" >RDS:{{subgroup.streets}}</div>
+   </div>
 {% if message %}
    <H1> {{message}} </H1>
 {% else %}
    <div class="subheading row">
       <div class="rgid" >Road group Id</div>
       <div class="name" >Name</div>
+       <div class="name" >CCName</div>
       <div class="bnum" >Households</div>
-      <div class="bnum" >Calculated</div>
-      <div class="bnum" >Distance</div>
+      <div class="bnum" >Electors</div>
+      <div class="bnum" >LW</div>
+       <div class="bnum" >LN</div>
       <div class="button" ></div>
       <div class="button" ></div>
    </div>
@@ -43,48 +52,53 @@
      <div class="roadgroup row "  >
        <div class="roadgroupid" id="{{aroadgroup.roadgroupid}}" >{{aroadgroup.roadgroupid}}</div>
        <div class="name" >{{aroadgroup.name}}</div>
+       <div class="name" >{{aroadgroup.ccname}}</div>
        <div class="bnum" >{{aroadgroup.households}}</div>
-        <div class="bnum" >{{aroadgroup.calculated}}</div>
-       <div class="bnum" >{{aroadgroup.distance | number_format(2)}}</div>
+      <div class="bnum" >{{aroadgroup.electors}}</div>
+      {% if aroadgroup.electors > 0 %}
+      <div class="bnum" >{{ (aroadgroup.PLVW/aroadgroup.electors) | number_format(2)}}</div>
+      <div class="bnum" >{{ (aroadgroup.PLVN/aroadgroup.electors) | number_format(2)}}</div>
+      {% else %}
+       <div class="bnum" >0</div>
+       <div class="bnum" >0</div>
+      {% endif %}
        <div class="button" ><a class="button" href = "/roadgroup/showone/{{aroadgroup.roadgroupid}}" >VIEW</a>   </div>
        <div class="button" ><a class="button" href = "/roadgroup/edit/{{aroadgroup.roadgroupid}}" >EDIT</a>   </div>
+        <div class="button" ><a class="button" href = "/roadgroup/removefromsubgroup/{{aroadgroup.roadgroupid}}" >REMOVE</a>   </div>
      </div>
   {% endfor %}
   </div>
 {% endif %}
 
 <div><a class="button" href = "/roadgroup/new/{{rggroup.rggroupid}}/{{subgroup.rgsubgroupid}}" >ADD NEW ROADGROUP</a></div>
-  {% if streets|length >0 %}
+  {% if spareroadgroups|length >0 %}
 <div class="subheading  row">
-  <div class="label red"> Spare Streets</div>
+  <div class="label red"> Spare Roadgroups</div>
 </div>
-<div class="streetlist">
-  {% for street in streets %}
+<div class="rglist">
+  {% for roadgroup in spareroadgroups %}
   <div class="street row indent">
-     <div class="name" >{{street.name}}
-        {% if street.part %}
-        /{{street.part}}
-        {% endif %}
-        </div>
-    <div class="PD" >{{street.PD}}</div>
-    <a class="button" href = "/street/edit/{{street.streetid}}" >VIEW</a>
+  <div class="name" >{{roadgroup.roadgroupid}}</div>
+     <div class="name" >{{roadgroup.name}}</div>
+     <div class="name" >{{roadgroup.ccname}}</div>
+    <a class="button" href = "/rggroup/addroadgroup/{{rggroup.rggroupid}}/{{subgroup.rgsubgroupid}}/{{roadgroup.roadgroupid}}" >add</a>
   </div>
   {% endfor %}
 </div>
 {% else %}
 <div class="subheading  row">
-  <div class="label"> No un-allocated streets found</div>
+  <div class="label"> No spare roadgroups found</div>
 </div>
 {% endif %}
 <div class="map" >
-  <div id="swmapid" ></div>
+  <div id="goodmapid" ></div>
 </div>
-  {% set jslocation = subgroup.getjson() %}
-    {% set abounds = bounds | json_encode | raw %}
-  <script  type="text/javascript" >
-    var mymap = mySwMap("{{jslocation}}");
+  {% set sggeodata = subgroup.geodata | json_encode | raw  %}
+  {% dump(sggeodata) %}
+<script >
+    var mymap = myGoodMap("{{sggeodata}}");
      kml = "{{rggroup.kml}}";
-  var path = "{{mappath}}roadgroups/"+kml;
+     var path = "{{mappath}}roadgroups/"+kml;
       if(kml)
       {
           var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.1 };
@@ -108,17 +122,15 @@
 
   {% endfor %}
 
-    kml = "{{rggroup.kml}}";
+     kml = "{{rggroup.kml}}";
      var path = "{{mappath}}roadgroups/"+kml;
-      if(kml)
+     if(kml)
       {
           var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 3 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.0 };
        //   makeOutlineKml(mymap,path,style,false,"{{rggroup.rggroupid}}");
       }
-     setMarkers(mymap,"{{abounds}}");
-  //   drawBox(mymap,"{{abounds}}");
-     setBounds2(mymap,"{{abounds}}");
-
+     setMarkers(mymap,"{{sggeodata}}");
+     setBounds2(mymap,"{{sggeodata}}");
    </script>
 
 {% endblock %}

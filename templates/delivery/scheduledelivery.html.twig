@@ -97,17 +97,13 @@
     </ul>
 {% endif %}
 <div class="map" >
-  <div id="wmapid" ></div>
+  <div id="goodmapid" ></div>
 </div>
-<script>
-  toggle();
-</script>
-{% set jslocation = delivery.getjson() %}
-{% set abounds = bounds | json_encode | raw %}
-<script >
 
-var mymap = myWMap("{{jslocation}}");
-var fgroup =  new L.featureGroup();
+{% set geodata = delivery.getGeodata_json() %}
+{% dump(geodata) %}
+<script >
+  var mymap = myGoodMap("{{geodata}}");
 
 var i=1;
 {% for key ,arndgroup in roundstree %}
@@ -157,8 +153,8 @@ var kml = "{{delivery.KML}}";
           var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.9, "fillOpacity": 0.0 };
           makeOutlineKml(mymap,path,style,false,"{{delivery.name}}")
       }
-   setMarkers(mymap,"{{abounds}}");
-   setBounds2(mymap,"{{abounds}}");
+      setMarkers(mymap,"{{geodata}}");
+      setBounds2(mymap,"{{geodata}}");
 </script>
 
 {% endblock %}

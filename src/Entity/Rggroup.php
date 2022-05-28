@@ -51,7 +51,15 @@ class Rggroup
      */
     private $Electors;
 
-   private $Geodata;
+      /**
+     * @ORM\Column(name="streets",type="integer",  nullable=true)
+     */
+    private $Streets;
+
+   /**
+   * @ORM\Column(name="geodata",type="string",  nullable=true)
+   */
+  private $Geodata;
 
    private $Roadgroups;
 
@@ -59,6 +67,24 @@ class Rggroup
 
    private $Target;
 
+public function getStreets()
+   {
+     return $this->Streets;
+   }
+
+   public function setStreets($number): self
+   {
+     $this->Streets = $number;
+
+     return $this;
+   }
+
+     public function addStreets($number): self
+    {
+        $this->Streets += $number;
+
+        return $this;
+    }
 
 
     public function getRggroupid()
@@ -200,6 +226,12 @@ public function setGeodata($text)
    $this->Geodata= $text_json;
 }
 
+public function getGeodata_obj()
+{
+ $ngeodata = new Geodata;
+
+ return  $ngeodata->loadGeodata($this->getGeodata());
+}
 
 
 
@@ -207,35 +239,8 @@ public function setGeodata($text)
 
 
 
- public function initGeodata()
-    {
-          $geodata = array();
-          $geodata["dist"]=-1;
-          $geodata["maxlat"]=null;
-          $geodata["midlat"]=null;
-          $geodata["minlat"]=null;
-          $geodata["maxlong"]=null;
-          $geodata["midlong"]=null;
-          $geodata["minlong"]=null;
-          $this->Geodata = json_encode($geodata);
-    }
 
-     public function expandbounds($bounds)
-     {
-     if (!$bounds) return ;
-     $thisbounds= $this->getGeodata();
-      if(!array_key_exists("minlat",  $this->getGeodata())) return;
-          if(!array_key_exists("minlat", $bounds)) return;
-        if($thisbounds["minlat"] === null)  $thisbounds["minlat"] =  $bounds["minlat"];
-        if($thisbounds["maxlong"] === null)  $thisbounds["maxlong"] =  $bounds["maxlong"];
-        if(($bounds["minlat"] !== null) && ($thisbounds["minlat"] >  $bounds["minlat"])) $thisbounds["minlat"] = $bounds["minlat"];
-        if(($bounds["maxlong"] !== null) && ($thisbounds["maxlong"] <  $bounds["maxlong"])) $thisbounds["maxlong"] = $bounds["maxlong"];
-         if($thisbounds["maxlat"] === null)  $thisbounds["maxlat"] =  $bounds["maxlat"];
-        if($thisbounds["minlong"] === null)  $thisbounds["minlong"] =  $bounds["minlong"];
-      if(($bounds["maxlat"] !== null) && ( $thisbounds["maxlat"] < $bounds["maxlat"]))  $thisbounds["maxlat"]= $bounds["maxlat"];
-      if(($bounds["minlong"] !== null) && ( $thisbounds["minlong"] > $bounds["minlong"]))  $thisbounds["minlong"] = $bounds["minlong"];
-      $this->setGeodata($thisbounds);
-     }
+
 
 
    public function getjson()

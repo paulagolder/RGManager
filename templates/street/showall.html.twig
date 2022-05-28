@@ -19,13 +19,40 @@
      <div class="message"> Streets or part streets belong to a Roadgroup and a Polling District </div>
     <div class="button  right"> <a class="button" href = "/" >{{'back'}} </a> </div>
     </div>
-       <form action="/street/filters" method="post">
-    <div class="subheading row">
-      <label for="duplicates">Duplicated Streets</label>
-      <input type="radio" id="duplicates" name="filter" value="duplicates">
-      <input type="submit" value="Submit">
+
+
+      <div class="row">
+        <form method="POST" action="/street/streetimport" enctype="multipart/form-data">
+          <div class="upload-wrapper">
+            <span class="file-name">Choose a file...</span>
+            <label for="file-upload">Browse<input type="file" id="file-upload" name="uploadedFile"></label>
+            </div>
+            <input type="submit" name="uploadBtn" value="Upload" />
+          </form>
     </div>
-        </form>
+
+      <form action="/street/filters" method="post">
+        <div class="subheading row">
+        <label for="duplicates">Duplicated Streets</label>
+        <input type="radio" id="duplicates" name="filter" value="duplicates">
+
+            <label for="split">Split Streets</label>
+            <input type="radio" id="split" name="filter" value="split">
+                <label for="splits">NEW Streets</label>
+                <input type="radio" id="new" name="filter" value="new">
+                  </div>
+                  <div class="subheading row">
+                  <label for="problem">Problem Streets</label>
+                  <input type="radio" id="problem" name="filter" value="problem">
+                    <label for="nopath">No Path</label>
+                    <input type="radio" id="nopath" name="filter" value="nopath">
+                      <label for="nogeodata">No Geodata</label>
+                      <input type="radio" id="nogeodata" name="filter" value="nogeodata">
+                      </div>
+                      <div class="subheading row">
+                        <input type="submit" value="Submit">
+    </div>
+  </form>
             <form action="/street/search"" method="post">
     <div class="subheading row">
       <label for="searchfield">Find Street</label>
@@ -36,6 +63,7 @@
 
      <div class="subheading row">
      <div class="name" >Name/part</div>
+     <div class="pd" >District</div>
      <div class="pd" >PD</div>
      <div  class="num" >House-holds</div>
      <div  class="num" >Electors</div>
@@ -47,12 +75,12 @@
        {% for street in streets %}
        <div class="row" >
          <div class="name" >{{street.fullname}}</div>
-         <div class="pd" >{{street.pd}}</div>
-
+            <div class="pd" >{{street.districtid}}</div>
+         <div class="pd" >{{street.pdid}}</div>
           <div  class="num" >{{street.households}}</div>
            <div  class="num" >{{street.electors}}</div>
-             <div class="button"> <a class="button" href = "/street/viewgroup/{{street.name}}" >View</a> </div>
-         <div class="button"> <a class="button" href = "/street/edit/{{street.name}}/{{street.part}}" >Edit</a> </div>
+             <div class="button"> <a class="button" href = "/street/viewgroupbyseq/{{street.seq}}" >View</a> </div>
+         <div class="button"> <a class="button" href = "/street/edit/{{street.seq}}" >Edit</a> </div>
           <div  class="shorttext" > {{street.note}}</div>
       </div>
        {% endfor %}

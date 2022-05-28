@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Repository\RggroupRepository;
 use Doctrine\ORM\Mapping as ORM;
-
+use App\Entity\Geodata;
 
 class Rndgroup
 {
@@ -143,6 +143,10 @@ class Rndgroup
         return $this;
     }
 
+public function getGeodata()
+{
+ return  json_decode($this->Geodata,true);
+}
 
 
 public function getGeodata_json()
@@ -150,71 +154,34 @@ public function getGeodata_json()
  return  $this->Geodata;
 }
 
-public function getGeodata()
+public function getGeodata_obj()
 {
- return  json_decode($this->Geodata,true);
+    $ngeodata = new Geodata;
+
+ return  $ngeodata->loadGeodata($this->getGeodata());
 }
 
 public function setGeodata($text)
 {
-  $text_json = json_encode($text);
+    $text_json = json_encode($text);
    $this->Geodata= $text_json;
 }
 
  public function initGeodata()
-    {
-          $geodata = array();
-          $geodata["dist"]=-1;
-          $geodata["maxlat"]=null;
-          $geodata["midlat"]=null;
-          $geodata["minlat"]=null;
-          $geodata["maxlong"]=null;
-          $geodata["midlong"]=null;
-          $geodata["minlong"]=null;
-          $this->Geodata = json_encode($geodata);
-    }
+ {
+          $this->Geodata = json_encode( new Geodata());
+  }
 
-     public function expandbounds($bounds_str)
-     {
-       if (!$bounds_str) return ;
-     $bounds =  json_decode($bounds_str);
-     $thisbounds= $this->getGeodata();
-      if(!array_key_exists("minlat",  $this->getGeodata())) return;
-          if(!array_key_exists("minlat", $bounds)) return;
-        if($thisbounds["minlat"] === null)  $thisbounds["minlat"] =  $bounds->minlat;
-        if($thisbounds["maxlong"] === null)  $thisbounds["maxlong"] =  $bounds->maxlong;
-        if(($bounds->minlat !== null) && ($thisbounds["minlat"] >  $bounds->minlat)) $thisbounds["minlat"] = $bounds->minlat;
-        if(($bounds->maxlong !== null) && ($thisbounds["maxlong"] <  $bounds->maxlong)) $thisbounds["maxlong"] = $bounds->maxlong;
-         if($thisbounds["maxlat"] === null)  $thisbounds["maxlat"] =  $bounds->maxlat;
-        if($thisbounds["minlong"] === null)  $thisbounds["minlong"] =  $bounds->minlong;
-      if(($bounds->maxlat !== null) && ( $thisbounds["maxlat"] < $bounds->maxlat))  $thisbounds["maxlat"]= $bounds->maxlat;
-      if(($bounds->minlong !== null) && ( $thisbounds["minlong"] > $bounds->minlong))  $thisbounds["minlong"] = $bounds->minlong;
-      $this->setGeodata($thisbounds);
-     }
 
-  public function expandbounds_x($bounds)
-     {
-     if (!$bounds) return ;
-     $thisbounds= $this->getGeodata();
-      if(!array_key_exists("minlat",  $this->getGeodata())) return;
-          if(!array_key_exists("minlat", $bounds)) return;
-        if($thisbounds["minlat"] === null)  $thisbounds["minlat"] =  $bounds["minlat"];
-        if($thisbounds["maxlong"] === null)  $thisbounds["maxlong"] =  $bounds["maxlong"];
-        if(($bounds["minlat"] !== null) && ($thisbounds["minlat"] >  $bounds["minlat"])) $thisbounds["minlat"] = $bounds["minlat"];
-        if(($bounds["maxlong"] !== null) && ($thisbounds["maxlong"] <  $bounds["maxlong"])) $thisbounds["maxlong"] = $bounds["maxlong"];
-         if($thisbounds["maxlat"] === null)  $thisbounds["maxlat"] =  $bounds["maxlat"];
-        if($thisbounds["minlong"] === null)  $thisbounds["minlong"] =  $bounds["minlong"];
-      if(($bounds["maxlat"] !== null) && ( $thisbounds["maxlat"] < $bounds["maxlat"]))  $thisbounds["maxlat"]= $bounds["maxlat"];
-      if(($bounds["minlong"] !== null) && ( $thisbounds["minlong"] > $bounds["minlong"]))  $thisbounds["minlong"] = $bounds["minlong"];
-      $this->setGeodata($thisbounds);
-     }
 
-     public function getBounds()
-     {
+public function mergeGeodata_obj($geodata_obj)
+{
+   $g = $this->getGeodata_obj()->mergeGeodata_obj($geodata_obj);
+   $this->setGeodata($g);
+}
 
-        return $this->getGeodata();
 
-     }
+
 
 
    public function getjson()
@@ -238,9 +205,11 @@ public function setGeodata($text)
    $this->Rndgroupid = $obj->getRggroupid();
    $this->KML = $obj->getKML();
    $this->Households =$obj->getHouseholds();
-   $this->Target = 0;
-    $this->Completed = 0;
-    $this->Roadgroups =0;
+   $this->Target = $obj->getTarget();
+   $this->Completed = $obj->getCompleted();
+   $this->Roadgroups =$obj->getRoadgroups();
+   $this->Streets =$obj->getStreets();
+  // $this->Steps =$obj->getSteps();
    }else
    {
    $this->Name = $obj["name"];
@@ -248,8 +217,10 @@ public function setGeodata($text)
    $this->KML = $obj["KML"];
    $this->Households =$obj["Households"];
    $this->Target =$obj["Target"];
-    $this->Completed =$obj["Completed"];
-     $this->Roadgroups =$obj["Roadgroups"];
+   $this->Completed =$obj["Completed"];
+   $this->Roadgroups =$obj["Roadgroups"];
+   $this->Streets =$obj["Streets"];
+  // $this->Steps =$obj["Steps"];
    }
    }
 

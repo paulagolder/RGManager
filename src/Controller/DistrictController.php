@@ -74,7 +74,7 @@ class DistrictController extends AbstractController
            $seat->setHouseholds($count);
 
         }
-
+dump($district);
         return $this->render('district/showone.html.twig',
             [
                 'rgyear' => $this->rgyear,
@@ -103,8 +103,8 @@ class DistrictController extends AbstractController
             $form->handleRequest($request);
             if ($form->isValid())
             {
-                $geodata =  $this->mapserver->loadRoute("districts/",$adistrict->getKML());
-                $adistrict->setGeodata($geodata);
+                //$geodata =  $this->mapserver->loadRoute("districts/",$adistrict->getKML());
+                //$adistrict->setGeodata($geodata);
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($adistrict);
                 $entityManager->flush();
@@ -387,7 +387,7 @@ class DistrictController extends AbstractController
         $roadgrouplinks = $this->getDoctrine()->getRepository("App:Seat")->findRoadgroups($dtid,$stid,$this->rgyear);
 
         $rglist = array();
-        $bounds =$this->mapserver->newbounds();
+         $bounds =$this->mapserver->newGeodata();
         foreach ($roadgrouplinks as $aroadgrouplink)
         {
            $aroadgroup =  $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($aroadgrouplink["roadgroupid"],$this->rgyear);
@@ -427,9 +427,6 @@ class DistrictController extends AbstractController
    public function heatmap($dtid)
     {
             $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
-    $mappath= $this->container->get('parameter_bag')->get('mappath');
-    $maproot = $this->container->get('parameter_bag')->get('maproot');
-    $topmap = $this->container->get('parameter_bag')->get('topmap');
     $rggroups = $this->getDoctrine()->getRepository("App:Rggroup")->findAll();
     if (!$rggroups)
     {
@@ -445,21 +442,20 @@ class DistrictController extends AbstractController
         $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($swid,$this->rgyear);
         foreach ($roadgroups as $aroadgroup)
         {
-          if(!$this->mapserver->ismap($aroadgroup->getKML()))
-          {
-            $aroadgroup->setKML($this->mapserver->findmap($aroadgroup->getRoadgroupid(),$this->rgyear));
-          }
-          $labness = intval($aroadgroup->getPrioritygroup());
-          $aroadgroup->setPrioritygroup($labness);
+          if($aroadgroup->getElectors()>0)
+             $labness = $aroadgroup->getPLVN()/$aroadgroup->getElectors();
+          else
+             $labness=0;
           $rg = array();
           $rg["kml"] = $aroadgroup->getKML();
           $rg["priority"] = $labness;
           $rg["color"] = $this->mapserver->makeColor($labness);
-          // dump($rg);
+          $rg['rgid'] = $aroadgroup->getRoadgroupid();
           $rglist[]=$rg;
         }
       }
     }
+    dump($rglist);
     dump($district);
     return $this->render('district/heatmap.html.twig',
     [

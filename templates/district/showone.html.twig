@@ -53,19 +53,27 @@
      </div>
   {% endfor %}
   </div>
-     <div class="button" ><a class="button" href = "/seat/new/{{district.districtid}}" >Add District</a>   </div>
+     <div class="button" ><a class="button" href = "/seat/new/{{district.districtid}}" >Add Seat</a>   </div>
 {% endif %}
 
 
 <div class="map" >
-  <div id="swmapid" ></div>
+  <div id="goodmapid" ></div>
 </div>
 
-  {% set jslocation = district.getjson() %}
-
+  {% set geodata = district.getGeodata_json() %}
+  {% dump(geodata) %}
 
   <script  type="text/javascript" >
-    var mymap = mySwMap("{{jslocation}}");
+
+    var mymap = myGoodMap("{{geodata}}");
+
+       if("{{district.kml}}")
+      {
+         var aspath = "{{mappath}}districts/{{district.kml}}";
+         var style = {"color":  "#0000ff" , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.0};
+         makeOutlineKml(mymap,aspath,style, true,"{{district.name}}");
+      }
      {# set seatl = seatlist|json_encode|raw #};
     {# var seats = {{seatlist|json_encode|raw}} #};
     var aspath = "{{mappath}}{{district.kml}}";
@@ -80,8 +88,13 @@
       var path = "{{mappath}}{{district.districtid}}/{{aseat.kml}}";
       if(path)
       {
-         var h2s = document.getElementById("{{aseat.seatid}}");
+
+      if(doesFileExist(path))
+      {
+        var h2s = document.getElementById("{{aseat.seatid}}");
          h2s.style.backgroundColor = getColor(i);
+      };
+
          var style = {"color":  getColor(i) ,"fillColor":  getColor(i) , "weight": 6 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.5 };
          makeKMLLayer(mymap,path,style,true,"{{aseat.name}}");
          i=i+1;
@@ -89,12 +102,7 @@
       }
     }
    {% endfor %}
-      if("{{district.kml}}")
-      {
-         var aspath = "{{mappath}}districts/{{district.kml}}";
-         var style = {"color":  "#0000ff" , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.0};
-         makeOutlineKml(mymap,aspath,style, true,"{{district.name}}");
-      }
+
 
    </script>
    </div>

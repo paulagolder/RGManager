@@ -78,14 +78,15 @@
     {% for key, arnd in roundstree %}
     {% set colouri = colouri +1 %}
       <div class="row" >
-        <div class="rgid colour_{{colouri}}">{{key}}</div>
+        <div class="rgid colour_{{colouri}}">{{ arnd.label}}</div>
         <div class="name"> {{ arnd.name}}</div>
         <div class="num">{{arnd.households}}</div>
         <div class="num">{{arnd.target}}</div>
         <div class="num">{{arnd.completed}}</div>
         <div class="num">{{arnd.roadgroups}}</div>
-         <div class="num">{{arnd.kml}}</div>
+
         <div class="button wide"><a class="button wide" href = "/delivery/scheduleround/{{delivery.deliveryId}}/{{key}}" >Schedule Round</a></div>
+        <div class="button wide delete"><a class="button wide delete" href = "/round/zeroround/{{delivery.deliveryId}}/{{key}}" >Do not Deliver</a></div>
           <div class="button wide delete"><a class="button wide delete" href = "/round/deleteround/{{delivery.deliveryId}}/{{key}}" >Delete Round</a></div>
       </div>
     {% endfor %}
@@ -120,16 +121,12 @@
 {% endif %}
 
 <div class="map" >
-  <div id="wmapid" ></div>
+  <div id="goodmapid" ></div>
 </div>
-<script>
-  toggle();
-</script>
-{% set jslocation = delivery.getjson() %}
-{% set abounds = bounds | json_encode | raw %}
-
+     {% set geodata = subgroup.getGeodata_obj | json_encode | raw   %}
+     {% dump(geodata) %}
 <script >
-  var mymap = myWMap("{{jslocation}}");
+  var mymap = myGoodMap("{{geodata}}");
   var wardlayer = null;
   var fgroup =  new L.featureGroup();
   var i=1;
@@ -155,7 +152,7 @@
     var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.9, "fillOpacity": 0.0 };
     makeOutlineKml(mymap,path,style,false,"{{delivery.name}}")
     }
-    setMarkers(mymap,"{{abounds}}");
-    setBounds2(mymap,"{{abounds}}");
+    setMarkers(mymap,"{{geodata}}");
+    setBounds2(mymap,"{{geodata}}");
 </script>
 {% endblock %}

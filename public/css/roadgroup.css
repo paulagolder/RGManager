@@ -31,7 +31,9 @@ div.roadgroup div.roadgroup.row.red
 { background-color : pink;}
 
 
-div.map div#rgmapid
+
+
+div.map div#wmapid
 {
   height: 500px;
   width: 100%;

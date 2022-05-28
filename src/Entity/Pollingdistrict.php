@@ -14,11 +14,29 @@ class Pollingdistrict
   /**
    * @ORM\Id
    *
-   * @ORM\Column(name="pollingdistrictid",type="string")
+   * @ORM\Column(name="pdid",type="string")
    */
-  private $PollingDistrictId;
+  private $PdId;
+
+ /**
+   *
+   * @ORM\Column(name="districtid",type="string")
+   */
+  private $DistrictId;
 
 
+ /**
+   *
+   * @ORM\Column(name="pdtag",type="string")
+   */
+  private $PdTag;
+
+
+   /**
+   *
+   * @ORM\Column(name="name",type="string")
+   */
+  private $Name;
 
   /**
    * @ORM\Column(name="households",type="integer", nullable=true)
@@ -35,50 +53,49 @@ class Pollingdistrict
    */
   private $KML;
 
-  /**
-   * @ORM\Column(name="minlat",type="float", nullable=true)
-   */
-  private $minlat;
 
   /**
-   * @ORM\Column(name="midlat",type="float", nullable=true)
+   * @ORM\Column(name="geodata",type="string", length=300, nullable=true)
    */
-  private $midlat;
-
-  /**
-   * @ORM\Column(name="maxlat",type="float", nullable=true)
-   */
-  private $maxlat;
-
-  /**
-   * @ORM\Column(name="minlong",type="float", nullable=true)
-   */
-  private $minlong;
-
-  /**
-   * @ORM\Column(name="midlong",type="float", nullable=true)
-   */
-  private $midlong;
-
-  /**
-   * @ORM\Column(name="maxlong",type="float", nullable=true)
-   */
-  private $maxlong;
+  private $Geodata;
 
 
-
-  public function getPollingDistrictId()
+  public function getPdId()
    {
-     return $this->PollingDistrictId;
+     return $this->PdId;
    }
 
-   public function setPollingDistrictId($ID): self
+   public function setPdId($ID): self
    {
-     $this->PollingDistrictId = $ID;
+     $this->PdId = $ID;
 
      return $this;
    }
 
+
+     public function getPdTag()
+   {
+     return $this->PdTag;
+   }
+
+   public function setPdTag($text): self
+   {
+     $this->PdTag = $text;
+
+     return $this;
+   }
+
+    public function getDistrictId()
+   {
+     return $this->DistrictId;
+   }
+
+   public function setDistrictId($ID): self
+   {
+     $this->DistrictId = $ID;
+
+     return $this;
+   }
 
 
    public function getHouseholds(): ?int
@@ -118,77 +135,25 @@ class Pollingdistrict
      return $this;
    }
 
-   public function getMinlat(): ?float
-   {
-     return $this->minlat;
-   }
 
-   public function setMinlat(?float $minlat): self
-   {
-     $this->minlat = $minlat;
 
-     return $this;
-   }
 
-   public function getMidlat(): ?float
-   {
-     return $this->midlat;
-   }
+public function getGeodata_json()
+{
+ return  $this->Geodata;
+}
 
-   public function setMidlat(?float $midlat): self
-   {
-     $this->midlat = $midlat;
+public function getGeodata()
+{
+ return  json_decode($this->Geodata,true);
+}
 
-     return $this;
-   }
+ public function setGeodata($text): self
+    {
+        $this->Geodata = json_encode($text);
+        return $this;
+    }
 
-   public function getMaxlat(): ?float
-   {
-     return $this->maxlat;
-   }
-
-   public function setMaxlat(?float $maxlat): self
-   {
-     $this->maxlat = $maxlat;
-
-     return $this;
-   }
-
-   public function getMinlong(): ?float
-   {
-     return $this->minlong;
-   }
-
-   public function setMinlong(?float $minlong): self
-   {
-     $this->minlong = $minlong;
-
-     return $this;
-   }
-
-   public function getMidlong(): ?float
-   {
-     return $this->midlong;
-   }
-
-   public function setMidlong(?float $midlong): self
-   {
-     $this->midlong = $midlong;
-
-     return $this;
-   }
-
-   public function getMaxlong(): ?float
-   {
-     return $this->maxlong;
-   }
-
-   public function setMaxlong(?float $maxlong): self
-   {
-     $this->maxlong = $maxlong;
-
-     return $this;
-   }
 
 
 

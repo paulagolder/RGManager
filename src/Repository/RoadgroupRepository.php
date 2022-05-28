@@ -43,7 +43,17 @@ class RoadgroupRepository extends EntityRepository
      public function findLooseRoadgroups()
      {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'SELECT DISTINCT r.roadgroupid,r.name  FROM roadgroup as r left join rggroup as w on r.rggroupid = w.rggroupid where w.rggroupid is null or r.rgsubgroupid is null';
+        $sql = 'SELECT DISTINCT r.roadgroupid,r.name, r.ccname  FROM roadgroup as r left join rggroup as w on r.rggroupid = w.rggroupid where w.rggroupid is null or r.rgsubgroupid is null';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $roadgroups= $stmt->fetchAll();
+        return $roadgroups;
+     }
+
+      public function findSpareRoadgroupsinGroup($wdid)
+     {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT DISTINCT r.roadgroupid,r.name ,r.ccname FROM roadgroup as r left join rggroup as w on r.rggroupid = w.rggroupid where w.rggroupid is null or r.rgsubgroupid is null';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $roadgroups= $stmt->fetchAll();
@@ -64,12 +74,23 @@ class RoadgroupRepository extends EntityRepository
     public function findRoadgroupsinRGGroup($wdid, $year)
     {
        $qb = $this->createQueryBuilder("p");
-       $qb->where("p.Rggroupid = :wdid");
-       $qb->setParameter('wdid', $wdid);
+      $qb->where("p.Rggroupid = :rgid");
+       $qb->setParameter('rgid', $wdid);
        $qb->andwhere("p.Year = :yr");
        $qb->setParameter('yr', $year);
        $roadgroups =  $qb->getQuery()->getResult();
        return $roadgroups;
+    }
+
+    public function addtosubgroup($rgid,$swid)
+    {
+        $qb = $this->createQueryBuilder("");
+        $qb->update('Roadgroup', 'r');
+        $qb->set('r.Rgsubgroupid', ':swid' );
+        $qb->where("r.Roadgroupid = :rgid");
+         $qb->setParameter('swid', $swid);
+         $qb->setParameter('rgid', $rgid);
+        $qb->getQuery()->execute();
     }
 
      public function findPDs()
@@ -85,7 +106,7 @@ class RoadgroupRepository extends EntityRepository
      public function findAllinPollingDistrict($pdid, $year)
      {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'select r.* from roadgroup as r where r.roadgroupid in (SELECT rs.roadgroupid FROM `roadgrouptostreet` as rs  WHERE rs.pd = "'.$pdid.'"  and rs.year = "'.$year.'") and r.year = "'.$year.'"';
+        $sql = 'select r.* from roadgroup as r where r.roadgroupid in (SELECT rs.roadgroupid FROM `roadgrouptostreet` as rs join street as s on rs.streetid = s.seq WHERE s.pdid = "'.$pdid.'"  and rs.year = "'.$year.'") and r.year = "'.$year.'"';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $roadgroups= $stmt->fetchAll();
@@ -95,7 +116,7 @@ class RoadgroupRepository extends EntityRepository
        public function findSpareRoadgroups($dvyid)
      {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'SELECT DISTINCT r.roadgroupid,r.name  FROM roadgroup as r left join roundtoroadgroup as w on r.roadgroupid = w.roadgroupid where w.deliveryid ="'.$dvyid.'" and w.roadgroupid is null';
+        $sql = 'SELECT DISTINCT r.roadgroupid,r.name , r.ccname FROM roadgroup as r left join roundtoroadgroup as w on r.roadgroupid = w.roadgroupid where w.deliveryid ="'.$dvyid.'" and w.roadgroupid is null';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $roadgroups= $stmt->fetchAll();
@@ -133,11 +154,13 @@ class RoadgroupRepository extends EntityRepository
 
      public function addStreet($astreet,$roadgroupid,$year)
      {
+     dump($astreet);
        $street= $astreet->getName();
+       $streetid =$astreet->getSeq();
        $part= $astreet->getPart();
-       $pd = $astreet->getPD();
+       $pd = $astreet->getPdId();
        $conn = $this->getEntityManager()->getConnection();
-       $sql = "insert into  roadgrouptostreet (street,part,pd,roadgroupid,year)  VALUES ( \"$street\", \"$part\", \"$pd\", \"$roadgroupid\", \"$year\" ) ";
+       $sql = "insert into  roadgrouptostreet (streetid,roadgroupid,year)  VALUES ( \"$streetid\", \"$roadgroupid\", \"$year\" ) ";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
      }
@@ -157,7 +180,7 @@ class RoadgroupRepository extends EntityRepository
      public function countHouseholds($roadgroupid, $year)
      {
         $conn = $this->getEntityManager()->getConnection();
-       $sql = 'SELECT SUM(s.households) as nos  FROM `street` as s JOIN roadgrouptostreet as rs on s.name = rs.street and (s.part= rs.part or s.part is null  or s.part="" ) WHERE rs.year = "'.$year.'" and rs.roadgroupid = "'.$roadgroupid.'"  group by rs.roadgroupid ';
+       $sql = 'SELECT SUM(s.households) as nos  FROM `street` as s JOIN roadgrouptostreet as rs on s.seq = rs.streetid  WHERE rs.year = "'.$year.'" and rs.roadgroupid = "'.$roadgroupid.'"  group by rs.roadgroupid ';
 
         $stmt = $conn->prepare($sql);
         $stmt->execute();

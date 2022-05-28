@@ -113,16 +113,13 @@
     </ul>
 {% endif %}
 <div class="map" >
-  <div id="wmapid" ></div>
+  <div id="goodmapid" ></div>
 </div>
-{% set jslocation = delivery.getjson() %}
-{% set abounds = bounds | json_encode | raw %}
-<script>
-  toggle();
-</script>
-<script >
 
-  var mymap = myWMap("{{jslocation}}");
+{% set geodata = around.getGeodata_json() %}
+{% dump(geodata) %}
+<script >
+  var mymap = myGoodMap("{{geodata}}");
   var wardlayer = null;
   var fgroup =  new L.featureGroup();
 

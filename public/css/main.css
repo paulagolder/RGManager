@@ -10,6 +10,12 @@ div.header {
   margin-bottom : 0.5em;
 }
 
+.visible {
+  height: 3em;
+  width: 10em;
+  background: yellow;
+}
+
 div.footer {
   font-size : 1em;
   font-style: italic;
@@ -41,9 +47,19 @@ div.topheader.row div.button
 div.heading
 {
   background-color: #a1e697;
-  height: 2em;
+  *height: 1em;
   font-size: 1.5em;
-  padding: 0.2em;
+  padding-top: 0.3em;
+  padding-bottom:0.1em
+}
+
+div.heading.small
+{
+  background-color: #a1e697;
+  *height: 1.0em;
+  font-size: 0.8em;
+  padding-top: 0.1em;
+  padding-bottom:0.3em
 }
 
 div.heading.medium
@@ -438,6 +454,12 @@ div.map div.mapdiv
   width: 100%;
 }
 
+
+div#goodmapid
+{
+  width: 100%;
+  height: 500px;
+}
 
 
 .colour_0

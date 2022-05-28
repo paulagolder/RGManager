@@ -3,61 +3,62 @@
 {% extends 'rgmaster.html.twig' %}
 
 {% block stylesheets %}
-      {{ parent() }}
-   <link href="{{ asset('/css/roadgroup.css') }}" rel="stylesheet" />
+{{ parent() }}
+<link href="{{ asset('/css/roadgroup.css') }}" rel="stylesheet" />
 {% endblock %}
 
 
 {% block middle %}
 <div class="roadgroup">
-{% if message %}
-<H1>{{message}} </H1>
+  {% if message %}
+  <H1>{{message}} </H1>
 
-{% else %}
-    <div class="heading row">
+  {% else %}
+  <div class="heading row">
     <div class="label">Roadgroups</div>
-     <div class="message"> For convenience Roadgroups are collected into RG-Groups and RG-Subgroups</div>
+    <div class="message"> For convenience Roadgroups are collected into RG-Groups and RG-Subgroups</div>
     <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+  </div>
+
+  <div class="roadgroup header  list row">
+
+    <div class="rgid" >Road group Id</div>
+    <div class="name" >Name</div>
+    <div class="rgid" >RG-Group</div>
+    <div  class="num" >House-holds</div>
+    <div  class="num" >Electors</div>
+    <div  class="num" >roads</div>
+    <div  class="button" ></div>
+    <div  class="button" ></div>
+    <div  class="text" >Note</div>
+  </div>
+
+  <div  class="pagescroll list" >
+
+    {% for roadgroup in roadgroups %}
+    {% set rowstyle = '' %}
+    {% if "pds" in roadgroup|keys and roadgroup.pds > 1 %}
+    {% set rowstyle = 'red' %}
+    {% endif %}
+    {% if "nos"  in roadgroup|keys    and roadgroup.nos < 1 %}
+      {% set rowstyle = 'red' %}
+      {% endif %}
+      <div class="roadgroup row  {{rowstyle}}" >
+        <div class="rgid" >{{roadgroup.roadgroupid}}</div>
+        <div class="name" >{{roadgroup.name}}</div>
+        <div class="rgid" >{{roadgroup.rggroupid}}</div>
+        <div class="num" >{{roadgroup.households}}</div>
+        <div class="num" >{{roadgroup.electors}}</div>
+        <div class="num" >{{roadgroup.nos}}</div>
+        <div class="num" >{{roadgroup.pds}}</div>
+        <div class="button"> <a class="button" href = "/roadgroup/showone/{{roadgroup.roadgroupid}}" >View</a> </div>
+        <div class="button"> <a class="button" href = "/roadgroup/showheat/{{roadgroup.roadgroupid}}" >Heat</a> </div>
+        <div class="button"> <a class="button" href = "/roadgroup/edit/{{roadgroup.roadgroupid}}" >Edit</a> </div>
+        <div class="text" > {{roadgroup.note}}</div>
+      </div>
+      {% endfor %}
     </div>
+    {% endif %}
 
-     <div class="roadgroup header  list row">
-
-                         <div class="rgid" >Road group Id</div>
-                           <div class="name" >Name</div>
-                       <div class="rgid" >RG-Group</div>
-                      <div  class="num" >House-holds</div>
-                       <div  class="num" >Electors</div>
-                        <div  class="num" >roads</div>
-                       <div  class="button" ></div>
-                        <div  class="button" ></div>
-                     <div  class="text" >Note</div>
-   </div>
-
-    <div  class="pagescroll list" >
-
-       {% for roadgroup in roadgroups %}
-           {% set rowstyle = '' %}
-       {% if "pds" in roadgroup|keys and roadgroup.pds > 1 %}
-       {% set rowstyle = 'red' %}
-       {% endif %}
-       {% if "nos"  in roadgroup|keys    and roadgroup.nos < 1 %}
-       {% set rowstyle = 'red' %}
-       {% endif %}
-                    <div class="roadgroup row  {{rowstyle}}" >
-                       <div  class="rgid" >{{roadgroup.roadgroupid}}</div>
-                       <div class="name" >{{roadgroup.name}}</div>
-                       <div  class="rgid" >{{roadgroup.rggroupid}}</div>
-                       <div  class="num" >{{roadgroup.households}}</div>
-                       <div  class="num" >{{roadgroup.electors}}</div>
-                       <div  class="num" >{{roadgroup.nos}}</div>
-                        <div  class="num" >{{roadgroup.pds}}</div>
-                        <div class="button"> <a class="button" href = "/roadgroup/showone/{{roadgroup.roadgroupid}}" >View</a> </div>
-                         <div class="button"> <a class="button" href = "/roadgroup/edit/{{roadgroup.roadgroupid}}" >Edit</a> </div>
-                     <div  class="text" > {{roadgroup.note}}</div>
-                     </div>
-       {% endfor %}
-    </div>
-{% endif %}
-
-</div>
-{% endblock %}
+  </div>
+  {% endblock %}

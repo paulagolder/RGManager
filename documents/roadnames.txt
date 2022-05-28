@@ -1,0 +1,33 @@
+
+
+ANSON AVENUE
+THE WINDINGS
+ST JOHNS CLOSE
+FALLOWFIELD
+HALFPENNY LANE
+TOWNSFIELDS
+
+MARTIN DRIVE
+TAYLOR WAY
+WRIGHT CLOSE
+PASCOE DRIVE
+DAVIDSON ROAD
+JOHN WILKS COURT
+ROBERT DAVIES WALK
+MILL POND                 The Mill Pond
+
+
+
+
+	ward	constituency	pd	stid Ascending 1	street	roadgroup	plv
+
+
+
+
+
+UPDATE `TABLE1` t, street s  SET t.`stid`=s.seq WHERE t.pd = s.pdid and t.street like s.name
+
+SAINTE FOY AVENUE
+
+
+INSERT INTO `roadgroup`(`roadgroupid`, `year`, `rggroupid`, `rgsubgroupid`, `name`, `ccname`) select rgid,"2022", rggroupid, rgsubgroupid, ccname ,ccname from TABLE30

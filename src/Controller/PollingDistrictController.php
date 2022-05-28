@@ -21,6 +21,7 @@ use App\Form\Type\RoadgroupForm;
 use App\Form\Type\StreetForm;
 use App\Entity\Roadgroup;
 use App\Entity\Street;
+use App\Entity\Geodata;
 use App\Entity\Pollingdistrict;
 use App\Service\MapServer;
 
@@ -70,12 +71,13 @@ class PollingDistrictController extends AbstractController
 
     $rglist = $this->getDoctrine()->getRepository("App:Roadgroup")->findAllinPollingDistrict($pdid,$this->rgyear);
     $apollingdistrict = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findOne($pdid);
+    dump($apollingdistrict);
     $roadgroups = [];
-    $bounds = $this->mapserver->newBounds();
+    $geodata = new Geodata;
     foreach ($rglist as $rg)
     {
       $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rg["roadgroupid"],$this->rgyear);
-      $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getGeodata());
+       $geodata->mergeGeodata_obj($aroadgroup->getGeodata_obj());
       $kml = $aroadgroup->getKML();
       if(!$this->mapserver->ismap($kml))
       {
@@ -84,6 +86,7 @@ class PollingDistrictController extends AbstractController
       $aroadgroup->setHouseholds(  $count = $this->getDoctrine()->getRepository("App:Roadgroup")->countHouseholds($aroadgroup->getRoadgroupId(), $this->rgyear));
       $roadgroups[] = $aroadgroup;
     }
+    $apollingdistrict->geodata =$geodata;
     $back =  "/pollingdistrict/showall/";
     // extra rgs?
     $totalhouseholds =0;
@@ -93,13 +96,39 @@ class PollingDistrictController extends AbstractController
     'rgyear'=>$this->rgyear,
     'message' =>  '' ,
     'pollingdistrict'=>$apollingdistrict,
-    'bounds'=> $bounds,
     'total'=>$totalhouseholds,
     'roadgroups' => $roadgroups ,
     'back'=>$back,
     ]);
 
   }
+
+
+  public function Showstreets($pdid)
+  {
+    $apollingdistrict = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findOne($pdid);
+    $geodata = new Geodata;
+     $streets =  $this->getDoctrine()->getRepository("App:Street")->findAllbyPd($pdid);
+    foreach ($streets as $street)
+    {
+      $astreet = $this->getDoctrine()->getRepository("App:Street")->findOnebySeq($street->getSeq());
+
+
+    }
+   // $apollingdistrict->{"geodata"} =$geodata;
+    $back =  "/pollingdistrict/showall/";
+
+    return $this->render('pollingdistrict/showstreets.html.twig',
+    [
+    'rgyear'=>$this->rgyear,
+    'message' =>  '' ,
+    'pollingdistrict'=>$apollingdistrict,
+    'streets' => $streets ,
+    'back'=>$back,
+    ]);
+
+  }
+
 
   public function Showoneb($rgid)
   {

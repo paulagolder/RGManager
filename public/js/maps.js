@@ -19,39 +19,16 @@ function getColor(i)
 {
   return window.colors[i]
 }
- // $location=  ''{"longitude":-1.8304,"latitude":52.6854 }';
 
 
 
-//alert(rgbToHex(0, 51, 255)); // #0033ff
 
-function xsetBoundsGeodata(amap,geodata)
+function myGoodMap(location)
 {
-  if(geodata=="") return;
-  var mybounds_dc =redecode(geodata);
-  var mybounds = JSON.parse(mybounds_dc);
-  if(mybounds["minlat"]===null) return;
-  var bounds =[];
-  bounds.push([ mybounds["maxlat"], mybounds["minlong"]]);
-  bounds.push([ mybounds["minlat"],mybounds["maxlong"]]);
-  amap.fitBounds(bounds);
-}
-
-function rgMap(geodata)
-{
-
-  if(geodata!="")
-  {
-  var mybounds_dc =redecode(geodata);
-  var mybounds = JSON.parse(mybounds_dc);
-  var lat =mybounds["midlat"];
-  var long = mybounds["midlong"];
-}
-else
-{
-  long =-1.8304;
-  lat = 52.6854 ;
-}
+  var location_dc =redecode(location);
+  var mylocation = JSON.parse(location_dc);
+  var lat = mylocation.midlat;
+  var long = mylocation.midlong;
   var zoom = 12;
   if( (typeof lat === "undefined") || lat < 40)
   {
@@ -59,126 +36,56 @@ else
     lat = 52.6854 ;
     zoom = 12;
   }
+
   if(zoom <1 ) zoom = 1;
-  var mymap = L.map('rgmapid').setView([ lat , long], zoom);
+
+  var mymap = L.map('goodmapid').setView([ lat , long], zoom);
   mapLink =
   '<a href="http://openstreetmap.org">OpenStreetMap</a>';
   L.tileLayer(
     'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; ' + mapLink + ' Contributors',
+      xmaxZoom: 20,
     }).addTo(mymap);
+
+
     return mymap;
 }
 
-  function mySwMap(location)
-  {
-    var location_dc =redecode(location);
-    var mylocation = JSON.parse(location_dc);
-    var lat = mylocation.latitude;
-    var long = mylocation.longitude;
-    var zoom = 12;
-    if( (typeof lat === "undefined") || lat < 40)
-    {
-      long =-1.8304;
-      lat = 52.6854 ;
-      zoom = 12;
-    }
 
-    if(zoom <1 ) zoom = 1;
-
-    var mymap = L.map('swmapid').setView([ lat , long], zoom);
-    mapLink =
-    '<a href="http://openstreetmap.org">OpenStreetMap</a>';
-    L.tileLayer(
-      'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; ' + mapLink + ' Contributors',
-        xmaxZoom: 20,
-      }).addTo(mymap);
-
-
-    //var marker = L.marker([lat , long]).addTo(mymap);
-   // var label = mylocation.name;
-   // marker.bindPopup(label);
-   // marker.on('mouseover',function(ev) {
-   //   marker.openPopup();
-   // });
-
-  return mymap;
-}
-
-function myRgMap(location)
+function myStMap(location)
 {
   var location_dc =redecode(location);
   var mylocation = JSON.parse(location_dc);
-  var lat = mylocation.latitude;
-  var long = mylocation.longitude;
-  var zoom = 10;
-  if( lat === undefined  || lat < 40)
+  var lat = mylocation.midlat;
+  var long = mylocation.midlong;
+  var zoom = 12;
+  if( (typeof lat === "undefined") || lat < 40)
   {
     long =-1.8304;
     lat = 52.6854 ;
-    zoom = 18;
+    zoom = 12;
   }
 
   if(zoom <1 ) zoom = 1;
 
-  var mymap = L.map('rgmapid').setView([ lat , long], zoom);
+  var mymap = L.map('stmapid').setView([ lat , long], zoom);
   mapLink =
   '<a href="http://openstreetmap.org">OpenStreetMap</a>';
   L.tileLayer(
     'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; ' + mapLink + ' Contributors',
-      maxZoom: 20,
+      "maxNativeZoom": 19, "maxZoom": 20,
     }).addTo(mymap);
+
+
     return mymap;
 }
 
-function myRgMapb(latstr,longstr)
-{
-  lat=parseFloat(latstr);
-  long= parseFloat(longstr);
-  var zoom = 10;
-  if( lat === undefined  || lat < 40)
-  {
-    long =-1.8304;
-    lat = 52.6854 ;
-    zoom = 18;
-  }
 
-  if(zoom <1 ) zoom = 1;
 
-  var mymap = L.map('rgmapid').setView([ lat , long], zoom);
-  mapLink =
-  '<a href="http://openstreetmap.org">OpenStreetMap</a>';
-  L.tileLayer(
-    'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; ' + mapLink + ' Contributors',
-      maxZoom: 20,
-    }).addTo(mymap);
-    return mymap;
-}
 
-function setBounds(amap, location)
-{
-  var location_dc =redecode(location);
-  var alocation = JSON.parse(location_dc);
-  var bounds =[];
-  bounds.push([ alocation.maxlat,alocation.maxlong]);
-  bounds.push([ alocation.maxlat,alocation.minlong]);
-  bounds.push([ alocation.minlat,alocation.maxlong]);
-  bounds.push([ alocation.minlat,alocation.minlong]);
-  amap.fitBounds(bounds);
-}
 
-function setBoundsb(amap, maxlat,maxlong,minlat,minlong)
-{
-  var bounds =[];
-  bounds.push([ parseFloat(maxlat),parseFloat(maxlong)]);
-  bounds.push([ parseFloat(maxlat),parseFloat(minlong)]);
-  bounds.push([ parseFloat(minlat),parseFloat(maxlong)]);
-  bounds.push([ parseFloat(minlat),parseFloat(minlong)]);
-  amap.fitBounds(bounds);
-}
 
 function setBounds2(amap, amybounds)
 {
@@ -219,6 +126,21 @@ function setMarkers(amap,amybounds)
    marker = L.marker([nwlat, selong]).addTo(amap);
 }
 
+function setMarkers2(amap,amybounds)
+{
+  var mybounds_dc =redecode(amybounds);
+  var mybounds = JSON.parse(mybounds_dc);
+  if(mybounds["minlat"]===null) return;
+  var nwlat =  mybounds["maxlat"];
+  var nwlong =  mybounds["minlong"];
+  var selat =  mybounds["minlat"];
+  var selong =  mybounds["maxlong"];
+  var marker = L.marker([nwlat, nwlong]).addTo(amap);
+  marker = L.marker([selat, selong]).addTo(amap);
+  marker = L.marker([selat, nwlong]).addTo(amap);
+  marker = L.marker([nwlat, selong]).addTo(amap);
+}
+
 function drawBox(amap,mybounds)
 {
   var bounds =[];
@@ -237,80 +159,6 @@ function drawBox(amap,mybounds)
 }
 
 
-
-
-
-function myWMap(location)
-{
-  if(location !== undefined && location !== null)
-  {
-  var location_dc =redecode(location);
-  var mylocation = JSON.parse(location_dc);
-  var lat = mylocation.latitude;
-  var long = mylocation.longitude;
-  var zoom = 12;
-  }
-  if( lat === undefined  || lat < 40)
-  {
-    long =-1.8304;
-    lat = 52.6854 ;
-    zoom = 12;
-  }
-
-  if(zoom <1 ) zoom = 1;
-
- // var mymap = L.map('wmapid').setView([ lat , long], zoom);
-  var mymap = L.map('wmapid').setView([ lat , long],zoom);
-  mapLink =
-  '<a href="http://openstreetmap.org">OpenStreetMap</a>';
-  L.tileLayer(
-    'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; ' + mapLink + ' Contributors',
-      xmaxZoom: 20,
-    }).addTo(mymap);
-
-
-    return mymap;
-}
-
-
-
-function myStMap(location)
-{
-  if(location)
-  {
-  var location_dc =redecode(location);
-  var mylocation = JSON.parse(location_dc);
-  var lat = mylocation.latitude;
-  var long = mylocation.longitude;
-}else
-{
-  var lat = null;
-  var long = null;
-}
-
-  var zoom = 20;
-  if( lat === undefined  || lat < 40)
-  {
-    long =-1.8304;
-    lat = 52.6854 ;
-    zoom = 14;
-  }
-
-  if(zoom <1 ) zoom = 1;
-
-  var mymap = L.map('stmapid').setView([ lat , long], zoom);
-  mapLink =
-  '<a href="http://openstreetmap.org">OpenStreetMap</a>';
-  L.tileLayer(
-    'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; ' + mapLink + ' Contributors',
-      "maxNativeZoom": 19, "maxZoom": 20,
-    }).addTo(mymap);
-
-
-    return mymap;
-}
 
 
 
@@ -466,7 +314,7 @@ function redecode(mystr)
 }
 
 
-function drawPath(amap,mypath,style=null)
+function drawPath(amap,mypath,label,style=null)
 {
   var polyline = null;
   if(style == null)
@@ -493,7 +341,7 @@ function drawPath(amap,mypath,style=null)
     var track = point.steps;
      polyline = L.polyline(track, style).addTo(amap);
 
-     polyline.bindPopup("Branch:"+bn);
+     polyline.bindPopup(label);
      bn=bn+1;
   }
 
@@ -528,4 +376,19 @@ function setEndMarkers(amap,branch)
   markers["start"] = scircle;
   markers["end"]=ecircle;
   return markers;
+}
+
+function doesFileExist(urlToFile)
+{
+  var xhr = new XMLHttpRequest();
+  xhr.open('HEAD', urlToFile, false);
+  xhr.send();
+
+  if (xhr.status == "404") {
+    console.log("File doesn't exist");
+    return false;
+  } else {
+    console.log("File exists");
+    return true;
+  }
 }

@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use App\Entity\Delivery;
 use App\Entity\Round;
+use App\Entity\Geodata;
 use App\Entity\Rggroup;
 use App\Entity\Rgsubgroup;
 use App\Entity\Roadgroup;
@@ -66,8 +67,11 @@ class DeliveryController extends AbstractController
 
     foreach($deliveries as &$delivery)
     {
-      $delivery->{"target"}=1234;
-      $delivery->{"delivered"}=4321;
+     // $delivery->{"target"}=0;
+     // $delivery->{"delivered"}=0;
+      $rounds= $this->getDoctrine()->getRepository("App:Round")->findRounds($delivery);
+      $roundstree = $this->treeserver->makeroundtree_object($rounds);
+      $delivery->update($roundstree);
       $rgmlpath ="/rgml/".$delivery->getSpacelessName().".rgml";
       $csvpath ="/csv/".$delivery->getSpacelessName().".csv";
       $rgml = $assetPackage->getUrl($rgmlpath);
@@ -109,25 +113,16 @@ class DeliveryController extends AbstractController
     $countdelivered=0;
     $counttarget=0;
     $usedrgs= array();
-    $bounds =$this->mapserver->newbounds();
-    /*
-     *    $delivery->{"Households"}=$counthh;
-     *    $delivery->{"Target"}=  $counttarget;
-     *    $delivery->{"Delivered"}=  $countdelivered;
-     *    $delivery->{"Roadgroups"}=  $countrgs;*/
+    $geodata = new Geodata;
+    foreach($rounds as $rnd)
+    {
+      $geodata->mergeGeodata_obj($rnd->getGeodata_obj());
+    }
+    dump($geodata);
     $roundstree = $this->treeserver->makeroundtree_object($rounds);
-    $this->treeserver->updateCounts($delivery,$roundstree);
-    $bounds = $this->treeserver->makebounds($roundstree);
     dump($roundstree);
-    dump($bounds);
     $rgstree = $this->spareRoadgroups($dvyid);
-    dump($rgstree);
-    $tbounds = $this->treeserver->makebounds_roadgroups($rgstree);
-    dump($tbounds);
-    $bounds = $this->mapserver->expandboundsobj($bounds,$tbounds);
-    dump($bounds);
-    dump($tbounds);
-
+    $delivery->setGeodata($geodata);
     dump($delivery);
     return $this->render('delivery/scheduledelivery.html.twig',
     [
@@ -136,10 +131,48 @@ class DeliveryController extends AbstractController
     'delivery'=>$delivery,
     'roundstree'=>$roundstree,
     'rgstree'=>$rgstree,
-    'bounds'=>$bounds,
     'back'=>"/delivery/edit/".$dvyid,
     ]);
   }
+
+
+  public function showagents($dvyid)
+  {
+    $delivery = $this->getDoctrine()->getRepository("App:Delivery")->findOne($dvyid);
+    if (!$delivery)
+    {
+      return $this->render('Delivery/showone.html.twig', [ 'message' =>  'Delivery not Found',]);
+    }
+    $rounds= $this->getDoctrine()->getRepository("App:Round")->findRounds($delivery);
+    $agents=[];
+    foreach($rounds as $round)
+    {
+      $agent = $round->getAgent();
+      if(!array_key_exists($agent,$agents))
+      {
+        $a=[];
+        $a['label']=$agent;
+        $a['round'] = 0;
+        $a['target'] = 0;
+        $a['completed']=0;
+        $agents[$agent]=$a;
+      }
+      $agents[$agent]['round'] = $agents[$agent]['round']+1;
+      $agents[$agent]['target'] = $agents[$agent]['target']+$round->getTarget();
+      $agents[$agent]['completed'] = $agents[$agent]['completed']+$round->getCompleted();
+    }
+     ksort($agents);
+    return $this->render('delivery/showagents.html.twig',
+    [
+    'rgyear' => $this->rgyear,
+    'message' =>  '' ,
+    'delivery'=>$delivery,
+    'agents'=>$agents,
+    'bounds'=>null,
+    'back'=>"/delivery/manage/".$dvyid,
+    ]);
+  }
+
 
   public function schedulegroup($dvyid,$grpid)
   {
@@ -149,7 +182,7 @@ class DeliveryController extends AbstractController
       return $this->render('Delivery/showone.html.twig', [ 'message' =>  'Delivery not Found',]);
     }
     $rounds= $this->getDoctrine()->getRepository("App:Round")->findRounds($delivery);
-    $bounds =$this->mapserver->newbounds();
+     $bounds =$this->mapserver->newGeodata();
     $countrgs = 0;
     $usedrgs= array();
 
@@ -159,8 +192,8 @@ class DeliveryController extends AbstractController
     $grouptree= $roundstree[$grpid]["children"];
     $rgstree = $this->spareRoadgroups($dvyid);
     $group = $roundstree[$grpid]["group"];
-    $bounds = $group->getBounds();
-    dump($bounds);
+    $ggeodata= $group->getGeodata_json();
+    dump( $ggeodata);
     return $this->render('delivery/schedulegroup.html.twig',
     [
     'rgyear' => $this->rgyear,
@@ -168,12 +201,49 @@ class DeliveryController extends AbstractController
     'delivery'=>$delivery,
     'group'=> $roundstree[$grpid]["group"],
     'roundstree'=>$grouptree,
-    'bounds'=>$bounds,
+    'bounds'=>$ggeodata,
     'rgstree'=>$rgstree,
     'back'=>"/delivery/scheduledelivery/".$dvyid,
     ]);
   }
 
+
+  public function updategroup($dvyid,$grpid)
+  {
+    $delivery = $this->getDoctrine()->getRepository("App:Delivery")->findOne($dvyid);
+    $rounds= $this->getDoctrine()->getRepository("App:Round")->findRounds($delivery);
+    foreach($rounds as $key=> $rnd)
+    {
+      $this->roundupdate($dvyid,$rnd->getRoundId());
+    }
+    return $this->redirect("/delivery/manage/$dvyid");
+  }
+
+
+  public function roundupdate($dvyid,$rndid)
+  {
+    $delivery = $this->getDoctrine()->getRepository("App:Delivery")->findOne($dvyid);
+    $round= $this->getDoctrine()->getRepository("App:Round")->findOne($rndid);
+    $entityManager = $this->getDoctrine()->getManager();
+    $geodata = new Geodata;
+    $rgps =  $this->getDoctrine()->getRepository("App:Round")->getRoadgroups($rndid,$this->rgyear);
+    $roadgroups= [];
+    foreach($rgps as $rgp)
+    {
+      $roadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgp["roadgroupid"],$this->rgyear);
+      dump($roadgroup);
+      $roadgroups[$rgp["roadgroupid"]]=$roadgroup;
+    }
+    foreach($roadgroups as $key2=> $roadgroup)
+      {
+         $geodata->mergeGeodata_obj( $roadgroup->getGeodata_obj());
+      }
+      $round->setGeodata($geodata);
+
+      $entityManager->persist($round);
+    $entityManager->flush();
+    return $this->redirect("/delivery/manage/$dvyid");
+  }
 
   public function schedulesubgroup($dvyid,$grpid,$sgrpid)
   {
@@ -198,8 +268,8 @@ class DeliveryController extends AbstractController
     $subgroup =  $grouptree[$sgrpid]["group"];
     $countrgs = 0;
     $usedrgs= array();
-     $bounds = $subgroup->getBounds();
-     dump($bounds);
+     $sggeodata = $subgroup->getGeodata_json();
+     dump($sggeodata);
     $rgstree = $this->spareRoadgroups($dvyid);
     return $this->render('delivery/schedulesubgroup.html.twig',
     [
@@ -209,12 +279,42 @@ class DeliveryController extends AbstractController
     'group'=>$group,
     'subgroup'=> $subgroup,
     'roundstree'=>$subgrouptree,
-    'bounds'=>$bounds,
+    'bounds'=>$sggeodata,
     'rgstree'=>$rgstree,
     'back'=>"/delivery/schedulegroup/".$dvyid."/".$grpid,
     ]);
   }
 
+  public function manage($dvyid)
+  {
+    $delivery = $this->getDoctrine()->getRepository("App:Delivery")->findOne($dvyid);
+    $district = $this->getDoctrine()->getRepository("App:District")->findOne($delivery->getDistrictId());
+    if (!$delivery)
+    {
+      return $this->render('Delivery/showone.html.twig', [ 'message' =>  'Delivery not Found',]);
+    }
+    $rounds =  $this->getDoctrine()->getRepository("App:Round")->findRounds($delivery);
+    $roundstree =     $this->treeserver->makeroundtree_object($rounds);
+    dump($roundstree);
+    $delivery->update($roundstree);
+    dump($delivery);
+    $geodata =new Geodata;
+    foreach($roundstree as $key=> $grp)
+    {
+      $grpgeodata = $grp["group"]-> getGeodata_obj();
+      $geodata->mergeGeodata_obj( $grpgeodata);
+    }
+    $delivery->setGeodata($geodata);
+    dump($delivery);
+    return $this->render('delivery/managerounds.html.twig',
+    [
+    'rgyear' => $this->rgyear,
+    'message' =>  '' ,
+    'delivery'=>$delivery,
+    'roundstree'=>$roundstree,
+    'back'=>"/delivery/showcurrent"
+    ]);
+  }
 
   public function scheduleround($dvyid, $rndid)
   {
@@ -222,7 +322,7 @@ class DeliveryController extends AbstractController
     $delivery = $this->getDoctrine()->getRepository("App:Delivery")->findOne($dvyid);
     $round= $this->getDoctrine()->getRepository("App:Round")->findOne($rndid);
     dump($round);
-    $roadgroups =  $this->getDoctrine()->getRepository("App:Round")->getRoadgroups($rndid);
+    $roadgroups =  $this->getDoctrine()->getRepository("App:Round")->getRoadgroups($rndid,$this->rgyear);
 
     $round->{"countrgs"}=count($roadgroups);
     $rgstree = $this->spareRoadgroups($dvyid);
@@ -232,15 +332,7 @@ class DeliveryController extends AbstractController
       $bounds = JSON_decode($bounds);
     dump($bounds);
     $countrgs =0;
-   /* foreach($roadgroups as $aroadgroup)
-    {
-      dump($aroadgroup);
-      $countrgs++;
-      if( array_key_exists( "geodata",$aroadgroup) && $aroadgroup["geodata"]!= null)
-        $bounds = $this->mapserver->expandboundsobj($bounds, $this->mapserver->makebounds($aroadgroup["geodata"]));
 
-      //stuff to fix here
-    }*/
     if($round->getRgsubgroupId() != null)
     {
       $back = "/delivery/schedulesubgroup/".$dvyid."/".$round->getRggroupId()."/".$round->getRgsubgroupId();
@@ -559,8 +651,19 @@ class DeliveryController extends AbstractController
   {
     $delivery = $this->getDoctrine()->getRepository("App:Delivery")->findOne($dvyid);
     $rounds= $this->getDoctrine()->getRepository("App:Round")->findRounds($delivery);
-    dump($rounds);
+    foreach($rounds as &$round)
+    {
+      $rgs = $this->getDoctrine()->getRepository("App:Round")->getRoadgroups($round->getRoundId());
+      foreach($rgs as $rg)
+      {
+        $streets = $this->getDoctrine()->getRepository("App:Street")->findGroup($rg["roadgroupid"],$this->rgyear);
+      }
+   $round->streetlist = $streets;
+
+    }
+
     $roundstree = $this->treeserver->makeroundtree_object($rounds);
+    dump($roundstree);
     $file = "csv/".$delivery->getSpacelessName().".csv";
     $csvout = "";
     $csvout .= "RD-Group, Name, RD-Sugroup,Name, Roadgroup, Name,  Households , Deliveries, Date, Agent, Delivered \n\n";
@@ -593,12 +696,11 @@ class DeliveryController extends AbstractController
       {
         $asubg  = $asubgroup["group"];
         $csvout .= " ,,".$asubg->getRndgroupid().",".$asubg->getName().",,,".$asubg->getHouseholds()."\n";
-        $roadgroups=$asubgroup["children"];
-        foreach ($roadgroups as $argroup)
+        $rounds=$asubgroup["children"];
+        foreach ($rounds as $around)
         {
-          $rgid = $argroup->getLabel();
-          $aroadgroup =  $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
-          $csvout .= " ,,,,".$aroadgroup->getRoadgroupId().",".$aroadgroup->getName().",".$aroadgroup->getHouseholds()."\n";
+
+          $csvout .= " ,,,,".$around->getLabel().",".$around->getName().",".$around->getTarget()."\n";
         }
         #csvout .= " \n";
       }
@@ -689,7 +791,7 @@ class DeliveryController extends AbstractController
     foreach( $rounds as $around)
     {
       $rndid=$around->getRoundId();
-      $rgs= $this->getDoctrine()->getRepository("App:Round")->getRoadgroups($rndid);
+      $rgs= $this->getDoctrine()->getRepository("App:Round")->getRoadgroups($rndid,$this->rgyear);
       // $rounds[$rndid]["countrgs"] = count($rgs);
       $usedrgs = array_merge($usedrgs, $rgs);
     }

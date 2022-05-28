@@ -49,7 +49,7 @@ class SeatRepository  extends EntityRepository
      public function findRoadgroups($dtid,$stid,$year)
      {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'select r.* from roadgroup as r where roadgroupid in (select DISTINCT roadgroupid from roadgrouptostreet as rs join street as s on (rs.street = s.name and ( rs.part = s.part or ( rs.part is null or rs.part = "" )) and rs.year="'.$year.'" ) where s.pd in (SELECT pdid FROM `seattopd` sp WHERE sp.seat="'.$stid.'" and sp.district ="'.$dtid.'" and sp.year = "'.$year.'")) and r.year = "'.$year.'"';
+        $sql = 'select r.* from roadgroup as r where r.roadgroupid in (select DISTINCT roadgroupid from roadgrouptostreet as rs join street as s on rs.streetid = s.seq  and rs.year="'.$year.'"  where s.pdid in (SELECT pdid FROM `seattopd` sp WHERE sp.seat="'.$stid.'" and sp.district ="'.$dtid.'" and sp.year = "'.$year.'")) and r.year = "'.$year.'"';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $roadgroups= $stmt->fetchAll(\Doctrine\ORM\Query::HYDRATE_ARRAY);
@@ -77,7 +77,7 @@ class SeatRepository  extends EntityRepository
      {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = 'select p.* from pollingdistrict as p where p.pollingdistrictid in (select DISTINCT sp.pdid from seattopd as sp WHERE sp.seat="'.$stid.'" and sp.district ="'.$dtid.'" and sp.year ="'.$year.'")';
+        $sql = 'select p.* from pollingdistrict as p where p.pdid in (select DISTINCT sp.pdid from seattopd as sp WHERE sp.seat="'.$stid.'" and sp.district ="'.$dtid.'" and sp.year ="'.$year.'")';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $roadgroups= $stmt->fetchAll(\Doctrine\ORM\Query::HYDRATE_ARRAY);
@@ -88,7 +88,7 @@ class SeatRepository  extends EntityRepository
       public function countHouseholds($dtid,$stid,$year)
      {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = ' Select SUM(r.households) as nos FROM `street` as r , seattopd as sp where r.pd= sp.pdid and sp.seat="'.$stid.'" and sp.district ="'.$dtid.'" and sp.year ="'.$year.'" ';
+        $sql = ' Select SUM(r.households) as nos FROM `street` as r , seattopd as sp where r.pdid= sp.pdid and sp.seat="'.$stid.'" and sp.district ="'.$dtid.'" and sp.year ="'.$year.'" ';
          $stmt = $conn->prepare($sql);
          $stmt->execute();
          $harray= $stmt->fetchAll();
@@ -111,10 +111,10 @@ class SeatRepository  extends EntityRepository
      }
 
 
-       public function addpd($dtid,$stid,$pdid,$year)
+       public function addpd($dtid,$stid,$pdid,$pdtag,$year)
      {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'insert into seattopd (district,seat, pdid,year ) values ("'.$dtid.'", "'.$stid.'","'.$pdid.'", "'.$year.'" );';
+        $sql = 'insert into seattopd (district,seat, pdid,pdtag,year ) values ("'.$dtid.'", "'.$stid.'","'.$pdid.'","'.$pdtag.'","'.$year.'" );';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
      }

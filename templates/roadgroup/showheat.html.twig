@@ -1,4 +1,4 @@
-{# views/roadgroup/showone.html.twig #}
+{# views/roadgroup/showheat.html.twig #}
 
 {% extends 'rgmaster.html.twig' %}
 
@@ -46,7 +46,7 @@
   </div>
   <div class="subheading row">
     <div class="name" >Name/part</div>
-    <div class="button wide" >PD</div>
+    <div class="pd" >PD</div>
     <div  class="num" >House-holds</div>
      <div  class="num" >Electors</div>
      <div  class="num" >Dist</div>
@@ -61,7 +61,7 @@
         /{{street.part}}
         {% endif %}
       </div>
-      <div class="button wide" ><a class="button" href = "/pollingdistrict/show/{{street.pdid}}" >{{street.pdid}}</a></div>
+      <div class="pd" ><a class="button" href = "/pollingdistrict/show/{{street.pd}}" >{{street.pd}}</a></div>
       <div  class="num" >{{street.households}}</div>
         <div  class="num" >{{street.electors}}</div>
           {% if street.geodata %}
@@ -91,7 +91,7 @@
       <button type="submit">Add Street</button>
     <select name="selstreet">
 {% for astreet in sparestreets %}
-    <option value="{{ astreet.seq}}">{{astreet.name }}/{{astreet.pdid}}</option>
+    <option value="{{ astreet.seq}}">{{ astreet.name }}/{{astreet.pd}}</option>
 {% endfor %}
 </select>
   </form>
@@ -116,9 +116,7 @@
 <div class="map" >
   <div id="goodmapid" ></div>
 </div>
-     {% dump(roadgroup) %}
      {% set geodata = roadgroup.getGeodata_obj | json_encode | raw   %}
-     {% dump(geodata) %}
 <script >
   var mymap = myGoodMap("{{geodata}}");
   var kml = "{{roadgroup.kml}}";
@@ -130,6 +128,7 @@
   }
   var style = {"color":  "#FF0000" , "weight": 14 ,  "clickable": true ,"opacity": 0.3, "fillOpacity": 0.1 };
    {% for street in streets %}
+
       drawPath(mymap,"{{street.getPath()}}","{{street.getName()}}");
    {% endfor %}
   setMarkers(mymap,"{{geodata}}");

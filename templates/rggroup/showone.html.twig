@@ -20,13 +20,18 @@
 
 {% block middle %}
   <div class="heading  row">
-        <div class="label"> RG-Groups:</div>
-        <div class="value"> {{rggroup.rggroupid}}:</div>
-        <div class="value"> {{rggroup.name}}</div>
-        <div class="value"> {{rggroup.households}}</div>
-
-        <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
-      </div>
+     <div class="label"> RG-Groups:</div>
+     <div class="value"> {{rggroup.rggroupid}}:</div>
+     <div class="value"> {{rggroup.name}}</div>
+     <div class="button  right"> <a class="button" href = "/rggroup/updategroup/{{rggroup.rggroupid}}" >Update </a> </div>
+     <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+  </div>
+  <div class="heading small row">
+   <div class="value small"> HH:{{rggroup.Households}}</div>
+   <div class="value small"> EE:{{rggroup.Electors}}</div>
+   <div class="value small"> RGS:{{rggroup.roadgroups}}</div>
+   <div class="value small"> RDS:{{rggroup.streets}}</div>
+  </div>
 
 {% if message %}
    <H1> {{message}} </H1>
@@ -34,8 +39,12 @@
  <div class="subheading row">
       <div class="rgid" >RG-SubgroupId</div>
       <div class="name" >Name</div>
-      <div class="bnum" >Households</div>
-       <div class="bnum" >Calculated</div>
+       <div class="bnum" >Households</div>
+      <div class="bnum" >Electors</div>
+      <div class="bnum" >Roadgroups</div>
+        <div class="bnum" >Streets</div>
+         <div class="bnum" >PW</div>
+          <div class="bnum" >PN</div>
       <div class="button" ></div>
       <div class="button" ></div>
    </div
@@ -44,8 +53,17 @@
          <div class="rggroup row" >
            <div class="rgid" id="{{subgroup.rgsubgroupid}}">{{subgroup.rgsubgroupid}}</div>
            <div class="name" >{{subgroup.name}}</div>
-           <div class="bnum" >{{subgroup.total}}</div>
-           <div class="bnum" >{{subgroup.calculated}}</div>
+           <div class="bnum" >{{subgroup.households}}</div>
+           <div class="bnum" >{{subgroup.electors}}</div>
+           <div class="bnum" >{{subgroup.roadgroups}}</div>
+           <div class="bnum" >{{subgroup.streets}}</div>
+           {% if subgroup.electors > 0 %}
+             <div class="bnum" >{{ (subgroup.PLVW/subgroup.electors) | number_format(2)}}</div>
+             <div class="bnum" >{{ (subgroup.PLVN/subgroup.electors) | number_format(2)}}</div>
+           {% else %}
+             <div class="bnum" >0</div>
+             <div class="bnum" >0</div>
+           {% endif %}
            <a class="button" href = "/rgsubgroup/show/{{subgroup.rgsubgroupid}}" >VIEW</a>
            <a class="button" href = "/rgsubgroup/edit/{{subgroup.rgsubgroupid}}" >EDIT</a>
         </div>
@@ -62,6 +80,7 @@
   <div class=" row  indent">
     <div class="rgid" >{{roadgroup.roadgroupid}}</div>
     <div class="name" >{{roadgroup.name}}</div>
+     <div class="name" >{{roadgroup.ccname}}</div>
     <a class="button" href = "/roadgroup/edit/{{roadgroup.roadgroupid}}" >VIEW</a>
   </div>
   {% endfor %}
@@ -73,14 +92,13 @@
 {% endif %}
 
 <div class="map" >
-  <div id="wmapid" ></div>
+  <div id="goodmapid" ></div>
 </div>
-{% set jslocation = rggroup.getjson() %}
-
-  {% set abounds = bounds | json_encode | raw %}
+  {% set ggeodata = rggroup.geodata | json_encode | raw  %}
+  {% dump(ggeodata)  %}
 <script >
 
-var mymap = myWMap("{{jslocation}}");
+var mymap = myGoodMap("{{ggeodata}}");
 
 var bounds = null;
 var rggrouplayer = null;
@@ -121,8 +139,8 @@ var i=0;
           makeOutlineKml(mymap,path,style,false,"{{rggroup.name}}")
       }
 
-   setMarkers(mymap,"{{abounds}}");
-   setBounds2(mymap,"{{abounds}}");
+   setMarkers(mymap,"{{ggeodata}}");
+    setBounds2(mymap,"{{ggeodata}}");
 </script>
 {% endif %}
 {% endblock %}

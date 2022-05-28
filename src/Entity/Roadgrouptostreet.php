@@ -11,27 +11,19 @@ use Doctrine\ORM\Mapping as ORM;
 class Roadgrouptostreet
 {
 
-
+  /**
+     * @ORM\Id
+     * @ORM\Column(name="seq",type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $Seq;
 
 /**
-     * @ORM\Id
-     * @ORM\Column(name="street",type="string", length=10)
+     *
+     * @ORM\Column(name="streetid",type="integer")
      */
-    private $Street;
+    private $StreetId;
 
-
-
-    /**
-     * @ORM\Id
-     * @ORM\Column(name="part",type="string", length=40, nullable=true)
-     */
-    private $Part;
-
-
-    /**
-     * @ORM\Column(name="pd",type="string", length=10, nullable=true)
-     */
-    private $PD;
 
 
      /**
@@ -49,36 +41,18 @@ class Roadgrouptostreet
 
   public function getStreetId()
     {
-    if($this->Part)
-    {
-    return $this->Street."/".$this->Part;
-    }
-    else
-        return $this->Street;
+
+        return $this->StreetId;
     }
 
 
 
-    public function getStreet(): ?string
-    {
-        return $this->Ntreet;
-    }
 
-    public function setStreet(string $Name): self
-    {
-        $this->Street = $Name;
 
-        return $this;
-    }
-
-    public function getPart(): ?string
+    public function setStreetId($num): self
     {
-        return $this->Part;
-    }
+        $this->StreetId = $num;
 
-    public function setPart(?string $part): self
-    {
-        $this->Part = $part;
         return $this;
     }
 

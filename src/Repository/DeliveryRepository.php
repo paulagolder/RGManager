@@ -73,7 +73,7 @@ dump($roadgroups);
     $stmt = $conn->prepare($sqlpd);
     $pollingdistricts = $stmt->fetchAll();
     $pdarray = array();
-    $sql = 'select r.* from roadgroup as r where r.roadgroupid in (SELECT rs.roadgroupid FROM `roadgrouptostreet` as rs  WHERE rs.pd IN(:pdlist)   and rs.year = "'.$year.'") and r.year = "'.$year.'"';
+    $sql = 'select r.* from roadgroup as r where r.roadgroupid in ( SELECT rs.roadgroupid  FROM `roadgrouptostreet` as rs  join street as s on rs.streetid = s.seq  WHERE s.pd IN(:pdlist)   and  rs.year = "2022") and r.year = "'.$year.'"';
 
     $stmt = $conn->executeQuery(
       $sql,

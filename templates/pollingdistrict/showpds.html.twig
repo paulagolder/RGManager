@@ -20,7 +20,7 @@
 
 {% else %}
     <div class="heading row">
-    <div class="label">Polling District : {{pollingdistrict.pollingdistrictid}}</div>
+    <div class="label">Polling District : {{pollingdistrict.pdid}}</div>
      <div class="message"> All Roadgroups with streets in this Polling district</div>
     <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
     </div>
@@ -56,15 +56,14 @@
                      </div>
        {% endfor %}
     </div>
-    <div class="map" >
-  <div id="swmapid" ></div>
+ <div class="map" >
+  <div id="goodmapid" ></div>
 </div>
+  {% set sggeodata = pollingdistrict.geodata | json_encode | raw  %}
+  {% dump(sggeodata) %}
+<script >
+    var mymap = myGoodMap("{{sggeodata}}");
 
-
-  {% set jslocation = pollingdistrict.getjson() %}
-  {% set abounds = bounds | json_encode | raw %}
-  <script  type="text/javascript" >
-    var mymap = mySwMap("{{jslocation}}");
     var i=0;
     var fgroup =  new L.featureGroup();
     {% for aroadgroup in roadgroups %}
@@ -84,8 +83,8 @@
       }
     }
        {% endfor %}
-   setMarkers(mymap,"{{abounds}}");
-     setBounds2(mymap,"{{abounds}}");
+   setMarkers(mymap,"{{sggeodata}}}");
+     setBounds2(mymap,"{{sggeodata}}}");
    </script>
    {% endif %}
 

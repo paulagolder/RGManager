@@ -5,12 +5,25 @@ namespace App\Entity;
 use App\Repository\RoadgroupRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityManager;
+use App\Entity\Geodata;
+use App\Entity\Street;
 
 /**
  * @ORM\Entity(repositoryClass=RoadgroupRepository::class)
  */
 class Roadgroup
 {
+
+ private $entityManager;
+
+
+
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
   /**
    * @ORM\Id
    *
@@ -27,10 +40,15 @@ class Roadgroup
 
 
   /**
-   * @ORM\Column(name="name",type="string", length=20)
+   * @ORM\Column(name="name",type="string", length=30)
    */
   private $Name;
 
+
+    /**
+   * @ORM\Column(name="ccname",type="string", length=30)
+   */
+  private $CCName;
 
   /**
    * @ORM\Column(name="rgsubgroupid",type="string")
@@ -66,6 +84,17 @@ class Roadgroup
    */
   private $Distance;
 
+    /**
+   * @ORM\Column(name="PLVW",type="integer",  nullable=true)
+   */
+  private $PLVW;
+  /**
+   *
+   *                /**
+   * @ORM\Column(name="PLVN",type="integer",  nullable=true)
+   */
+   private $PLVN;
+
   /**
    * @ORM\Column(name="kml",type="string", length=20, nullable=true)
    */
@@ -98,12 +127,34 @@ class Roadgroup
      */
     private $Updated;
 
-
-    private $em;
-    public function __construct(EntityManager $em)
+    public function getPLVW()
     {
-        $this->em = $em;
+      return $this->PLVW;
     }
+
+    public function setPLVW($number): self
+    {
+      $this->PLVW = $number;
+      return $this;
+    }
+
+
+    public function getPLVN()
+    {
+      return $this->PLVN;
+    }
+
+    public function setPLVN($number): self
+    {
+      $this->PLVN = $number;
+      return $this;
+    }
+
+  //  private $em;
+//    public function __construct(EntityManager $em)
+  //  {
+   //     $this->em = $em;
+   // }
 
 
   public function getRoadgroupId()
@@ -164,6 +215,18 @@ class Roadgroup
    public function setName(string $name): self
    {
      $this->Name = $name;
+     return $this;
+   }
+
+     public function getCCName(): ?string
+   {
+
+     return $this->CCName;
+   }
+
+   public function setCCName(string $name): self
+   {
+     $this->CCName = $name;
      return $this;
    }
 
@@ -279,7 +342,12 @@ class Roadgroup
    }
 
 
+public function getGeodata_obj()
+{
+ $ngeodata = new Geodata;
 
+ return  $ngeodata->loadGeodata($this->getGeodata());
+}
 
 public function getGeodata_json()
 {
@@ -359,6 +427,9 @@ public function setGeodata($text)
       $csvout .= "   ,,$this->RoadgroupId:".$this->getName()." , $this->Households \n  ";
      return  $csvout;
    }
+
+
+
 
 
 }

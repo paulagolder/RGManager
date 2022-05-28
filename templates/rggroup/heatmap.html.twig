@@ -1,4 +1,4 @@
-{# views/rggroup/showone.html.twig #}
+{# views/rggroup/heatmap.html.twig #}
 
 {% extends 'rgmaster.html.twig' %}
 
@@ -43,13 +43,13 @@
       </div>
 
 <div class="map" >
-  <div id="rgmapid" ></div>
+  <div id="goodmapid" ></div>
 </div>
-{% set geodata = district.getGeodata_json %}
+
+     {% set geodata = rggroup.getGeodata_obj | json_encode | raw   %}
+     {% dump(geodata) %}
 <script >
-
-
-var mymap = rgMap(geodata);
+  var mymap = myGoodMap("{{geodata}}");
 
 var bounds = null;
 var wardlayer = null;
@@ -58,16 +58,16 @@ var fgroup =  new L.featureGroup();
       var path = "{{mappath}}roadgroups/"+kml;
       if(kml)
       {
-          var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.0 };
-          makeKMLLayer(mymap,path,style,true,"LCC")
+          var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "unclickable": true,"opacity": 0.2, "fillOpacity": 0.0 };
+          makeKMLLayer(mymap,path,style,true)
       }
 
 {% for rg in rglist %}
 
-    var mc = "{{rg['color']}}";
+    var mc = "{{rg.color}}";
     var style = {"color":  mc , "weight": 4 ,  "clickable": true ,"opacity": 1.0, "fillOpacity": 1.0 };
     var  kml = "{{rg['kml']}}";
-     var name = kml+"("+mc+")";
+     var name = "{{rg['rgid']}}-{{rg['priority']}}";
     var path = "{{mappath}}roadgroups/"+kml;
     if(kml)
     {

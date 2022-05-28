@@ -22,6 +22,7 @@ use App\Form\Type\RoadgroupForm;
 use App\Form\Type\StreetForm;
 use App\Entity\Roadgroup;
 use App\Entity\Street;
+use App\Entity\Geodata;
 
 
 
@@ -47,7 +48,8 @@ class RoadgroupController extends AbstractController
   public function Showall()
   {
     $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findAllbyYear($this->rgyear);
-    if (!$roadgroups) {
+    if (!$roadgroups)
+    {
       return $this->render('roadgroup/showall.html.twig', [ 'message' =>  'roadgroups not Found',]);
     }
     $streets = array();
@@ -57,11 +59,8 @@ class RoadgroupController extends AbstractController
       $streets[$street["roadgroupid"]] = $street["nos"];
     }
     $rgpds = $this->getDoctrine()->getRepository("App:Roadgrouptostreet")->countPDs($this->rgyear);
-
-
     foreach ( $roadgroups as $key=>$roadgroup)
     {
-
       if(array_key_exists($roadgroup->getRoadgroupId(),$streets))
       {
         $roadgroup->nos = $streets[$roadgroup->getRoadgroupId()];
@@ -78,7 +77,6 @@ class RoadgroupController extends AbstractController
 
       $roadgroups[$key] = $roadgroup;
     }
-dump($roadgroups);
     return $this->render('roadgroup/showall.html.twig',
     [
     'rgyear'=>$this->rgyear,
@@ -105,17 +103,20 @@ dump($roadgroups);
     $wdid = $roadgroup->getRggroupid();
     $stlist = [];
     $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($rgid,$this->rgyear);
-    foreach($streets as &$astreet)
+    $pds = '"(';
+    foreach($streets as $astreet)
     {
-      if($astreet->getGeodata()==null)
-      {
-        $astreet->makeGeodata();
-      }
-   }
-    $bounds = $this->mapserver->makebounds_streetlist($streets);
-    $totalhouseholds = 0;
-    $totaldist = 0;
+      if(!str_contains($pds, $astreet->getPdId()))
+          $pds .=  $astreet->getPdId().',';
 
+    }
+    $pds .=')"';
+    dump($pds);
+    $pds = str_replace(",)",")",$pds);
+    dump($pds);
+    $extrastreetsinpd = null;
+    if(strlen($pds) >2)
+       $extrastreetsinpd =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreetsInPd($pds,$this->rgyear);
     if($swdid)
       $back = "/rgsubgroup/show/".$swdid;
     else if($wdid)
@@ -123,41 +124,25 @@ dump($roadgroups);
     else
       $back =  "/rggroup/showall/";
     $extrastreets =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreets($this->rgyear);
-   // dump($extrastreets);
-    //if($this->needsUpdating($rgid))
+    $geodata= $roadgroup->getGeodata_obj();
+    dump($roadgroup);
+    dump($geodata);
+    if($geodata->maxlat <-350)
     {
-      $this->makeGeodata($rgid);
-    }
-  //  else
-    {
-    $geodata= $roadgroup->getGeodata();
-    //if($geodata === null)
-    {
-      if($roadgroup->getKML())
-      {
-        $geodata= $this->makeGeodata($rgid);
+      $agroup = $this->getDoctrine()->getRepository("App:Rggroup")->findOne($roadgroup->getRggroupid());
+      $geodata = $agroup->getGeodata();
       $roadgroup->setGeodata($geodata);
-      $roadgroup->setDistance($geodata["dist"]);
-      $entityManager = $this->getDoctrine()->getManager();
-      $entityManager->persist($roadgroup);
-      $entityManager->flush();
-      }
     }
 
-      }
-      $geodata= $roadgroup->getGeodata();
-    dump($geodata);
+
     return $this->render('roadgroup/showone.html.twig',
     [
     'rgyear'=>$this->rgyear,
     'message' =>  '' ,
     'seats'=>$seats,
-    'total'=>$totalhouseholds,
-    'totaldist'=>$totaldist,
-    'geodata'=>$geodata,
-    'bounds' =>$bounds,
     'roadgroup' => $roadgroup ,
     'streets'=> $streets,
+    'sparestreetspd'=>$extrastreetsinpd,
     'sparestreets'=>$extrastreets,
     'year'=>$this->rgyear,
     'back'=>$back,
@@ -166,10 +151,41 @@ dump($roadgroups);
   }
 
 
+  public function Showheat($rgid)
+  {
+    $seats= null;
+    $roadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
+    if(!$roadgroup)
+    {
+      return $this->render('roadgroup/showone.html.twig',  [    'rgyear'=>$this->rgyear,'message' =>  'No roadgroups not Found',]);
+    }
+    $currentkml = $roadgroup->getKML();
+    $swdid = $roadgroup->getRgsubgroupid();
+    $wdid = $roadgroup->getRggroupid();
+    $stlist = [];
+    $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($rgid,$this->rgyear);
+    if($swdid)
+      $back = "/rgsubgroup/show/".$swdid;
+    else if($wdid)
+      $back =  "/rggroup/show/".$wdid;
+    else
+      $back =  "/rggroup/showall/";
+    $extrastreets =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreets($this->rgyear);
+    $geodata= $roadgroup->getGeodata();
 
+    return $this->render('roadgroup/showone.html.twig',
+    [
+    'rgyear'=>$this->rgyear,
+    'message' =>  '' ,
+    'seats'=>$seats,
+    'roadgroup' => $roadgroup ,
+    'streets'=> $streets,
+    'sparestreets'=>$extrastreets,
+    'year'=>$this->rgyear,
+    'back'=>$back,
+    ]);
 
-
-
+  }
 
 
   public function Edit($rgid)
@@ -222,11 +238,23 @@ dump($roadgroups);
       ));
   }
 
+  public function removefromsubgroup($rgid)
+  {
+    $roadgroup = $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($rgid,$this->rgyear);
+    $swdid = $roadgroup->getRGsubgroupid();
+    $roadgroup->setRGsubgroupid(null);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($roadgroup );
+        $entityManager->flush();
+        return $this->redirect("/rgsubgroup/show/".$swdid);
+
+  }
+
   public function NewRG($wdid, $swdid)
   {
     $request = $this->requestStack->getCurrentRequest();
 
-    $roadgroup  = new Roadgroup ();
+    $roadgroup  = new Roadgroup ( $this->getDoctrine()->getManager());
     $roadgroup->setRggroupid($wdid);
     $roadgroup->setRgsubgroupid($swdid);
     $roadgroup->setYear($this->rgyear);
@@ -281,7 +309,8 @@ dump($roadgroups);
         $entityManager->persist($astreet);
         $entityManager->flush();
         $pid = $street->getStreetId();
-        return $this->redirect("/street/edit/".$pid);
+        return $this->doUpdating($pid);
+
       }
     }
 
@@ -312,10 +341,13 @@ dump($roadgroups);
         $entityManager->persist($astreet);
         $entityManager->flush();
         $pid = $astreet->getStreetId();
-        return $this->redirect("/roadgroup/showone/".$rgid);
+        $seq= $astreet->getSeq();
+       // return $this->redirect("/roadgroup/showone/".$rgid);
         $rgst = new RoadgrouptoStreet();
         $rgst.setStreet($pid);
+        $rgst.setStreetId($pid);
         $rgst.setRoadgroupId($rgid);
+        return $this->doUpdating($rgid);
 
       }
     }
@@ -349,51 +381,20 @@ dump($roadgroups);
   }
 
 
-  public function UpdateHouseholds($rgid)
-  {
 
-    $this->getDoctrine()->getRepository('App:Roadgroup')->updateHouseholds($rgid,$this->rgyear);
-
-    return $this->redirect($back);
-
-  }
 
   public function newkml($rgid)
   {
     $roadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
     if(!$roadgroup)
     {
-      return $this->render('roadgroup/showone.html.twig',  [    'rgyear'=>$this->rgyear,'message' =>  'No roadgroups not Found',]);
+      return "";
     }
-
     $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($rgid,$this->rgyear);
     $newkml = "";
-    $totaldist =0;
     foreach($streets as $astreet)
     {
-      $path = $astreet->getDecodedpath();
-      foreach($path as $branch)
-      {
-        if(count($branch->steps)>1)
-        {
-
-       // $geodata = $this->loadBranch($branch->steps);
-       // $dist += $geodata["dist"];
-        $newkml .=  "<Placemark>\n";
-        $newkml .=  "  <name>".$astreet->getName()."</name>\n";
-        $newkml .=  "  <styleUrl>#blueLine</styleUrl>\n";
-        $newkml .=  "  <LineString>\n";
-        $newkml .=  "	   <coordinates>\n";
-        foreach($branch->steps as $step)
-        {
-          $newkml .="".$step[1].",".$step[0]."\n";
-        }
-        $newkml .=  "    </coordinates>\n";
-        $newkml .=  "  </LineString>\n";
-        $newkml .=  "</Placemark>\n";
-      }
-      }
-      $totaldist += $astreet->getDistance();
+      $newkml .= $astreet->makekml();
     }
     return $newkml;
   }
@@ -429,72 +430,30 @@ dump($roadgroups);
     $roadgroup->setKml($kmlname);
     $time = new \DateTime();
     $roadgroup->setUpdated($time);
-    $roadgroup->setGeodata(null);
-    $roadgroup->setDistance(-1);
     $entityManager = $this->getDoctrine()->getManager();
     $entityManager->persist($roadgroup);
     $entityManager->flush();
-    $this->updateGeodata($rgid);
-    return $this->redirect("/roadgroup/showone/".$rgid);
+
   }
 
-
-
-
-  public function writekml($newkml,$kmlname)
-  {
-
-    $file = "maps/roadgroups/".$kmlname;
-    $xmlout = "";
-    $xmlout .= "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-    $xmlout .= "<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n";
-    $xmlout .=  "<Document>\n";
-    $xmlout .=  " <name>".$kmlname."</name>\n";
-    $xmlout .=  "<Style id=\"blueLine\">\n";
-    $xmlout .=  "  <LineStyle>\n";
-    $xmlout .=  "    <color>7fff0000</color>\n";
-    $xmlout .=  "    <width>4</width>\n";
-    $xmlout .=  "  </LineStyle>\n";
-    $xmlout .=  "</Style>\n";
-
-    $xmlout .=  $newkml;
-
-    $xmlout .=  "</Document>\n";
-    $xmlout .=  "</kml>\n";
-    $handle = fopen($file, "w") or die("ERROR: Cannot open the file.");
-    fwrite($handle, $xmlout) or die ("ERROR: Cannot write the file.");
-    fclose($handle);
-    $this->addFlash('notice 1','kml file saved'.$file );
-
-    return true;
-  }
-
-
-  function updateGeodata($rgid)
-  {
-    $year=$this->rgyear;
-    $roadgroup= $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
-    $geodata = $this->makeGeodata($rgid);
-    $roadgroup->setGeodata($geodata);
-    $roadgroup->setDistance($geodata["dist"]);
-    $entityManager = $this->getDoctrine()->getManager();
-    $entityManager->persist($roadgroup);
-    $entityManager->flush();
-   }
-
-
-   public function needsUpdating($rgid)
+   public function updateRoadgroup($rgid)
    {
      $roadgroup= $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
-     $streetdate =  new \DateTime("1/1/2000");
-     $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($rgid,$this->rgyear);
-
-     foreach($streets as $astreet)
+     $this->makeGeodata($rgid);
+     dump($roadgroup);
+     if(!$roadgroup->getGeodata())
      {
-       if($streetdate > $astreet->getupdated() ) $streetdate = $astreet->getupdated();
-     }
-     if($streetdate > $roadgroup->getUpdated()) return true;
-     return false;
+       $rgsubgroupid = $roadgroup->getRgsubgroupid();
+       $rgsubgroup = $this->getDoctrine()->getRepository("App:Rgsubgroup")->findOne($rgsubgroupid );
+       if(!$rgsubgroup->getGeodata())
+       {
+         $rggroupid = $rgsubgroup->getRggroupid();
+         $rggroup = $this->getDoctrine()->getRepository("App:Rggroup")->findOne($rggroupid );
+       }
+
+    }
+     $this->exportKML($rgid);
+     return $this->redirect('/roadgroup/showone/'.$rgid);
    }
 
 
@@ -504,58 +463,49 @@ dump($roadgroups);
      $streets =  $this->getDoctrine()->getRepository("App:Street")->findgroup($rgid,$this->rgyear);
      $totalhouseholds = 0;
      $totalelectors = 0;
-     $totaldist = 0;
      $totalstreets = 0;
-
-     $dist = 0;
-     $minlat=360;
-     $minlong =360;
-     $maxlat=-360;
-     $maxlong=-360;
+     $totalsteps =0;
+     $totplvw = 0;
+     $totplvn =0;
+     $geodata = new Geodata;
+     $maxhh = 0;
+     $name="??";
      foreach($streets as $astreet)
      {
+       $sthh = $astreet->getHouseholds();
+       if($sthh > $maxhh)
+       {
+         $maxhh= $sthh;
+         $name = $astreet->getName();
+       }
        $totalhouseholds += $astreet->getHouseholds();
        $totalelectors += $astreet->getElectors();
-
+       $totalsteps += $astreet->getsteps() ;
        $totalstreets ++;
        $astreet->makeGeodata();
        $stgd = $astreet->getGeodata();
-       if($stgd !=null)
-       {
-       $totaldist += $stgd["dist"];
-       $aminlat = floatval($stgd["minlat"]);
-       $aminlong = floatval($stgd["minlong"]);
-       $amaxlat = floatval($stgd["maxlat"]);
-       $amaxlong = floatval($stgd["maxlong"]);
-       if($aminlong> -360)
-       {
-         if($minlat > $aminlat && $aminlat != 0)$minlat = $aminlat;
-         if($minlong > $aminlong && $aminlong != 0)$minlong = $aminlong;
-         if($maxlong <  $amaxlong && $amaxlong != 0)$maxlong = $amaxlong;
-         if($maxlat <  $amaxlat  &&  $amaxlat != 0)$maxlat = $amaxlat;
-       }
+       $geodata->mergeGeodata_array($stgd);
+       $totplvw += $astreet->getPLVW();
+       $totplvn += $astreet->getPLVN();;
      }
-
-     }
-     $geodata = array();
-     $geodata["dist"]=$totaldist;
-     $geodata["maxlat"]=$maxlat;
-     $geodata["midlat"]=($maxlat+$minlat)/2;
-     $geodata["minlat"]=$minlat;
-     $geodata["maxlong"]=$maxlong;
-     $geodata["midlong"]=($minlong+$maxlong)/2;
-     $geodata["minlong"]=$minlong;
+      $geodata->steps =  $totalsteps;
+      $geodata->streets = $totalstreets;
+      $geodata->roadgroups =1;
      $time = new \DateTime();
      $roadgroup->setUpdated($time);
      $roadgroup->setGeodata($geodata);
-     $roadgroup->setDistance($totaldist);
+     $roadgroup->setName($name);
      $roadgroup->setHouseholds($totalhouseholds);
      $roadgroup->setElectors($totalelectors);
      $roadgroup->setStreets($totalstreets);
+     $roadgroup->setPLVW($totplvw);
+     $roadgroup->setPLVN($totplvn);
+
      $entityManager = $this->getDoctrine()->getManager();
      $entityManager->persist($roadgroup);
      $entityManager->flush();
-     return $geodata;
+
+
    }
 
 

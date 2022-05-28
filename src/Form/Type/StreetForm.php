@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 
 class StreetForm extends AbstractType
@@ -21,10 +22,10 @@ class StreetForm extends AbstractType
         $builder ->add('name', TextType::class ,['label' => 'Street Name',]);
         $builder ->add('Part', TextType::class,['label' => 'Part Road','required' => false,]);
         $builder ->add('Qualifier', TextType::class,['label' => 'Description','required' => false,'empty_data'    => '',]);
-        $builder ->add('PD', TextType::class,['label' => 'Polling District','required' => false,]);
+        $builder ->add('PdId', TextType::class,['label' => 'Polling District','required' => false,]);
         $builder ->add('Households', IntegerType::class,['label' => 'Households','required' => false,]);
         $builder ->add('Electors', IntegerType::class,['label' => 'Electors','required' => false,]);
-        $builder ->add('Updated', DateTimeType::class,['label' => 'Updated','required' => false, 'disabled' => true,]);
+        //$builder ->add('Updated', HiddenType::class,['label' => 'Updated','required' => false, 'disabled' => true,]);
         $builder ->add('Path', TextType::class,['label' => 'Path','required' => false,]);
         $builder ->add('Note', TextAreaType::class,['label' => 'Comment','required' => false,]);
     }

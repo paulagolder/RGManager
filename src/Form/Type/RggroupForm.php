@@ -21,8 +21,7 @@ class RggroupForm extends AbstractType
         $builder ->add('KML', TextType::class,['label' => 'KML','required' => false,]);
         $builder ->add('Households', IntegerType::class,['label' => 'Households','required' => false,]);
         $builder ->add('Electors', IntegerType::class,['label' => 'Electors','required' => false,]);
-        $builder ->add('Latitude', TextType::class,['label' =>  'Latitude','required' => false,]);
-        $builder ->add('Longitude', TextType::class,['label' => 'Longitude','required' => false,]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

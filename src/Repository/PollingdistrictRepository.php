@@ -13,7 +13,7 @@ class PollingdistrictRepository  extends EntityRepository
      public function findAllbyYear($year)
      {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'select p.pollingdistrictid,p.households , p.electors,s.*  from pollingdistrict  as p, seattopd as s where s.pdid =  p.pollingdistrictid and s.year = "'.$year.'" ';
+        $sql = 'select p.pdid,p.districtid,p.households , p.electors,s.*  from pollingdistrict  as p, seattopd as s where s.pdid =  p.pdid and s.year = "'.$year.'" order by p.districtid, p.pdid';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $pdseats= $stmt->fetchAll();
@@ -28,6 +28,7 @@ class PollingdistrictRepository  extends EntityRepository
           }
           $district = $pdseat["district"];
           $seat = $pdseat["seat"];
+           $pds[$pdid]["districtid"] =  $pdseat["districtid"];;
           $pds[$pdid][$district] = $seat;
           $pds[$pdid]["households"] = $pdseat["households"];
           $pds[$pdid]["electors"] = $pdseat["electors"];
@@ -39,9 +40,8 @@ class PollingdistrictRepository  extends EntityRepository
     public function findone($pdid)
     {
        $qb = $this->createQueryBuilder("p");
-       $qb->where("p.PollingDistrictId = :pdid");
-       $qb->setParameter('pdid', $pdid);
-       $qb->orderBy("p.PollingDistrictId", "ASC");
+       $qb->where("p.PdId = :apdid");
+       $qb->setParameter('apdid',$pdid);
        $apd =  $qb->getQuery()->getOneOrNullResult();
        return $apd;
     }
@@ -50,7 +50,7 @@ class PollingdistrictRepository  extends EntityRepository
      public function findSpares($dtid,  $year)
      {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'select  q.pollingdistrictid  from pollingdistrict as q  where q.pollingdistrictid not in  (select  p.pollingdistrictid  from pollingdistrict  as p, seattopd as s where s.pdid =  p.pollingdistrictid and s.district = "'.$dtid.'" and year = "'.$year.'")';
+        $sql = 'select  q.pdid , q.districtid from pollingdistrict as q  where q.pdid not in  (select  p.pdid  from pollingdistrict  as p, seattopd as s where s.pdid =  p.pdid and s.district = "'.$dtid.'" and year = "'.$year.'")  order by q.pdid';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $pds= $stmt->fetchAll();

@@ -82,6 +82,8 @@ class Delivery
      */
       public $Roadgroups;
 
+      public $Geodata;
+
     public function getDeliveryId()
     {
         return $this->DeliveryId;
@@ -168,7 +170,7 @@ class Delivery
 
 
 
-        public function getCreateDate()
+    public function getCreateDate()
     {
         return $this->CreateDate;
     }
@@ -180,7 +182,7 @@ class Delivery
      }
 
 
-      public function getComment(): ?string
+    public function getComment(): ?string
     {
         return $this->Comment;
     }
@@ -234,6 +236,30 @@ class Delivery
         return $this;
     }
 
+    public function getGeodata_json()
+{
+ return  $this->Geodata;
+}
+
+public function getGeodata()
+{
+ return  json_decode($this->Geodata,true);
+}
+
+public function setGeodata($text)
+{
+  $text_json = json_encode($text);
+   $this->Geodata= $text_json;
+}
+
+public function getGeodata_obj()
+{
+ $ngeodata = new Geodata;
+
+ return  $ngeodata->loadGeodata($this->getGeodata());
+}
+
+
 
    public function getjson()
    {
@@ -247,6 +273,21 @@ class Delivery
   // $str .=  '"latitude":"'.$this->Latitude.'"';
    $str .="}";
    return  $str;
+   }
+
+
+   public function update($roundstree)
+   {
+   $tg=0;
+   $cp=0;
+
+     foreach($roundstree as $rndgroup)
+     {
+     $tg += $rndgroup["group"]->getTarget();
+     $cp += $rndgroup["group"]->getCompleted();
+     }
+     $this->setTarget($tg);
+     $this->setCompleted($cp);
    }
 
 }

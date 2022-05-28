@@ -41,6 +41,7 @@ class TreeServer
       $cmptd = $rnd["completed"];
       $rgs = $rnd["roadgroups"];
       $tgts = $rnd["target"];
+      $agent = strtolower($rnd["agent"]);
       $rndgrpid = $rnd["rggroupid"];
       $rgsubgrpid = $rnd["rgsubgroupid"];
       if(is_null($rndgrpid ))
@@ -73,14 +74,17 @@ class TreeServer
         $rndgroups[$rndgrpid]["children"][$rgsubgrpid]["group"]->setRoadgroups(0);
       }
         $rndgroups[$rndgrpid]["children"][$rgsubgrpid]["group"]->addHouseholds($hh);
+        $rndgroups[$rndgrpid]["group"]->addHouseholds($hh);
+        $rndgroups[$rndgrpid]["children"][$rgsubgrpid]["children"][$key] =  $rnd;
+        if(!str_contains($agent,"xx"))
+        {
         $rndgroups[$rndgrpid]["children"][$rgsubgrpid]["group"]->addRoadgroups($rgs);
         $rndgroups[$rndgrpid]["children"][$rgsubgrpid]["group"]->addTarget($tgts);
         $rndgroups[$rndgrpid]["children"][$rgsubgrpid]["group"]->addCompleted($cmptd);
-        $rndgroups[$rndgrpid]["children"][$rgsubgrpid]["children"][$key] =  $rnd;
-          $rndgroups[$rndgrpid]["group"]->addHouseholds($hh);
           $rndgroups[$rndgrpid]["group"]->addRoadgroups($rgs);
           $rndgroups[$rndgrpid]["group"]->addTarget($tgts);
           $rndgroups[$rndgrpid]["group"]->addCompleted($cmptd);
+        }
     }
     return $rndgroups;
   }
@@ -122,25 +126,29 @@ class TreeServer
         $rndgroups[$rggrp]["children"][$rgsubgrp]["group"]->setRoadgroups(0);
         $rndgroups[$rggrp]["children"][$rgsubgrp]["group"]->initGeodata();
       }
-   //   $thisrg =  $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($rgid,$this->rgyear);
-   //   if($thisrg)
-   //   {
+
         $rndgroups[$rggrp]["children"][$rgsubgrp]["children"][$rgid] =  $rnd;
         $hh = $rnd->getHouseholds();
         $cp = $rnd->getCompleted();
         $tg = $rnd->getTarget();
         $rg = $rnd->getRoadgroups();
-        $bnd = $rnd->getGeodata();
+        $bnd = $rnd->getGeodata_obj();
+        $agent = strtolower($rnd->getAgent());
+
         $rndgroups[$rggrp]["group"]->addHouseholds($hh);
+        $rndgroups[$rggrp]["children"][$rgsubgrp]["group"]->addHouseholds($hh);
+        $rndgroups[$rggrp]["children"][$rgsubgrp]["group"]->mergeGeodata_obj($bnd);
+        $rndgroups[$rggrp]["group"]->mergeGeodata_obj($bnd);
+        if(!str_contains($agent,"xx"))
+        {
         $rndgroups[$rggrp]["group"]->addCompleted($cp);
         $rndgroups[$rggrp]["group"]->addTarget($tg);
         $rndgroups[$rggrp]["group"]->addRoadgroups($rg);
-        $rndgroups[$rggrp]["group"]->expandBounds($bnd);
-        $rndgroups[$rggrp]["children"][$rgsubgrp]["group"]->addHouseholds($hh);
         $rndgroups[$rggrp]["children"][$rgsubgrp]["group"]->addCompleted($cp);
         $rndgroups[$rggrp]["children"][$rgsubgrp]["group"]->addTarget($tg);
         $rndgroups[$rggrp]["children"][$rgsubgrp]["group"]->addRoadgroups($rg);
-        $rndgroups[$rggrp]["children"][$rgsubgrp]["group"]->expandBounds($bnd);
+
+        }
     }
     return $rndgroups;
   }
@@ -180,7 +188,6 @@ class TreeServer
         if($thisrg)
         {
           $rggroups[$rggrp]["children"][$rgsubgrp]["children"][$rgid] =  $thisrg;
-          $hh = $thisrg->getHouseholds();
           $rggroups[$rggrp]["group"]->addHouseholds($thisrg->getHouseholds());
           $rggroups[$rggrp]["group"]->addRoadgroups(1);
           $rggroups[$rggrp]["group"]->addElectors($thisrg->getElectors());
@@ -194,9 +201,9 @@ class TreeServer
   }
 
 
-  public function makebounds($roundstree)
+  public function xmakebounds($roundstree)
   {
-    $bounds =$this->mapserver->newbounds();
+     $bounds =$this->mapserver->newGeodata();
     foreach( $roundstree as &$agroup)
     {
       if( array_key_exists("children",$agroup))
@@ -222,9 +229,9 @@ class TreeServer
    return $bounds;
   }
 
-  public function makebounds_fromsubgroup($roundstree)
+  public function xmakebounds_fromsubgroup($roundstree)
   {
-    $bounds =$this->mapserver->newbounds();
+     $bounds =$this->mapserver->newGeodata();
     foreach( $roundstree as $around)
     {
 
@@ -235,17 +242,17 @@ class TreeServer
   }
 
 
-  public function makebounds_roadgroups($roundstree)
+  public function makegeodata_roadgroups($roundstree)
   {
-    $bounds =$this->mapserver->newbounds();
+      $geodata =$this->mapserver->newGeodata();
     foreach( $roundstree as &$agroup)
     {
       dump($agroup);
       if( array_key_exists("children",$agroup))
       {
-        $dbounds = $this->makebounds_roadgroups($agroup["children"]);
-        $bounds = $this->mapserver->expandbounds($bounds, $dbounds);
-        $agroup["group"]->setGeodata($bounds);
+         $dgeodata = $this->makegeodata_roadgroups($agroup["children"]);
+         $geodata = $this->mapserver->expandbounds( $geodata,  $dgeodata);
+        $agroup["group"]->setGeodata( $geodata);
       }
       else
       {
@@ -253,18 +260,17 @@ class TreeServer
         {
           foreach($agroup["roadgrouplist"] as $roadgroup)
           {
-            $dbounds = $this->mapserver->makebounds($roadgroup["geodata"]);
-            $bounds = $this->mapserver->expandbounds($bounds, $dbounds);
+
+             $geodata = $this->mapserver->expandbounds( $geodata, $roadgroup["geodata"]);
           }
         }
         elseif(  property_exists($agroup,"Geodata"))
         {
-          $dbounds = $this->mapserver->makebounds_fromarray($agroup->getGeodata());
-          $bounds = $this->mapserver->expandbounds($bounds, $dbounds);
+           $geodata = $this->mapserver->expandbounds( $geodata,  $agroup->getGeodata());
         }
       }
     }
-    return $bounds;
+    return  $geodata;
   }
 
 

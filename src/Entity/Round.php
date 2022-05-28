@@ -319,19 +319,14 @@ class Round
    {
       $this->Geodata= $json;
    }
-   public function getjson()
-   {
-     ;
 
-     $str ="{";
-     $str .=  '"name":"'.$this->Name.'",';
-     $str .=  '"roundid":"'.$this->RoundId.'",';
-     $str .=  '"kml":"'.$this->KML.'"';
-     // $str .=  '"longitude":"'.$this->Longitude.'",';
-     // $str .=  '"latitude":"'.$this->Latitude.'"';
-     $str .="}";
-     return  $str;
+   public function getGeodata_obj()
+   {
+     $ngeodata = new Geodata;
+
+     return  $ngeodata->loadGeodata($this->getGeodata());
    }
+
 
 
    public function setValues_array($roadgrouplist)

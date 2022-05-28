@@ -1,0 +1,60 @@
+{# views/street/showall.html.twig #}
+
+{% extends 'rgmaster.html.twig' %}
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/street.css') }}" rel="stylesheet" />
+{% endblock %}
+
+
+{% block middle %}
+<div class="street">
+{% if message %}
+<H1> {{message}} </H1>
+
+{% else %}
+    <div class="heading row">
+    <div class="label"> Streets in PollingDistrict </div>
+     <div class="label">{{pollingdistrict.districtid}} </div>
+       <div class="label">{{pollingdistrict.pdid}} </div>
+    <div class="button  right"> <a class="button" href = "{{back}}" >Back</a> </div>
+    </div>
+
+
+
+
+
+    <div class="subheading row">
+      <label for="searchfield">Find Street</label>
+      <input type="text" id="searchfield" name="searchfield" >
+      <input type="submit" value="Submit">
+    </div>
+        </form>
+
+     <div class="subheading row">
+     <div class="name" >Name/part</div>
+     <div class="pd" >PD</div>
+     <div  class="num" >House-holds</div>
+     <div  class="num" >Electors</div>
+     <div  class="button" ></div>
+     <div  class="button" ></div>
+     <div  class="text" >Note</div>
+   </div>
+    <div class="list  pagescroll" >
+       {% for street in streets %}
+       <div class="row" >
+         <div class="name" >{{street.fullname}}</div>
+         <div class="pd" >{{street.pdid}}</div>
+
+          <div  class="num" >{{street.households}}</div>
+           <div  class="num" >{{street.electors}}</div>
+             <div class="button"> <a class="button" href = "/street/viewgroupbyseq/{{street.seq}}" >View</a> </div>
+         <div class="button"> <a class="button" href = "/street/edit/{{street.seq}}" >Edit</a> </div>
+          <div  class="shorttext" > {{street.note}}</div>
+      </div>
+       {% endfor %}
+    </div>
+{% endif %}
+</div>
+{% endblock %}
