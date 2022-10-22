@@ -208,7 +208,10 @@ class Roadgroup
    {
       return $this->Name;
    }
-   else
+   else  if($this->endsWith($this->Name,"."))
+   {
+    return $this->Name;
+   }else
      return $this->Name."..etc";
    }
 

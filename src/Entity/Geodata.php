@@ -95,7 +95,15 @@ public function makeGeodata($input)
  }
 
 
+public function isgeodata()
+{
 
+
+   if($this->maxlat > -360)   return true;
+   else return false ;
+
+
+}
 
 public function loadGeodata($input)
 {

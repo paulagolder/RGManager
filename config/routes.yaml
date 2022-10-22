@@ -22,6 +22,11 @@ pollingdistrict_showone:
    path: /pollingdistrict/show/{pdid}
    controller: App\Controller\PollingDistrictController::showone
 
+pollingdistrict_edit:
+   path: /pollingdistrict/edit/{pdid}
+   controller: App\Controller\PollingDistrictController::edit
+
+
 pollingdistrict_showall:
    path: /pollingdistrict/showall
    controller: App\Controller\PollingDistrictController::showall

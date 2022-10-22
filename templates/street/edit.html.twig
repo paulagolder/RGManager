@@ -357,8 +357,15 @@ function closeForm() {
       <script  type="text/javascript" >
          var mymap = myStMap("{{stgeodata}}");
          mymap.on('click', onMapClick);
-         drawPath(mymap,"{{street.getPath()}}");
-         setMarkers(mymap,"{{stgeodata}}");
+         {% for astreet in streets %}
+         var  style = { color: "#008000", weight: 5, opacity: 0.4 };
+         {% if astreet.getSeq() != street.getSeq()  %}
+           drawPath(mymap,"{{astreet.getPath()}}","dummylabel",style);
+           {% endif %}
+         {% endfor %}
+         style = { color: "#ff0000", weight: 10, opacity: 0.4 };
+         drawPath(mymap,"{{street.getPath()}}","edit this",style);
+       //  setMarkers(mymap,"{{stgeodata}}");
          setBounds2(mymap,"{{stgeodata}}");
       </script>
 </div>

@@ -18,12 +18,12 @@
        <div class="label">Polling Districts</div>
        <div class="message"> All Polling Districts and Seats containing them ( a PD can only be in one seat for each level) </div>
        <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+        <div class="button  right"> <a class="button" href = "/pollingdistrict/edit/new" >New PD</a> </div>
     </div>
     <div class="roadgroup header  list row">
         <div class="rgid" >PD</div>
          <div class="rgid" >District</div>
-         <div class="bnum" >Households</div>
-           <div class="bnum" >Electors</div>
+  <div class="button" ></div>
         <div class="rgid" >City Ward</div>
         <div class="rgid" >District Ward</div>
         <div class="rgid" >County Division</div>
@@ -34,9 +34,9 @@
          <div class="roadgroup row " >
              <div  class="rgid" > <a class="routebutton" href = "/pollingdistrict/show/{{key}}" >{{key}}</a></div>
               <div  class="rgid" > {{pd.districtid}}</a></div>
+                 <div  class="rgid" > <a class="routebutton" href = "/pollingdistrict/edit/{{key}}" >Edit</a></div>
               <div  class="rgid" > <a class="routebutton" href = "/pollingdistrict/showstreets/{{key}}" >Show Streets</a></div>
-              <div  class="bnum" >{{pd.households}}</div>
-               <div  class="bnum" >{{pd.electors}}</div>
+
             {% if pd.LCC is defined %}
             <div  class="rgid" > <a class="routebutton" href = "/seat/showpds/LCC/{{pd["LCC"]}}" >{{pd["LCC"]}}</a></div>
             {% else %}

@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 use App\Service\FileUploader;
+use App\Form\Type\PDForm;
 use App\Form\Type\RoadgroupForm;
 use App\Form\Type\StreetForm;
 use App\Entity\Roadgroup;
@@ -167,7 +168,43 @@ class PollingDistrictController extends AbstractController
 
   }
 
-  public function Edit($rgid)
+    public function Edit($pdid)
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        if($pdid)
+        {
+              $apd = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findOne($pdid);
+              dump($apd);
+        }
+        if(! isset($apd))
+        {
+            $apd= new pollingdistrict();
+        }
+        $form = $this->createForm(PDForm::class, $apd);
+        if ($request->getMethod() == 'POST')
+        {
+            $form->handleRequest($request);
+            if ($form->isValid())
+            {
+                //$geodata =  $this->mapserver->loadRoute("districts/",$adistrict->getKML());
+                //$adistrict->setGeodata($geodata);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($apd);
+                $entityManager->flush();
+               // $dtid = $adistrict->getDistrictid();
+                return $this->redirect("/pollingdistrict/edit/".$pdid);
+            }
+        }
+        return $this->render('pollingdistrict/edit.html.twig', array(
+           'rgyear' => $this->rgyear,
+            'form' => $form->createView(),
+            'pd'=>$apd,
+            'returnlink'=>'/',
+            ));
+    }
+
+
+  public function EditRoadgroup($rgid)
   {
     $request = $this->requestStack->getCurrentRequest();
     if($rgid !== "new")

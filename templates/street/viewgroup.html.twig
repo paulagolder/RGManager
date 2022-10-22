@@ -41,8 +41,8 @@
    <div class="subheading row">
      <div class="checkbox" ></div>
      <div class="name" >Name/part</div>
-     <div class="button"  >PD</div>
-     <div  class="button" >Road group ID</div>
+     <div class="button wide"  >PD</div>
+     <div  class="button wide" >Road group ID</div>
      <div  class="num" >House-holds</div>
      <div  class="num" >Electors</div>
        <div  class="num" >Steps</div>
@@ -57,12 +57,12 @@
        <div class="street row" >
           <div class="checkbox" > <input type="checkbox" id="{{street.seq}}" name="selectstreets[]" value="{{street.seq}}"></div>
           <div class="name"  id="x{{street.seq}}">{{street.name}}/{{street.part}}</div>
-             <div class="button"><a class="button" href = "/pollingdistrict/show/{{street.pdid}}">{{street.pdid}}</a></div>
+             <div class="button wide"><a class="button wide " href = "/pollingdistrict/show/{{street.pdid}}">{{street.pdid}}</a></div>
              {% if  street.roadgroupid == "None" %}
 
-                     <div class="button"><a class="button" href = "">NONE</a></div>
+                     <div class="button"><a class="button wide" href = "">NONE</a></div>
              {% else %}
-            <div class="button"><a class="button" href = "/roadgroup/showone/{{street.roadgroupid}}">{{street.roadgroupid}}</a></div>
+            <div class="button wide "><a class="button wide" href = "/roadgroup/showone/{{street.roadgroupid}}">{{street.roadgroupid}}</a></div>
             {%  endif %}
 
 
@@ -116,12 +116,12 @@ var estyle = {
          if(h2s)
             h2s.style.backgroundColor = getColor(i)
              var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
-                drawPath(mymap,"{{street.getPath()}}",estyle);
+                drawPath(mymap,"{{street.getPath()}}","{{street.getSeq()}}",estyle);
 
             i=i+1;
             if(i>11)i=0;
              {% endfor %}
-                  setMarkers(mymap,"{{sggeodata}}");
+   //               setMarkers(mymap,"{{sggeodata}}");
      setBounds2(mymap,"{{sggeodata}}");
       </script>
 {% endif %}

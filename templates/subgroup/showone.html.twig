@@ -102,7 +102,7 @@
       if(kml)
       {
           var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.1 };
-        //  makeKMLLayer(mymap,path,style,false,"{{rggroup.rggroupid}}");
+          makeKMLLayer(mymap,path,style,false,"{{rggroup.rggroupid}}");
       }
 
     var i=0;
@@ -129,7 +129,7 @@
           var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 3 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.0 };
        //   makeOutlineKml(mymap,path,style,false,"{{rggroup.rggroupid}}");
       }
-     setMarkers(mymap,"{{sggeodata}}");
+    // setMarkers(mymap,"{{sggeodata}}");
      setBounds2(mymap,"{{sggeodata}}");
    </script>
 

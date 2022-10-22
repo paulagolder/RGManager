@@ -27,7 +27,7 @@
   <div class="label">Seat: </div>
   <div class="value">{{seat.districtid}}-{{seat.seatid}}</div>
   <div class="value">{{seat.name}}</div>
-  <div class="message"> All Roadgroups with streets in each Polling district</div>
+  <div class="message"> All streets in each Polling district</div>
   <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
 </div>
 
@@ -69,36 +69,32 @@ var mymap = myGoodMap("{{geodata}}");
 
       {% if  seat.kml %}
       var aspath = "{{mappath}}outlines/{{seat.kml}}";
-      if("{{seat.kml}}")
+     // if({{seat.kml}})
       {
-         var style = {"color":  "#000000" , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.2};
-         makeKMLLayer(mymap,aspath,style,true,"{{seat.name}}")
+         var style = {"color":  "#000000" , "weight": 4 ,  "clickable": false ,"opacity": 1, "fillOpacity": 0.001};
+         makeKMLLayer(mymap,aspath,style,false)
       }
      {% endif %}
       var i = 0;
-      {% for key,roadgroups in rgs %}
-      if({{key}})
-      {
+      {% for key,pd in sts %}
+
         var h2s = document.getElementById("{{key}}");
-         if(h2s)
+        if(h2s)
             h2s.style.backgroundColor = getColor(i);
-            }
-  {% for aroadgroup in roadgroups %}
+
+  {% for astreet in pd %}
     {
-      var kml = "{{aroadgroup.kml}}";
-      var path = "{{mappath}}roadgroups/"+kml;
-      if(kml)
-      {
-         var link = "<a href='/roadgroup/showone/{{aroadgroup.roadgroupid}}'>{{aroadgroup.roadgroupid}}</a>";
-         var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
-          makeKMLLayer(mymap,path,style, false,link)
+
+         var link = "<a href='/street/showone/{{astreet.seq}}'>{{astreet.name}}</a>";
+         var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.9 };
+         drawPath(mymap,"{{astreet.getPath()}}","fred",style);
       }
-      }
+
        {% endfor %}
-           i=i+1;
+  i=i+1;
            if(i>11) i=0;
  {% endfor %}
-   setMarkers(mymap,"{{geodata}}");
+  // setMarkers(mymap,"{{geodata}}");
    setBounds2(mymap,"{{geodata}}");
 
    </script>

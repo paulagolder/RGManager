@@ -63,7 +63,6 @@
   {% dump(sggeodata) %}
 <script >
     var mymap = myGoodMap("{{sggeodata}}");
-
     var i=0;
     var fgroup =  new L.featureGroup();
     {% for aroadgroup in roadgroups %}

@@ -273,7 +273,7 @@ class StreetRepository  extends EntityRepository
         $conn = $this->getEntityManager()->getConnection();
        $sqlx = 'SELECT s.*,r.* FROM `street` as s LEFT JOIN roadgrouptostreet as r on s.seq= r.streetid where r.roadgroupid is null ORDER BY `s`.`name` ASC ';
 
-           $sql = 'SELECT s.*FROM `street` as s LEFT JOIN roadgrouptostreet as r on s.seq= r.streetid where ( r.roadgroupid is null or s.pdid is null)  ORDER BY `s`.`name` ASC ';
+           $sql = 'SELECT s.*FROM `street` as s LEFT JOIN roadgrouptostreet as r on s.seq= r.streetid where ( r.roadgroupid is null or s.pdid is null)  ORDER BY `s`.`households` DESC ';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $streetars= $stmt->fetchAll();

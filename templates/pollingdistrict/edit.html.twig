@@ -1,0 +1,39 @@
+{# views/pollingdistrict/edit.html.twig #}
+
+{% extends 'rgmaster.html.twig' %}
+
+
+{% block stylesheets %}
+      {{ parent() }}
+   <link href="{{ asset('/css/district.css') }}" rel="stylesheet" />
+{% endblock %}
+{% block js %}
+   {{ parent() }}
+
+{% endblock %}
+
+
+{% block middle %}
+<div id="middle" >
+<div id="pdedit"  >
+<div>
+ <div class="heading  row" >
+ <div class="label">Edit PollingDistrict:</div>
+ <div class="title" > {{pd.PdId}}</div>
+ <div class="button  right"> <a class="button" href ="/" >{{'back'}} </a> </div>
+</div>
+<div class="formmap">
+<div  class="form" >
+    {{ form_start(form) }}
+    {{ form_row(form.PdId) }}
+    {{ form_row(form.PdTag) }}
+    {{ form_row(form.Districtid) }}
+    {{ form_row(form.KML) }}
+
+    <button type="submit">{{'Register!'}}</button>
+    {{ form_end(form) }}
+</div>
+</div>
+</div>
+</div>
+{% endblock %}

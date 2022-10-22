@@ -32,11 +32,7 @@ class Pollingdistrict
   private $PdTag;
 
 
-   /**
-   *
-   * @ORM\Column(name="name",type="string")
-   */
-  private $Name;
+
 
   /**
    * @ORM\Column(name="households",type="integer", nullable=true)

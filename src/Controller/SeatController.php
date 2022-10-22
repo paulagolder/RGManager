@@ -187,28 +187,22 @@ class SeatController extends AbstractController
 
         }
         $pds = $this->getDoctrine()->getRepository("App:Seat")->findPollingdistricts($dtid,$stid,$this->rgyear);
-        $rgs = [];
+        $sts = [];
            $geodata = new Geodata;
         foreach($pds as $key =>  $pd)
         {
            $thh = 0;
           $pdid = $pd["pdid"];
-         $rglist = $this->getDoctrine()->getRepository("App:Roadgroup")->findAllinPollingDistrict($pdid, $this->rgyear);
-         $roadgroups = [];
-         foreach ($rglist as $rg)
+         $stlist = $this->getDoctrine()->getRepository("App:Street")->findAllbyPD($pdid);
+         $sts[$pdid]=array();
+         foreach ($stlist as $st)
          {
-            $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rg["roadgroupid"],$this->rgyear);
-            $geodata->mergeGeodata_obj($aroadgroup->getGeodata_obj());
-            $kml = $aroadgroup->getKML();
-            if(!$this->mapserver->ismap($kml))
-            {
-               $aroadgroup->setKML($this->mapserver->findmap($aroadgroup->getRoadgroupId(),$this->rgyear));
-            }
-            $roadgroups[] = $aroadgroup;
-            $sum=  $this->getDoctrine()->getRepository("App:Roadgroup")->countHouseholds($rg["roadgroupid"],$this->rgyear);
-            $thh+= $sum;
+            $astreet= $this->getDoctrine()->getRepository("App:Street")->findOnebySeq($st->getSeq());
+            $geodata->mergeGeodata_obj($astreet->getGeodata_obj());
+             $sts[$pdid][$st->getSeq()]= $astreet;
+            $thh+= $astreet->getHouseholds();
           }
-          $rgs[$pdid]= $roadgroups;
+
           $pd["households"] = $thh;
           $pds[$key]=$pd;
         }
@@ -223,7 +217,7 @@ class SeatController extends AbstractController
                 'district'=> $district,
                 'seat' => $seat,
                 'pds'=>$pds,
-                'rgs'=>$rgs,
+                'sts'=>$sts,
                  'sparepds' => $sparepds,
                  'back'=>"/district/show/".$dtid,
             ]);

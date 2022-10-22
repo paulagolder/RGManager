@@ -32,7 +32,7 @@ class MapServer
       $rmaps = $session->get('maps');
       if(!$rmaps or $reload)
       {
-        $maps = scandir($this->maproot."/roadgroups");
+        $maps = scandir($this->maproot."roadgroups");
 
         $session->set('maps', $maps);
       }
@@ -408,9 +408,9 @@ class MapServer
       $g  = 0;
     }elseif($intval<$c[1])
       {
-        $r = 0;
-        $b = 128;
-        $g  =129;
+        $r = 137;
+        $b = 240;
+        $g  =207;
       }
       elseif($intval <$c[2])
       {
@@ -420,9 +420,10 @@ class MapServer
       }
       elseif($intval <$c[3])
       {
-        $r = 128;
-        $b = 0;
-        $g  = 127;
+        //255,182,193
+        $r = 255;
+        $b = 182;
+        $g  = 193;
       } elseif($intval > 1)
       {
         $r = 0;
@@ -434,7 +435,6 @@ class MapServer
         $b = 0;
         $g  = 0;
       }
-      dump($r);
     return $this->rgbToHex($r,$g,$b);
   }
 

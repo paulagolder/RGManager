@@ -427,6 +427,7 @@ dump($district);
    public function heatmap($dtid)
     {
             $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
+            $seats =  $this->getDoctrine()->getRepository("App:Seat")->findChildren($dtid);
     $rggroups = $this->getDoctrine()->getRepository("App:Rggroup")->findAll();
     if (!$rggroups)
     {
@@ -457,11 +458,13 @@ dump($district);
     }
     dump($rglist);
     dump($district);
+    dump($seats);
     return $this->render('district/heatmap.html.twig',
     [
     'rgyear'=>$this->rgyear,
     'message' =>  '' ,
     'district'=>$district,
+    'seats'=>$seats,
     'rglist'=>$rglist,
     'back'=>"/",
     ]);

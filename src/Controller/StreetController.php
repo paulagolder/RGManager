@@ -254,15 +254,19 @@ class StreetController extends AbstractController
     if(!$rdseq) return $this->redirect("/rggroup/showall");
     $astreet = $this->getDoctrine()->getRepository('App:Street')->findOnebySeq($rdseq);
     $rgid= $this->getDoctrine()->getRepository('App:Roadgrouptostreet')->findRg($rdseq,$this->rgyear);
-    $roadgroup =  $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($rgid,$this->rgyear);
+    if($rgid)
+      $roadgroup =  $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($rgid,$this->rgyear);
+    else
+      $roadgroup = null;
+    $rggroup = null;
     if($roadgroup)
+    {
       $rggroup =   $this->getDoctrine()->getRepository('App:Rggroup')->findOne($roadgroup->getRggroupid());
+    }
     $streets = $this->getDoctrine()->getRepository('App:Street')->findAllbyName($astreet->getName());
-    $this->fixPath($streets);
-   // $astreet = $this->getDoctrine()->getRepository('App:Street')->findOnebySeq($rdname,$rdpart);
+
     $path = $astreet->getDecodedPath();
     $tracks=$path;
-
     $streetcount = sizeof($streets);
     if(! isset($astreet))
     {
@@ -274,9 +278,7 @@ class StreetController extends AbstractController
       $form->handleRequest($request);
       if ($form->isValid())
       {
-        dump($astreet->getPath());
         $path = $astreet->getDecodedPath();
-        dump($path);
         $tracks=$path;
         $newtracks =[];
         foreach($tracks as $track)
@@ -287,11 +289,7 @@ class StreetController extends AbstractController
           }
         }
         $newpath = json_encode($newtracks);
-        dump($newpath);
-        dump($newtracks);
         $geodata = $this->mapserver->make_geodata_steps_obj($newtracks);
-        dump($geodata);
-
         $time = new \DateTime();
         $astreet->setUpdated($time);
         $astreet->setPath($newpath);
@@ -301,38 +299,34 @@ class StreetController extends AbstractController
         $entityManager->persist($astreet);
         $entityManager->flush();
         $rdid = $astreet->getStreetId();
-       // return $this->redirect('/street/editbyseq/'.$rdseq);
        return $this->redirect( "/roadgroup/showone/$rgid");
       }
     }
-    dump($astreet->getGeodata());
-    if(!$astreet->getGeodata())
+
+    $geodata = new Geodata();
+    foreach($streets as $bstreet)
     {
-
-      $astreet->setGeodata(new geodata);
-
+      $geodata->mergeGeodata_obj($bstreet->getGeodata_obj());
     }
-
-    if(!$astreet->getGeodata() or $astreet->getGeodata()["maxlat"] <-350)
+    if($astreet->getGeodata())
     {
-      $geodata = $roadgroup->getGeodata();
-      if( !$geodata or $geodata["maxlat"] <-350)
-      {
+      $geodata = $astreet->getGeodata_obj();
+    }
+    if(!$geodata->isgeodata())
+    {
+      if($roadgroup)
+         $geodata = $roadgroup->getGeodata_obj();
+      if(!$geodata->isgeodata() && $rggroup)
         $geodata = $rggroup->getGeodata();
-
-      }
     }
-    else
-    {
-      $geodata=$astreet->getGeodata();
 
-    }
     dump($geodata);
     return $this->render('street/edit.html.twig', array(
       'rgyear'=>$this->rgyear,
       'roadgroupid' =>$rgid,
       'form' => $form->createView(),
       'streetcount'=>$streetcount,
+      'streets'=>$streets,
       'street'=>$astreet,
       'tracks'=>$tracks,
       'geodata'=> $geodata,

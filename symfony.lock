@@ -103,7 +103,7 @@
         "version": "v0.3.3"
     },
     "php": {
-        "version": "7.4"
+        "version": "7.2"
     },
     "psr/cache": {
         "version": "1.0.1"

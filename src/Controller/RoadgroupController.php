@@ -103,7 +103,7 @@ class RoadgroupController extends AbstractController
     $wdid = $roadgroup->getRggroupid();
     $stlist = [];
     $streets = $this->getDoctrine()->getRepository("App:Street")->findgroup($rgid,$this->rgyear);
-    $pds = '"(';
+    $pds = '"';
     foreach($streets as $astreet)
     {
       if(!str_contains($pds, $astreet->getPdId()))
@@ -112,10 +112,11 @@ class RoadgroupController extends AbstractController
     }
     $pds .=')"';
     dump($pds);
-    $pds = str_replace(",)",")",$pds);
+    $pds = str_replace(",)","",$pds);
     dump($pds);
     $extrastreetsinpd = null;
     if(strlen($pds) >2)
+
        $extrastreetsinpd =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreetsInPd($pds,$this->rgyear);
     if($swdid)
       $back = "/rgsubgroup/show/".$swdid;
@@ -123,7 +124,7 @@ class RoadgroupController extends AbstractController
       $back =  "/rggroup/show/".$wdid;
     else
       $back =  "/rggroup/showall/";
-    $extrastreets =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreets($this->rgyear);
+    $extrastreetsloose =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreets($this->rgyear);
     $geodata= $roadgroup->getGeodata_obj();
     dump($roadgroup);
     dump($geodata);
@@ -133,7 +134,7 @@ class RoadgroupController extends AbstractController
       $geodata = $agroup->getGeodata();
       $roadgroup->setGeodata($geodata);
     }
-
+    $extrastreets = array_merge(  $extrastreetsinpd ,    $extrastreetsloose );
 
     return $this->render('roadgroup/showone.html.twig',
     [
@@ -142,7 +143,6 @@ class RoadgroupController extends AbstractController
     'seats'=>$seats,
     'roadgroup' => $roadgroup ,
     'streets'=> $streets,
-    'sparestreetspd'=>$extrastreetsinpd,
     'sparestreets'=>$extrastreets,
     'year'=>$this->rgyear,
     'back'=>$back,
@@ -494,7 +494,8 @@ class RoadgroupController extends AbstractController
      $time = new \DateTime();
      $roadgroup->setUpdated($time);
      $roadgroup->setGeodata($geodata);
-     $roadgroup->setName($name);
+     if(!str_ends_with($roadgroup->getName(),"."))
+        $roadgroup->setName($name);
      $roadgroup->setHouseholds($totalhouseholds);
      $roadgroup->setElectors($totalelectors);
      $roadgroup->setStreets($totalstreets);

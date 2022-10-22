@@ -54,9 +54,18 @@ var kml = "{{district.KML}}";
 var path = "{{mappath}}outlines/"+kml;
 if(kml)
 {
-  var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "nonclickable": true,"opacity": 0.2, "fillOpacity": 0.0 };
- // makeKMLLayer(mymap,path,style,true,"");
+  var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 4 ,  "nonclickable": true,"opacity": 0.9, "fillOpacity": 0.0 };
+  makeKMLLayer(mymap,path,style,true,"");
 }
+var i=0;
+{% for seat in seats %}
+kml = "{{seat.kml}}"
+var path = "{{mappath}}outlines/"+kml;
+var style = {"color": getColor(i),"fillcolor": getColor(i), "weight": 2,  "nonclickable": true,"opacity": 1.0, "fillOpacity": 0.2 };
+var name = "{{seat.name}}";
+makeKMLLayer(mymap,path,style,true,name);
+i=i+1;
+{% endfor %}
 {% for rg in rglist %}
 var mc = "{{rg['color']}}";
 var style = {"color":  mc , "weight": 4 ,  "clickable": true ,"opacity": 1.0, "fillOpacity": 1.0 };

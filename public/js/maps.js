@@ -225,7 +225,8 @@ function makeKMLLayer(amap,kmlfilepath,style, fitbounds=false, label='')
      {
     //  amap.fitBounds(bounds);
     }
-   track.bindPopup(label);
+    if(label)
+       track.bindPopup(label);
   });
   return track;
 }
@@ -340,7 +341,6 @@ function drawPath(amap,mypath,label,style=null)
   {
     var track = point.steps;
      polyline = L.polyline(track, style).addTo(amap);
-
      polyline.bindPopup(label);
      bn=bn+1;
   }

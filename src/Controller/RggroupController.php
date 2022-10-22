@@ -88,6 +88,7 @@ class RggroupController extends AbstractController
       $rggroup->setRoadgroups(count($rgs));
       $rggroups[$i]=$rggroup;
     }
+    dump($rggroups);
     $extraroadgroups =  $this->getDoctrine()->getRepository("App:Roadgroup")->findLooseRoadgroups();
     return $this->render('rggroup/showall.html.twig',
     [
