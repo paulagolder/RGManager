@@ -19,6 +19,33 @@ div#seat div.row.indent.id div.row
    margin-bottom: 5px;
 }
 
+div#seat div.pdpanel
+{
+  display:flex;
+  flex-wrap:wrap;
+}
+
+
+div#seat div.pdrow
+{
+  font-size : 8pt;
+  width : 24em;
+}
+
+div#seat div.pdrow div.rgid
+{
+  width : 6em;
+}
+
+div#seat div.pdrow div.bnum
+{
+  width : 4em;
+}
+
+div#seat div.pdrow div.button
+{
+  width : 4em;
+}
 
 
 div#swmapid

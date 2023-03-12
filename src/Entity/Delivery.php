@@ -13,7 +13,7 @@ class Delivery
     /**
      * @ORM\Id
      * @ORM\Column(name="deliveryid",type="integer")
-      * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $DeliveryId;
 
@@ -23,18 +23,18 @@ class Delivery
     private $Name;
 
 
-     /**
+    /**
      * @ORM\Column(name="year",type="string", length=50)
      */
     private $Year;
 
 
-     /**
+    /**
      * @ORM\Column(name="targetdate",type="string", length=50)
      */
     private $TargetDate;
 
-        /**
+    /**
      * @ORM\Column(name="createdate",type="datetime")
      */
     private $CreateDate;
@@ -44,45 +44,45 @@ class Delivery
      */
     private $DistrictId;
 
-        /**
+    /**
      * @ORM\Column(name="seatids",type="string", length=20)
      */
     private $SeatIds;
 
-     /**
+    /**
      * @ORM\Column(name="comment",type="string", length=50)
      */
     private $Comment;
 
 
-     /**
+    /**
      * @ORM\Column(name="kml",type="string", length=50)
      */
     public $KML;
 
 
-   /**
+    /**
      * @ORM\Column(name="households",type="integer")
      */
     public $Households;
 
-      /**
+    /**
      * @ORM\Column(name="Completed",type="integer")
      */
     public $Completed;
 
 
-     /**
+    /**
      * @ORM\Column(name="target",type="integer")
      */
-     public $Target;
+    public $Target;
 
-     /**
+    /**
      * @ORM\Column(name="roadgroups",type="integer")
      */
-      public $Roadgroups;
+    public $Roadgroups;
 
-      public $Geodata;
+    public $Geodata;
 
     public function getDeliveryId()
     {
@@ -103,8 +103,8 @@ class Delivery
     public function getSpacelessName(): ?string
     {
 
-       $slname = str_replace(" ", "_",$this->Name);
-       $slname = str_replace("__", "_",$slname);
+        $slname = str_replace(" ", "_",$this->Name);
+        $slname = str_replace("__", "_",$slname);
         return $slname;
     }
 
@@ -113,7 +113,7 @@ class Delivery
         $this->Name = $Text;
         return $this;
     }
-       public function getKML(): ?string
+    public function getKML(): ?string
     {
         return $this->KML;
     }
@@ -124,7 +124,7 @@ class Delivery
         return $this;
     }
 
-     public function getDistrictId(): ?string
+    public function getDistrictId(): ?string
     {
         return $this->DistrictId;
     }
@@ -135,7 +135,7 @@ class Delivery
         return $this;
     }
 
-     public function getSeatIds(): ?string
+    public function getSeatIds(): ?string
     {
         return $this->SeatIds;
     }
@@ -146,7 +146,7 @@ class Delivery
         return $this;
     }
 
-         public function getYear(): ?string
+    public function getYear(): ?string
     {
         return $this->Year;
     }
@@ -157,7 +157,7 @@ class Delivery
         return $this;
     }
 
-     public function getTargetDate(): ?string
+    public function getTargetDate(): ?string
     {
         return $this->TargetDate;
     }
@@ -179,7 +179,7 @@ class Delivery
     {
         $this->CreateDate = $date;
         return $this;
-     }
+    }
 
 
     public function getComment(): ?string
@@ -193,7 +193,7 @@ class Delivery
         return $this;
     }
 
-     public function getRoadgroups()
+    public function getRoadgroups()
     {
         return $this->Roadgroups;
     }
@@ -204,7 +204,7 @@ class Delivery
         return $this;
     }
 
-      public function getHouseholds()
+    public function getHouseholds()
     {
         return $this->Households;
     }
@@ -214,7 +214,7 @@ class Delivery
         $this->Households = $number;
         return $this;
     }
-      public function getTarget()
+    public function getTarget()
     {
         return $this->Target;
     }
@@ -225,7 +225,7 @@ class Delivery
         return $this;
     }
 
-       public function getCompleted()
+    public function getCompleted()
     {
         return $this->Completed;
     }
@@ -237,58 +237,56 @@ class Delivery
     }
 
     public function getGeodata_json()
-{
- return  $this->Geodata;
-}
+    {
+        return  $this->Geodata;
+    }
 
-public function getGeodata()
-{
- return  json_decode($this->Geodata,true);
-}
+    public function getGeodata()
+    {
+        return  json_decode($this->Geodata,true);
+    }
 
-public function setGeodata($text)
-{
-  $text_json = json_encode($text);
-   $this->Geodata= $text_json;
-}
+    public function setGeodata($text)
+    {
+        $text_json = json_encode($text);
+        $this->Geodata= $text_json;
+    }
 
-public function getGeodata_obj()
-{
- $ngeodata = new Geodata;
+    public function getGeodata_obj()
+    {
+        $ngeodata = new Geodata;
 
- return  $ngeodata->loadGeodata($this->getGeodata());
-}
-
-
-
-   public function getjson()
-   {
-;
-
-   $str ="{";
-   $str .=  '"name":"'.$this->Name.'",';
-   $str .=  '"deliveryid":"'.$this->DeliveryId.'",';
-   $str .=  '"kml":"'.$this->KML.'"';
-  // $str .=  '"longitude":"'.$this->Longitude.'",';
-  // $str .=  '"latitude":"'.$this->Latitude.'"';
-   $str .="}";
-   return  $str;
-   }
+        return  $ngeodata->loadGeodata($this->getGeodata());
+    }
 
 
-   public function update($roundstree)
-   {
-   $tg=0;
-   $cp=0;
 
-     foreach($roundstree as $rndgroup)
-     {
-     $tg += $rndgroup["group"]->getTarget();
-     $cp += $rndgroup["group"]->getCompleted();
-     }
-     $this->setTarget($tg);
-     $this->setCompleted($cp);
-   }
+    public function getjson()
+    {
+        $str ="{";
+        $str .=  '"name":"'.$this->Name.'",';
+        $str .=  '"deliveryid":"'.$this->DeliveryId.'",';
+        $str .=  '"kml":"'.$this->KML.'"';
+        // $str .=  '"longitude":"'.$this->Longitude.'",';
+        // $str .=  '"latitude":"'.$this->Latitude.'"';
+        $str .="}";
+        return  $str;
+    }
+
+
+    public function update($roundstree)
+    {
+        $tg=0;
+        $cp=0;
+
+        foreach($roundstree as $rndgroup)
+        {
+            $tg += $rndgroup["group"]->getTarget();
+            $cp += $rndgroup["group"]->getCompleted();
+        }
+        $this->setTarget($tg);
+        $this->setCompleted($cp);
+    }
 
 }
 

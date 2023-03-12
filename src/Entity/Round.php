@@ -401,7 +401,7 @@ class Round
 
    function makeXML($inset="")
    {
-     $geodata  = $this->getGeodata();
+     $geodata  = $this->getGeodata_json();
      $xmlout =$inset. "<round RoundId='$this->RoundId' Label='$this->Label' Name='$this->Name' Households='$this->Households'  KML='$this->KML' Bounds='$geodata' >\n  ";
      if($this->Roadgrouplist != null)
    {

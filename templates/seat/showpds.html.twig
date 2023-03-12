@@ -27,13 +27,13 @@
   <div class="label">Seat: </div>
   <div class="value">{{seat.districtid}}-{{seat.seatid}}</div>
   <div class="value">{{seat.name}}</div>
-  <div class="message"> All streets in each Polling district</div>
+  <div class="message"> All  Polling districts is Seat</div>
   <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
 </div>
 
-
+<div  class="pdpanel  indent id">
    {% for key,value in pds %}
-     <div  class="row indent id">
+     <div  class="pdrow row indent id">
         <div  id="{{value.pdid}}" class="rgid" >
          <a class="routebutton"  href ="/pollingdistrict/show/{{value.pdid}}" >{{value.pdid}}</a> </div>
           <div class="bnum"> H:{{value.households}}</div>
@@ -41,7 +41,7 @@
            <div class="button"> <a class="button" href = "/seat/removepd/{{seat.districtid}}/{{seat.seatid}}/{{value.pdid}}" >Remove</a> </div>
        </div>
           {% endfor %}
-
+</div>
            <div class="buttonrow row">
   <form action="/seat/addpollingdistrict/{{seat.districtid}}/{{seat.seatid}}"  method="post" enctype="multipart/form-data">
       <button type="submit">Add Polling District</button>

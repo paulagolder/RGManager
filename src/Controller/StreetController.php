@@ -444,11 +444,11 @@ class StreetController extends AbstractController
     return $this->redirect("/street/showall");
   }
 
-  public function StreetReplicate($stname,$stpart)
+  public function StreetReplicate($stseq)
   {
-    if($stname)
+    if($stseq)
     {
-      $astreet = $this->getDoctrine()->getRepository('App:Street')->findOnebyName($stname,$stpart);
+      $astreet = $this->getDoctrine()->getRepository('App:Street')->findOnebySeq($stseq);
       $astreet->fixPath();
       if(!$astreet) return $this->redirect("/street/showall");
     }

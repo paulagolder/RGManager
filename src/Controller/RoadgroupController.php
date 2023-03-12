@@ -116,7 +116,6 @@ class RoadgroupController extends AbstractController
     dump($pds);
     $extrastreetsinpd = null;
     if(strlen($pds) >2)
-
        $extrastreetsinpd =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreetsInPd($pds,$this->rgyear);
     if($swdid)
       $back = "/rgsubgroup/show/".$swdid;

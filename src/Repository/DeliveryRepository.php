@@ -38,7 +38,7 @@ class DeliveryRepository  extends EntityRepository
   public function findCandidateDeliveryRoadgroups($delivery,$year)
   {
     $conn = $this->getEntityManager()->getConnection();
-    $sqlpd = 'select p.pollingdistrictid  from pollingdistrict  as p, seattopd as s where s.pdid =  p.pollingdistrictid and s.year = "'.$year.'" and s.district = "'.$delivery->getDistrictId().'" ';
+    $sqlpd = 'select p.pdid  from pollingdistrict  as p, seattopd as s where s.pdid =  p.pdid and s.year = "'.$year.'" and s.district = "'.$delivery->getDistrictId().'" order by s.seat ';
     if($delivery->getSeatIds())
       $sqlpd .= ' and s.seat = "'.$delivery->getSeatIds().'"';
     $stmt = $conn->prepare($sqlpd);
@@ -47,10 +47,10 @@ class DeliveryRepository  extends EntityRepository
     $pdlist = "";
     foreach($pollingdistricts  as $key => $value)
     {
-      $pdlist  .= '"'.$value["pollingdistrictid"].'", ';
+      $pdlist  .= '"'.$value["pdid"].'", ';
     }
     $pdlist .= '"xx"';
-    $sql = 'select r.* from roadgroup as r where r.roadgroupid in (SELECT rs.roadgroupid FROM `roadgrouptostreet` as rs  WHERE rs.pd IN('.$pdlist.')   and rs.year = "'.$year.'") and r.year = "'.$year.'"';
+    $sql = 'select r.* from roadgroup as r where r.roadgroupid in (SELECT rs.roadgroupid FROM `roadgrouptostreet` as rs , street as s where rs.streetid = s.seq and  s.pdid IN('.$pdlist.')   and rs.year = "'.$year.'") and r.year = "'.$year.'"';
     $stmt = $conn->executeQuery($sql);
 
     $roadgroups= $stmt->fetchAll();
@@ -73,7 +73,10 @@ dump($roadgroups);
     $stmt = $conn->prepare($sqlpd);
     $pollingdistricts = $stmt->fetchAll();
     $pdarray = array();
-    $sql = 'select r.* from roadgroup as r where r.roadgroupid in ( SELECT rs.roadgroupid  FROM `roadgrouptostreet` as rs  join street as s on rs.streetid = s.seq  WHERE s.pd IN(:pdlist)   and  rs.year = "2022") and r.year = "'.$year.'"';
+    $sql = 'select r.* from roadgroup as r where r.roadgroupid in ( SELECT rs.roadgroupid  FROM `roadgrouptostreet` as rs  join street as s on rs.streetid = s.seq  WHERE s.pdid IN(:pdlist)   and  rs.year = "2022") and r.year = "'.$year.'"';
+
+
+
 
     $stmt = $conn->executeQuery(
       $sql,

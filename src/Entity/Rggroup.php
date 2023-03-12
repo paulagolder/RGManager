@@ -100,7 +100,8 @@ public function getStreets()
 
     public function getName(): ?string
     {
-        return $this->Name;
+        $fname = str_replace("&", "&amp;", $this->Name);
+        return $fname;
     }
 
     public function setName(string $Name): self

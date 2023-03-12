@@ -399,10 +399,9 @@ street_delete:
         stpart: null
 
 street_replicate:
-    path: /street/replicate/{stname}/{stpart}
+    path: /street/replicate/{stseq}
     controller: App\Controller\StreetController::streetreplicate
-    defaults:
-        stpart: null
+
 
 street_merge:
     path: /street/groupops

@@ -227,6 +227,7 @@ class DeliveryController extends AbstractController
     $entityManager = $this->getDoctrine()->getManager();
     $geodata = new Geodata;
     $rgps =  $this->getDoctrine()->getRepository("App:Round")->getRoadgroups($rndid,$this->rgyear);
+     dump($rgps);
     $roadgroups= [];
     foreach($rgps as $rgp)
     {
@@ -833,13 +834,23 @@ class DeliveryController extends AbstractController
     $this->getDoctrine()->getRepository("App:Round")->deleteRounds($dvyid);
     $delivery =   $this->getDoctrine()->getRepository("App:Delivery")->findOne($dvyid);
     $sprrgs =  $this->getDoctrine()->getRepository("App:Delivery")->findCandidateDeliveryRoadgroups($delivery,$delivery->getYear());
+
     dump($sprrgs);
+    $index = 1;
+    $csubgroup = "";
     foreach( $sprrgs as $rg )
     {
           $entityManager = $this->getDoctrine()->getManager();
           $newround = new round();
           $newround->setDeliveryId(intval($dvyid));
-          $newround->setLabel($rg["roadgroupid"]);
+          $subgroup = $rg["rgsubgroupid"];
+          if($subgroup != $csubgroup)
+          {
+            $csubgroup = $subgroup;
+            $idlabel = str_replace("RG_","",$rg["rgsubgroupid"])."_" ;
+            $index=1;
+          }
+          $newround->setLabel($idlabel.$index);
           $newround->setName($rg["name"]);
           $newround->setRggroupId($rg["rggroupid"]);
           $newround->setRgsubgroupId($rg["rgsubgroupid"]);
@@ -851,6 +862,7 @@ class DeliveryController extends AbstractController
           $newround->setRoadgroups(1);
           $entityManager->persist($newround);
           $entityManager->flush();
+          $index++;
           $adtrg = new RoundtoRoadgroup();
           $adtrg->setDeliveryId(intval($dvyid));
           $adtrg->setRoundId($newround->getRoundId());

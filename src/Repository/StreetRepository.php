@@ -158,7 +158,7 @@ class StreetRepository  extends EntityRepository
        return $street;
     }
 
- public function findOnebyStreetId($streetid)
+    public function findOnebyStreetId($streetid)
     {
       $sname = explode("/",$streetid);
       $sn = $sname[0];
@@ -235,7 +235,7 @@ class StreetRepository  extends EntityRepository
      dump($pdlist);
 
         $conn = $this->getEntityManager()->getConnection();
-         $sql = 'SELECT s.* FROM `street` as s left OUTER join roadgrouptostreet as rs on s.seq = rs.streetid  and rs.year= '.$year.' WHERE rs.seq is null and FIND_IN_SET( pdid, '.$pdlist.') > 0     order by s.pdid ';
+         $sql = 'SELECT s.* FROM `street` as s left OUTER join roadgrouptostreet as rs on s.seq = rs.streetid  and rs.year= '.$year.' WHERE rs.seq is null and FIND_IN_SET( pdid, '.$pdlist.') > 0     order by s.pdid , s.name ';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $streets= $stmt->fetchAll();
@@ -256,12 +256,9 @@ class StreetRepository  extends EntityRepository
         $streets = array();
         foreach( $streetars as $astreetar )
         {
-
          $astreet = new Street();
          $astreet->load($astreetar);
          $streets[] = $astreet;
-     //    $streets[] =  json_decode(json_encode((object) $astreetar), FALSE);
-
         }
         return $streets;
      }
