@@ -231,6 +231,7 @@ class RggroupController extends AbstractController
     $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($swdid, $this->rgyear);
     $spareroadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findSpareRoadgroupsinGroup($rggroupid);
     $extrastreets =null;
+    dump($roadgroups);
     return $this->render('subgroup/showone.html.twig',
     [
     'rgyear'=>$this->rgyear,
