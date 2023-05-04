@@ -77,7 +77,7 @@ class SeatRepository  extends EntityRepository
      {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = 'select p.* from pollingdistrict as p where p.pdid in (select DISTINCT sp.pdid from seattopd as sp WHERE sp.seat="'.$stid.'" and sp.district ="'.$dtid.'" and sp.year ="'.$year.'")';
+        $sql = 'select p.* from pollingdistrict as p where p.pdid in (select DISTINCT sp.pdid from seattopd as sp WHERE sp.seat="'.$stid.'" and sp.district ="'.$dtid.'" and sp.year ="'.$year.'") order by p.pdid';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $roadgroups= $stmt->fetchAll(\Doctrine\ORM\Query::HYDRATE_ARRAY);

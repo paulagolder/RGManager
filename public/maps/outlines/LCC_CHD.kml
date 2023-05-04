@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://earth.google.com/kml/2.1">
-<Folder>
+<Document>
 	<name>LCC Chadsmead Ward</name>
 	<Placemark>
 		<name>LCC Chadsmead Ward</name>
@@ -106,5 +106,5 @@
 -1.8488895893096924,52.69253117796075,0
 -1.84818696975708,52.6927604675293,0.0
 			</coordinates></LinearRing></outerBoundaryIs></Polygon>
-	</Placemark></Folder>
+	</Placemark></Document>
 </kml>

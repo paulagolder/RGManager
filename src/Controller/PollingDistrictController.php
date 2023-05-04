@@ -75,7 +75,7 @@ class PollingDistrictController extends AbstractController
     dump($apollingdistrict);
     $roadgroups = [];
     $geodata = new Geodata;
-    foreach ($rglist as $rg)
+  /*  foreach ($rglist as $rg)
     {
       $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rg["roadgroupid"],$this->rgyear);
        $geodata->mergeGeodata_obj($aroadgroup->getGeodata_obj());
@@ -87,10 +87,14 @@ class PollingDistrictController extends AbstractController
       $aroadgroup->setHouseholds(  $count = $this->getDoctrine()->getRepository("App:Roadgroup")->countHouseholds($aroadgroup->getRoadgroupId(), $this->rgyear));
       $roadgroups[] = $aroadgroup;
     }
-    $apollingdistrict->geodata =$geodata;
+   $apollingdistrict->geodata =$geodata;
+    $entityManager = $this->getDoctrine()->getManager();
+    $entityManager->persist($apollingdistrict);
+    $entityManager->flush();*/
     $back =  "/pollingdistrict/showall/";
     // extra rgs?
     $totalhouseholds =0;
+    $roadgroups = $rglist;
 
     return $this->render('pollingdistrict/showpds.html.twig',
     [
@@ -109,22 +113,36 @@ class PollingDistrictController extends AbstractController
   {
     $apollingdistrict = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findOne($pdid);
     $geodata = new Geodata;
+
      $streets =  $this->getDoctrine()->getRepository("App:Street")->findAllbyPd($pdid);
+     $ldcseat =  $this->getDoctrine()->getRepository("App:Pollingdistrict")->findSeat($pdid,$this->rgyear,"district council");
+     dump($ldcseat);
+     $geodata = new $geodata();
     foreach ($streets as $street)
     {
-      $astreet = $this->getDoctrine()->getRepository("App:Street")->findOnebySeq($street->getSeq());
+      $geodata->mergeGeodata_obj($street->getGeodata_obj());
+      if(strlen($street->getPath()) > 40)
+      {
+        $street->{"color"} = "black";
 
-
+      }else
+        $street->{"color"} = "red";
     }
-   // $apollingdistrict->{"geodata"} =$geodata;
+    $apollingdistrict->setGeodata($geodata);
+    $entityManager = $this->getDoctrine()->getManager();
+    $entityManager->persist($apollingdistrict);
+    $entityManager->flush();
     $back =  "/pollingdistrict/showall/";
 
-    return $this->render('pollingdistrict/showstreets.html.twig',
+   // return $this->render('pollingdistrict/showstreets.html.twig',
+    return $this->render('pollingdistrict/editstreets.html.twig',
     [
     'rgyear'=>$this->rgyear,
     'message' =>  '' ,
     'pollingdistrict'=>$apollingdistrict,
     'streets' => $streets ,
+    'seat'=> "/seat/showpds/LDC/".$ldcseat,
+    'street'=> "/pollingdistrict/newstreet/LDC/".$pdid,
     'back'=>$back,
     ]);
 
@@ -159,7 +177,7 @@ class PollingDistrictController extends AbstractController
     'rgyear'=>$this->rgyear,
     'message' =>  '' ,
     'seat'=> null,
-     'total'=>$totalhouseholds,
+    'total'=>$totalhouseholds,
     'roadgroup' => $roadgroup ,
     'streets'=> $streets,
     'sparestreets'=>$extrastreets,
@@ -201,6 +219,33 @@ class PollingDistrictController extends AbstractController
             'pd'=>$apd,
             'returnlink'=>'/',
             ));
+    }
+
+
+    public function Update($pdid)
+    {
+
+      if($pdid)
+      {
+        $apd = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findOne($pdid);
+        dump($apd);
+      }
+      $geodata = new Geodata;
+      $streets =  $this->getDoctrine()->getRepository("App:Street")->findAllbyPd($pdid);
+      foreach ($streets as $street)
+      {
+        $astreet = $this->getDoctrine()->getRepository("App:Street")->findOnebySeq($street->getSeq());
+
+         $geodata->mergeGeodata_obj($astreet->getGeodata_obj());
+      }
+
+      $apd->setGeodata($geodata);
+      $entityManager = $this->getDoctrine()->getManager();
+      $entityManager->persist($apd);
+      $entityManager->flush();
+
+      return $this->redirect("/pollingdistrict/show/".$pdid);
+
     }
 
 
@@ -308,6 +353,27 @@ class PollingDistrictController extends AbstractController
 
 
 
+  public function newstreet($dtid,$pdid)
+  {
 
+    $astreet = new Street();
+    $astreet->setPath("");
+    dump($pdid);
+    dump($dtid);
+    $apd = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findOne($pdid);
+    $astreet->setGeodata($apd->getGeodata());
+    $astreet->setUpdated(null);
+    $astreet->setName("NEW STREET");
+    $astreet->setDistrictId($dtid);
+      $astreet->setPdId($pdid);
+    $entityManager = $this->getDoctrine()->getManager();
+    $entityManager->persist($astreet);
+    $entityManager->flush();
+    $pid = $astreet->getStreetId();
+    dump($astreet);
+    $seq= $astreet->getSeq();
+
+    return $this->redirect("/pollingdistrict/showstreets/".$pdid);
+}
 
 }

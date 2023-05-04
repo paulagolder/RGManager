@@ -1,0 +1,81 @@
+{# views/street/editstreets.html.twig #}
+
+{% extends 'rgmaster.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="{{ asset('/css/street.css') }}" rel="stylesheet" />
+<link href="{{ asset('/css/pollingdistrict.css') }}" rel="stylesheet" />
+
+{% endblock %}
+
+
+{% block middle %}
+<div  id="pollingdistrict" class="street">
+  {% if message %}
+  <H1> {{message}} </H1>
+
+  {% else %}
+  <div class="heading row">
+    <div class="label"> Streets in PollingDistrict </div>
+    <div class="label">{{pollingdistrict.districtid}} </div>
+    <div class="label">{{pollingdistrict.pdid}} </div>
+    <div class="button right"> <a class="button" href = "{{seat}}" >View Seat</a> </div>
+    <div class="button"> <a class="button" href = "{{street}}" >New Street</a> </div>
+    <div class="button"> <a class="button" href = "{{back}}" >Back</a> </div>
+  </div>
+
+  <div class="splitpage"  >
+    <div class="column1">
+
+      <div class="subheading row">
+        <div class="name" >Name/part</div>
+        <div  class="button" ></div>
+        <div  class="button" ></div>
+      </div>
+      <div class="list  pagescroll" >
+        {% for street in streets %}
+
+        <div class="row" >
+          <div class="name {{street.color}}" >{{street.fullname}}</div>
+          <div class="num {{street.color}}" >{{street.households}}</div>
+          <div class="button"> <a class="button" href = "/street/edit/{{street.seq}}" >Edit</a> </div>
+          <div  class="shorttext" > {{street.note}}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <div class= "column2">
+      <div class="map" >
+        <div id="goodmapid" ></div>
+      </div>
+      {% set sggeodata = pollingdistrict.geodata | json_encode | raw  %}
+      {% dump(sggeodata) %}
+      <script >
+        var mymap = myGoodMap("{{sggeodata}}");
+        var i=0;
+        var fgroup =  new L.featureGroup();
+       // mymap.on('click', onMapClick);
+        {% for street in streets %}
+        var i=0;
+        var fgroup =  new L.featureGroup();
+        var estyle = {
+        color:  getColor(i),
+        weight: 5,
+        opacity: 1
+        }
+        var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
+        drawPath(mymap,"{{street.getPath()}}","{{street.getSeq()}}",estyle);
+
+        i=i+1;
+        if(i>11)i=0;
+        {% endfor %}
+        //               setMarkers(mymap,"{{sggeodata}}");
+        setBounds2(mymap,"{{sggeodata}}");
+      </script>
+
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

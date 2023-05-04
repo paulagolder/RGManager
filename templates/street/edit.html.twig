@@ -300,7 +300,8 @@ function closeForm() {
       <div class="button> "><a class="button small" href = "/street/editgroup/{{street.seq}}" >Edit Group </a> </div>
       <div class="button> "><a class="button small" href = " https://lichfielddc.maps.arcgis.com/apps/webappviewer/index.html?id=f15c49e001cd48239abf6571b5d3f68d" target="_pdmap" >View PD Map</a> </div>
     {% endif %}
-    <div class="button  right"> <a class="button" href = "/street/editbyseq/{{street.seq}}" >Back</a> </div>
+    <div class="button  right"> <a class="button" href = "/pollingdistrict/showstreets/{{street.pdid}}" >ViewPD</a> </div>
+    <div class="button"> <a class="button" href = "/street/editbyseq/{{street.seq}}" >Back</a> </div>
      <div class="button"> <a class="button" href = "/roadgroup/showone/{{roadgroupid}}" >Roadgroup</a> </div>
   </div>
   <div class="formmap">
@@ -351,6 +352,7 @@ function closeForm() {
 
 <div class ="row">
       <div class="button"> <a class="small button red" href ="/street/replicate/{{street.seq}}" >{{'SPLIT ROAD'}} </a> </div>
+        <div class="button"> <a class="small button red" href ="/street/delete/{{street.seq}}" >{{'DELETE'}} </a> </div>
  </div>
 
          {% set stgeodata = geodata | json_encode | raw  %}

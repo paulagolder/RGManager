@@ -62,7 +62,7 @@ class RoadgrouptostreetRepository  extends EntityRepository
        public function countPDs($year)
      {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'Select rs.roadgroupid, count(DISTINCT s.pd) as nos from  roadgrouptostreet rs left join street s on rs.streetid = s.seq WHERE rs.year = "'.$year.'" group by rs.roadgroupid  order by rs.roadgroupid;' ;
+        $sql = 'Select rs.roadgroupid, count(DISTINCT s.pdid) as nos from  roadgrouptostreet rs left join street s on rs.streetid = s.seq WHERE rs.year = "'.$year.'" group by rs.roadgroupid  order by rs.roadgroupid;' ;
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $pdres= $stmt->fetchAll();

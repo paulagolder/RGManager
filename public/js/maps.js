@@ -121,9 +121,9 @@ function setMarkers(amap,amybounds)
   var selat =  mybounds["minlat"];
   var selong =  mybounds["maxlong"];
   var marker = L.marker([nwlat, nwlong]).addTo(amap);
-   marker = L.marker([selat, selong]).addTo(amap);
-   marker = L.marker([selat, nwlong]).addTo(amap);
-   marker = L.marker([nwlat, selong]).addTo(amap);
+  marker = L.marker([selat, selong]).addTo(amap);
+  marker = L.marker([selat, nwlong]).addTo(amap);
+  marker = L.marker([nwlat, selong]).addTo(amap);
 }
 
 function setMarkers2(amap,amybounds)
@@ -166,18 +166,18 @@ function drawBox(amap,mybounds)
 function CheckUrl(url)
 {
   try {
-  var http = null;
-  if (window.XMLHttpRequest)
-  {// code for IE7+, Firefox, Chrome, Opera, Safari
-     http=new XMLHttpRequest();
-  }
-  else
-  {// code for IE6, IE5
-     http=new ActiveXObject("Microsoft.XMLHTTP");
-  }
-  http.open('HEAD', url, false);
-  http.send();
-  return http.status!=404;
+    var http = null;
+    if (window.XMLHttpRequest)
+    {// code for IE7+, Firefox, Chrome, Opera, Safari
+      http=new XMLHttpRequest();
+    }
+    else
+    {// code for IE6, IE5
+      http=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    http.open('HEAD', url, false);
+    http.send();
+    return http.status!=404;
 
   }
   catch(err) {
@@ -191,22 +191,22 @@ function addMyKML(mymap,kmlfilepath,color, cumbounds)
 {
   fetch(kmlfilepath).then(res => res.text()).then(kmltext =>
   {
-  const parser = new DOMParser();
-  const kml = parser.parseFromString(kmltext, 'text/xml');
-  const track = new L.KML(kml);
-  track.setStyle({color: color , weight: 14 ,  clickable: true ,opacity: 0.7, fillOpacity: 0.1 });
-  mymap.addLayer(track);
+    const parser = new DOMParser();
+    const kml = parser.parseFromString(kmltext, 'text/xml');
+    const track = new L.KML(kml);
+    track.setStyle({color: color , weight: 14 ,  clickable: true ,opacity: 0.7, fillOpacity: 0.1 });
+    mymap.addLayer(track);
 
-  const bounds = track.getBounds();
-  if( cumbounds[0] == null)
-  {
-    cumbounds[0] = bounds;
-  }else
-  {
-    cumbounds[0].extend(bounds);
-  }
+    const bounds = track.getBounds();
+    if( cumbounds[0] == null)
+    {
+      cumbounds[0] = bounds;
+    }else
+    {
+      cumbounds[0].extend(bounds);
+    }
 
-});
+  });
 
 }
 
@@ -220,13 +220,13 @@ function makeKMLLayer(amap,kmlfilepath,style, fitbounds=false, label='')
     track = new L.KML(kml);
     track.setStyle(style);
     amap.addLayer(track);
-     const bounds = track.getBounds();
-     if(bounds)
-     {
-    //  amap.fitBounds(bounds);
+    const bounds = track.getBounds();
+    if(bounds)
+    {
+      //  amap.fitBounds(bounds);
     }
     if(label)
-       track.bindPopup(label);
+      track.bindPopup(label);
   });
   return track;
 }
@@ -237,17 +237,16 @@ function makeOutlineKml(amap,kmlfilepath,style, fitbounds=false, label='')
   var polygon = omnivore.kml(kmlfilepath);
   polygon.setStyle(style);
   polygon.addTo(amap);
- if(fitbounds)
- {
-  polygon.on('ready', function() {
-    amap.fitBounds(polygon.getBounds())
-  });
- }
+  if(fitbounds)
+  {
+    polygon.on('ready', function() {
+      amap.fitBounds(polygon.getBounds())
+    });
+  }
 }
 
 function addMyKML2(mymap, kmlfile, style,fitbounds=false, label='')
 {
-
   var runLayer = omnivore.kml(kmlfile)
   .on('ready', function() {
 
@@ -259,11 +258,8 @@ function addMyKML2(mymap, kmlfile, style,fitbounds=false, label='')
     });
   })
   .addTo(mymap);
-
   return runLayer;
 }
-
-
 
 function addKMLLayer(layergroup,kmlfilepath,style)
 {
@@ -279,39 +275,34 @@ function addKMLLayer(layergroup,kmlfilepath,style)
   });
 }
 
-
-
-
-
 function addMyKMLLayer(mymap,kmllayer,color)
 {
   if(kmllayer)
   {
-   // var kmllayer = new L.KML(kmlfilepath, {async: true});
+    // var kmllayer = new L.KML(kmlfilepath, {async: true});
     kmllayer.on("loaded", function(e)
     {
       kmllayer.setStyle({color: color , weight: 14});
-     // mymap.fitBounds(e.target.getBounds(), {padding: [50,50]});
+      // mymap.fitBounds(e.target.getBounds(), {padding: [50,50]});
     });
     mymap.addLayer(kmllayer);
     return kmllayer
   }
 }
 
-
 function redecode(mystr)
 {
-    if(typeof mystr === 'object') return mystr;
-    if (!mystr.includes('&') ) return mystr;
-    var instr = mystr.replace(/&amp;/g  , '&');
-    instr = instr.replace(/&gt;/g  , '>');
-    instr = instr.replace(/&lt;/g   , '<');
-    instr = instr.replace(/&quot;/g  ,  '"');
-    instr = instr.replace(/&#39;/g   ,"'");
-    instr = instr.replace(/&#039;/g   ,",");
+  if(typeof mystr === 'object') return mystr;
+  if (!mystr.includes('&') ) return mystr;
+  var instr = mystr.replace(/&amp;/g  , '&');
+  instr = instr.replace(/&gt;/g  , '>');
+  instr = instr.replace(/&lt;/g   , '<');
+  instr = instr.replace(/&quot;/g  ,  '"');
+  instr = instr.replace(/&#39;/g   ,"'");
+  instr = instr.replace(/&#039;/g   ,",");
 
 
-    return instr;
+  return instr;
 }
 
 
@@ -320,7 +311,7 @@ function drawPath(amap,mypath,label,style=null)
   var polyline = null;
   if(style == null)
   {
-     style = {
+    style = {
       color: "#800000",
       weight: 10,
       opacity: 0.4
@@ -333,37 +324,34 @@ function drawPath(amap,mypath,label,style=null)
     mypath = mypath.replace( "}]]","}]");
     if(mypath.length >4)
     {
-  var dpath =redecode(mypath);
-  var points = JSON.parse(dpath);
-  if(points.length<1) return;
-  var bn = 1;
-  for(point of points)
+      var dpath =redecode(mypath);
+      var points = JSON.parse(dpath);
+      if(points.length<1) return;
+      var bn = 1;
+      for(point of points)
+      {
+        var track = point.steps;
+        polyline = L.polyline(track, style).addTo(amap);
+        polyline.bindPopup(label);
+        bn=bn+1;
+      }
+    }
+  }
+  else
   {
-    var track = point.steps;
-     polyline = L.polyline(track, style).addTo(amap);
-     polyline.bindPopup(label);
-     bn=bn+1;
+    var track = mypath.steps;
+    polyline = L.polyline(track, style).addTo(amap);
   }
-
-  }
-}
-else
-{
-
-  var track = mypath.steps;
-
-  polyline = L.polyline(track, style).addTo(amap);
-}
-return polyline ;
+  return polyline ;
 
 }
 
 
 function setEndMarkers(amap,branch)
 {
-    var markers =[];
-    var track = branch.steps;
-    var l = track.length;
+  var markers =[];
+  var track = branch.steps;
+  var l = track.length;
   var start=track[0];
   if(!start) return;
   if(start.length<2) return;

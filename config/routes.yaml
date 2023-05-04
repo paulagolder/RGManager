@@ -26,6 +26,9 @@ pollingdistrict_edit:
    path: /pollingdistrict/edit/{pdid}
    controller: App\Controller\PollingDistrictController::edit
 
+pollingdistrict_update:
+    path:  /pollingdistrict/update/{pdid}
+    controller: App\Controller\PollingDistrictController::update
 
 pollingdistrict_showall:
    path: /pollingdistrict/showall
@@ -35,7 +38,9 @@ pollingdistrict_showstreets:
    path: /pollingdistrict/showstreets/{pdid}
    controller: App\Controller\PollingDistrictController::showstreets
 
-
+pollingdistrict_newstreet:
+   path: /pollingdistrict/newstreet/{dtid}/{pdid}
+   controller: App\Controller\PollingDistrictController::newstreet
 
 delivery_schedule:
    path: /delivery/scheduledelivery/{dvyid}
@@ -393,7 +398,7 @@ street_import:
 
 
 street_delete:
-    path: /street/delete/{stname}/{stpart}
+    path: /street/delete/{stseq}
     controller: App\Controller\StreetController::streetdelete
     defaults:
         stpart: null

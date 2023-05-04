@@ -73,5 +73,15 @@ class PollingdistrictRepository  extends EntityRepository
         return 0;
      }
 
+     public function findSeat($pdid,  $year, $level)
+     {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'select  sp.seat from  seattopd as sp , seat as s where sp.seat=s.seatid and sp.pdid =  "'.$pdid.'"  and sp.year = "'.$year.'" and s.level = "'.$level.'"';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $pds= $stmt->fetchAll();
+        dump($pds);
+        return $pds[0]["seat"];
+     }
 
 }

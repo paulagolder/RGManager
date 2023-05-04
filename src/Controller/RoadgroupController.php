@@ -23,6 +23,7 @@ use App\Form\Type\StreetForm;
 use App\Entity\Roadgroup;
 use App\Entity\Street;
 use App\Entity\Geodata;
+use App\Entity\Roadgrouptostreet;
 
 
 
@@ -313,7 +314,8 @@ class RoadgroupController extends AbstractController
       }
     }
 
-    return $this->render('street/edit.html.twig', array(
+    //return $this->redirect("/rggroup/show/".$wdid);
+   return $this->render('street/edit.html.twig', array(
       'rgyear'=>$this->rgyear,
       'form' => $form->createView(),
       'street'=>$street,
@@ -327,37 +329,25 @@ class RoadgroupController extends AbstractController
     $aroadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
     $astreet = new Street();
     $gd= $aroadgroup->getGeodata();
-
-    $form = $this->createForm(StreetForm::class, $astreet);
-    if ($request->getMethod() == 'POST')
-    {
-      $form->handleRequest($request);
-      if ($form->isValid())
-      {
         $astreet->setPath("");
+        $astreet->setGeodata($gd);
         $astreet->setUpdated(null);
+        $astreet->setName("NEW STREET");
+        $astreet->setDistrictId("??");
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($astreet);
         $entityManager->flush();
         $pid = $astreet->getStreetId();
+        dump($astreet);
         $seq= $astreet->getSeq();
-       // return $this->redirect("/roadgroup/showone/".$rgid);
-        $rgst = new RoadgrouptoStreet();
-        $rgst.setStreet($pid);
-        $rgst.setStreetId($pid);
-        $rgst.setRoadgroupId($rgid);
-        return $this->doUpdating($rgid);
 
-      }
-    }
-
-    return $this->render('street/edit.html.twig', array(
-      'rgyear'=>$this->rgyear,
-      'form' => $form->createView(),
-      'street'=>$astreet,
-      'roadgroupid'=>$rgid,
-      'back'=>'/roadgroup/showone/'.$rgid,
-      ));
+        $rgst = new Roadgrouptostreet();
+           dump($rgst);
+        $rgst->setStreetId($seq);
+        $rgst->setRoadgroupId($rgid);
+        $entityManager->persist($rgst);
+         $entityManager->flush();
+    return $this->redirect("/roadgroup/showone/".$rgid);
   }
 
   public function Delete($rgid)

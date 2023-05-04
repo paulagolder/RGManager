@@ -37,7 +37,7 @@ class StreetRepository  extends EntityRepository
        {
          $qb->Where("p.Geodata IS NULL "); // NOT EMPTY
         }
-       $qb->orderBy("p.Name", "ASC");
+       $qb->orderBy("p.Households", "DESC");
        $streets =  $qb->getQuery()->getResult();
        return $streets;
     }

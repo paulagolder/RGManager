@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://earth.google.com/kml/2.1">
-<Folder>
+<Document>
 	<name>LCC_Boley Park Ward</name>
 	<Placemark>
 		<name>LCC_Boley Park Ward</name>
@@ -169,5 +169,5 @@
 -1.81135819922773,52.6775730391711,0
 -1.81160579670993,52.6777901112601,0
 		</coordinates></LinearRing></outerBoundaryIs></Polygon>
-	</Placemark></Folder>
+	</Placemark></Document>
 </kml>

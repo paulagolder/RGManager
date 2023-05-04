@@ -253,6 +253,9 @@ class StreetController extends AbstractController
     $request = $this->requestStack->getCurrentRequest();
     if(!$rdseq) return $this->redirect("/rggroup/showall");
     $astreet = $this->getDoctrine()->getRepository('App:Street')->findOnebySeq($rdseq);
+    $pdid = $astreet->getPdId();
+       $pd = $this->getDoctrine()->getRepository('App:Pollingdistrict')->findOne($pdid);
+         $geodata = $pd->getGeodata();
     $rgid= $this->getDoctrine()->getRepository('App:Roadgrouptostreet')->findRg($rdseq,$this->rgyear);
     if($rgid)
       $roadgroup =  $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($rgid,$this->rgyear);
@@ -299,11 +302,12 @@ class StreetController extends AbstractController
         $entityManager->persist($astreet);
         $entityManager->flush();
         $rdid = $astreet->getStreetId();
-       return $this->redirect( "/roadgroup/showone/$rgid");
+       return $this->redirect( " /pollingdistrict/showstreets/$pdid");
+
       }
     }
 
-    $geodata = new Geodata();
+  /*  $geodata = new Geodata();
     foreach($streets as $bstreet)
     {
       $geodata->mergeGeodata_obj($bstreet->getGeodata_obj());
@@ -318,7 +322,7 @@ class StreetController extends AbstractController
          $geodata = $roadgroup->getGeodata_obj();
       if(!$geodata->isgeodata() && $rggroup)
         $geodata = $rggroup->getGeodata();
-    }
+    }*/
 
     dump($geodata);
     return $this->render('street/edit.html.twig', array(
@@ -334,15 +338,15 @@ class StreetController extends AbstractController
       ));
   }
 
-  public function StreetDelete($stname,$stpart)
+  public function StreetDelete($stseq)
   {
-
-    $astreet = $this->getDoctrine()->getRepository('App:Street')->findOnebyName($stname,$stpart);
-    $astreet->fixPath();
+    $astreet = $this->getDoctrine()->getRepository('App:Street')->findOnebySeq($stseq);
+    $pdid = $astreet->getPdId();
     if($astreet==null)  return;
-    $back =  "/rggroup/showall/";
+   //    $astreet->fixPath();
+    $back =  "/pollingdistrict/show/".$pdid;
     $entityManager = $this->getDoctrine()->getManager();
-    $entityManager->remove($satreet);
+    $entityManager->remove($astreet);
     $entityManager->flush();
     return $this->redirect($back);
   }

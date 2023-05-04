@@ -37,3 +37,29 @@ div#subwardedit div.form div label
   color: green;
   display: inline-block;
 }
+
+
+div#pollingdistrict  div.splitpage
+{
+  display:flex;
+}
+
+div#pollingdistrict  div.splitpage div.column1
+{
+  width:500px
+}
+
+div#pollingdistrict  div.splitpage div.column2
+{
+  width:500px
+}
+
+div#pollingdistrict  div.name.black
+{
+ color:black;
+}
+
+div#pollingdistrict  div.name.red
+{
+  color:red;
+}

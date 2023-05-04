@@ -328,20 +328,42 @@ class MapServer
     $maxlat = -360;
     $minlng = 360;
     $maxlng = -360;
-    $addpath =  $this->maproot."roadgroups/".$addfile;
+    $addpath =  $this->maproot.$addfile;
     $addpath = str_replace("//","/",$addpath);
+
     $xmlstr2 = file_get_contents($addpath);
     $addkml = new \SimpleXMLElement($xmlstr2);
+    dump($addkml);
 
-    foreach ($addkml->Document->Placemark as $placemark)
+    $placemarks = $addkml->Document->Placemark;
+   // $aplacemark = $addkml->Folder->Placemark;
+  //  $placemarks =array($aplacemark);
+    dump($placemarks);
+  //  dump($aplacemark);
+    foreach ($placemarks as $placemark)
     {
+      dump($placemark);
       $coords = $placemark->Polygon->outerBoundaryIs->LinearRing->coordinates;
-      foreach( $coords as $coord)
+      dump($coords);
+      if(strstr($coords[0], "\n"))
       {
-        $carry = explode(" ",$coord[0]);
-        foreach($carry as $cd)
+      $carray = preg_split("/\r\n|\n|\r/", $coords[0]);
+      }else
+     {
+       $carray = explode(" ",$coords[0]);
+    }
+
+
+      dump($carray);
+      foreach( $carray as $coord)
+      {
+
+        $latlng = explode(",",$coord);
+        dump($latlng);
+        if(count($latlng )>1)
         {
-          $latlng = explode(",",$cd);
+
+
           $lat =  floatval($latlng[1]);
           $lng =  floatval($latlng[0]);
           if($maxlat < $lat)$maxlat= $lat;
@@ -349,6 +371,7 @@ class MapServer
           if($minlat > $lat)$minlat= $lat;
           if($minlng > $lng)$minlng= $lng;
         }
+
       }
     }
     $geodata = new Geodata;
@@ -358,6 +381,7 @@ class MapServer
     $geodata->minlong = $minlng;
     $geodata->midlat = ($minlat+$maxlat)/2;
     $geodata->midlong = ($minlng+$maxlng)/2;
+    dump($geodata);
       return $geodata;
   }
 

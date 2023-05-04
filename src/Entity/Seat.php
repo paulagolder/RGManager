@@ -26,6 +26,11 @@ class Seat
      */
     private $DistrictId;
 
+    /**
+     * @ORM\Column(name="level",type="string", length=50)
+     */
+    private $Level;
+
 
       /**
      * @ORM\Column(name="date",type="integer", length=50)
@@ -101,6 +106,18 @@ class Seat
     public function setName(string $Name): self
     {
         $this->Name = $Name;
+        return $this;
+    }
+
+
+    public function getLevel(): ?string
+    {
+        return $this->Level;
+    }
+
+    public function setLevel(string $text): self
+    {
+        $this->Level = $text;
         return $this;
     }
 
