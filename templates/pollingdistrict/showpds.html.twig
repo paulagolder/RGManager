@@ -21,6 +21,7 @@
 {% else %}
     <div class="heading row">
     <div class="label">Polling District : {{pollingdistrict.pdid}}</div>
+      <div class="label">{{pollingdistrict.name}}</div>
      <div class="message"> All Roadgroups with streets in this Polling district</div>
            <div class="button  right"> <a class="button" href = "/pollingdistrict/showstreets/{{pollingdistrict.pdid}}" >{{'edit'}} </a> </div>
       <div class="button  right"> <a class="button" href = "/pollingdistrict/update/{{pollingdistrict.pdid}}" >{{'update'}} </a> </div>

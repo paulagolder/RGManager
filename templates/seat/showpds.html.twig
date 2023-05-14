@@ -22,43 +22,43 @@
 <H1> Seat not found </H1>
 {% else %}
 <div id="seat" >
-   <div class="heading  row">
-      <div class="label">Seat: </div>
-      <div class="value">{{seat.districtid}}-{{seat.seatid}}</div>
-      <div class="value">{{seat.name}}</div>
-      <div class="message"> All  Polling districts in Seat</div>
-      <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
-   </div>
+<div class="heading  row">
+<div class="label">Seat : </div>
+<div class="value">{{seat.districtid}}-{{seat.seatid}}</div>
+<div class="value">{{seat.name}}</div>
+<div class="message"> All  Polling districts in Seat</div>
+<div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+</div>
 
-   <div  class="pdpanel  indent id">
-      {% for key,value in pds %}
-      <div  class="pdrow row indent id">
-         <div  id="{{value.pdid}}" class="rgid" >
-            <a class="routebutton"  href ="/pollingdistrict/show/{{value.pdid}}" >{{value.pdid}}</a>
-         </div>
-         <div class="bnum"> H:{{value.households}}</div>
-         <div  class="button" > <a class="button"  href ="/pollingdistrict/show/{{value.pdid}}" >View</a> </div>
-         <div class="button"> <a class="button" href = "/seat/removepd/{{seat.districtid}}/{{seat.seatid}}/{{value.pdid}}" >Remove</a> </div>
-      </div>
-      {% endfor %}
-   </div>
+<div  class="pdpanel  indent id">
+{% for key,value in pds %}
+<div  class="pdrow row indent id">
+<div  id="{{value.pdid}}" class="rgid" >
+<a class="routebutton"  href ="/pollingdistrict/edit/{{value.pdid}}" >{{value.pdid}}</a>
+</div>
+<div class="bnum"> H:{{value.households}}</div>
+<div  class="button" > <a class="button"  href ="/pollingdistrict/showstreets/{{value.pdid}}" >Edit</a> </div>
+<div class="button"> <a class="button" href = "/seat/removepd/{{seat.districtid}}/{{seat.seatid}}/{{value.pdid}}" >Remove</a> </div>
+</div>
+{% endfor %}
+</div>
 
-   <div class="buttonrow row">
-      <form action="/seat/addpollingdistrict/{{seat.districtid}}/{{seat.seatid}}"  method="post" enctype="multipart/form-data">
-         <button type="submit">Add Polling District</button>
-         <select name="selpd">
-            {% for apd in sparepds %}
-            <option value="{{apd.pdid}}">{{apd.pdid}}</option>
-            {% endfor %}
-         </select>
-      </form>
-   </div>
+<div class="buttonrow row">
+<form action="/seat/addpollingdistrict/{{seat.districtid}}/{{seat.seatid}}"  method="post" enctype="multipart/form-data">
+<button type="submit">Add Polling District</button>
+<select name="selpd">
+{% for apd in sparepds %}
+<option value="{{apd.pdid}}">{{apd.pdid}}</option>
+{% endfor %}
+</select>
+</form>
+</div>
 </div>
 </div>
 
 
 <div class="map" >
-   <div id="goodmapid" ></div>
+<div id="goodmapid" ></div>
 </div>
 {% set geodata = seat.getGeodata_json() %}
 {% dump(sts) %};
@@ -66,35 +66,41 @@
 <script >
 var mymap = myGoodMap("{{geodata}}");
 {% if  seat.kml %}
-
-
-
+var parent = new L.FeatureGroup();
 var aspath = "{{mappath}}outlines/{{seat.kml}}";
 if("{{seat.kml}}")
 {
-   var style = {"color":  "#000000" , "weight": 4 ,  "clickable": false ,"opacity": 1, "fillOpacity": 0.0};
-  {# makeOutlineKml(mymap,aspath,style,false,"{{seat.name}}")#}
-   makeOutlineKml(mymap,aspath,style,false);
+     makeKMLLayer(parent,aspath,baseStyle,false);
 }
-
 {% endif %}
 
 var i = 0;
+var streets = new L.FeatureGroup();
+
 {% for key,pd in sts %}
 var h2s = document.getElementById("{{key}}");
 if(h2s)  h2s.style.backgroundColor = getColor(i);
+astreetfg =new L.FeatureGroup();
 {% for astreet in pd %}
 {
-   var link = "<a href='/street/showone/{{astreet.seq}}'>{{astreet.name}}</a>";
-   var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.9 };
-   drawPath(mymap,"{{astreet.getPath()}}","{{astreet.pdid}}",style);
+
+   var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.9 };
+  thispath = drawPath(astreetfg,"{{astreet.getPath()}}","{{astreet.pdid}}",style);
+
 }
+astreetfg.bindPopup("{{astreet.pdid}}");
+var link = "<a href='/street/showone/{{astreet.seq}}'>{{astreet.name}}</a>";
+streets.addLayer(astreetfg);
 {% endfor %}
+streets.setStyle({"clickable": true });
 i=i+1;
 if(i>11) i=0;
 {% endfor %}
-setMarkers(mymap,"{{geodata}}");
-setBounds2(mymap,"{{geodata}}");
+   mymap.addLayer(streets);
+     mymap.addLayer(parent);
+   streets.bringToFront();
+   parent.bringToBack();
+   setBounds2(mymap,"{{geodata}}");
 </script>
 {% endif %}
 </div>

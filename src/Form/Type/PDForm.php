@@ -18,6 +18,7 @@ class PDForm extends AbstractType
     {
         $builder ->add('PdId', TextType::class,['label' => 'PdId']);
         $builder ->add('PdTag', TextType::class,['label' => 'Tag']);
+            $builder ->add('Name', TextType::class,['label' => 'Name']);
         $builder ->add('Districtid', TextType::class ,['label' => 'District',]);
          $builder ->add('KML', TextType::class,['label' => 'KML','required' => false,]);
     }

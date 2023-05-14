@@ -200,6 +200,10 @@ seats_showpds:
    path: /seat/showpds/{dtid}/{stid}
    controller: App\Controller\SeatController::showpds
 
+seats_showwards:
+   path: /seat/showwards/{dtid}/{stid}
+   controller: App\Controller\SeatController::showwards
+
 
 seats_removepd:
    path: /seat/removepd/{dtid}/{stid}/{pdid}

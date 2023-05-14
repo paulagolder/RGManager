@@ -16,8 +16,7 @@
     <Placemark>
       <name>Lichfield City North</name>
       <styleUrl>#ourPolygonStyle</styleUrl>
-        <LinearRing>
-          <coordinates>
+       <Polygon><outerBoundaryIs><LinearRing><coordinates>
 -1.8017455339431763,52.68814468383789,0.0
 -1.8025068044662476,52.687950134277344,0.0
 -1.803344964981079,52.6877326965332,0.0
@@ -442,8 +441,7 @@
 -1.8019402027130127,52.68828582763672,0.0
 -1.80182945728302,52.68821716308594,0.0
 -1.8017455339431763,52.68814468383789,0.0
-          </coordinates>
-        </LinearRing>
+</coordinates></LinearRing></outerBoundaryIs></Polygon>
     </Placemark>
   </Document>
 </kml>

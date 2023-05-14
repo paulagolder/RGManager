@@ -56,6 +56,13 @@ class Pollingdistrict
   private $Geodata;
 
 
+  /**
+   * @ORM\Column(name="name",type="string", length=40, nullable=true)
+   */
+  private $Name;
+
+
+
   public function getPdId()
    {
      return $this->PdId;
@@ -77,6 +84,18 @@ class Pollingdistrict
    public function setPdTag($text): self
    {
      $this->PdTag = $text;
+
+     return $this;
+   }
+
+   public function getName()
+   {
+     return $this->Name;
+   }
+
+   public function setName($text): self
+   {
+     $this->Name = $text;
 
      return $this;
    }

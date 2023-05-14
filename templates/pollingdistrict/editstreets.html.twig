@@ -2,10 +2,21 @@
 
 {% extends 'rgmaster.html.twig' %}
 
+
 {% block stylesheets %}
 {{ parent() }}
 <link href="{{ asset('/css/street.css') }}" rel="stylesheet" />
 <link href="{{ asset('/css/pollingdistrict.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+
+{% endblock %}
+
+{% block js %}
+{{ parent() }}
+<script src="{{asset('js/maps.js')}}"></script>
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+<script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
+<script src="{{asset('js/L.KML.js')}}"></script>
 
 {% endblock %}
 
@@ -20,6 +31,7 @@
     <div class="label"> Streets in PollingDistrict </div>
     <div class="label">{{pollingdistrict.districtid}} </div>
     <div class="label">{{pollingdistrict.pdid}} </div>
+    <div class="label">{{pollingdistrict.name}}</div>
     <div class="button right"> <a class="button" href = "{{seat}}" >View Seat</a> </div>
     <div class="button"> <a class="button" href = "{{street}}" >New Street</a> </div>
     <div class="button"> <a class="button" href = "{{back}}" >Back</a> </div>
@@ -53,6 +65,13 @@
       {% dump(sggeodata) %}
       <script >
         var mymap = myGoodMap("{{sggeodata}}");
+
+        if("{{pollingdistrict.kml}}")
+        {
+        var aspath = "{{mappath}}parishes/{{pollingdistrict.kml}}";
+        var style = {"color":  "#0000ff" , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.0};
+        makeOutlineKml(mymap,aspath,style, true,"{{pollingdistrict.pdid}}");
+        }
         var i=0;
         var fgroup =  new L.featureGroup();
        // mymap.on('click', onMapClick);
@@ -65,7 +84,7 @@
         opacity: 1
         }
         var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
-        drawPath(mymap,"{{street.getPath()}}","{{street.getSeq()}}",estyle);
+        drawPath(mymap,"{{street.getPath()}}","{{street.getName()}}",estyle);
 
         i=i+1;
         if(i>11)i=0;

@@ -20,6 +20,16 @@ function getColor(i)
   return window.colors[i]
 }
 
+var  baseStyle =
+{
+  color :  'grey' ,
+  fillColor :  'green' ,
+  weight : 4 ,
+  clickable : true ,
+  opacity : 1 ,
+  fillOpacity : 0 ,
+  fill : false
+};
 
 
 
@@ -159,10 +169,6 @@ function drawBox(amap,mybounds)
 }
 
 
-
-
-
-
 function CheckUrl(url)
 {
   try {
@@ -235,8 +241,13 @@ function makeKMLLayer(amap,kmlfilepath,style, fitbounds=false, label='')
 function makeOutlineKml(amap,kmlfilepath,style, fitbounds=false, label='')
 {
   var polygon = omnivore.kml(kmlfilepath);
-  polygon.setStyle(style);
+ // polygon.setStyle({color: '#000000' , weight: 14 ,  clickable: true ,opacity: 0.7, fillOpacity: 0.1 });
+
+  //amap.setStyle(style);
+  //polygon.setStyle(style);
+    polygon.setStyle({color: '#000000' , weight: 14 ,  clickable: true ,opacity: 0.7, fillOpacity: 0.1 });
   polygon.addTo(amap);
+ // amap.setStyle({fillColor: '#0000FF', fillOpacity: 1});
   if(fitbounds)
   {
     polygon.on('ready', function() {
@@ -267,7 +278,6 @@ function addKMLLayer(layergroup,kmlfilepath,style)
   fetch(kmlfilepath).then(res => res.text()).then(kmltext =>
   {
     const parser = new DOMParser();
-
     const kml = parser.parseFromString(kmltext, 'text/xml');
     track = new L.KML(kml);
     track.setStyle(style);
@@ -332,7 +342,7 @@ function drawPath(amap,mypath,label,style=null)
       {
         var track = point.steps;
         polyline = L.polyline(track, style).addTo(amap);
-        polyline.bindPopup(label);
+      //  polyline.bindPopup(label);
         bn=bn+1;
       }
     }
@@ -342,6 +352,7 @@ function drawPath(amap,mypath,label,style=null)
     var track = mypath.steps;
     polyline = L.polyline(track, style).addTo(amap);
   }
+    polyline.bindPopup(label);
   return polyline ;
 
 }

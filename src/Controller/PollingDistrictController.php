@@ -115,8 +115,9 @@ class PollingDistrictController extends AbstractController
     $geodata = new Geodata;
 
      $streets =  $this->getDoctrine()->getRepository("App:Street")->findAllbyPd($pdid);
-     $ldcseat =  $this->getDoctrine()->getRepository("App:Pollingdistrict")->findSeat($pdid,$this->rgyear,"district council");
-     dump($ldcseat);
+     $seatid =  $this->getDoctrine()->getRepository("App:Pollingdistrict")->findSeat($pdid,$this->rgyear,"district");
+     $seat = $this->getDoctrine()->getRepository("App:Seat")->findOne(null,$seatid);
+     dump($seat);
      $geodata = new $geodata();
     foreach ($streets as $street)
     {
@@ -128,7 +129,11 @@ class PollingDistrictController extends AbstractController
       }else
         $street->{"color"} = "red";
     }
+        if(!$geodata->isGeodata())
+          if($seat) $geodata= $seat->getGeodata_obj();
+
     $apollingdistrict->setGeodata($geodata);
+
     $entityManager = $this->getDoctrine()->getManager();
     $entityManager->persist($apollingdistrict);
     $entityManager->flush();
@@ -141,7 +146,7 @@ class PollingDistrictController extends AbstractController
     'message' =>  '' ,
     'pollingdistrict'=>$apollingdistrict,
     'streets' => $streets ,
-    'seat'=> "/seat/showpds/LDC/".$ldcseat,
+    'seat'=> "/seat/showpds/LDC/".$seatid,
     'street'=> "/pollingdistrict/newstreet/LDC/".$pdid,
     'back'=>$back,
     ]);
@@ -192,6 +197,7 @@ class PollingDistrictController extends AbstractController
         if($pdid)
         {
               $apd = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findOne($pdid);
+              $seatid = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findSeat($pdid,$this->rgyear,"district");
               dump($apd);
         }
         if(! isset($apd))
@@ -217,7 +223,7 @@ class PollingDistrictController extends AbstractController
            'rgyear' => $this->rgyear,
             'form' => $form->createView(),
             'pd'=>$apd,
-            'returnlink'=>'/',
+            'back'=>'/seat/showpds/LDC/'.$seatid,
             ));
     }
 

@@ -1,0 +1,80 @@
+{# views/seat/showseats.html.twig #}
+
+{% extends 'rgmaster.html.twig' %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="{{ asset('/css/seat.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
+{% endblock %}
+
+{% block js %}
+{{ parent() }}
+<script src="{{asset('js/maps.js')}}"></script>
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+<script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
+<script src="{{asset('js/L.KML.js')}}"></script>
+{% endblock %}
+
+{% block middle %}
+
+{% if message %}
+<H1> Seat not found </H1>
+{% else %}
+<div id="seat" >
+   <div class="heading  row">
+      <div class="label">Seat: </div>
+      <div class="value">{{district.districtid}}</div>
+      <div class="value">{{district.name}}</div>
+      <div class="message"> All  Seats in District</div>
+      <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+   </div>
+{% dump(wards) %};
+   <div  class="pdpanel  indent id">
+      {% for key,value in wards %}
+      <div  class="pdrow row indent id">
+         <div  id="{{value.seatid}}" class="rgid" >
+            <a class="routebutton"  href ="/seat/edit/{{value.seatid}}" >{{value.seatid}}</a>
+         </div>
+         <div class="bnum"> H:{{value.households}}</div>
+         <div  class="button" > <a class="button"  href ="/seat/show/{{value.seatid}}" >View</a> </div>
+         <div class="button"> <a class="button" href = "/seat/removepd/{{value.districtid}}/{{value.seatid}}" >Remove</a> </div>
+      </div>
+      {% endfor %}
+   </div>
+
+
+</div>
+</div>
+
+
+<div class="map" >
+   <div id="goodmapid" ></div>
+</div>
+{% set geodata = district.getGeodata_json() %}
+{% dump(wards) %};
+<script >
+var mymap = myGoodMap("{{geodata}}");
+{% if  district.kml %}
+   var aspath = "{{mappath}}outlines/{{district.kml}}";
+   var style = {"color":  "#ff0000" , "weight": 4 ,  "clickable": false ,"opacity": 1, "fillOpacity": 0.0};
+   makeOutlineKml(mymap,aspath,style,false);
+{% endif %}
+
+var i = 0;
+{% for ward in wards %}
+   {% dump(ward) %};
+   var h2s = document.getElementById("{{ward.seatid}}");
+   if(h2s)  h2s.style.backgroundColor = getColor(i);
+   var apath = "{{mappath}}outlines/{{ward.kml}}";
+   var style = {"color":  getColor(i) ,"fillColor":  getColor(i) , "weight": 6 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.5 };
+   makeKMLLayer(mymap,apath,style,true,"{{ward.seatid}}");
+   i=i+1;
+   if(i>11) i=0;
+{% endfor %}
+setMarkers(mymap,"{{geodata}}");
+setBounds2(mymap,"{{geodata}}");
+</script>
+{% endif %}
+</div>
+{% endblock %}

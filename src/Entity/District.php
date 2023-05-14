@@ -21,6 +21,12 @@ class District
      */
     private $Name;
 
+
+    /**
+     * @ORM\Column(name="level",type="string", length=50)
+     */
+    private $Level;
+
       /**
      * @ORM\Column(name="electors",type="integer", length=50)
      */
@@ -76,6 +82,17 @@ class District
         return $this;
     }
 
+    public function getLevel(): ?string
+    {
+        return $this->Level;
+    }
+
+    public function setLevel(string $text): self
+    {
+        $this->Level = $text;
+        return $this;
+    }
+
      public function getHouseholds()
     {
         return $this->Households;
@@ -116,6 +133,15 @@ public function getGeodata()
         $this->Geodata = json_encode($text);
         return $this;
     }
+
+
+    public function getGeodata_obj()
+    {
+        $ngeodata = new Geodata;
+
+        return  $ngeodata->loadGeodata($this->getGeodata());
+    }
+
 
 
    public function xgetjson()

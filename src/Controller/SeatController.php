@@ -224,13 +224,49 @@ class SeatController extends AbstractController
     }
 
 
+    public function showwards($dtid,$stid)
+    {
+
+        $district = $this->getDoctrine()->getRepository("App:Seat")->findOne($dtid,$stid);
+        dump($district);
+          $d1 =$district->getGeodata_obj();
+       // $wards= $this->getDoctrine()->getRepository("App:Seat")->findSeats("district");
+
+           $wards= $this->getDoctrine()->getRepository("App:Seat")->findSeatsbyPD($stid);
+       dump($wards);
+       foreach ($wards as $wardid)
+        {
+             $ward =  $this->getDoctrine()->getRepository("App:Seat")->findOne(null,$wardid["seatid"]);
+             $selwards[] = $ward;
+        }
+
+        //dump($selwards);
+
+        if(!$district->getKML())
+        {
+           // $seat->setKML($this->mapserver->findseat($seat->getSeatId(),$this->rgyear,$district->getDistrictId()));
+        }
+        $geodata = $district->getGeodata_obj();;
+
+        return $this->render('seat/showwards.html.twig',
+                             [
+                             'rgyear' => $this->rgyear,
+                             'message' =>  '' ,
+                             'district'=> $district,
+                             'wards' => $selwards,
+                             'back'=>"/district/show/".$dtid,
+                             ]);
+    }
+
+
 
     public function edit($dtid, $stid)
     {
         $request = $this->requestStack->getCurrentRequest();
         if($dtid )
         {
-            $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);;
+            $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
+            $level = $district->getLevel();
         }
         if($stid)
         {
@@ -240,6 +276,7 @@ class SeatController extends AbstractController
         {
             $seat = new seat();
             $seat->setDistrictId($dtid);
+            $seat->setLevel($level);
         }
         $form = $this->createForm(SeatForm::class, $seat);
         //  $formFactory = Forms::createFormFactory();
@@ -249,13 +286,15 @@ class SeatController extends AbstractController
             $form->handleRequest($request);
             if ($form->isValid())
             {
-
+               if($seat->getKML())
+               {
                 $kmlfile = "/outlines/".$seat->getKML();
                 dump($kmlfile);
                 $geodata =  $this->mapserver->scanRoute($kmlfile);
                 dump($geodata);
                 $seat->setGeodata($geodata);
                 dump($seat);
+               }
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($seat);
                 $entityManager->flush();

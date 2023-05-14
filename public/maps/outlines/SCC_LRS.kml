@@ -16,8 +16,7 @@
     <Placemark>
       <name>Lichfield Rural South</name>
       <styleUrl>#ourPolygonStyle</styleUrl>
-        <LinearRing>
-          <coordinates>
+      <Polygon><outerBoundaryIs><LinearRing><coordinates>
 -1.8943346738815308,52.62264633178711,0.0
 -1.8946192264556885,52.62284469604492,0.0
 -1.8957386016845703,52.62364196777344,0.0
@@ -1418,8 +1417,7 @@
 -1.892790675163269,52.621578216552734,0.0
 -1.8938169479370117,52.6223030090332,0.0
 -1.8943346738815308,52.62264633178711,0.0
-          </coordinates>
-        </LinearRing>
+         </coordinates></LinearRing></outerBoundaryIs></Polygon>
     </Placemark>
   </Document>
 </kml>

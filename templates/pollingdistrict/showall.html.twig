@@ -29,7 +29,8 @@
         <div class="rgid" >County Division</div>
         <div class="rgid" >Constituency</div>
     </div>
-    <div  class="pagescroll list" >
+    {% dump(pds) %}
+   <div  class="pagescroll list" >
        {% for key, pd in pds %}
          <div class="roadgroup row " >
              <div  class="rgid" > <a class="routebutton" href = "/pollingdistrict/show/{{key}}" >{{key}}</a></div>
@@ -37,23 +38,23 @@
                  <div  class="rgid" > <a class="routebutton" href = "/pollingdistrict/edit/{{key}}" >Edit</a></div>
               <div  class="rgid" > <a class="routebutton" href = "/pollingdistrict/showstreets/{{key}}" >Show Streets</a></div>
 
-            {% if pd.LCC is defined %}
-            <div  class="rgid" > <a class="routebutton" href = "/seat/showpds/LCC/{{pd["LCC"]}}" >{{pd["LCC"]}}</a></div>
+            {% if pd.parish is defined %}
+            <div  class="rgid" > <a class="routebutton" href = "/seat/showpds/LCC/{{pd["parish"]}}" >{{pd["parish"]}}</a></div>
             {% else %}
             <div class="rgid" >...</div>
            {% endif %}
-            {% if pd.LDC is defined %}
-            <div  class="rgid" > <a class="routebutton" href = "/seat/showpds/LDC/{{pd["LDC"]}}" >{{pd["LDC"]}}</a></div>
+            {% if pd.district is defined %}
+            <div  class="rgid" > <a class="routebutton" href = "/seat/showpds/LDC/{{pd["district"]}}" >{{pd["district"]}}</a></div>
             {% else %}
               <div class="rgid" >...</div>
             {% endif %}
-            {% if pd.SCC is defined %}
-               <div  class="rgid" > <a class="routebutton" href = "/seat/showpds/SCC/{{pd["SCC"]}}" >{{pd["SCC"]}}</a></div>
+            {% if pd.county is defined %}
+               <div  class="rgid" > <a class="routebutton" href = "/seat/showpds/SCC/{{pd["county"]}}" >{{pd["county"]}}</a></div>
             {% else %}
                 <div class="rgid" >...</div>
              {% endif %}
-              {% if pd.UKP is defined %}
-               <div  class="rgid" > <a class="routebutton" href = "/seat/showpds/UKP/{{pd["UKP"]}}" >{{pd["UKP"]}}</a></div>
+              {% if pd.parliament is defined %}
+               <div  class="rgid" > <a class="routebutton" href = "/seat/showpds/UKP/{{pd["parliament"]}}" >{{pd["parliament"]}}</a></div>
             {% else %}
                 <div class="rgid" >...</div>
              {% endif %}

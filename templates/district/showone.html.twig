@@ -4,7 +4,7 @@
 
 {% block stylesheets %}
       {{ parent() }}
-   <link href="{{ asset('/css/subward.css') }}" rel="stylesheet" />
+   <link href="{{ asset('/css/district.css') }}" rel="stylesheet" />
    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"/>
 
 {% endblock %}
@@ -21,10 +21,10 @@
 {% block middle %}
 <div id="seat">
 <div class="heading  row">
-  <div class="label">Election District: </div>
-  <div class="value">{{district.districtid}}</div>
-  <div class="value">{{district.name}}</div>
-  <div class="button  right"> <a class="button" href = "{{back}}" >Back</a> </div>
+<div class="label">Election District: </div>
+<div class="value">{{district.districtid}}</div>
+<div class="value">{{district.name}}</div>
+<div class="button  right"> <a class="button" href = "{{back}}" >Back</a> </div>
 </div>
 
 
@@ -34,55 +34,68 @@
 <div class="subheading row">
       <div class="rgid" >SeatId</div>
       <div class="name" >Name</div>
-       <div class="bnum" >Households</div>
+      <div class="bnum" >Households</div>
       <div  class="button" ></div>
       <div  class="button" ></div>
 </div>
 
 <div class="list">
-  {% set seatlist = [] %}
-  {% for aseat in seats %}
-    {% set seatlist = seatlist|merge([aseat.seatid]) %}
-     <div class="seat row "  >
-       <div class="seatid  id" id="{{aseat.seatid}}" >{{aseat.seatid}}</div>
+{% set seatlist = [] %}
+{% for aseat in seats %}
+   {% set seatlist = seatlist|merge([aseat.seatid]) %}
+   <div class="seat row "  >
+      <div class="seatid  id" id="{{aseat.seatid}}" >{{aseat.seatid}}</div>
          <div class="name" >{{aseat.name}}</div>
-          <div class="bnum" >{{aseat.households}}</div>
-       <div class="button wide" ><a class="button" href = "/seat/showrgs/{{district.districtid}}/{{aseat.seatid}}" >VIEW RoadGroups</a>   </div>
-          <div class="button wide" ><a class="button" href = "/seat/showpds/{{district.districtid}}/{{aseat.seatid}}" >VIEW Polling Districts</a>   </div>
-       <div class="button" ><a class="button" href = "/seat/edit/{{district.districtid}}/{{aseat.seatid}}" >EDIT</a>   </div>
-     </div>
-  {% endfor %}
-  </div>
-     <div class="button" ><a class="button" href = "/seat/new/{{district.districtid}}" >Add Seat</a>   </div>
+         <div class="bnum" >{{aseat.households}}</div>
+         {% if ( level == "district")  %}
+
+         {% elseif level == "parish" %}
+
+         {% elseif level == "county"  %}
+               <div class="button wide" ><a class="button" href = "/seat/showwards/{{district.districtid}}/{{aseat.seatid}}" >VIEW Wards</a>   </div>
+           {% elseif level == "parliament"  %}
+                 <div class="button wide" ><a class="button" href = "/seat/showwards/{{district.districtid}}/{{aseat.seatid}}" >VIEW Wards</a>   </div>
+             {% else  %}
+                   <div class="button wide" ><a class="button" href = "/seat/showwards/{{district.districtid}}/{{aseat.seatid}}" >OTHER</a>   </div>
+             {% endif %}
+
+      <div class="button wide" ><a class="button" href = "/seat/showrgs/{{district.districtid}}/{{aseat.seatid}}" >VIEW RoadGroups</a>   </div>
+         <div class="button wide" ><a class="button" href = "/seat/showpds/{{district.districtid}}/{{aseat.seatid}}" >VIEW Polling Districts</a>   </div>
+      <div class="button" ><a class="button" href = "/seat/edit/{{district.districtid}}/{{aseat.seatid}}" >EDIT</a>   </div>
+   </div>
+{% endfor %}
+</div>
+   <div class="button" ><a class="button" href = "/seat/new/{{district.districtid}}" >Add Seat</a>   </div>
 {% endif %}
 
 
 <div class="map" >
-  <div id="goodmapid" ></div>
+<div id="goodmapid" ></div>
 </div>
 
-  {% set geodata = district.getGeodata_json() %}
-  {% dump(geodata) %}
+{% set geodata = district.getGeodata_json() %}
+{% dump(geodata) %}
 
-  <script  type="text/javascript" >
+<script  type="text/javascript" >
 
-    var mymap = myGoodMap("{{geodata}}");
+   var mymap = myGoodMap("{{geodata}}");
 
-       if("{{district.kml}}")
+      if("{{district.kml}}")
       {
          var aspath = "{{mappath}}districts/{{district.kml}}";
-         var style = {"color":  "#0000ff" , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.0};
-         makeOutlineKml(mymap,aspath,style, true,"{{district.name}}");
+         var style = {"color":  "#000000" , "weight": 8 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.0};
+        {# makeOutlineKml(mymap,aspath,style, true,"{{district.name}}");#}
+           makeKMLLayer(mymap,aspath,style,true,"{{district.name}}");
       }
-     {# set seatl = seatlist|json_encode|raw #};
-    {# var seats = {{seatlist|json_encode|raw}} #};
-    var aspath = "{{mappath}}{{district.kml}}";
+   {# set seatl = seatlist|json_encode|raw #};
+   {# var seats = {{seatlist|json_encode|raw}} #};
+   var aspath = "{{mappath}}{{district.kml}}";
 
-    var i=0;
-    var did = "{{district.districtid}}";
-    var fgroup =  new L.featureGroup();
-    {% for aseat in seats %}
-    {
+   var i=0;
+   var did = "{{district.districtid}}";
+   var fgroup =  new L.featureGroup();
+   {% for aseat in seats %}
+   {
       var path = null;
       {#var path = "http://rgmanager.lerot.org/maps/"+did+"_"+aseat+".kml";#}
       var path = "{{mappath}}{{district.districtid}}/{{aseat.kml}}";
@@ -91,16 +104,16 @@
 
       if(doesFileExist(path))
       {
-        var h2s = document.getElementById("{{aseat.seatid}}");
+      var h2s = document.getElementById("{{aseat.seatid}}");
          h2s.style.backgroundColor = getColor(i);
       };
 
-         var style = {"color":  getColor(i) ,"fillColor":  getColor(i) , "weight": 6 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.5 };
+         var style = {"color":  getColor(i) ,"fillColor":  getColor(i) , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.5 };
          makeKMLLayer(mymap,path,style,true,"{{aseat.name}}");
          i=i+1;
          if(i>11) i=0;
       }
-    }
+   }
    {% endfor %}
 
 

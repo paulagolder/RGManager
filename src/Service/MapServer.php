@@ -324,13 +324,17 @@ class MapServer
 
   public function scanRoute($addfile)
   {
+       $geodata = new Geodata;
     $minlat = 360;
     $maxlat = -360;
     $minlng = 360;
     $maxlng = -360;
-    $addpath =  $this->maproot.$addfile;
+     dump($addfile);
+    if($addfile)
+    {
+        $addpath =  $this->maproot.$addfile;
     $addpath = str_replace("//","/",$addpath);
-
+dump($addpath);
     $xmlstr2 = file_get_contents($addpath);
     $addkml = new \SimpleXMLElement($xmlstr2);
     dump($addkml);
@@ -374,7 +378,7 @@ class MapServer
 
       }
     }
-    $geodata = new Geodata;
+
     $geodata->maxlat = $maxlat;
     $geodata->maxlong = $maxlng;
     $geodata->minlat = $minlat;
@@ -382,6 +386,7 @@ class MapServer
     $geodata->midlat = ($minlat+$maxlat)/2;
     $geodata->midlong = ($minlng+$maxlng)/2;
     dump($geodata);
+    }
       return $geodata;
   }
 
@@ -595,6 +600,22 @@ class MapServer
       $geodata["steps"]=$nsteps;
       return  $geodata;
     }
+
+
+    public function isinside($geo1,$geo2)
+    {
+      if( ($geo1->midlat < $geo2->maxlat) && ($geo1->midlat > $geo2->minlat))
+      {
+        if( ($geo1->midlong < $geo2->maxlong) && ($geo1->midlong > $geo2->minlong))
+          return true;
+      }
+      return false;
+    }
+
+
+
+
+
 
 
 }

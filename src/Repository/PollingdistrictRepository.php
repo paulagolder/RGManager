@@ -13,11 +13,12 @@ class PollingdistrictRepository  extends EntityRepository
      public function findAllbyYear($year)
      {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'select p.pdid,p.districtid,p.households , p.electors,s.*  from pollingdistrict  as p, seattopd as s where s.pdid =  p.pdid and s.year = "'.$year.'" order by p.districtid, p.pdid';
+        $sql = 'select p.pdid,p.districtid as dpd,p.households , p.electors,s.*,st.*  from pollingdistrict  as p left join seattopd as s on  s.pdid =  p.pdid left join  seat as st on s.seat = st.seatid  order by p.districtid, p.pdid';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $pdseats= $stmt->fetchAll();
         $pds =[];
+        dump($pdseats);
         foreach($pdseats as $pdseat)
         {
 
@@ -26,10 +27,10 @@ class PollingdistrictRepository  extends EntityRepository
           {
              $pds[$pdid] = array();
           }
-          $district = $pdseat["district"];
+          $district = $pdseat["dpd"];
           $seat = $pdseat["seat"];
-           $pds[$pdid]["districtid"] =  $pdseat["districtid"];;
-          $pds[$pdid][$district] = $seat;
+          $pds[$pdid]["districtid"] =  $pdseat["dpd"];;
+          $pds[$pdid][ $pdseat["level"]] = $seat;
           $pds[$pdid]["households"] = $pdseat["households"];
           $pds[$pdid]["electors"] = $pdseat["electors"];
         }
@@ -81,6 +82,7 @@ class PollingdistrictRepository  extends EntityRepository
         $stmt->execute();
         $pds= $stmt->fetchAll();
         dump($pds);
+        if(count($pds)<1)  return null;
         return $pds[0]["seat"];
      }
 
