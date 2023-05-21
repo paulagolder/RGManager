@@ -10,6 +10,10 @@ district_showone:
    path: /district/show/{dtid}
    controller: App\Controller\DistrictController::showone
 
+district_update:
+   path: /district/update/{dtid}
+   controller: App\Controller\DistrictController::update
+
 district_edit:
    path: /district/edit/{dtid}
    controller: App\Controller\DistrictController::edit
@@ -214,7 +218,7 @@ seats_showrgs:
    controller: App\Controller\SeatController::showrgs
 
 seats_edit:
-   path: /seat/edit/{dtid}/{stid}
+   path: /seat/edit/{stid}
    controller: App\Controller\SeatController::edit
 
 seats_newseat:

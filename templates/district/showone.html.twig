@@ -24,7 +24,8 @@
 <div class="label">Election District: </div>
 <div class="value">{{district.districtid}}</div>
 <div class="value">{{district.name}}</div>
-<div class="button  right"> <a class="button" href = "{{back}}" >Back</a> </div>
+<div class="button  right"> <a class="button" href = "/district/update/{{district.districtid}}" >Update</a> </div>
+<div class="button "> <a class="button" href = "{{back}}" >Back</a> </div>
 </div>
 
 
@@ -61,7 +62,7 @@
 
       <div class="button wide" ><a class="button" href = "/seat/showrgs/{{district.districtid}}/{{aseat.seatid}}" >VIEW RoadGroups</a>   </div>
          <div class="button wide" ><a class="button" href = "/seat/showpds/{{district.districtid}}/{{aseat.seatid}}" >VIEW Polling Districts</a>   </div>
-      <div class="button" ><a class="button" href = "/seat/edit/{{district.districtid}}/{{aseat.seatid}}" >EDIT</a>   </div>
+      <div class="button" ><a class="button" href = "/seat/edit/{{aseat.seatid}}" >EDIT</a>   </div>
    </div>
 {% endfor %}
 </div>
@@ -79,13 +80,11 @@
 <script  type="text/javascript" >
 
    var mymap = myGoodMap("{{geodata}}");
-
+   var fparent = new L.FeatureGroup();
       if("{{district.kml}}")
       {
-         var aspath = "{{mappath}}districts/{{district.kml}}";
-         var style = {"color":  "#000000" , "weight": 8 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.0};
-        {# makeOutlineKml(mymap,aspath,style, true,"{{district.name}}");#}
-           makeKMLLayer(mymap,aspath,style,true,"{{district.name}}");
+         var aspath = "{{mappath}}{{district.districtid}}/{{district.kml}}";
+           makeKMLLayer(fparent,aspath,outlineStyle,true,"{{district.name}}");
       }
    {# set seatl = seatlist|json_encode|raw #};
    {# var seats = {{seatlist|json_encode|raw}} #};
@@ -96,8 +95,6 @@
    var fgroup =  new L.featureGroup();
    {% for aseat in seats %}
    {
-      var path = null;
-      {#var path = "http://rgmanager.lerot.org/maps/"+did+"_"+aseat+".kml";#}
       var path = "{{mappath}}{{district.districtid}}/{{aseat.kml}}";
       if(path)
       {
@@ -108,14 +105,17 @@
          h2s.style.backgroundColor = getColor(i);
       };
 
-         var style = {"color":  getColor(i) ,"fillColor":  getColor(i) , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.5 };
-         makeKMLLayer(mymap,path,style,true,"{{aseat.name}}");
+        var astyle = {"color":  getColor(i) ,"fillColor":  getColor(i) , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.5 };
+        makeKMLLayer(fgroup,path,astyle,true,"{{aseat.name}}");
          i=i+1;
          if(i>11) i=0;
       }
    }
    {% endfor %}
-
+   mymap.addLayer(fgroup);
+   mymap.addLayer(fparent);
+   fgroup.bringToBack();
+   fparent.bringToFront();
 
    </script>
    </div>

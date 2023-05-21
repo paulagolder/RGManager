@@ -86,4 +86,18 @@ class PollingdistrictRepository  extends EntityRepository
         return $pds[0]["seat"];
      }
 
+     public function findSmallestSeat($pdid)
+     {
+        $conn = $this->getEntityManager()->getConnection();
+         $sql= 'select s.* from seattopd as sp , seat as s where sp.seat=s.seatid and sp.pdid = "'.$pdid.'" order by s.households ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $pds= $stmt->fetchAll();
+        dump($pds);
+        if(count($pds)<1)  return null;
+        return $pds[0];
+
+     }
+
+
 }

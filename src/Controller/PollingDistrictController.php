@@ -115,8 +115,8 @@ class PollingDistrictController extends AbstractController
     $geodata = new Geodata;
 
      $streets =  $this->getDoctrine()->getRepository("App:Street")->findAllbyPd($pdid);
-     $seatid =  $this->getDoctrine()->getRepository("App:Pollingdistrict")->findSeat($pdid,$this->rgyear,"district");
-     $seat = $this->getDoctrine()->getRepository("App:Seat")->findOne(null,$seatid);
+     $seat =  $this->getDoctrine()->getRepository("App:Pollingdistrict")->findSmallestSeat($pdid);
+
      dump($seat);
      $geodata = new $geodata();
     foreach ($streets as $street)
@@ -146,8 +146,9 @@ class PollingDistrictController extends AbstractController
     'message' =>  '' ,
     'pollingdistrict'=>$apollingdistrict,
     'streets' => $streets ,
-    'seat'=> "/seat/showpds/LDC/".$seatid,
-    'street'=> "/pollingdistrict/newstreet/LDC/".$pdid,
+    'seat'=>$seat,
+    'showseat'=> "/seat/showpds/LDC/".$seat["seatid"],
+    'newstreet'=> "/pollingdistrict/newstreet/LDC/".$pdid,
     'back'=>$back,
     ]);
 

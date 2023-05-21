@@ -10,17 +10,12 @@ use Symfony\Component\HttpFoundation\Session\Session;
 class SeatRepository  extends EntityRepository
 {
 
-    public function findone($districtid, $seatid)
+    public function findone( $seatid)
     {
        $qb = $this->createQueryBuilder("p");
        $qb->where("p.SeatId = :stid");
        $qb->setParameter('stid', $seatid);
-       if($districtid)
-       {
-        $qb->andwhere("p.DistrictId = :dtid");
-       $qb->setParameter('dtid', $districtid);
-    }
-       $qb->orderBy("p.SeatId", "ASC");
+        $qb->orderBy("p.SeatId", "ASC");
        $seat =  $qb->getQuery()->getOneOrNullResult();
        return $seat;
     }
@@ -112,7 +107,7 @@ class SeatRepository  extends EntityRepository
      {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = 'select p.* from pollingdistrict as p where p.pdid in (select DISTINCT sp.pdid from seattopd as sp WHERE sp.seat="'.$stid.'" and sp.district ="'.$dtid.'" and sp.year ="'.$year.'") order by p.pdid';
+        $sql = 'select p.* from pollingdistrict as p where p.pdid in (select DISTINCT sp.pdid from seattopd as sp WHERE sp.seat="'.$stid.'" and sp.year ="'.$year.'") order by p.pdid';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $roadgroups= $stmt->fetchAll(\Doctrine\ORM\Query::HYDRATE_ARRAY);

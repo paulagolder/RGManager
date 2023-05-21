@@ -90,11 +90,12 @@ var i=0;
 {% for roadgroup in agroup.roadgrouplist %}
     var style = {"color":  getColor(i) , "weight": 4 ,  "clickable": true ,"opacity": 1.0, "fillOpacity": 1.0 };
       var  kml = "{{roadgroup.kml}}";
-      var path = "{{mappath}}roadgroups/"+kml;
       if(kml)
       {
-        countsgs = countsgs+1;
-        makeKMLLayer(mymap,path,style,true,kml);
+       countsgs = countsgs+1;
+       var astyle = {"color":  getColor(i) ,"fillColor":  getColor(i) , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.5 };
+       var  path = "{{mappath}}roadgroups/"+kml;
+       addRoadgroup(mymap, path, astyle);
       }
   {% endfor %}
 

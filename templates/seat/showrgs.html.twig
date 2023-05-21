@@ -25,7 +25,7 @@
 <div id="seat" >
 <div class="heading  row">
   <div class="label">Seat: </div>
-  <div class="value">{{seat.districtid}}-{{seat.seatid}}</div>
+  <div class="value">{{seat.districtid}}:{{seat.seatid}}</div>
   <div class="value">{{seat.name}}</div>
   <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
 </div>
@@ -66,36 +66,42 @@
   {% dump(geodata) %}
 <script >
 var mymap = myGoodMap("{{geodata}}");
+var fparent = new L.FeatureGroup();
  {% if  seat.kml %}
-      var aspath = "{{mappath}}outlines/{{seat.kml}}";
-      if("{{seat.kml}}")
-      {
-         var style = {"color":  "#000000" , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.2};
-         makeOutlineKml(mymap,aspath,style,false,"{{seat.name}}")
-      }
+         var aspath = "{{mappath}}{{seat.districtid}}/{{seat.kml}}";
+         makeKMLLayer(fparent,aspath,outlineStyle,false,"{{seat.name}}")
      {% endif %}
         var i=0;
+       //   var fgroups = new L.FeatureGroup();
        {% for key,value in roadgrouplist %}
+
        {% for key2,value2 in value %}
+       //  var fgroup = new L.FeatureGroup();
           var akey = "{{key2}}";
           var h2s = document.getElementById(akey);
           if(h2s)
              h2s.style.backgroundColor = getColor(i);
           {% for value3 in value2 %}
-
+ {% dump(value3) %}
             var kml = "{{value3.kml}}";
-              var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1};
               if(kml)
               {
+               var astyle = {"color":  getColor(i) ,"fillColor":  getColor(i) , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.5 };
                 var  path = "{{mappath}}roadgroups/"+kml;
-                makeKMLLayer(mymap,path,style,false,"{{value3.name}}");
+                addRoadgroup(mymap, path, astyle);
               }
          {% endfor %}
+           // mymap.addLayer(fgroup);
            i=i+1;
-           if(i>11)i=0;
+             if (i === 2) {
+             var k= 21;
+              }
       {% endfor %}
      {% endfor %}
-     setMarkers(mymap,"{{geodata}}");
+      //mymap.addLayer(fgroups);
+     mymap.addLayer(fparent);
+  // fgroups.bringToFront();
+   fparent.bringToBack()
      setBounds2(mymap,"{{geodata}}");
    </script>
    {% endif %}

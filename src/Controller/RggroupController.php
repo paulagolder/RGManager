@@ -96,7 +96,7 @@ class RggroupController extends AbstractController
     'message' =>  '' ,
     'heading' => 'The rggroups',
     'topmap'=>$topmap,
-    'geodata'=> $geodata->getGeodata_str(),
+    'geodata'=> $geodata,
     'rggroups' => $rggroups,
     'roadgroups' => $extraroadgroups,
     ]);

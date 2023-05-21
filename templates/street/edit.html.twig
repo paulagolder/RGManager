@@ -357,6 +357,7 @@ function closeForm() {
 
          {% set stgeodata = geodata | json_encode | raw  %}
       <script  type="text/javascript" >
+
          var mymap = myStMap("{{stgeodata}}");
          mymap.on('click', onMapClick);
          {% for astreet in streets %}

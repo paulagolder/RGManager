@@ -72,19 +72,16 @@ class SeatController extends AbstractController
     }
 
 
-    public function showone($dtid,$stid)
+    public function showone($stid)
     {
 
-        $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
-        $seat= $this->getDoctrine()->getRepository("App:Seat")->findOne($dtid,$stid);
+       // $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
+        $seat= $this->getDoctrine()->getRepository("App:Seat")->findOne($stid);
         if (!$seat)
         {
             return $this->render('seat/showone.html.twig', [ 'message' =>  'seat not Found',]);
         }
-        if(!$this->mapserver->ismap($seat->getKML()))
-        {
-            $seat->setKML($this->mapserver->findseat($seat->getSeatId(),$this->rgyear,$district->getDistrictId()));
-        }
+
         $roadgrouplinks = $this->getDoctrine()->getRepository("App:Seat")->findRoadgroups($dtid,$stid,$this->rgyear);
         $rglist = array();
 
@@ -128,7 +125,9 @@ class SeatController extends AbstractController
     {
 
         $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
-        $seat= $this->getDoctrine()->getRepository("App:Seat")->findOne($dtid,$stid);
+        dump($district);
+        $seat= $this->getDoctrine()->getRepository("App:Seat")->findOne($stid);
+        dump($seat);
         if (!$seat)
         {
             return $this->render('seat/showone.html.twig', [ 'message' =>  'seat not Found',]);
@@ -162,7 +161,7 @@ class SeatController extends AbstractController
         }
         $seat->setGeodata($geodata);
         dump($rglist);
-        return $this->render('seat/showone.html.twig',
+        return $this->render('seat/showrgs.html.twig',
                              [
                              'rgyear' => $this->rgyear,
                              'message' =>  '' ,
@@ -177,15 +176,15 @@ class SeatController extends AbstractController
     {
 
         $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
-        $seat= $this->getDoctrine()->getRepository("App:Seat")->findOne($dtid,$stid);
+        $seat= $this->getDoctrine()->getRepository("App:Seat")->findOne($stid);
         if (!$seat)
         {
             return $this->render('seat/showone.html.twig', [ 'message' =>  'seat not Found',]);
         }
-        if(!$seat->getKML())
+     /*   if(!$seat->getKML())
         {
             $seat->setKML($this->mapserver->findseat($seat->getSeatId(),$this->rgyear,$district->getDistrictId()));
-        }
+        }*/
         $pds = $this->getDoctrine()->getRepository("App:Seat")->findPollingdistricts($dtid,$stid,$this->rgyear);
         dump($pds);
         $sts = [];
@@ -227,25 +226,17 @@ class SeatController extends AbstractController
     public function showwards($dtid,$stid)
     {
 
-        $district = $this->getDoctrine()->getRepository("App:Seat")->findOne($dtid,$stid);
-        dump($district);
-          $d1 =$district->getGeodata_obj();
-       // $wards= $this->getDoctrine()->getRepository("App:Seat")->findSeats("district");
-
-           $wards= $this->getDoctrine()->getRepository("App:Seat")->findSeatsbyPD($stid);
+        $district = $this->getDoctrine()->getRepository("App:Seat")->findOne($stid);
+        $wards= $this->getDoctrine()->getRepository("App:Seat")->findSeatsbyPD($stid);
        dump($wards);
+       $selwards = null;
        foreach ($wards as $wardid)
         {
-             $ward =  $this->getDoctrine()->getRepository("App:Seat")->findOne(null,$wardid["seatid"]);
+             $ward =  $this->getDoctrine()->getRepository("App:Seat")->findOne($wardid["seatid"]);
              $selwards[] = $ward;
         }
+        dump($selwards);
 
-        //dump($selwards);
-
-        if(!$district->getKML())
-        {
-           // $seat->setKML($this->mapserver->findseat($seat->getSeatId(),$this->rgyear,$district->getDistrictId()));
-        }
         $geodata = $district->getGeodata_obj();;
 
         return $this->render('seat/showwards.html.twig',
@@ -260,18 +251,17 @@ class SeatController extends AbstractController
 
 
 
-    public function edit($dtid, $stid)
+    public function edit($stid)
     {
         $request = $this->requestStack->getCurrentRequest();
-        if($dtid )
-        {
-            $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
-            $level = $district->getLevel();
-        }
         if($stid)
         {
-            $seat = $this->getDoctrine()->getRepository('App:Seat')->findOne($dtid,$stid);
+            $seat = $this->getDoctrine()->getRepository('App:Seat')->findOne($stid);
         }
+        dump($seat);
+        $district = $this->getDoctrine()->getRepository("App:District")->findOne($seat->getDistrictId());
+        $level = $district->getLevel();
+
         if(! isset($seat))
         {
             $seat = new seat();
@@ -288,7 +278,7 @@ class SeatController extends AbstractController
             {
                if($seat->getKML())
                {
-                $kmlfile = "/outlines/".$seat->getKML();
+                $kmlfile = "/".$seat->getDistrictId()."/".$seat->getKML();
                 dump($kmlfile);
                 $geodata =  $this->mapserver->scanRoute($kmlfile);
                 dump($geodata);
@@ -299,16 +289,16 @@ class SeatController extends AbstractController
                 $entityManager->persist($seat);
                 $entityManager->flush();
                 $dtid = $seat->getDistrictId();
-                return $this->redirect('/seat/edit/'.$dtid."/".$stid);
+                return $this->redirect('/district/show/'.$dtid);
             }
         }
 
         return $this->render('seat/edit.html.twig', array(
             'rgyear'=>$this->rgyear,
             'form' => $form->createView(),
-                                                          'district'=>$district,
-                                                          'seat'=>$seat,
-                                                          'returnlink'=>'/district/show/'.$dtid,
+            'district'=>$district,
+            'seat'=>$seat,
+             'returnlink'=>'/district/show/'.$seat->getDistrictId(),
         ));
     }
 

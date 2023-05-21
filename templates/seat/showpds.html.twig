@@ -66,11 +66,12 @@
 <script >
 var mymap = myGoodMap("{{geodata}}");
 {% if  seat.kml %}
-var parent = new L.FeatureGroup();
-var aspath = "{{mappath}}outlines/{{seat.kml}}";
+var fparent = new L.FeatureGroup();
+
 if("{{seat.kml}}")
 {
-     makeKMLLayer(parent,aspath,baseStyle,false);
+     var aspath = "{{mappath}}{{seat.districtid}}/{{seat.kml}}";
+     makeKMLLayer(fparent,aspath,outlineStyle,false);
 }
 {% endif %}
 
@@ -84,22 +85,22 @@ astreetfg =new L.FeatureGroup();
 {% for astreet in pd %}
 {
 
-   var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.9 };
-  thispath = drawPath(astreetfg,"{{astreet.getPath()}}","{{astreet.pdid}}",style);
+
+  thispath = drawPath(astreetfg,"{{astreet.getPath()}}","{{astreet.pdid}}",getStyle(i));
 
 }
 astreetfg.bindPopup("{{astreet.pdid}}");
-var link = "<a href='/street/showone/{{astreet.seq}}'>{{astreet.name}}</a>";
+
 streets.addLayer(astreetfg);
 {% endfor %}
-streets.setStyle({"clickable": true });
+
 i=i+1;
-if(i>11) i=0;
+;
 {% endfor %}
    mymap.addLayer(streets);
-     mymap.addLayer(parent);
+     mymap.addLayer(fparent);
    streets.bringToFront();
-   parent.bringToBack();
+   fparent.bringToBack();
    setBounds2(mymap,"{{geodata}}");
 </script>
 {% endif %}

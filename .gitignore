@@ -8,6 +8,7 @@
 /public/maps/*
 /public/csv/*
 /public/rgml/*
+/documents/*
 /src/.preload.php
 /var/
 /vendor/

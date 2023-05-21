@@ -411,6 +411,26 @@ dump($addpath);
     return $colors[$i];
   }
 
+
+
+  function getFillStyle($i)
+  {
+      $fillStyle =[];
+      $fillStyle["color"]=  'grey' ;
+      $fillStyle["fillColor"]=  'green' ;
+      $fillStyle["weight"]=  4 ;
+      $fillStyle["clickable"]= true ;
+      $fillStyle["opacity"]=  1 ;
+      $fillStyle["fillOpacity"]=  0.5;
+      $fillStyle["fill"]=  true;
+
+    $istyle= fillStyle;
+    $istyle["color"]  = getColor($i) ;
+    $istyle["fillColor"] =  getColor($i) ;
+    return istyle;
+  }
+
+
   function hexColor($color)
   {
     $rgb = dechex(($color[0]<<16)|($color[1]<<8)|$color[2]);

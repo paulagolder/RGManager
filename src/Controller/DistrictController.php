@@ -60,17 +60,8 @@ class DistrictController extends AbstractController
     $kml = $district->getKML();
     $geodata = $district->getGeodata_obj();;
     $seats = $this->getDoctrine()->getRepository("App:Seat")->findChildren($dtid);
-    foreach($seats as &$seat)
-    {
-      $geodata->mergeGeodata_obj($seat->getGeodata_obj());
-      $count = $this->getDoctrine()->getRepository("App:Seat")->countHouseholds($dtid, $seat->getSeatId(), $this->rgyear);
-      $seat->setHouseholds($count);
-    }
-    $district->setGeodata($geodata);
-    $entityManager = $this->getDoctrine()->getManager();
-    $entityManager->persist($district);
-    $entityManager->flush();
     dump($district);
+    dump($seats);
     return $this->render('district/showone.html.twig',
                          [
                          'rgyear' => $this->rgyear,
@@ -81,6 +72,7 @@ class DistrictController extends AbstractController
                          'back'=>"/"
                          ]);
   }
+
 
   public function update($dtid)
   {

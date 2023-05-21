@@ -51,11 +51,10 @@
 <script >
   var mymap = myGoodMap("{{geodata}}");
  {% if  seat.kml %}
-      var aspath = "{{mappath}}outlines/{{seat.kml}}";
+      var aspath = "{{mappath}}{{seat.districtid}}/{{seat.kml}}";
       if("{{seat.kml}}")
       {
-         var style = {"color":  "#000000" , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.2};
-         makeOutlineKml(mymap,aspath,style,false,"{{seat.name}}")
+         makeKMLLayer(mymap,path,outlineStyle,false,"{{seat.name}}");
       }
       setBoundsGeodata(mymap, "{{geodata}}");
   {% endif %}

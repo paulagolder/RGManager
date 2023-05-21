@@ -24,21 +24,21 @@
 <div id="seat" >
    <div class="heading  row">
       <div class="label">Seat: </div>
-      <div class="value">{{district.districtid}}</div>
+      <div class="value">{{district.seatid}}</div>
       <div class="value">{{district.name}}</div>
       <div class="message"> All  Seats in District</div>
       <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
    </div>
-{% dump(wards) %};
+{% dump(wards) %}
    <div  class="pdpanel  indent id">
       {% for key,value in wards %}
       <div  class="pdrow row indent id">
          <div  id="{{value.seatid}}" class="rgid" >
-            <a class="routebutton"  href ="/seat/edit/{{value.seatid}}" >{{value.seatid}}</a>
+            <a class="routebutton"  href ="/seat/edit/{{district.seatid}}/{{value.seatid}}" >{{value.seatid}}</a>
          </div>
          <div class="bnum"> H:{{value.households}}</div>
-         <div  class="button" > <a class="button"  href ="/seat/show/{{value.seatid}}" >View</a> </div>
-         <div class="button"> <a class="button" href = "/seat/removepd/{{value.districtid}}/{{value.seatid}}" >Remove</a> </div>
+         <div  class="button" > <a class="button"  href ="/seat/show/{{district.seatid}}/{{value.seatid}}" >View</a> </div>
+         <div class="button"> <a class="button" href = "/seat/removepd/{{district.seatid}}/{{value.seatid}}" >Remove</a> </div>
       </div>
       {% endfor %}
    </div>
@@ -52,26 +52,32 @@
    <div id="goodmapid" ></div>
 </div>
 {% set geodata = district.getGeodata_json() %}
-{% dump(wards) %};
+{% dump(wards) %}
 <script >
 var mymap = myGoodMap("{{geodata}}");
+var parent = new L.FeatureGroup();
 {% if  district.kml %}
    var aspath = "{{mappath}}outlines/{{district.kml}}";
-   var style = {"color":  "#ff0000" , "weight": 4 ,  "clickable": false ,"opacity": 1, "fillOpacity": 0.0};
-   makeOutlineKml(mymap,aspath,style,false);
+     makeKMLLayer(parent,aspath,outlineStyle,false);
 {% endif %}
 
 var i = 0;
+var wards = new L.FeatureGroup();
 {% for ward in wards %}
    {% dump(ward) %};
    var h2s = document.getElementById("{{ward.seatid}}");
    if(h2s)  h2s.style.backgroundColor = getColor(i);
    var apath = "{{mappath}}outlines/{{ward.kml}}";
    var style = {"color":  getColor(i) ,"fillColor":  getColor(i) , "weight": 6 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.5 };
-   makeKMLLayer(mymap,apath,style,true,"{{ward.seatid}}");
+   makeKMLLayer(wards,apath,style,true,"{{ward.seatid}}");
    i=i+1;
    if(i>11) i=0;
 {% endfor %}
+
+
+  mymap.addLayer(wards);
+     mymap.addLayer(parent);
+     parent.bringToFront();
 setMarkers(mymap,"{{geodata}}");
 setBounds2(mymap,"{{geodata}}");
 </script>

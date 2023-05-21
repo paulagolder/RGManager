@@ -32,9 +32,9 @@
     <div class="label">{{pollingdistrict.districtid}} </div>
     <div class="label">{{pollingdistrict.pdid}} </div>
     <div class="label">{{pollingdistrict.name}}</div>
-    <div class="button right"> <a class="button" href = "{{seat}}" >View Seat</a> </div>
-    <div class="button"> <a class="button" href = "{{street}}" >New Street</a> </div>
-    <div class="button"> <a class="button" href = "{{back}}" >Back</a> </div>
+    <div class="largebutton right"> <a class="button" href = "{{showseat}}" >View Seat</a> </div>
+    <div class="largebutton"> <a class="button" href = "{{newstreet}}" >New Street</a> </div>
+
   </div>
 
   <div class="splitpage"  >
@@ -65,31 +65,32 @@
       {% dump(sggeodata) %}
       <script >
         var mymap = myGoodMap("{{sggeodata}}");
-
-        if("{{pollingdistrict.kml}}")
+        var fparent = new L.FeatureGroup();
+        if("{{seat.kml}}")
         {
-        var aspath = "{{mappath}}parishes/{{pollingdistrict.kml}}";
-        var style = {"color":  "#0000ff" , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.0};
-        makeOutlineKml(mymap,aspath,style, true,"{{pollingdistrict.pdid}}");
+        var aspath = "{{mappath}}{{seat.districtid}}/{{seat.kml}}";
+        makeKMLLayer(fparent,aspath,outlineStyle,false);
         }
         var i=0;
         var fgroup =  new L.featureGroup();
        // mymap.on('click', onMapClick);
         {% for street in streets %}
         var i=0;
-        var fgroup =  new L.featureGroup();
         var estyle = {
         color:  getColor(i),
         weight: 5,
         opacity: 1
         }
         var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
-        drawPath(mymap,"{{street.getPath()}}","{{street.getName()}}",estyle);
+        drawPath(fgroup,"{{street.getPath()}}","{{street.getName()}}",estyle);
 
         i=i+1;
         if(i>11)i=0;
         {% endfor %}
-        //               setMarkers(mymap,"{{sggeodata}}");
+        mymap.addLayer(fgroup);
+        mymap.addLayer(fparent);
+        fparent.bringToFront();
+        fgroup.bringToBack();
         setBounds2(mymap,"{{sggeodata}}");
       </script>
 

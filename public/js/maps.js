@@ -1,35 +1,82 @@
 
-window.colors= [];
-window.colors[0]="#FF000088";
-window.colors[1]="#00FF0088";
-window.colors[2]="#0000FF88";
-window.colors[3]="#FFFF0088";
-window.colors[4]="#FF00FF88";
-window.colors[5]="#00FFFF88";
-window.colors[6]="#80000088";
-window.colors[7]="#00800088";
-window.colors[8]="#00008088";
-window.colors[9]="#80800088";
-window.colors[10]="#80008088";
-window.colors[11]="#00808088";
-window.colors[12]="#5a5a5a88";
+var colors= [];
+colors[0]="#FF000088";
+colors[1]="#00FF0088";
+colors[2]="#0000FF88";
+colors[3]="#FFFF0088";
+colors[4]="#FF00FF88";
+colors[5]="#00FFFF88";
+colors[6]="#80000088";
+colors[7]="#00800088";
+colors[8]="#00008088";
+colors[9]="#80800088";
+colors[10]="#80008088";
+colors[11]="#00808088";
+colors[12]="#5a5a5a88";
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 
 function getColor(i)
 {
-  return window.colors[i]
+   var j = i%12;
+  return colors[j]
 }
 
 var  baseStyle =
 {
   color :  'grey' ,
   fillColor :  'green' ,
+  weight : 14 ,
+  clickable : true ,
+  opacity : 0.7 ,
+  fillOpacity : 0.1,
+  fill : false
+};
+
+var  fillStyle =
+{
+  color :  'grey' ,
+  fillColor :  'green' ,
   weight : 4 ,
+  clickable : true ,
+  opacity : 1 ,
+  fillOpacity : 0.5,
+  fill : true
+};
+
+
+var  outlineStyle =
+{
+  color :  'black' ,
+  fillColor :  'green' ,
+  weight : 8 ,
   clickable : true ,
   opacity : 1 ,
   fillOpacity : 0 ,
   fill : false
 };
+
+
+function getStyle(i)
+{
+  var istyle= baseStyle;
+  istyle.color =   getColor(i) ;
+  istyle.fillColor =  getColor(i) ;
+  return istyle;
+}
+
+
+function getFillStyle(i)
+{
+  var istyle= fillStyle;
+  istyle.color =   getColor(i) ;
+  istyle.fillColor =  getColor(i) ;
+  return istyle;
+}
+
 
 
 
@@ -193,7 +240,7 @@ function CheckUrl(url)
 
 
 
-function addMyKML(mymap,kmlfilepath,color, cumbounds)
+function xaddMyKML(mymap,kmlfilepath,color, cumbounds)
 {
   fetch(kmlfilepath).then(res => res.text()).then(kmltext =>
   {
@@ -216,7 +263,7 @@ function addMyKML(mymap,kmlfilepath,color, cumbounds)
 
 }
 
-function makeKMLLayer(amap,kmlfilepath,style, fitbounds=false, label='')
+function ymakeKMLLayer(amap,kmlfilepath,style, fitbounds=false, label='')
 {
   var track =null;
   fetch(kmlfilepath).then(res => res.text()).then(kmltext =>
@@ -225,16 +272,51 @@ function makeKMLLayer(amap,kmlfilepath,style, fitbounds=false, label='')
     const kml = parser.parseFromString(kmltext, 'text/xml');
     track = new L.KML(kml);
     track.setStyle(style);
-    amap.addLayer(track);
-    const bounds = track.getBounds();
-    if(bounds)
-    {
-      //  amap.fitBounds(bounds);
-    }
+
+    track.on('ready', function() { this.setStyle(style);    });
+
+       track.on("loaded", function(e) {  track.setStyle(style);}  );
+           amap.addLayer(track);
     if(label)
       track.bindPopup(label);
+
   });
-  return track;
+
+
+     amap.on('ready', function() { track.setStyle(style);    });
+
+
+}
+
+
+function zmakeKMLLayer(amap,kmlfilepath,style, fitbounds=false, label='')
+{
+  var layer = omnivore.kml(kmlfilepath);
+  layer.addTo(amap);
+  layer.on('ready', function() {
+           layer.setStyle(style);
+       });
+
+}
+
+function makeKMLLayer(amap,kmlfilepath,style, fitbounds=false, label='')
+{
+// Load kml file
+fetch(kmlfilepath)
+.then(res => res.text())
+.then(kmltext => {
+  // Create new kml overlay
+  const parser = new DOMParser();
+  const kml = parser.parseFromString(kmltext, 'text/xml');
+  const track = new L.KML(kml);
+  amap.addLayer(track);
+ // await sleep(2000);
+ track.setStyle(style);
+  // Adjust map to show the kml
+  //const bounds = track.getBounds();
+  //amap.fitBounds(bounds);
+});
+
 }
 
 
@@ -272,6 +354,23 @@ function addMyKML2(mymap, kmlfile, style,fitbounds=false, label='')
   return runLayer;
 }
 
+function addRoadgroup(mymap, kmlfile, style)
+{
+  var runLayer = omnivore.kml(kmlfile)
+  .on('ready', function()
+  {
+
+    runLayer.eachLayer(function(layer) {
+      runLayer.bindPopup(layer.feature.properties.name);
+      runLayer.setStyle( style);
+      // mymap.fitBounds(runLayer.getBounds());
+      //runLayer.bindPopup(label);
+    });
+  })
+  .addTo(mymap);
+  return runLayer;
+}
+
 function addKMLLayer(layergroup,kmlfilepath,style)
 {
 
@@ -280,12 +379,12 @@ function addKMLLayer(layergroup,kmlfilepath,style)
     const parser = new DOMParser();
     const kml = parser.parseFromString(kmltext, 'text/xml');
     track = new L.KML(kml);
-    track.setStyle(style);
+    track.on("loaded", function(e) {  track.setStyle(style);}  );
     layergroup.addLayer(track);
   });
 }
 
-function addMyKMLLayer(mymap,kmllayer,color)
+function xaddMyKMLLayer(mymap,kmllayer,color)
 {
   if(kmllayer)
   {

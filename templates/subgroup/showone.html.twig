@@ -97,42 +97,37 @@
   {% dump(sggeodata) %}
 <script >
     var mymap = myGoodMap("{{sggeodata}}");
-     kml = "{{rggroup.kml}}";
-     var path = "{{mappath}}roadgroups/"+kml;
-     console.log(path);
-      if(kml)
+      var fparent = new L.FeatureGroup();
+      if("{{rggroup.kml}}")
       {
-          var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 5 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.1 };
-          makeKMLLayer(mymap,path,style,false,"{{rggroup.rggroupid}}");
+          var path = "{{mappath}}roadgroups/{{rggroup.kml}}";
+          makeKMLLayer(fparent,path,outlineStyle,false,"{{rggroup.rggroupid}}");
       }
-
-    var i=0;
-    {% for aroadgroup in roadgroups %}
-      var kml = "{{aroadgroup.kml}}";
-      if(kml)
-      {
-        var path = "{{mappath}}roadgroups/"+kml;
-            console.log(path);
-         var h2s = document.getElementById("{{aroadgroup.roadgroupid}}");
-         if(h2s)
-            h2s.style.backgroundColor = getColor(i);
-         var style = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
-          makeKMLLayer(mymap,path,style,false,"{{aroadgroup.name}}");
-         i=i+1;
-         if(i>11) i=0;
-      }
-
-  {% endfor %}
-
-     kml = "{{rggroup.kml}}";
-     var path = "{{mappath}}roadgroups/"+kml;
-     if(kml)
-      {
-          var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 3 ,  "clickable": true,"opacity": 0.2, "fillOpacity": 0.0 };
-       //   makeOutlineKml(mymap,path,style,false,"{{rggroup.rggroupid}}");
-      }
-    setMarkers(mymap,"{{sggeodata}}");
-     setBounds2(mymap,"{{sggeodata}}");
+      var i=0;
+      var fgroup = new L.FeatureGroup();
+      {% for aroadgroup in roadgroups %}
+          var frggroup = new L.FeatureGroup();
+          if("{{aroadgroup.kml}}")
+          {
+            var path = "{{mappath}}roadgroups/{{aroadgroup.kml}}";
+            var h2s = document.getElementById("{{aroadgroup.roadgroupid}}");
+            if(h2s) h2s.style.backgroundColor = getColor(i);
+            var astyle = {"color":  getColor(i) ,"fillColor":  getColor(i) , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.5 };
+                addRoadgroup(mymap, path, astyle);
+           // addKMLLayer(mymap,path,getStyle(i),false,"{{aroadgroup.name}}");
+            i=i+1;
+            if(i==5)
+            {
+              var x=1 ;
+            }
+           //fgroup.addLayer(frggroup);
+          }
+      {% endfor %}
+       //mymap.addLayer(fgroup);
+        mymap.addLayer(fparent);
+        fparent.bringToFront();
+        fgroup.bringToBack
+      setBounds2(mymap,"{{sggeodata}}");
    </script>
 
 {% endblock %}
