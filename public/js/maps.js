@@ -60,6 +60,18 @@ var  outlineStyle =
 };
 
 
+var  fineoutlineStyle =
+{
+  color :  'black' ,
+  fillColor :  'green' ,
+  weight : 2 ,
+  clickable : true ,
+  opacity : 1 ,
+  fillOpacity : 0 ,
+  fill : false
+}
+
+
 function getStyle(i)
 {
   var istyle= baseStyle;

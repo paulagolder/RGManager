@@ -18,6 +18,8 @@ class DistrictForm extends AbstractType
     {
         $builder ->add('DistrictId', TextType::class,['label' => 'DistrictId']);
         $builder ->add('Name', TextType::class ,['label' => 'Name',]);
+         $builder ->add('GroupId', TextType::class,['label' => 'Group','required' => false,]);
+        $builder ->add('Level', TextType::class ,['label' => 'Level',]);
         $builder ->add('Households', IntegerType::class,['label' => 'Households','required' => false,]);
         $builder ->add('Electors', IntegerType::class,['label' => 'Electors','required' => false,]);
         $builder ->add('KML', TextType::class,['label' => 'KML','required' => false,]);

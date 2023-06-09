@@ -92,12 +92,21 @@ class PollingdistrictRepository  extends EntityRepository
          $sql= 'select s.* from seattopd as sp , seat as s where sp.seat=s.seatid and sp.pdid = "'.$pdid.'" order by s.households ';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
-        $pds= $stmt->fetchAll();
-        dump($pds);
-        if(count($pds)<1)  return null;
-        return $pds[0];
-
+        $seats= $stmt->fetchAll();
+        if(count($seats)<1)  return null;
+        return $seats[0];
      }
+
+     public function findAllSeats($pdid)
+     {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql= 'select distinct s.* from seattopd as sp , seat as s where sp.seat=s.seatid and sp.pdid = "'.$pdid.'" order by s.households ';
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $seats= $stmt->fetchAll();
+        return $seats;
+     }
+
 
 
 }

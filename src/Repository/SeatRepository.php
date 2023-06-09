@@ -31,8 +31,8 @@ class SeatRepository  extends EntityRepository
     public function findChildren($drid)
     {
        $qb = $this->createQueryBuilder("p");
-       $qb->where("p.DistrictId = :drid");
-       $qb->setParameter('drid', $drid);
+       $qb->where("p.DistrictId like  :drid");
+       $qb->setParameter('drid', $drid."%");
        $qb->orderBy("p.Name", "ASC");
        $seats =  $qb->getQuery()->getResult();
        return $seats;
@@ -102,6 +102,30 @@ class SeatRepository  extends EntityRepository
         $seats= $stmt->fetchAll();
         return $seats;
      }
+
+
+    public function findSeatsfromPD($pdid)
+    {
+       $conn = $this->getEntityManager()->getConnection();
+       $sql = 'select distinct s.seatid from seat s , seattopd spd where spd.seat = s.seatid and s.level="district" and   spd.pdid = "'.$pdid.'" order by s.households';
+       $stmt = $conn->prepare($sql);
+       $stmt->execute();
+       //   $seats= $stmt->fetchAll(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+       $seats= $stmt->fetchAll();
+       return $seats;
+    }
+
+
+    public function findSeatsInDistrict($dtid)
+    {
+       $conn = $this->getEntityManager()->getConnection();
+       $sql = 'select * from seat s  where s.districtid ="'.$dtid.'" order by s.name';
+       $stmt = $conn->prepare($sql);
+       $stmt->execute();
+        $seats= $stmt->fetchAll(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+      // $seats= $stmt->fetchAll();
+       return $seats;
+    }
 
      public function findPollingdistricts($dtid,$stid,$year)
      {

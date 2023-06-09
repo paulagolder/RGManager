@@ -289,7 +289,7 @@ div.header div.row div.rgid
 
  div.menu div.row div.id
  {
-   width: 4em;
+   width: 6em;
  }
 
 div.header div.row div.num
@@ -319,7 +319,7 @@ div.header div.row div.bnum
 
  div.row div.indent
  {
-   margin-left:5em;
+   margin-left: 4em;
  }
 
 div.header div.row div.text
@@ -446,6 +446,11 @@ div.row div.button.wide
   margin-left: 1em;
 }
 
+ div.divwide
+{
+  width: 8em;
+
+}
 
 
 div.map div.mapdiv

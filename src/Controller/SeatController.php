@@ -72,10 +72,10 @@ class SeatController extends AbstractController
     }
 
 
-    public function showone($stid)
+    public function showone($dtid,$stid)
     {
 
-       // $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
+        $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
         $seat= $this->getDoctrine()->getRepository("App:Seat")->findOne($stid);
         if (!$seat)
         {
@@ -110,7 +110,7 @@ class SeatController extends AbstractController
                 $rglist[$wid] =  $wrglist;
             }
         }
-        return $this->render('seat/showone.html.twig',
+        return $this->render('seat/showrgs.html.twig',
                              [
                              'rgyear' => $this->rgyear,
                              'message' =>  '' ,
@@ -136,6 +136,10 @@ class SeatController extends AbstractController
         dump($roadgrouplinks);
         $rglist = array();
         $geodata = $seat->getGeodata_obj();
+        if(!$geodata->isgeodata())
+        {
+            $geodata = $district->getGeodata_obj();
+        }
         foreach ($roadgrouplinks as $aroadgrouplink)
         {
             $aroadgroup =  $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($aroadgrouplink["roadgroupid"],$this->rgyear);
@@ -181,14 +185,70 @@ class SeatController extends AbstractController
         {
             return $this->render('seat/showone.html.twig', [ 'message' =>  'seat not Found',]);
         }
-     /*   if(!$seat->getKML())
-        {
-            $seat->setKML($this->mapserver->findseat($seat->getSeatId(),$this->rgyear,$district->getDistrictId()));
-        }*/
+
         $pds = $this->getDoctrine()->getRepository("App:Seat")->findPollingdistricts($dtid,$stid,$this->rgyear);
         dump($pds);
         $sts = [];
-        $geodata = $seat->getGeodata_obj();;
+        $geodata = $seat->getGeodata_obj();
+        if(!$geodata->isgeodata())
+        {
+            $geodata = $district->getGeodata_obj();
+        }
+        foreach($pds as $key =>  $pd)
+        {
+            $thh = 0;
+            $pdid = $pd["pdid"];
+            $stlist = $this->getDoctrine()->getRepository("App:Street")->findAllbyPD($pdid);
+            $sts[$pdid]=array();
+            foreach ($stlist as $st)
+            {
+                $astreet= $this->getDoctrine()->getRepository("App:Street")->findOnebySeq($st->getSeq());
+                $sts[$pdid][$st->getSeq()]= $astreet;
+                $thh+= $astreet->getHouseholds();
+            }
+            $pd["households"] = $thh;
+            $pds[$key]=$pd;
+        }
+        dump($sts);
+
+        $sparepds = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findSpares($district->getDistrictId(),$this->rgyear );
+
+        return $this->render('seat/showpds.html.twig',
+                             [
+                             'rgyear' => $this->rgyear,
+                             'message' =>  '' ,
+                             'district'=> $district,
+                             'seat' => $seat,
+                             'pds'=>$pds,
+                             'sts'=>$sts,
+                             'sparepds' => $sparepds,
+                             'back'=>"/district/show/".$dtid,
+                             ]);
+    }
+
+
+    public function update($stid)
+    {
+
+        $seat= $this->getDoctrine()->getRepository("App:Seat")->findOne($stid);
+        $dtid = $seat->getDistrictId();
+        dump($seat);
+        if (!$seat)
+        {
+            return $this->render('seat/showone.html.twig', [ 'message' =>  'seat not Found',]);
+        }
+        $pds = $this->getDoctrine()->getRepository("App:Seat")->findPollingdistricts($dtid,$stid,$this->rgyear);
+        dump($pds);
+        $sts = [];
+        if($seat->getKML())
+        {
+             $kmlfile = "/".$seat->getDistrictId()."/".$seat->getKML();
+             $geodata =$this->mapserver->scanRoute($kmlfile);
+        }else
+        {
+             $geodata = new Geodata();
+        }
+
         foreach($pds as $key =>  $pd)
         {
             $thh = 0;
@@ -207,27 +267,71 @@ class SeatController extends AbstractController
         }
         dump($sts);
         $seat->setGeodata($geodata);
-        $sparepds = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findSpares($district->getDistrictId(),$this->rgyear );
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($seat);
+        $entityManager->flush();
 
-        return $this->render('seat/showpds.html.twig',
-                             [
-                             'rgyear' => $this->rgyear,
-                             'message' =>  '' ,
-                             'district'=> $district,
-                             'seat' => $seat,
-                             'pds'=>$pds,
-                             'sts'=>$sts,
-                             'sparepds' => $sparepds,
-                             'back'=>"/district/show/".$dtid,
-                             ]);
+          return $this->redirect('/seat/showpds/'.$dtid.'/'.$stid);
+
     }
 
+    public function updateparish($stid)
+    {
+
+        $seat= $this->getDoctrine()->getRepository("App:Seat")->findOne($stid);
+        $dtid = $seat->getDistrictId();
+        $parentdistrict = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
+        dump($parentdistrict);
+        if($parentdistrict->getLevel() == "parish group") $imageroot = $parentdistrict->getDistrictId();
+        else $imageroot= $dtid;
+        dump($seat);
+        if (!$seat)
+        {
+            return $this->render('seat/showone.html.twig', [ 'message' =>  'seat not Found',]);
+        }
+        $pds = $this->getDoctrine()->getRepository("App:Seat")->findPollingdistricts($dtid,$stid,$this->rgyear);
+        dump($pds);
+        $sts = [];
+        if($seat->getKML())
+        {
+            $kmlfile = "/".$imageroot."/".$seat->getKML();
+            $geodata =$this->mapserver->scanRoute($kmlfile);
+        }else
+        {
+            $geodata = new Geodata();
+        }
+
+        foreach($pds as $key =>  $pd)
+        {
+            $thh = 0;
+            $pdid = $pd["pdid"];
+            $stlist = $this->getDoctrine()->getRepository("App:Street")->findAllbyPD($pdid);
+            $sts[$pdid]=array();
+            foreach ($stlist as $st)
+            {
+                $astreet= $this->getDoctrine()->getRepository("App:Street")->findOnebySeq($st->getSeq());
+                $geodata->mergeGeodata_obj($astreet->getGeodata_obj());
+                $sts[$pdid][$st->getSeq()]= $astreet;
+                $thh+= $astreet->getHouseholds();
+            }
+            $pd["households"] = $thh;
+            $pds[$key]=$pd;
+        }
+        dump($sts);
+        $seat->setGeodata($geodata);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($seat);
+        $entityManager->flush();
+
+        return $this->redirect('/seat/showpds/'.$dtid.'/'.$stid);
+
+    }
 
     public function showwards($dtid,$stid)
     {
 
         $district = $this->getDoctrine()->getRepository("App:Seat")->findOne($stid);
-        $wards= $this->getDoctrine()->getRepository("App:Seat")->findSeatsbyPD($stid);
+        $wards= $this->getDoctrine()->getRepository("App:Seat")->findSeatsInDistrict($stid);
        dump($wards);
        $selwards = null;
        foreach ($wards as $wardid)
@@ -251,16 +355,22 @@ class SeatController extends AbstractController
 
 
 
-    public function edit($stid)
+    public function edit($dtid,$stid)
     {
         $request = $this->requestStack->getCurrentRequest();
         if($stid)
         {
             $seat = $this->getDoctrine()->getRepository('App:Seat')->findOne($stid);
         }
-        dump($seat);
-        $district = $this->getDoctrine()->getRepository("App:District")->findOne($seat->getDistrictId());
+        $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
         $level = $district->getLevel();
+
+        if($seat)
+        {
+            dump($seat);
+
+        }
+
 
         if(! isset($seat))
         {
@@ -269,8 +379,7 @@ class SeatController extends AbstractController
             $seat->setLevel($level);
         }
         $form = $this->createForm(SeatForm::class, $seat);
-        //  $formFactory = Forms::createFormFactory();
-        //  $form = $formFactory->createBuilder(SeatForm::class, $seat, ['csrf_protection' => false])->getForm();
+
         if ($request->getMethod() == 'POST')
         {
             $form->handleRequest($request);
@@ -278,12 +387,14 @@ class SeatController extends AbstractController
             {
                if($seat->getKML())
                {
-                $kmlfile = "/".$seat->getDistrictId()."/".$seat->getKML();
-                dump($kmlfile);
+                   if($district->getGroupId())
+                   {
+                        $kmlfile = "/".$district->getGroupId()."/".$seat->getKML();
+                   }
+                   else
+                       $kmlfile = "/".$seat->getDistrictId()."/".$seat->getKML();
                 $geodata =  $this->mapserver->scanRoute($kmlfile);
-                dump($geodata);
                 $seat->setGeodata($geodata);
-                dump($seat);
                }
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($seat);

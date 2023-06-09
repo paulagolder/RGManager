@@ -348,7 +348,6 @@ class Roadgroup
 public function getGeodata_obj()
 {
  $ngeodata = new Geodata;
-
  return  $ngeodata->loadGeodata($this->getGeodata());
 }
 

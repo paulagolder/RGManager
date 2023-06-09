@@ -107,9 +107,8 @@ class RoadgroupController extends AbstractController
     $pds = '"';
     foreach($streets as $astreet)
     {
-      if(!str_contains($pds, $astreet->getPdId()))
-          $pds .=  $astreet->getPdId().',';
-
+     if(!str_contains($pds, $astreet->getPdId()))
+         $pds .=  $astreet->getPdId().',';
     }
     $pds .=')"';
     dump($pds);

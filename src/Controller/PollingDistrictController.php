@@ -113,11 +113,10 @@ class PollingDistrictController extends AbstractController
   {
     $apollingdistrict = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findOne($pdid);
     $geodata = new Geodata;
-
      $streets =  $this->getDoctrine()->getRepository("App:Street")->findAllbyPd($pdid);
      $seat =  $this->getDoctrine()->getRepository("App:Pollingdistrict")->findSmallestSeat($pdid);
-
-     dump($seat);
+     $seats =  $this->getDoctrine()->getRepository("App:Pollingdistrict")->findAllSeats($pdid);
+     dump($seats);
      $geodata = new $geodata();
     foreach ($streets as $street)
     {
@@ -130,7 +129,9 @@ class PollingDistrictController extends AbstractController
         $street->{"color"} = "red";
     }
         if(!$geodata->isGeodata())
-          if($seat) $geodata= $seat->getGeodata_obj();
+          if($seat) $geodata=  $geodata->makeGeodata($seat["geodata"]);
+  dump($geodata);
+       //   if($seat) $geodata= $seat->getGeodata_obj();
 
     $apollingdistrict->setGeodata($geodata);
 
@@ -146,7 +147,7 @@ class PollingDistrictController extends AbstractController
     'message' =>  '' ,
     'pollingdistrict'=>$apollingdistrict,
     'streets' => $streets ,
-    'seat'=>$seat,
+    'seats'=>$seats,
     'showseat'=> "/seat/showpds/LDC/".$seat["seatid"],
     'newstreet'=> "/pollingdistrict/newstreet/LDC/".$pdid,
     'back'=>$back,
@@ -211,8 +212,8 @@ class PollingDistrictController extends AbstractController
             $form->handleRequest($request);
             if ($form->isValid())
             {
-                //$geodata =  $this->mapserver->loadRoute("districts/",$adistrict->getKML());
-                //$adistrict->setGeodata($geodata);
+                $geodata =  $this->mapserver->scanRoute($seatid."/".$apd->getKML());
+                $apd->setGeodata($geodata);
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($apd);
                 $entityManager->flush();

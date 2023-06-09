@@ -30,6 +30,8 @@
     {{ form_start(form) }}
     {{ form_row(form.DistrictId) }}
     {{ form_row(form.Name) }}
+    {{ form_row(form.Level) }}
+    {{ form_row(form.GroupId) }}
     {{ form_row(form.Households) }}
     {{ form_row(form.Electors) }}
     {{ form_row(form.KML) }}
@@ -46,16 +48,21 @@
 </div>
 
   {% set geodata = district.getGeodata_json() %}
-  {% dump(geodata) %}
+
 
  <script  type="text/javascript" >
      var mymap = myGoodMap("{{geodata}}");
  {% if  district.kml %}
-      var aspath = "{{mappath}}outlines/{{district.kml}}";
+
       if("{{district.kml}}")
       {
-         var style = {"color":  "#000000" , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.2};
-         makeOutlineKml(mymap,aspath,style,false,"{{district.name}}")
+       if("{{district.groupid}}")
+       {
+       var aspath = "{{mappath}}{{district.groupid}}/{{district.kml}}";
+       }
+       else
+          var aspath = "{{mappath}}districts/{{district.kml}}";
+         makeKMLLayer(mymap,aspath,outlineStyle,false,"{{district.name}}")
       }
       setBoundsGeodata(mymap, "{{geodata}}");
   {% endif %}

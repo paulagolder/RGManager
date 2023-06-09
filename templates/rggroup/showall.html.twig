@@ -107,7 +107,7 @@ var i=0;
     if(i>11)i=0;
   }
  {% endfor %}
- var path = "{{mappath}}outlines/{{topmap}}";
+ var path = "{{mappath}}roadgroups/{{topmap}}";
 {
    var style = {"color":  "#0000FF" , "weight": 5 ,  "clickable": true ,"opacity": 0.2, "fillOpacity": 1.0};
    makeOutlineKml(mymap, path,style,false,"All RG-Groups");

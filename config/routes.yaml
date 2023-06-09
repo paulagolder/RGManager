@@ -10,6 +10,21 @@ district_showone:
    path: /district/show/{dtid}
    controller: App\Controller\DistrictController::showone
 
+district_showgroup:
+   path: /district/showgroup/{dtid}
+   controller: App\Controller\DistrictController::showgroup
+
+
+district_showparish:
+   path: /district/showparish/{dtid}
+   controller: App\Controller\DistrictController::showparish
+
+
+
+district_updateparish:
+   path: /district/updateparish/{stid}
+   controller: App\Controller\SeatController::updateparish
+
 district_update:
    path: /district/update/{dtid}
    controller: App\Controller\DistrictController::update
@@ -204,6 +219,11 @@ seats_showpds:
    path: /seat/showpds/{dtid}/{stid}
    controller: App\Controller\SeatController::showpds
 
+seats_update:
+   path: /seat/update/{stid}
+   controller: App\Controller\SeatController::update
+
+
 seats_showwards:
    path: /seat/showwards/{dtid}/{stid}
    controller: App\Controller\SeatController::showwards
@@ -218,7 +238,7 @@ seats_showrgs:
    controller: App\Controller\SeatController::showrgs
 
 seats_edit:
-   path: /seat/edit/{stid}
+   path: /seat/edit/{dtid}/{stid}
    controller: App\Controller\SeatController::edit
 
 seats_newseat:

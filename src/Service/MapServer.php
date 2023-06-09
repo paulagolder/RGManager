@@ -329,12 +329,10 @@ class MapServer
     $maxlat = -360;
     $minlng = 360;
     $maxlng = -360;
-     dump($addfile);
     if($addfile)
     {
         $addpath =  $this->maproot.$addfile;
-    $addpath = str_replace("//","/",$addpath);
-dump($addpath);
+    $addpath = str_replace("//","/",$addpath);;
     $xmlstr2 = file_get_contents($addpath);
     $addkml = new \SimpleXMLElement($xmlstr2);
     dump($addkml);
@@ -342,13 +340,13 @@ dump($addpath);
     $placemarks = $addkml->Document->Placemark;
    // $aplacemark = $addkml->Folder->Placemark;
   //  $placemarks =array($aplacemark);
-    dump($placemarks);
+  //  dump($placemarks);
   //  dump($aplacemark);
     foreach ($placemarks as $placemark)
     {
-      dump($placemark);
+     // dump($placemark);
       $coords = $placemark->Polygon->outerBoundaryIs->LinearRing->coordinates;
-      dump($coords);
+   //   dump($coords);
       if(strstr($coords[0], "\n"))
       {
       $carray = preg_split("/\r\n|\n|\r/", $coords[0]);
@@ -363,7 +361,7 @@ dump($addpath);
       {
 
         $latlng = explode(",",$coord);
-        dump($latlng);
+        //dump($latlng);
         if(count($latlng )>1)
         {
 
@@ -385,7 +383,7 @@ dump($addpath);
     $geodata->minlong = $minlng;
     $geodata->midlat = ($minlat+$maxlat)/2;
     $geodata->midlong = ($minlng+$maxlng)/2;
-    dump($geodata);
+ //   dump($geodata);
     }
       return $geodata;
   }

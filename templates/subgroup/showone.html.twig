@@ -38,7 +38,8 @@
       <div class="rgid" >Road group Id</div>
       <div class="name" >Name</div>
        <div class="name" >CCName</div>
-      <div class="bnum" >Households</div>
+        <div class="bnum" >Households</div>
+      <div class="bnum" >Streets</div>
       <div class="bnum" >Electors</div>
       <div class="bnum" >LW</div>
        <div class="bnum" >LN</div>
@@ -54,6 +55,7 @@
        <div class="name" >{{aroadgroup.name}}</div>
        <div class="name" >{{aroadgroup.ccname}}</div>
        <div class="bnum" >{{aroadgroup.households}}</div>
+       <div class="bnum" >{{aroadgroup.streets}}</div>
       <div class="bnum" >{{aroadgroup.electors}}</div>
       {% if aroadgroup.electors > 0 %}
       <div class="bnum" >{{ (aroadgroup.PLVW/aroadgroup.electors) | number_format(2)}}</div>

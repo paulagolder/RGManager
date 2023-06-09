@@ -1,4 +1,4 @@
-{# views/district/showone.html.twig #}
+{# views/district/showparish.html.twig #}
 
 {% extends 'rgmaster.html.twig' %}
 
@@ -24,7 +24,7 @@
 <div class="label">{{district.level}} </div>
 <div class="value">{{district.districtid}}</div>
 <div class="value">{{district.name}}</div>
-<div class="button  right"> <a class="button" href = "/district/update/{{district.districtid}}" >Update</a> </div>
+<div class="button  right"> <a class="button" href = "/district/updateparish/{{district.districtid}}" >Update</a> </div>
 <div class="button "> <a class="button" href = "{{back}}" >Back</a> </div>
 </div>
 
@@ -89,7 +89,7 @@
    var fparent = new L.FeatureGroup();
       if("{{district.kml}}")
       {
-         var aspath = "{{mappath}}{{district.districtid}}/{{district.kml}}";
+         var aspath = "{{mappath}}{{imageroot}}/{{district.kml}}";
            makeKMLLayer(fparent,aspath,outlineStyle,true,"{{district.name}}");
       }
    {# set seatl = seatlist|json_encode|raw #};

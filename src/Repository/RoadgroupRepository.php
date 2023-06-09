@@ -192,4 +192,20 @@ class RoadgroupRepository extends EntityRepository
         else
           return 0;
      }
+
+     public function countStreets($roadgroupid, $year)
+     {
+        $conn = $this->getEntityManager()->getConnection();
+        $sql = 'SELECT count(*) as nos  FROM `street` as s JOIN roadgrouptostreet as rs on s.seq = rs.streetid  WHERE rs.year = "'.$year.'" and rs.roadgroupid = "'.$roadgroupid.'"  group by rs.roadgroupid ';
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $harray= $stmt->fetchAll();
+        if(array_key_exists(0, $harray))
+        {
+           return $harray[0]["nos"];
+        }
+        else
+           return 0;
+     }
 }

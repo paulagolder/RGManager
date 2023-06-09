@@ -82,7 +82,7 @@ public function makeGeodata($input)
 
  }else
  {
-      if(is_array($indata))
+      if(is_array($input))
       {
         $geodata = (object)$input;
       }

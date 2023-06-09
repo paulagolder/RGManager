@@ -57,7 +57,7 @@ class MainController extends AbstractController
          }
 
         $message = "";
-        $districts = $this->getDoctrine()->getRepository("App:District")->findAll();
+        $districts = $this->getDoctrine()->getRepository("App:District")->findAllIndexed();
         $streets = $this->getDoctrine()->getRepository("App:Street")->findAll();
         $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findAllCurrent($this->rgyear);
         if (!$streets)
@@ -67,7 +67,7 @@ class MainController extends AbstractController
         {
             $message .= count( $streets). " Streets found\n ";
         }
-
+           dump($districts);
           return $this->render('rgmenu.html.twig',
           [
             'rgyear'=>$this->rgyear,

@@ -255,7 +255,14 @@ class StreetController extends AbstractController
     $astreet = $this->getDoctrine()->getRepository('App:Street')->findOnebySeq($rdseq);
     $pdid = $astreet->getPdId();
        $pd = $this->getDoctrine()->getRepository('App:Pollingdistrict')->findOne($pdid);
-         $geodata = $pd->getGeodata();
+         $geodata = $pd->getGeodata_obj();
+         if(!$geodata or !$geodata->isgeodata())
+         {
+           $seatid = $this->getDoctrine()->getRepository('App:Seat')->findSeatsfromPD($pdid);
+           $seat= $this->getDoctrine()->getRepository('App:Seat')->getOne($seatid[0]);
+           dump($seat);
+           $geodata = $seat["geodata"];
+        }
     $rgid= $this->getDoctrine()->getRepository('App:Roadgrouptostreet')->findRg($rdseq,$this->rgyear);
     if($rgid)
       $roadgroup =  $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($rgid,$this->rgyear);
@@ -267,6 +274,7 @@ class StreetController extends AbstractController
       $rggroup =   $this->getDoctrine()->getRepository('App:Rggroup')->findOne($roadgroup->getRggroupid());
     }
     $streets = $this->getDoctrine()->getRepository('App:Street')->findAllbyName($astreet->getName());
+
 
     $path = $astreet->getDecodedPath();
     $tracks=$path;
@@ -281,6 +289,7 @@ class StreetController extends AbstractController
       $form->handleRequest($request);
       if ($form->isValid())
       {
+        try{
         $path = $astreet->getDecodedPath();
         $tracks=$path;
         $newtracks =[];
@@ -303,6 +312,12 @@ class StreetController extends AbstractController
         $entityManager->flush();
         $rdid = $astreet->getStreetId();
        return $this->redirect( " /pollingdistrict/showstreets/$pdid");
+        }
+        catch (PDOException $e)
+        {
+           return $this->redirect( " /pollingdistrict/showstreets/$pdid");
+        }
+
 
       }
     }

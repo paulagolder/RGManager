@@ -57,18 +57,85 @@ class DistrictController extends AbstractController
       return $this->render('district/showone.html.twig', [ 'message' =>  'district not Found',]);
     }
     $level = $district->getLevel();
+    if ($level == "warded parish") $imageroot = "LDP";
+    else $imageroot = $district->getDistrictId();
     $kml = $district->getKML();
     $geodata = $district->getGeodata_obj();;
     $seats = $this->getDoctrine()->getRepository("App:Seat")->findChildren($dtid);
     dump($district);
     dump($seats);
+    foreach($seats as &$seat)
+    {
+      $seat->setSeats(count($this->getDoctrine()->getRepository("App:Seat")->findChildren($seat->getSeatId())));
+    }
     return $this->render('district/showone.html.twig',
                          [
                          'rgyear' => $this->rgyear,
                          'message' =>  '' ,
+                         'imageroot'=>$imageroot,
                          'level' => $level,
                          'district'=>$district,
                          'seats'=>$seats,
+                         'back'=>"/"
+                         ]);
+  }
+
+  public function showparish($dtid)
+  {
+
+    $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
+
+    if (!$district)
+    {
+      return $this->render('district/showone.html.twig', [ 'message' =>  'district not Found',]);
+    }
+    $level = $district->getLevel();
+    $imageroot = "LDP";
+
+    $kml = $district->getKML();
+    $geodata = $district->getGeodata_obj();;
+    $seats = $this->getDoctrine()->getRepository("App:Seat")->findChildren($dtid);
+    dump($district);
+    dump($seats);
+    foreach($seats as &$seat)
+    {
+      $seat->setSeats(count($this->getDoctrine()->getRepository("App:Seat")->findChildren($seat->getSeatId())));
+    }
+    return $this->render('district/showparish.html.twig',
+                         [
+                         'rgyear' => $this->rgyear,
+                         'message' =>  '' ,
+                         'imageroot'=>$imageroot,
+                         'level' => $level,
+                         'district'=>$district,
+                         'seats'=>$seats,
+                         'back'=>"/district/showgroup/".$district->getGroupId(),
+                         ]);
+  }
+
+  public function showgroup($dtid)
+  {
+
+    $group = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
+    $imageroot = $group->getDistrictId();
+    $message = "";
+    $districts = $this->getDoctrine()->getRepository("App:District")->findGroup($dtid);
+    $streets = $this->getDoctrine()->getRepository("App:Street")->findAll();
+    $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findAllCurrent($this->rgyear);
+    if (!$streets)
+    {
+      $message .= 'Streets not Found\n';
+    }else
+    {
+      $message .= count( $streets). " Streets found\n ";
+    }
+    return $this->render('district/showgroup.html.twig',
+                         [
+                         'rgyear' => $this->rgyear,
+                         'message' =>  '' ,
+                         'imageroot'=>$imageroot,
+                         'district'=>$group,
+                         'districts'=>$districts,
                          'back'=>"/"
                          ]);
   }
@@ -113,8 +180,16 @@ class DistrictController extends AbstractController
       $form->handleRequest($request);
       if ($form->isValid())
       {
-        //$geodata =  $this->mapserver->loadRoute("districts/",$adistrict->getKML());
-        //$adistrict->setGeodata($geodata);
+        if($adistrict->getKML())
+          if($adistrict->getGroupId())
+          {
+             $geodata =  $this->mapserver->scanRoute($adistrict->getGroupId()."/".$adistrict->getKML());
+          }
+          else
+          $geodata =  $this->mapserver->scanRoute("districts/".$adistrict->getKML());
+        else
+          $geodata= new Geodata();
+        $adistrict->setGeodata($geodata);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($adistrict);
         $entityManager->flush();
@@ -141,8 +216,6 @@ class DistrictController extends AbstractController
       $form->handleRequest($request);
       if ($form->isValid())
       {
-        // $person->setContributor($user->getUsername());
-        // $person->setUpdateDt($time);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($ward);
         $entityManager->flush();

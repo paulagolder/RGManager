@@ -17,6 +17,12 @@ class District
     private $DistrictId;
 
     /**
+     * @ORM\Column(name="groupid",type="string", length=50)
+     */
+    private $GroupId;
+
+
+    /**
      * @ORM\Column(name="name",type="string", length=50)
      */
     private $Name;
@@ -26,6 +32,11 @@ class District
      * @ORM\Column(name="level",type="string", length=50)
      */
     private $Level;
+
+    /**
+     * @ORM\Column(name="display",type="integer", length=50)
+     */
+    private $Display;
 
       /**
      * @ORM\Column(name="electors",type="integer", length=50)
@@ -71,6 +82,17 @@ class District
         return $this;
     }
 
+    public function getGroupId()
+    {
+        return $this->GroupId;
+    }
+
+    public function setGroupId($ID): self
+    {
+        $this->GroupId = $ID;
+        return $this;
+    }
+
     public function getName(): ?string
     {
         return $this->Name;
@@ -101,6 +123,18 @@ class District
     public function setHouseholds($number): self
     {
         $this->Households = $number;
+        return $this;
+    }
+
+
+    public function getDisplay()
+    {
+        return $this->Display;
+    }
+
+    public function setDisplay($number): self
+    {
+        $this->Display = $number;
         return $this;
     }
 
