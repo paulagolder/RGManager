@@ -8,13 +8,13 @@
      <div class="heading  row" >
         <div class="label">{{district.name}}</div>
          <div class="button  right"> <a class="button" href = "/" >back</a> </div>
-      </div>
+     </div>
 
-       <div  class="menu" >
+     <div  class="menu row" >
         <div class="list">
         {% for district in districts %}
           <div class="row">
-             <div class="id indent">{{district.DistrictId}}</div>
+          <div  id="{{district.DistrictId}}" class="id indent">{{district.DistrictId}}</div>
              <div class="name">{{district.name}}</div>
              {% if  "group" in district.Level  %}
              <div class="button"> <a class="button" href = "/district/showparish/{{district.DistrictId}}" >View</a> </div>
@@ -28,7 +28,53 @@
         {% endfor %}
         </div>
 
-
-
+<div class="map" style="width:50%;height:100%;">
+<div id="goodmapid" ></div>
 </div>
+</div>
+
+{% set geodata = district.getGeodata_json() %}
+{% dump(geodata) %}
+
+<script  type="text/javascript" >
+
+   var mymap = myGoodMap("{{geodata}}");
+   var fparent = new L.FeatureGroup();
+      if("{{district.kml}}")
+      {
+         var aspath = "{{mappath}}districts/{{district.kml}}";
+           makeKMLLayer(fparent,aspath,outlineStyle,true,"{{district.name}}");
+      }
+   {# set seatl = seatlist|json_encode|raw #};
+   {# var seats = {{seatlist|json_encode|raw}} #};
+   var aspath = "{{mappath}}{{district.kml}}";
+
+   var i=0;
+   var did = "{{district.districtid}}";
+   var fgroup =  new L.featureGroup();
+   {% for adistrict in districts %}
+   {
+      var path = "{{mappath}}{{imageroot}}/{{adistrict.kml}}";
+      if(path)
+      {
+
+      if(doesFileExist(path))
+      {
+      var h2s = document.getElementById("{{adistrict.districtid}}");
+         h2s.style.backgroundColor = getColor(i);
+      };
+       var astyle = {"color":  getColor(i) ,"fillColor":  getColor(i) , "weight": 4 ,  "clickable": true ,"opacity": 1, "fillOpacity": 0.5 };
+        makeKMLLayer(fgroup,path,astyle,true,"{{adistrict.name}}");
+         i=i+1;
+
+      }
+   }
+   {% endfor %}
+   mymap.addLayer(fgroup);
+   mymap.addLayer(fparent);
+   fgroup.bringToBack();
+   fparent.bringToFront();
+
+   </script>
+   </div>
 {% endblock %}

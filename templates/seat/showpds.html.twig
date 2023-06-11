@@ -26,8 +26,15 @@
 <div class="label">{{seat.level}}: </div>
 <div class="value">{{seat.districtid}}-{{seat.seatid}}</div>
 <div class="value">{{seat.name}}</div>
-<div class="message"> All  Polling districts in Seat</div>
+{% if "parish"  in seat.level  %}
+<div class="message"> All  Polling districts in Parish</div>
+<div class="button  right"> <a class="button" href = "/seat/updateparish/{{seat.seatid}}" >Update</a> </div>
+{% else %}
+<div class="message"> All  Polling districts in Ward</div>
 <div class="button  right"> <a class="button" href = "/seat/update/{{seat.seatid}}" >update</a> </div>
+{% endif %}
+
+
 <div class="button "> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
 </div>
 
@@ -71,8 +78,15 @@ var fparent = new L.FeatureGroup();
 
 if("{{seat.kml}}")
 {
-     var aspath = "{{mappath}}{{seat.districtid}}/{{seat.kml}}";
-     makeKMLLayer(fparent,aspath,outlineStyle,false);
+  if("{{district.groupid}}")
+  {
+     var aspath = "{{mappath}}{{district.groupid}}/{{seat.kml}}";
+  }
+  else
+  {
+        var aspath = "{{mappath}}{{seat.districtid}}/{{seat.kml}}";
+  }
+  makeKMLLayer(fparent,aspath,outlineStyle,false);
 }
 {% endif %}
 
@@ -85,10 +99,7 @@ if(h2s)  h2s.style.backgroundColor = getColor(i);
 astreetfg =new L.FeatureGroup();
 {% for astreet in pd %}
 {
-
-
   thispath = drawPath(astreetfg,"{{astreet.getPath()}}","{{astreet.pdid}}",getStyle(i));
-
 }
 astreetfg.bindPopup("{{astreet.pdid}}");
 

@@ -68,9 +68,13 @@
 var mymap = myGoodMap("{{geodata}}");
 var fparent = new L.FeatureGroup();
  {% if  seat.kml %}
+   {% if district.groupid  %}
+      var aspath = "{{mappath}}{{district.groupid}}/{{seat.kml}}";
+   {% else %}
          var aspath = "{{mappath}}{{seat.districtid}}/{{seat.kml}}";
-         makeKMLLayer(fparent,aspath,outlineStyle,false,"{{seat.name}}")
-     {% endif %}
+  {% endif %}
+        makeKMLLayer(fparent,aspath,outlineStyle,false,"{{seat.name}}")
+          {% endif %}
         var i=0;
        //   var fgroups = new L.FeatureGroup();
        {% for key,value in roadgrouplist %}
@@ -82,7 +86,6 @@ var fparent = new L.FeatureGroup();
           if(h2s)
              h2s.style.backgroundColor = getColor(i);
           {% for value3 in value2 %}
- {% dump(value3) %}
             var kml = "{{value3.kml}}";
               if(kml)
               {

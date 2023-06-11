@@ -223,6 +223,9 @@ seats_update:
    path: /seat/update/{stid}
    controller: App\Controller\SeatController::update
 
+seats_updateparish:
+   path: /seat/updateparish/{stid}
+   controller: App\Controller\SeatController::updateparish
 
 seats_showwards:
    path: /seat/showwards/{dtid}/{stid}

@@ -136,15 +136,9 @@ class SeatController extends AbstractController
         dump($roadgrouplinks);
         $rglist = array();
         $geodata = $seat->getGeodata_obj();
-        if(!$geodata->isgeodata())
-        {
-            $geodata = $district->getGeodata_obj();
-        }
         foreach ($roadgrouplinks as $aroadgrouplink)
         {
             $aroadgroup =  $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($aroadgrouplink["roadgroupid"],$this->rgyear);
-            dump($aroadgroup);
-            $geodata->mergeGeodata_obj($aroadgroup->getGeodata_obj());
             $kml = $aroadgroup->getKML();
             if($aroadgroup)
             {
@@ -163,7 +157,6 @@ class SeatController extends AbstractController
                 $rglist[$wid] =  $wrglist;
             }
         }
-        $seat->setGeodata($geodata);
         dump($rglist);
         return $this->render('seat/showrgs.html.twig',
                              [
@@ -189,11 +182,6 @@ class SeatController extends AbstractController
         $pds = $this->getDoctrine()->getRepository("App:Seat")->findPollingdistricts($dtid,$stid,$this->rgyear);
         dump($pds);
         $sts = [];
-        $geodata = $seat->getGeodata_obj();
-        if(!$geodata->isgeodata())
-        {
-            $geodata = $district->getGeodata_obj();
-        }
         foreach($pds as $key =>  $pd)
         {
             $thh = 0;
@@ -210,7 +198,7 @@ class SeatController extends AbstractController
             $pds[$key]=$pd;
         }
         dump($sts);
-
+        dump($district);
         $sparepds = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findSpares($district->getDistrictId(),$this->rgyear );
 
         return $this->render('seat/showpds.html.twig',
@@ -232,7 +220,9 @@ class SeatController extends AbstractController
 
         $seat= $this->getDoctrine()->getRepository("App:Seat")->findOne($stid);
         $dtid = $seat->getDistrictId();
+        $district =  $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
         dump($seat);
+        dump($district);
         if (!$seat)
         {
             return $this->render('seat/showone.html.twig', [ 'message' =>  'seat not Found',]);
@@ -242,6 +232,10 @@ class SeatController extends AbstractController
         $sts = [];
         if($seat->getKML())
         {
+             if($district->getGroupid())
+             {
+                  $kmlfile = "/".$district->getGroupid()."/".$seat->getKML();
+            }else
              $kmlfile = "/".$seat->getDistrictId()."/".$seat->getKML();
              $geodata =$this->mapserver->scanRoute($kmlfile);
         }else
@@ -270,8 +264,7 @@ class SeatController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($seat);
         $entityManager->flush();
-
-          return $this->redirect('/seat/showpds/'.$dtid.'/'.$stid);
+        return $this->redirect('/seat/showpds/'.$dtid.'/'.$stid);
 
     }
 
@@ -282,7 +275,7 @@ class SeatController extends AbstractController
         $dtid = $seat->getDistrictId();
         $parentdistrict = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
         dump($parentdistrict);
-        if($parentdistrict->getLevel() == "parish group") $imageroot = $parentdistrict->getDistrictId();
+        if($parentdistrict->getLevel() == "parish council" ||  $parentdistrict->getLevel() == "warded parish"  ) $imageroot = $parentdistrict->getGroupId();
         else $imageroot= $dtid;
         dump($seat);
         if (!$seat)
