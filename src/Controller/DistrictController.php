@@ -48,7 +48,7 @@ class DistrictController extends AbstractController
   {
 
     $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
-dump($district);
+    dump($district);
     if (!$district)
     {
       return $this->render('district/showone.html.twig', [ 'message' =>  'district not Found',]);
@@ -180,10 +180,10 @@ dump($district);
         if($adistrict->getKML())
           if($adistrict->getGroupId())
           {
-             $geodata =  $this->mapserver->scanRoute($adistrict->getGroupId()."/".$adistrict->getKML());
+            $geodata =  $this->mapserver->scanRoute($adistrict->getGroupId()."/".$adistrict->getKML());
           }
           else
-          $geodata =  $this->mapserver->scanRoute("districts/".$adistrict->getKML());
+            $geodata =  $this->mapserver->scanRoute("districts/".$adistrict->getKML());
         else
           $geodata= new Geodata();
         $adistrict->setGeodata($geodata);
@@ -208,7 +208,7 @@ dump($district);
     $request = $this->requestStack->getCurrentRequest();
 
 
-      $adistrict= new district();
+    $adistrict= new district();
 
     $adistrict->setGroupId($dtid);
     $form = $this->createForm(districtForm::class, $adistrict);
@@ -545,25 +545,25 @@ dump($district);
 
     $rglist= array();
 
-      foreach ($seats as $aseat)
-      {
+    foreach ($seats as $aseat)
+    {
 
-        $roadgroups = $this->getDoctrine()->getRepository("App:Seat")->findRoadgroups($dtid,$aseat->getSeatid(),$this->rgyear);
-        foreach ($roadgroups as $aroadgroup)
-        {
-          dump($aroadgroup);
-          if($aroadgroup["electors"]>0)
-            $labness = $aroadgroup["PLVN"]/$aroadgroup["electors"];
-          else
-            $labness=0;
-          $rg = array();
-          $rg["kml"] = $aroadgroup["kml"];
-          $rg["priority"] = $labness;
-          $rg["color"] = $this->mapserver->makeColor($labness);
-          $rg['rgid'] = $aroadgroup["roadgroupid"];
-          $rglist[]=$rg;
-        }
+      $roadgroups = $this->getDoctrine()->getRepository("App:Seat")->findRoadgroups($dtid,$aseat->getSeatid(),$this->rgyear);
+      foreach ($roadgroups as $aroadgroup)
+      {
+        dump($aroadgroup);
+        if($aroadgroup["electors"]>0)
+          $labness = $aroadgroup["PLVN"]/$aroadgroup["electors"];
+        else
+          $labness=0;
+        $rg = array();
+        $rg["kml"] = $aroadgroup["kml"];
+        $rg["priority"] = $labness;
+        $rg["color"] = $this->mapserver->makeColor($labness);
+        $rg['rgid'] = $aroadgroup["roadgroupid"];
+        $rglist[]=$rg;
       }
+    }
 
     dump($rglist);
     dump($district);
