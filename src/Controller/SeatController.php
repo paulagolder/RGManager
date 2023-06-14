@@ -139,7 +139,7 @@ class SeatController extends AbstractController
         foreach ($roadgrouplinks as $aroadgrouplink)
         {
             $aroadgroup =  $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($aroadgrouplink["roadgroupid"],$this->rgyear);
-            $kml = $aroadgroup->getKML();
+          //  $kml = $aroadgroup->getKML();
             if($aroadgroup)
             {
                 $swid =  $aroadgroup->getRgsubgroupid();

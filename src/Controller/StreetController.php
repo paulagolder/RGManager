@@ -253,15 +253,24 @@ class StreetController extends AbstractController
     $request = $this->requestStack->getCurrentRequest();
     if(!$rdseq) return $this->redirect("/rggroup/showall");
     $astreet = $this->getDoctrine()->getRepository('App:Street')->findOnebySeq($rdseq);
+    dump($astreet);
+     $geodata = new Geodata();;
     $pdid = $astreet->getPdId();
+    if($pdid)
+    {
        $pd = $this->getDoctrine()->getRepository('App:Pollingdistrict')->findOne($pdid);
          $geodata = $pd->getGeodata_obj();
+     }
          if(!$geodata or !$geodata->isgeodata())
          {
            $seatid = $this->getDoctrine()->getRepository('App:Seat')->findSeatsfromPD($pdid);
-           $seat= $this->getDoctrine()->getRepository('App:Seat')->getOne($seatid[0]);
-           dump($seat);
-           $geodata = $seat["geodata"];
+           if(count($seatid)>0)
+           {
+             dump($seatid);
+             $seat= $this->getDoctrine()->getRepository('App:Seat')->findone($seatid[0]["seatid"]);
+             dump($seat);
+             $geodata = $seat->getGeodata();
+           }
         }
     $rgid= $this->getDoctrine()->getRepository('App:Roadgrouptostreet')->findRg($rdseq,$this->rgyear);
     if($rgid)

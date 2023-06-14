@@ -13,7 +13,7 @@ class PollingdistrictRepository  extends EntityRepository
      public function findAllbyYear($year)
      {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'select p.pdid,p.districtid as dpd,p.households , p.electors,s.*,st.*  from pollingdistrict  as p left join seattopd as s on  s.pdid =  p.pdid left join  seat as st on s.seat = st.seatid  order by p.districtid, p.pdid';
+        $sql = 'select p.pdid as ppdid,p.districtid as dpd,p.households , p.electors,s.*,st.*  from pollingdistrict  as p left join seattopd as s on  s.pdid =  p.pdid left join  seat as st on s.seat = st.seatid  order by p.districtid, p.pdid';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $pdseats= $stmt->fetchAll();
@@ -22,7 +22,7 @@ class PollingdistrictRepository  extends EntityRepository
         foreach($pdseats as $pdseat)
         {
 
-          $pdid = $pdseat["pdid"];
+          $pdid = $pdseat["ppdid"];
           if(!array_key_exists($pdid, $pds))
           {
              $pds[$pdid] = array();

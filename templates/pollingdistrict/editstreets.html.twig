@@ -68,31 +68,21 @@
         var fparent = new L.FeatureGroup();
         var i=1;
         {% for seat in seats %}
-        var style = fineoutlineStyle;
+        var style = fineOutlineStyle;
         style.color = colors[i];
+      {% if seat.groupid %}
+       var aspath = "{{mappath}}{{seat.groupid}}/{{seat.kml}}";
+      {% else %}
         var aspath = "{{mappath}}{{seat.districtid}}/{{seat.kml}}";
+        {% endif %}
         makeKMLLayer(fparent,aspath,style,"{{seat.seatid}}");
         i=i+1;
         {% endfor %}
-
-        {# if("{{seat.kml}}")
-        //  {
-        //  var aspath = "{{mappath}}{{seat.districtid}}/{{seat.kml}}";
-        //  makeKMLLayer(fparent,aspath,outlineStyle,false);
-        //  }#}
         i=0;
         var fgroup =  new L.featureGroup();
-        // mymap.on('click', onMapClick);
         {% for street in streets %}
-        var i=0;
-        var edstyle = {
-        color:  getColor(i),
-        weight: 5,
-        opacity: 1
-        }
         var estyle = {"color":  getColor(i) , "weight": 14 ,  "clickable": true ,"opacity": 0.7, "fillOpacity": 0.1 };
-        drawPath(fgroup,"{{street.getPath()}}","{{street.getName()}}",estyle);
-
+        drawPath(fgroup,"{{street.getPath()}}","{{street.getName()}}",baseStyle);
         i=i+1;
         if(i>11)i=0;
         {% endfor %}

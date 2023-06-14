@@ -55,6 +55,7 @@ class DistrictController extends AbstractController
     }
     $level = $district->getLevel();
     if ($level == "warded parish") $imageroot = "LDP";
+    elseif ($level == "parish council") $imageroot = "LDP";
     else $imageroot = $district->getDistrictId();
     $kml = $district->getKML();
     $geodata = $district->getGeodata_obj();;
