@@ -38,7 +38,9 @@
    <H1> {{message}} </H1>
 {% else %}
       <div class="heading  row">
-        <div class="label"> {{district.name}}: HeatMap</div>
+       <div class="label"> {{district.level}}</div>
+        <div class="label"> {{district.name}}:</div>
+         <div class="message">HeatMap</div>
         <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
       </div>
 
@@ -51,19 +53,26 @@
 <script >
 var mymap = myGoodMap("{{geodata}}");
 var kml = "{{district.KML}}";
-var path = "{{mappath}}outlines/"+kml;
+
 if(kml)
 {
-  var style = {"color": "#0000FF","fillcolor": "#FF00FF", "weight": 4 ,  "nonclickable": true,"opacity": 0.9, "fillOpacity": 0.0 };
-  makeKMLLayer(mymap,path,style,true,"");
+  if("{{district.groupid}}")
+  {
+      var path = "{{mappath}}{{district.groupid}}/"+kml;
+
+
+  }
+  else
+    var path = "{{mappath}}districts/"+kml;
+      makeKMLLayer(mymap,path,outlineStyle,true,"");
 }
 var i=0;
 {% for seat in seats %}
 kml = "{{seat.kml}}"
-var path = "{{mappath}}outlines/"+kml;
-var style = {"color": getColor(i),"fillcolor": getColor(i), "weight": 2,  "nonclickable": true,"opacity": 1.0, "fillOpacity": 0.2 };
+var path = "{{mappath}}{{district.groupid}}/"+kml;
+//var style = {"color": getColor(i),"fillcolor": getColor(i), "weight": 2,  "nonclickable": true,"opacity": 1.0, "fillOpacity": 0.2 };
 var name = "{{seat.name}}";
-makeKMLLayer(mymap,path,style,true,name);
+makeKMLLayer(mymap,path,fineOutlineStyle,true,name);
 i=i+1;
 {% endfor %}
 {% for rg in rglist %}

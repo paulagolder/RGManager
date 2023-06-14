@@ -33,9 +33,9 @@ district_edit:
    path: /district/edit/{dtid}
    controller: App\Controller\DistrictController::edit
 
-district_heatmap:
-   path: /district/heatmap/{dtid}
-   controller: App\Controller\DistrictController::heatmap
+district_newparish:
+   path: /district/newparish/{dtid}
+   controller: App\Controller\DistrictController::newparish
 
 pollingdistrict_showone:
    path: /pollingdistrict/show/{pdid}

@@ -15,19 +15,16 @@ use Symfony\Component\Translation\Translator;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 use Symfony\Component\HttpFoundation\Response;
-//use Dompdf\Dompdf;
+
 
 use App\Form\Type\DistrictForm;
 use App\Entity\District;
+use App\Entity\Geodata;
 
 
 use App\Service\MapServer;
 
-//use App\Service\PDF;
-//use Fpdf\Fpdf;
-//use Dompdf\Exception;
-
-//require('fpdf.php');
+;
 
 class DistrictController extends AbstractController
 {
@@ -51,7 +48,7 @@ class DistrictController extends AbstractController
   {
 
     $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
-
+dump($district);
     if (!$district)
     {
       return $this->render('district/showone.html.twig', [ 'message' =>  'district not Found',]);
@@ -187,6 +184,46 @@ class DistrictController extends AbstractController
           }
           else
           $geodata =  $this->mapserver->scanRoute("districts/".$adistrict->getKML());
+        else
+          $geodata= new Geodata();
+        $adistrict->setGeodata($geodata);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($adistrict);
+        $entityManager->flush();
+        $dtid = $adistrict->getDistrictid();
+        return $this->redirect("/district/edit/".$dtid);
+      }
+    }
+    return $this->render('district/edit.html.twig', array(
+      'rgyear' => $this->rgyear,
+      'form' => $form->createView(),
+                                                          'dtid'=>$dtid,
+                                                          'district'=>$adistrict,
+                                                          'returnlink'=>'/',
+    ));
+  }
+
+  public function newparish($dtid)
+  {
+    $request = $this->requestStack->getCurrentRequest();
+
+
+      $adistrict= new district();
+
+    $adistrict->setGroupId($dtid);
+    $form = $this->createForm(districtForm::class, $adistrict);
+    if ($request->getMethod() == 'POST')
+    {
+      $form->handleRequest($request);
+      if ($form->isValid())
+      {
+        if($adistrict->getKML())
+          if($adistrict->getGroupId())
+          {
+            $geodata =  $this->mapserver->scanRoute($adistrict->getGroupId()."/".$adistrict->getKML());
+          }
+          else
+            $geodata =  $this->mapserver->scanRoute("districts/".$adistrict->getKML());
         else
           $geodata= new Geodata();
         $adistrict->setGeodata($geodata);
@@ -504,34 +541,30 @@ class DistrictController extends AbstractController
   {
     $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
     $seats =  $this->getDoctrine()->getRepository("App:Seat")->findChildren($dtid);
-    $rggroups = $this->getDoctrine()->getRepository("App:Rggroup")->findAll();
-    if (!$rggroups)
-    {
-      return $this->render('rggroup/showall.html.twig', [ 'message' =>  'RGgroups not Found',]);
-    }
+
+
     $rglist= array();
-    foreach($rggroups as $arggroup)
-    {
-      $subgroups = $this->getDoctrine()->getRepository("App:Rgsubgroup")->findChildren($arggroup->getRggroupid());
-      foreach ($subgroups as $asubgroup)
+
+      foreach ($seats as $aseat)
       {
-        $swid =  $asubgroup->getRgsubgroupid();
-        $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($swid,$this->rgyear);
+
+        $roadgroups = $this->getDoctrine()->getRepository("App:Seat")->findRoadgroups($dtid,$aseat->getSeatid(),$this->rgyear);
         foreach ($roadgroups as $aroadgroup)
         {
-          if($aroadgroup->getElectors()>0)
-            $labness = $aroadgroup->getPLVN()/$aroadgroup->getElectors();
+          dump($aroadgroup);
+          if($aroadgroup["electors"]>0)
+            $labness = $aroadgroup["PLVN"]/$aroadgroup["electors"];
           else
             $labness=0;
           $rg = array();
-          $rg["kml"] = $aroadgroup->getKML();
+          $rg["kml"] = $aroadgroup["kml"];
           $rg["priority"] = $labness;
           $rg["color"] = $this->mapserver->makeColor($labness);
-          $rg['rgid'] = $aroadgroup->getRoadgroupid();
+          $rg['rgid'] = $aroadgroup["roadgroupid"];
           $rglist[]=$rg;
         }
       }
-    }
+
     dump($rglist);
     dump($district);
     dump($seats);

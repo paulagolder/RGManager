@@ -60,7 +60,7 @@ var  outlineStyle =
 };
 
 
-var  fineoutlineStyle =
+var  fineOutlineStyle =
 {
   color :  'black' ,
   fillColor :  'green' ,

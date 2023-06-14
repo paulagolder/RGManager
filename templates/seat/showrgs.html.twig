@@ -24,9 +24,10 @@
 {% else %}
 <div id="seat" >
 <div class="heading  row">
-  <div class="label">Seat: </div>
+  <div class="label">{{seat.level}}</div>
   <div class="value">{{seat.districtid}}:{{seat.seatid}}</div>
   <div class="value">{{seat.name}}</div>
+   <div class="message">All Roadgroups in the {{seat.level}}</div>
   <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
 </div>
 

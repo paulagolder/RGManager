@@ -324,6 +324,7 @@ class SeatController extends AbstractController
     {
 
         $district = $this->getDoctrine()->getRepository("App:Seat")->findOne($stid);
+          dump($district);
         $wards= $this->getDoctrine()->getRepository("App:Seat")->findSeatsInDistrict($stid);
        dump($wards);
        $selwards = null;
