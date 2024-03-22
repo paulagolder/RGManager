@@ -52,7 +52,7 @@
    <div id="goodmapid" ></div>
 </div>
 {% set geodata = district.getGeodata_json() %}
-{% dump(seats) %};
+
 <script >
 var mymap = myGoodMap("{{geodata}}");
 {% if  district.kml %}

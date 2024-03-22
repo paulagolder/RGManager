@@ -78,7 +78,6 @@
   <div id="goodmapid" ></div>
 </div>
   {% set ageodata = geodata | json_encode|raw  %}
-  {% dump(ageodata) %}
 <script >
 var mymap = myGoodMap("{{ageodata}}");
 

@@ -150,13 +150,6 @@ class Roadgroup
       return $this;
     }
 
-  //  private $em;
-//    public function __construct(EntityManager $em)
-  //  {
-   //     $this->em = $em;
-   // }
-
-
   public function getRoadgroupId()
    {
      return $this->RoadgroupId;

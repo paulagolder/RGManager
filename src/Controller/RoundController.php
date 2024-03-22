@@ -178,6 +178,7 @@ class RoundController extends AbstractController
     $subsubroundstree = $subroundstree[$sgrpid]["children"];
     $colour = array();
     $subroundstree = $roundstree[$grpid]["children"];
+    dump($subroundstree);
     $i=0;
     foreach($subroundstree as $key =>$rg)
     {
@@ -226,6 +227,35 @@ class RoundController extends AbstractController
     return $this->managesubgroup($dvyid,$grpid,$sgrpid);
 
   }
+
+  /*public function updategeodata($dvyid,$grpid,$sgrpid)
+  {
+
+     $rounds = findSubgroupRounds($dvyid,$grpid,$sgrpid)
+
+
+    $totalhouseholds = 0;
+    $totalelectors = 0;
+    $geodata = new Geodata;
+
+    foreach($rounds as $rnd)
+    {
+      //$rg = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rtrg->getRoadgroupId(),$this->rgyear);
+     $geo = $rnd->getGeodata();
+     $geodata->mergeGeodata_obj($geo);
+
+    $totahouseholds += $rnd->getHouseholds();
+    $totalelectors += $rnd->getElectors();
+
+    }
+    $rnd->setGeodata($geodata);
+    $round->setHouseholds($totalhouseholds);
+       $round->setElectors($totalelectors);
+    $entityManager->persist($round);
+    $entityManager->flush();
+    return ;
+
+  }*/
 
   public function updatesubgroup($dvyid,$grpid,$sgrpid)
   {

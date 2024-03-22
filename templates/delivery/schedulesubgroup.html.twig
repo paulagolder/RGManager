@@ -125,7 +125,7 @@
   <div id="goodmapid" ></div>
 </div>
      {% set geodata = subgroup.getGeodata_obj | json_encode | raw   %}
-     {% dump(geodata) %}
+
 <script >
   var mymap = myGoodMap("{{geodata}}");
   var wardlayer = null;

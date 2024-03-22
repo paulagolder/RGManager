@@ -96,7 +96,7 @@
   <div id="goodmapid" ></div>
 </div>
   {% set sggeodata = subgroup.geodata | json_encode | raw  %}
-  {% dump(sggeodata) %}
+
 <script >
     var mymap = myGoodMap("{{sggeodata}}");
       var fparent = new L.FeatureGroup();

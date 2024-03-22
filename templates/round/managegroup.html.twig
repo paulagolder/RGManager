@@ -96,9 +96,9 @@
 <div class="map" >
   <div id="goodmapid" ></div>
 </div>
-{% dump(rndgroup) %}
+
      {% set geodata = rndgroup.getGeodata_json() %}
-  {% dump(geodata) %}
+
 <script >
 var mymap = myGoodMap("{{geodata}}");
 

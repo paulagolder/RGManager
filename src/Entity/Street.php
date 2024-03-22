@@ -459,7 +459,7 @@ class Street
       $minlat=360;
       $minlong =360;
       $maxlat=-360;
-      $maxlong=-306;
+      $maxlong=-360;
       $nsteps =0;
       if(! is_array($steps)) return $geodata;
                   $oldcoords = $steps[0];
@@ -485,7 +485,6 @@ class Street
     $geodata->midlong =($minlong+$maxlong)/2;
     $geodata->minlong =$minlong;
     $geodata->steps =$nsteps;
-    dump($geodata);
     return  $geodata;
     }
 

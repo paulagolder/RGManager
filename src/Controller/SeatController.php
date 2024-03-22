@@ -125,15 +125,13 @@ class SeatController extends AbstractController
     {
 
         $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
-        dump($district);
         $seat= $this->getDoctrine()->getRepository("App:Seat")->findOne($stid);
-        dump($seat);
         if (!$seat)
         {
             return $this->render('seat/showone.html.twig', [ 'message' =>  'seat not Found',]);
         }
         $roadgrouplinks = $this->getDoctrine()->getRepository("App:Seat")->findRoadgroups($dtid,$stid,$this->rgyear);
-        dump($roadgrouplinks);
+
         $rglist = array();
         $geodata = $seat->getGeodata_obj();
         foreach ($roadgrouplinks as $aroadgrouplink)
@@ -156,8 +154,8 @@ class SeatController extends AbstractController
                 $wrglist[$swid][]=$aroadgroup;
                 $rglist[$wid] =  $wrglist;
             }
+
         }
-        dump($rglist);
         return $this->render('seat/showrgs.html.twig',
                              [
                              'rgyear' => $this->rgyear,
@@ -180,7 +178,6 @@ class SeatController extends AbstractController
         }
 
         $pds = $this->getDoctrine()->getRepository("App:Seat")->findPollingdistricts($dtid,$stid,$this->rgyear);
-        dump($pds);
         $sts = [];
         foreach($pds as $key =>  $pd)
         {
@@ -197,8 +194,6 @@ class SeatController extends AbstractController
             $pd["households"] = $thh;
             $pds[$key]=$pd;
         }
-        dump($sts);
-        dump($district);
         $sparepds = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findSpares($district->getDistrictId(),$this->rgyear );
 
         return $this->render('seat/showpds.html.twig',
@@ -358,13 +353,6 @@ class SeatController extends AbstractController
         }
         $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
         $level = $district->getLevel();
-
-        if($seat)
-        {
-            dump($seat);
-
-        }
-
 
         if(! isset($seat))
         {

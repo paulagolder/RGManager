@@ -1,7 +1,7 @@
 # parameters for use on lerot.org server
 parameters:
     database_host:  '127.0.0.1'
-    database_port: '3306'
+    database_port: '3360'
     database_name: 'lerot_fflsas75'
     database_user: 'lerot_fflsas75'
     database_password: 'ch#75_eilly'
@@ -9,7 +9,7 @@ parameters:
 
  #database_host:  '127.0.0.1'
  ## remote :109.234.164.65
- #database_port: '3306'
+ #database_port: '3360'
  #database_name: 'gopa9677_fflsas75'
  #database_user: 'gopa9677_fflsas75'
  #database_password: 'bo70uligney'

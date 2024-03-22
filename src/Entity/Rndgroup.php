@@ -176,7 +176,7 @@ public function setGeodata($text)
 
 public function mergeGeodata_obj($geodata_obj)
 {
-   $g = $this->getGeodata_obj()->mergeGeodata_obj($geodata_obj);
+$g = $this->getGeodata_obj()->mergeGeodata_obj($geodata_obj);
    $this->setGeodata($g);
 }
 

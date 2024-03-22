@@ -21,7 +21,7 @@ class Seat
      */
     private $Name;
 
-     /**
+    /**
      * @ORM\Column(name="districtid",type="string", length=50)
      */
     private $DistrictId;
@@ -32,7 +32,7 @@ class Seat
     private $Level;
 
 
-      /**
+    /**
      * @ORM\Column(name="date",type="integer", length=50)
      */
     private $Date;
@@ -42,13 +42,13 @@ class Seat
      */
     private $KML;
 
-       /**
-   * @ORM\Column(name="geodata",type="string", length=300, nullable=true)
-   */
-  private $Geodata;
+    /**
+     * @ORM\Column(name="geodata",type="string", length=300, nullable=true)
+     */
+    private $Geodata;
 
 
-     public function getKML()
+    public function getKML()
     {
         return $this->KML;
     }
@@ -59,23 +59,23 @@ class Seat
         return $this;
     }
 
-      /**
+    /**
      * @ORM\Column(name="electorate",type="integer", length=50)
      */
     private $Electorate;
 
 
-      /**
+    /**
      * @ORM\Column(name="households",type="integer", length=50)
      */
     private $Households;
 
-      /**
+    /**
      * @ORM\Column(name="seats",type="integer", length=50)
      */
     private $Seats;
 
-      public function getSeatId()
+    public function getSeatId()
     {
         return $this->SeatId;
     }
@@ -121,7 +121,7 @@ class Seat
         return $this;
     }
 
-  public function getHouseholds()
+    public function getHouseholds()
     {
         return $this->Households;
     }
@@ -132,7 +132,7 @@ class Seat
         return $this;
     }
 
-  public function getElectors()
+    public function getElectors()
     {
         return $this->Electorate;
     }
@@ -143,7 +143,7 @@ class Seat
         return $this;
     }
 
-     public function getSeats()
+    public function getSeats()
     {
         return $this->Seats;
     }
@@ -155,57 +155,57 @@ class Seat
     }
 
 
-public function getGeodata_json()
-{
- return  $this->Geodata;
-}
+    public function getGeodata_json()
+    {
+        return  $this->Geodata;
+    }
 
-public function getGeodata()
-{
- return  json_decode($this->Geodata,true);
-}
+    public function getGeodata()
+    {
+        return  json_decode($this->Geodata,true);
+    }
 
- public function setGeodata($text): self
+    public function setGeodata($text): self
     {
         $this->Geodata = json_encode($text);
         return $this;
     }
 
-public function getGeodata_obj()
-{
- $ngeodata = new Geodata;
+    public function getGeodata_obj()
+    {
+        $ngeodata = new Geodata;
 
- return  $ngeodata->loadGeodata($this->getGeodata());
-}
+        return  $ngeodata->loadGeodata($this->getGeodata());
+    }
 
 
-   public function getjson()
-   {
-   $str ="{";
-   $str .=  '"name":"'.$this->Name.'",';
-   $str .=  '"seatid":"'.$this->SeatId.'",';
-   $str .=  '"kml":"'.$this->KML.'",';
-      $str .=  '"longitude":"0",';
-   $str .=  '"latitude":"0"';
-   $str .="}";
-   return  $str;
-   }
+    public function getjson()
+    {
+        $str ="{";
+        $str .=  '"name":"'.$this->Name.'",';
+        $str .=  '"seatid":"'.$this->SeatId.'",';
+        $str .=  '"kml":"'.$this->KML.'",';
+        $str .=  '"longitude":"0",';
+        $str .=  '"latitude":"0"';
+        $str .="}";
+        return  $str;
+    }
 
-   public function makexml()
-   {
-     $subwards=$this->subwards;
-     $xmlout = "";
-     $xmlout .= "  <ward WardId='$this->WardId' Name='$this->Ward' Households='$this->Households' >\n  ";
-     foreach ($subwards as $asubward )
-     {
-     $xmlout .= $asubward->makexml();
-     }
-     $xmlout .= "  </ward>\n";
-     return $xmlout;
-   }
+    public function makexml()
+    {
+        $subwards=$this->subwards;
+        $xmlout = "";
+        $xmlout .= "  <ward WardId='$this->WardId' Name='$this->Ward' Households='$this->Households' >\n  ";
+        foreach ($subwards as $asubward )
+        {
+            $xmlout .= $asubward->makexml();
+        }
+        $xmlout .= "  </ward>\n";
+        return $xmlout;
+    }
 
-   public function __toString()
-   {
+    public function __toString()
+    {
         return $this->Name.";".$this->KML;
     }
 }

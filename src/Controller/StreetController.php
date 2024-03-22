@@ -106,7 +106,7 @@ class StreetController extends AbstractController
     if (!$streets) {
       return $this->render('street/showall.html.twig', [ 'message' =>  'Streets not Found',]);
     }
-   dump($streets);
+
     return $this->render('street/showproblems.html.twig',
     [
     'rgyear'=>$this->rgyear,
@@ -158,7 +158,7 @@ class StreetController extends AbstractController
       $roadgroupid =  $this->getDoctrine()->getRepository('App:Roadgrouptostreet')->getRoadgroup($astreet->getSeq(),$this->rgyear);
       $astreet->roadgroupid = $roadgroupid;
     }
-    dump($streets);
+
     return $this->render('street/showproblems.html.twig',
     [
     'rgyear'=>$this->rgyear,
@@ -253,7 +253,6 @@ class StreetController extends AbstractController
     $request = $this->requestStack->getCurrentRequest();
     if(!$rdseq) return $this->redirect("/rggroup/showall");
     $astreet = $this->getDoctrine()->getRepository('App:Street')->findOnebySeq($rdseq);
-    dump($astreet);
      $geodata = new Geodata();;
     $pdid = $astreet->getPdId();
     if($pdid)
@@ -266,9 +265,7 @@ class StreetController extends AbstractController
            $seatid = $this->getDoctrine()->getRepository('App:Seat')->findSeatsfromPD($pdid);
            if(count($seatid)>0)
            {
-             dump($seatid);
              $seat= $this->getDoctrine()->getRepository('App:Seat')->findone($seatid[0]["seatid"]);
-             dump($seat);
              $geodata = $seat->getGeodata();
            }
         }
@@ -331,24 +328,6 @@ class StreetController extends AbstractController
       }
     }
 
-  /*  $geodata = new Geodata();
-    foreach($streets as $bstreet)
-    {
-      $geodata->mergeGeodata_obj($bstreet->getGeodata_obj());
-    }
-    if($astreet->getGeodata())
-    {
-      $geodata = $astreet->getGeodata_obj();
-    }
-    if(!$geodata->isgeodata())
-    {
-      if($roadgroup)
-         $geodata = $roadgroup->getGeodata_obj();
-      if(!$geodata->isgeodata() && $rggroup)
-        $geodata = $rggroup->getGeodata();
-    }*/
-
-    dump($geodata);
     return $this->render('street/edit.html.twig', array(
       'rgyear'=>$this->rgyear,
       'roadgroupid' =>$rgid,
@@ -438,14 +417,14 @@ class StreetController extends AbstractController
       $streets = $this->getDoctrine()->getRepository('App:Street')->findAllbyNamePd($row[3],$row[1]);
    if(count($streets)>1)
    {
-     dump($row);
+
      foreach($streets as $street)
    {
-      dump($street->getName());
+      //dump($street->getName());
    }
     }if(count($streets) == 0)
     {
-      dump($row);
+
       dump(" NOT FOUND ");
       $astreet =new Street();
       $astreet->setName($row[3]);
@@ -515,7 +494,6 @@ class StreetController extends AbstractController
   {
 
     $stid = $_POST["selstreet"];
-    dump($stid);
     if($stid)
     {
       $astreet = $this->getDoctrine()->getRepository('App:Street')->findOnebySeq($stid);
@@ -526,9 +504,9 @@ class StreetController extends AbstractController
 
     $this->getDoctrine()->getRepository('App:Roadgroup')->addStreet($astreet,$rgid,$this->rgyear);
 
-
     return $this->redirect("/roadgroup/showone/".$rgid);
   }
+
 
   function fixPath($streets)
   {

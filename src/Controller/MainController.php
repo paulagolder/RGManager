@@ -47,14 +47,18 @@ class MainController extends AbstractController
     {
 
          $years = $this->getDoctrine()->getRepository("App:Roadgrouptostreet")->getYears();
-         if(!$this->rgyear)
-         {
-            $this->rgyear  = date('Y');
-            $cookie = new Cookie('rgyear',	$this->rgyear,	time() + ( 24 * 60 * 60));
-		        $res = new Response();
-            $res->headers->setCookie( $cookie );
-            $res->send();
-         }
+
+         $this->rgyear = $years[0]["year"];
+
+        // if(!$this->rgyear)
+        // {
+         //   $this->rgyear  = date('Y');
+        //    $cookie = new Cookie('rgyear',	$this->rgyear,	time() + ( 24 * 60 * 60));
+		    //    $res = new Response();
+        //   $res->headers->setCookie( $cookie );
+        //    $res->send();
+        // }
+
 
         $message = "";
         $districts = $this->getDoctrine()->getRepository("App:District")->findAllIndexed();
@@ -67,7 +71,6 @@ class MainController extends AbstractController
         {
             $message .= count( $streets). " Streets found\n ";
         }
-           dump($districts);
           return $this->render('rgmenu.html.twig',
           [
             'rgyear'=>$this->rgyear,

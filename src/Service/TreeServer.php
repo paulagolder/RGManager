@@ -14,6 +14,7 @@ use  App\Entity\Rgsubgroup;
 use  App\Entity\Rndgroup;
 use App\Entity\Delivery;
 use App\Entity\Round;
+use App\Entity\Geodata;
 use Doctrine\ORM\EntityManagerInterface;
 
 class TreeServer
@@ -36,7 +37,6 @@ class TreeServer
     $rndgroups= array();
     foreach($rndlist as $key=>$rnd)
     {
-      dump($rnd);
       $hh = $rnd["households"];
       $cmptd = $rnd["completed"];
       $rgs = $rnd["roadgroups"];
@@ -247,7 +247,6 @@ class TreeServer
       $geodata =$this->mapserver->newGeodata();
     foreach( $roundstree as &$agroup)
     {
-      dump($agroup);
       if( array_key_exists("children",$agroup))
       {
          $dgeodata = $this->makegeodata_roadgroups($agroup["children"]);
@@ -278,7 +277,6 @@ class TreeServer
 
   public function updateCounts(&$delivery, $roundstree)
   {
-    dump($delivery);
     $hh=0;
     $rgs= 0;
     foreach( $roundstree as $agroup)

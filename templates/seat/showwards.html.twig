@@ -29,7 +29,7 @@
       <div class="message"> All  Seats in District</div>
       <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
    </div>
-{% dump(wards) %}
+
    <div  class="pdpanel  indent id">
       {% for key,value in wards %}
       <div  class="pdrow row indent id">
@@ -52,7 +52,7 @@
    <div id="goodmapid" ></div>
 </div>
 {% set geodata = district.getGeodata_json() %}
-{% dump(wards) %}
+
 <script >
 var mymap = myGoodMap("{{geodata}}");
 var parent = new L.FeatureGroup();
@@ -64,7 +64,7 @@ var parent = new L.FeatureGroup();
 var i = 0;
 var wards = new L.FeatureGroup();
 {% for ward in wards %}
-   {% dump(ward) %};
+
    var h2s = document.getElementById("{{ward.seatid}}");
    if(h2s)  h2s.style.backgroundColor = getColor(i);
    var apath = "{{mappath}}outlines/{{ward.kml}}";

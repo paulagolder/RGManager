@@ -88,7 +88,7 @@ class RggroupController extends AbstractController
       $rggroup->setRoadgroups(count($rgs));
       $rggroups[$i]=$rggroup;
     }
-    dump($rggroups);
+
     $extraroadgroups =  $this->getDoctrine()->getRepository("App:Roadgroup")->findLooseRoadgroups();
     return $this->render('rggroup/showall.html.twig',
     [
@@ -133,7 +133,6 @@ class RggroupController extends AbstractController
       $asubgroup->calculated =$calchh;
     }
     $extraroadgroups =  $this->getDoctrine()->getRepository("App:Roadgroup")->findLooseRoadgroups();
-    dump($rggroup);
     return $this->render('rggroup/showone.html.twig',
     [
     'rgyear'=>$this->rgyear,
@@ -231,7 +230,6 @@ class RggroupController extends AbstractController
     $roadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findChildren($swdid, $this->rgyear);
     $spareroadgroups = $this->getDoctrine()->getRepository("App:Roadgroup")->findSpareRoadgroupsinGroup($rggroupid);
     $extrastreets =null;
-    dump($roadgroups);
     return $this->render('subgroup/showone.html.twig',
     [
     'rgyear'=>$this->rgyear,
@@ -388,7 +386,6 @@ class RggroupController extends AbstractController
           $rg['rgid'] = $aroadgroup->getRoadgroupid();
           $rglist[]=$rg;
         }
-        dump($rglist);
       }
     return $this->render('rggroup/heatmap.html.twig',
     [

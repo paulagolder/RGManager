@@ -232,9 +232,7 @@ class StreetRepository  extends EntityRepository
 
          public function findLooseStreetsinPd($pdlist,$year)
      {
-     dump($pdlist);
-
-        $conn = $this->getEntityManager()->getConnection();
+         $conn = $this->getEntityManager()->getConnection();
          $sql = 'SELECT s.* FROM `street` as s left OUTER join roadgrouptostreet as rs on s.seq = rs.streetid  and rs.year= '.$year.' WHERE rs.seq is null and FIND_IN_SET( pdid, '.$pdlist.') > 0     order by s.pdid , s.name ';
         $stmt = $conn->prepare($sql);
         $stmt->execute();
@@ -274,7 +272,7 @@ class StreetRepository  extends EntityRepository
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $streetars= $stmt->fetchAll();
-        dump($streetars);
+      //  dump($streetars);
         $streets = array();
         foreach( $streetars as $astreetar )
         {
@@ -282,7 +280,7 @@ class StreetRepository  extends EntityRepository
          $astreet = new Street();
          $astreet->load($astreetar);
          $astreet->roadgroupid = "NONE";
-         dump($astreet);
+     //    dump($astreet);
          $streets[] = $astreet;
 
         }

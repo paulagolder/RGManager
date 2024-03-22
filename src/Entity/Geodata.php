@@ -10,24 +10,15 @@ class Geodata
 {
 
     public $maxlat;
-
     public $minlat;
-
     public $midlat;
-
     public $maxlong;
-
     public $minlong;
-
     public $midlong;
-
     public $dist;
-
     public $steps;
-
-     public $streets;
-
-      public $roadgroups;
+    public $streets;
+    public $roadgroups;
 
      public function __construct()
      {
@@ -35,7 +26,7 @@ class Geodata
       $this->minlat=360;
       $this->minlong =360;
       $this->maxlat=-360;
-      $this->maxlong=-306;
+      $this->maxlong=-360;
       $this->midlong=0;
       $this->midlat=0;
       $this->steps =0;
@@ -57,7 +48,7 @@ public function getGeodata_str()
 public function setGeodata_fromstr($text)
 {
   $text_json = json_encode($text);
-   $this->Geodata= $text_json;
+  $this->Geodata= $text_json;
 }
 
 
@@ -155,7 +146,7 @@ public function loadGeodata($input)
     if(is_object($ingeodata))
     {
         $ageodata= $ingeodata;
-
+        //dump($rootgeodata);
         $rootgeodata = $this;
 
       if($rootgeodata->minlat === null)  $rootgeodata->minlat =  $ageodata->minlat;
@@ -173,6 +164,7 @@ public function loadGeodata($input)
       $rootgeodata->roadgroups =  $rootgeodata->roadgroups+$ageodata->roadgroups;
        $rootgeodata->midlat =  ($rootgeodata->maxlat + $rootgeodata->minlat )/2;
          $rootgeodata->midlong =  ($rootgeodata->maxlong + $rootgeodata->minlong )/2;
+         //dump($rootgeodata);
       return $rootgeodata;
       }else
       {

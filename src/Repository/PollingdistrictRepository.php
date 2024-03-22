@@ -18,7 +18,7 @@ class PollingdistrictRepository  extends EntityRepository
         $stmt->execute();
         $pdseats= $stmt->fetchAll();
         $pds =[];
-        dump($pdseats);
+     //   dump($pdseats);
         foreach($pdseats as $pdseat)
         {
 
@@ -81,7 +81,7 @@ class PollingdistrictRepository  extends EntityRepository
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $pds= $stmt->fetchAll();
-        dump($pds);
+     //   dump($pds);
         if(count($pds)<1)  return null;
         return $pds[0]["seat"];
      }

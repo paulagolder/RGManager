@@ -47,7 +47,7 @@
 </div>
 
      {% set geodata = rggroup.getGeodata_obj | json_encode | raw   %}
-     {% dump(geodata) %}
+
 <script >
   var mymap = myGoodMap("{{geodata}}");
 

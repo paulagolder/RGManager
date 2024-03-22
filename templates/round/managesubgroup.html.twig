@@ -40,6 +40,7 @@
     <div class="value">CD:{{delivery.Completed}}</div>
     <div class="value">RG:{{delivery.Roadgroups}}</div>
     <div class="button  right"> <a class="button" href = "{{back}}" >{{'back'}} </a> </div>
+    <div class="button  right"> <a class="button" href = "/round/updategeodata/{{delivery.deliveryId}}/{{rndgroup.Rndgroupid}}/{{rndsubgroup.Rndgroupid}}" >update</a> </div>
 </div>
 
 
@@ -97,9 +98,9 @@
 <div class="map" >
   <div id="goodmapid" ></div>
 </div>
-{% dump(rndgroup) %}
+
 {% set geodata = rndsubgroup.getGeodata_json() %}
-{% dump(geodata) %}
+
 <script >
   var mymap = myGoodMap("{{geodata}}");;
   var bounds = null;

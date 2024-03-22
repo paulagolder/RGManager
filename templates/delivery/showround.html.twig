@@ -117,7 +117,7 @@
 </div>
 
 {% set geodata = around.getGeodata_json() %}
-{% dump(geodata) %}
+
 <script >
   var mymap = myGoodMap("{{geodata}}");
   var wardlayer = null;

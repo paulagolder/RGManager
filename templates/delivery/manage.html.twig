@@ -90,7 +90,7 @@
   <div id="goodmapid" ></div>
 </div>
   {% set sggeodata = delivery.geodata | json_encode | raw  %}
-  {% dump(sggeodata) %}
+
 <script >
     var mymap = myGoodMap("{{sggeodata}}");
 

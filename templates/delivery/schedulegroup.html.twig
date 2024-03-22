@@ -79,8 +79,21 @@
         <div class="button wide delete"><a class="button wide delete" href = "/round/zerosubgroup/{{delivery.deliveryId}}/{{group.Rndgroupid}}/{{key}}" >Do not Deliver</a></div>
       </div>
     {% endfor %}
+      {% for key, asubgroup in newsubgroups %}
+    {% set colouri = colouri +1 %}
+      <div class="row" >
+        <div class="rgid colour_{{colouri}}">{{key}}</div>
+        <div class="name"> {{ asubgroup.group.Name}}</div>
+        <div class="num">{{asubgroup.group.Households}}</div>
+        <div class="num">{{asubgroup.group.Target}}</div>
+        <div class="num">{{asubgroup.group.Completed}}</div>
+        <div class="num">{{asubgroup.group.Roadgroups}}</div>
+        <div class="button wide"><a class="button wide" href = "/delivery/schedulesubgroup/{{delivery.deliveryId}}/{{group.Rndgroupid}}/{{key}}" >Schedule SubGroup</a></div>
+        <div class="button wide delete"><a class="button wide delete" href = "/round/zerosubgroup/{{delivery.deliveryId}}/{{group.Rndgroupid}}/{{key}}" >Do not Deliver</a></div>
+      </div>
+    {% endfor %}
 </div>
-  <div class="largebutton" ><a class="button" href = "/delivery/addround/{{delivery.deliveryId}}" >Add New Round</a></div>
+  <div class="largebutton" ><a class="button" href = "/delivery/addsubgroup/{{delivery.deliveryId}}/{{group.Rndgroupid}}:" >Add New Subgroup</a></div>
 <div class="subheading row">
     <div class="name" >Unused Roadgroups</div>
   </div>
@@ -113,7 +126,7 @@
 </div>
 
 {% set geodata = group.getGeodata_json() %}
-{% dump(geodata) %}
+
 <script >
   var mymap = myGoodMap("{{geodata}}");
 

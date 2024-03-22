@@ -49,7 +49,7 @@
       </div>
 
       {% set geodata = district.getGeodata_json() %}
-      {% dump(geodata) %}
+
 <script >
 var mymap = myGoodMap("{{geodata}}");
 var kml = "{{district.KML}}";

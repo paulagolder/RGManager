@@ -19,7 +19,9 @@ district_showparish:
    path: /district/showparish/{dtid}
    controller: App\Controller\DistrictController::showparish
 
-
+district_heatmap:
+   path: /district/heatmap/{dtid}
+   controller: App\Controller\DistrictController::heatmap
 
 district_updateparish:
    path: /district/updateparish/{stid}
@@ -127,6 +129,13 @@ delivery_addround:
    controller: App\Controller\DeliveryController::addround
    requirements: { dvyid: \d+ }
 
+
+delivery_addsubgroup:
+   path: /delivery/addsubgroup/{dvyid}//{grpid}/
+   controller: App\Controller\DeliveryController::addsubgroup
+   requirements: { dvyid: \d+ }
+
+
 delivery_makerounds:
    path: /delivery/makerounds/{dvyid}/
    controller: App\Controller\DeliveryController::makerounds
@@ -186,6 +195,12 @@ round_manage_subgroup:
 round_update:
    path: /round/updateround/{dvyid}/{grpid}/{sgrpid}
    controller: App\Controller\RoundController::updateround
+
+
+round_updategeodata:
+   path: /round/updateround/{dvyid}/{grpid}/{sgrpid}
+   controller: App\Controller\RoundController::updategeodata
+
 
 round_update_subgroup:
    path: /round/updatesubgroup/{dvyid}/{grpid}/{sgrpid}

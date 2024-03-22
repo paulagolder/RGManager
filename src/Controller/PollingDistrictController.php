@@ -55,7 +55,6 @@ class PollingDistrictController extends AbstractController
     if (!$pds) {
       return $this->render('pollingdistrict/showall.html.twig', [ 'message' =>  'polling districts not Found',]);
     }
-    dump($pds);
 
     return $this->render('pollingdistrict/showall.html.twig',
                          [
@@ -73,7 +72,6 @@ class PollingDistrictController extends AbstractController
 
     $rglist = $this->getDoctrine()->getRepository("App:Roadgroup")->findAllinPollingDistrict($pdid,$this->rgyear);
     $apollingdistrict = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findOne($pdid);
-    dump($apollingdistrict);
     $roadgroups = [];
     $geodata = new Geodata;
     /*  foreach ($rglist as $rg)
@@ -118,13 +116,15 @@ class PollingDistrictController extends AbstractController
     $seat =  $this->getDoctrine()->getRepository("App:Pollingdistrict")->findSmallestSeat($pdid);
     $seats =  $this->getDoctrine()->getRepository("App:Pollingdistrict")->findAllSeats($pdid);
     $i=0;
-        dump($seats);
+
     while(!$seats[$i]["kml"] )  $i=$i+1;
     $seat = $seats[$i];
      $link="/seat/showpds/LDC/".$seat["seatid"];
-    dump($seat);
-    if($seat->getGeodata_obj()) $geodata = new Geodata($seat["geodata"]);
-    else $geodata = new $geodata();
+
+   // if($seat->getGeodata_obj())
+
+    $geodata = new Geodata($seat["geodata"]);
+   // else $geodata = new $geodata();
     foreach ($streets as $street)
     {
       if(strlen($street->getPath()) > 40)
@@ -134,23 +134,9 @@ class PollingDistrictController extends AbstractController
       }else
         $street->{"color"} = "red";
     }
-    dump($streets);
+
     $link=null;
-/*    if(!$geodata->isGeodata())
-      if($seat)
-      {
-        $geodata=  $geodata->makeGeodata($seat["geodata"]);
-        $link="/seat/showpds/LDC/".$seat["seatid"];
-      }
-      */
-      dump($geodata);
-    //   if($seat) $geodata= $seat->getGeodata_obj();
 
-  /*  $apollingdistrict->setGeodata($geodata);
-
-    $entityManager = $this->getDoctrine()->getManager();
-    $entityManager->persist($apollingdistrict);
-    $entityManager->flush();*/
     $back =  "/pollingdistrict/showall/";
 
     // return $this->render('pollingdistrict/showstreets.html.twig',
@@ -213,7 +199,6 @@ class PollingDistrictController extends AbstractController
     {
       $apd = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findOne($pdid);
       $seatid = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findSeat($pdid,$this->rgyear,"district");
-      dump($apd);
     }
     if(! isset($apd))
     {
@@ -255,7 +240,6 @@ class PollingDistrictController extends AbstractController
     if($pdid)
     {
       $apd = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findOne($pdid);
-      dump($apd);
     }
     $geodata = new Geodata;
     $streets =  $this->getDoctrine()->getRepository("App:Street")->findAllbyPd($pdid);
@@ -385,8 +369,6 @@ class PollingDistrictController extends AbstractController
 
     $astreet = new Street();
     $astreet->setPath("");
-    dump($pdid);
-    dump($dtid);
     $apd = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findOne($pdid);
     $astreet->setGeodata($apd->getGeodata());
     $astreet->setUpdated(null);
@@ -397,7 +379,6 @@ class PollingDistrictController extends AbstractController
     $entityManager->persist($astreet);
     $entityManager->flush();
     $pid = $astreet->getStreetId();
-    dump($astreet);
     $seq= $astreet->getSeq();
 
     return $this->redirect("/pollingdistrict/showstreets/".$pdid);

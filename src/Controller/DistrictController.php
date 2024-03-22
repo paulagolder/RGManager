@@ -48,7 +48,6 @@ class DistrictController extends AbstractController
   {
 
     $district = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
-    dump($district);
     if (!$district)
     {
       return $this->render('district/showone.html.twig', [ 'message' =>  'district not Found',]);
@@ -60,8 +59,6 @@ class DistrictController extends AbstractController
     $kml = $district->getKML();
     $geodata = $district->getGeodata_obj();;
     $seats = $this->getDoctrine()->getRepository("App:Seat")->findChildren($dtid);
-    dump($district);
-    dump($seats);
     foreach($seats as &$seat)
     {
       $seat->setSeats(count($this->getDoctrine()->getRepository("App:Seat")->findChildren($seat->getSeatId())));
@@ -93,8 +90,6 @@ class DistrictController extends AbstractController
     $kml = $district->getKML();
     $geodata = $district->getGeodata_obj();;
     $seats = $this->getDoctrine()->getRepository("App:Seat")->findChildren($dtid);
-    dump($district);
-    dump($seats);
     foreach($seats as &$seat)
     {
       $seat->setSeats(count($this->getDoctrine()->getRepository("App:Seat")->findChildren($seat->getSeatId())));
@@ -156,7 +151,7 @@ class DistrictController extends AbstractController
     $entityManager = $this->getDoctrine()->getManager();
     $entityManager->persist($district);
     $entityManager->flush();
-    dump($district);
+   // dump($district);
     return $this->redirect("/district/show/".$dtid);;
   }
 
@@ -166,7 +161,7 @@ class DistrictController extends AbstractController
     if($dtid)
     {
       $adistrict = $this->getDoctrine()->getRepository("App:District")->findOne($dtid);
-      dump($adistrict);
+    //  dump($adistrict);
     }
     if(! isset($adistrict))
     {
@@ -506,7 +501,7 @@ class DistrictController extends AbstractController
     {
       $aroadgroup =  $this->getDoctrine()->getRepository('App:Roadgroup')->findOne($aroadgrouplink["roadgroupid"],$this->rgyear);
       $bounds = $this->mapserver->expandbounds($bounds, $aroadgroup->getGeodata());
-      dump($bounds);
+    //  dump($bounds);
       $kml = $aroadgroup->getKML();
       if($aroadgroup)
       {
@@ -525,7 +520,7 @@ class DistrictController extends AbstractController
         $rglist[$wid] =  $wrglist;
       }
     }
-    dump($rglist);
+    //dump($rglist);
     return $this->render('seat/showone.html.twig',
                          [
                          'rgyear' => $this->rgyear,
@@ -552,7 +547,7 @@ class DistrictController extends AbstractController
       $roadgroups = $this->getDoctrine()->getRepository("App:Seat")->findRoadgroups($dtid,$aseat->getSeatid(),$this->rgyear);
       foreach ($roadgroups as $aroadgroup)
       {
-        dump($aroadgroup);
+        //dump($aroadgroup);
         if($aroadgroup["electors"]>0)
           $labness = $aroadgroup["PLVN"]/$aroadgroup["electors"];
         else
@@ -566,9 +561,9 @@ class DistrictController extends AbstractController
       }
     }
 
-    dump($rglist);
-    dump($district);
-    dump($seats);
+    //dump($rglist);
+    //dump($district);
+    //dump($seats);
     return $this->render('district/heatmap.html.twig',
                          [
                          'rgyear'=>$this->rgyear,

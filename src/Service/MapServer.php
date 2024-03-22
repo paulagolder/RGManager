@@ -335,18 +335,10 @@ class MapServer
     $addpath = str_replace("//","/",$addpath);;
     $xmlstr2 = file_get_contents($addpath);
     $addkml = new \SimpleXMLElement($xmlstr2);
-    dump($addkml);
-
     $placemarks = $addkml->Document->Placemark;
-   // $aplacemark = $addkml->Folder->Placemark;
-  //  $placemarks =array($aplacemark);
-  //  dump($placemarks);
-  //  dump($aplacemark);
     foreach ($placemarks as $placemark)
     {
-     // dump($placemark);
       $coords = $placemark->Polygon->outerBoundaryIs->LinearRing->coordinates;
-   //   dump($coords);
       if(strstr($coords[0], "\n"))
       {
       $carray = preg_split("/\r\n|\n|\r/", $coords[0]);
@@ -355,17 +347,12 @@ class MapServer
        $carray = explode(" ",$coords[0]);
     }
 
-
-      dump($carray);
       foreach( $carray as $coord)
       {
 
         $latlng = explode(",",$coord);
-        //dump($latlng);
         if(count($latlng )>1)
         {
-
-
           $lat =  floatval($latlng[1]);
           $lng =  floatval($latlng[0]);
           if($maxlat < $lat)$maxlat= $lat;
@@ -383,7 +370,6 @@ class MapServer
     $geodata->minlong = $minlng;
     $geodata->midlat = ($minlat+$maxlat)/2;
     $geodata->midlong = ($minlng+$maxlng)/2;
- //   dump($geodata);
     }
       return $geodata;
   }
@@ -546,7 +532,7 @@ class MapServer
       $minlat=360;
       $minlong =360;
       $maxlat=-360;
-      $maxlong=-306;
+      $maxlong=-360;
       $nsteps =0;
       $oldcoords = $steps[0];
      foreach($steps as $step)
@@ -575,7 +561,6 @@ class MapServer
 
     public function make_geodata_steps_obj($tracks)
     {
-      dump($tracks);
       $geodata=[];
       $geodata["dist"]=-1;
       $geodata["maxlat"]=0;
@@ -588,11 +573,10 @@ class MapServer
       $minlat=360;
       $minlong =360;
       $maxlat=-360;
-      $maxlong=-306;
+      $maxlong=-360;
       $nsteps =0;
       foreach($tracks as $track)
       {
-        dump($track);
       $oldcoords = ($track->steps)[0];
       foreach($track->steps as $step)
       {

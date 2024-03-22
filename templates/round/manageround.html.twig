@@ -60,9 +60,9 @@
 <div class="map" >
   <div id="goodmapid" ></div>
 </div>
-{% dump(delivery) %}
+
      {% set geodata = delivery.getGeodata_json() %}
-  {% dump(geodata) %}
+
 <script >
 var mymap = myGoodMap("{{geodata}}");
   var bounds = null;

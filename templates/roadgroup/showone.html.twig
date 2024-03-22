@@ -116,9 +116,9 @@
 <div class="map" >
   <div id="goodmapid" ></div>
 </div>
-     {% dump(roadgroup) %}
+
      {% set geodata = roadgroup.getGeodata_obj | json_encode | raw   %}
-     {% dump(geodata) %}
+
 <script >
   var mymap = myGoodMap("{{geodata}}");
   var kml = "{{roadgroup.kml}}";

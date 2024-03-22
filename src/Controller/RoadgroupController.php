@@ -107,13 +107,11 @@ class RoadgroupController extends AbstractController
     $pds = '"';
     foreach($streets as $astreet)
     {
-     if(!str_contains($pds, $astreet->getPdId()))
+     if($astreet->getPdId()  && !str_contains($pds, $astreet->getPdId()))
          $pds .=  $astreet->getPdId().',';
     }
     $pds .=')"';
-    dump($pds);
     $pds = str_replace(",)","",$pds);
-    dump($pds);
     $extrastreetsinpd = null;
     if(strlen($pds) >2)
        $extrastreetsinpd =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreetsInPd($pds,$this->rgyear);
@@ -125,8 +123,6 @@ class RoadgroupController extends AbstractController
       $back =  "/rggroup/showall/";
     $extrastreetsloose =  $this->getDoctrine()->getRepository("App:Street")->findLooseStreets($this->rgyear);
     $geodata= $roadgroup->getGeodata_obj();
-    dump($roadgroup);
-    dump($geodata);
     if($geodata->maxlat <-350)
     {
       $agroup = $this->getDoctrine()->getRepository("App:Rggroup")->findOne($roadgroup->getRggroupid());
@@ -312,8 +308,6 @@ class RoadgroupController extends AbstractController
 
       }
     }
-
-    //return $this->redirect("/rggroup/show/".$wdid);
    return $this->render('street/edit.html.twig', array(
       'rgyear'=>$this->rgyear,
       'form' => $form->createView(),
@@ -337,15 +331,12 @@ class RoadgroupController extends AbstractController
         $entityManager->persist($astreet);
         $entityManager->flush();
         $pid = $astreet->getStreetId();
-        dump($astreet);
         $seq= $astreet->getSeq();
-
         $rgst = new Roadgrouptostreet();
-           dump($rgst);
         $rgst->setStreetId($seq);
         $rgst->setRoadgroupId($rgid);
         $entityManager->persist($rgst);
-         $entityManager->flush();
+        $entityManager->flush();
     return $this->redirect("/roadgroup/showone/".$rgid);
   }
 
@@ -368,9 +359,6 @@ class RoadgroupController extends AbstractController
 
   }
 
-
-
-
   public function newkml($rgid)
   {
     $roadgroup = $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
@@ -386,8 +374,6 @@ class RoadgroupController extends AbstractController
     }
     return $newkml;
   }
-
-
 
   public function exportkml($rgid)
   {
@@ -428,7 +414,6 @@ class RoadgroupController extends AbstractController
    {
      $roadgroup= $this->getDoctrine()->getRepository("App:Roadgroup")->findOne($rgid,$this->rgyear);
      $this->makeGeodata($rgid);
-     dump($roadgroup);
      if(!$roadgroup->getGeodata())
      {
        $rgsubgroupid = $roadgroup->getRgsubgroupid();
@@ -438,7 +423,6 @@ class RoadgroupController extends AbstractController
          $rggroupid = $rgsubgroup->getRggroupid();
          $rggroup = $this->getDoctrine()->getRepository("App:Rggroup")->findOne($rggroupid );
        }
-
     }
      $this->exportKML($rgid);
      return $this->redirect('/roadgroup/showone/'.$rgid);

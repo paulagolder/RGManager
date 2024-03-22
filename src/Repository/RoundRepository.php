@@ -81,16 +81,16 @@ class RoundRepository  extends EntityRepository
     return $rounds;
   }
 
-    public function findSubgroupRounds($delivery,$group,$subgroup)
+    public function findSubgroupRounds($dvyid,$gpid,$sgpid)
   {
      $conn = $this->getEntityManager()->getConnection();
        $qb = $this->createQueryBuilder("p");
        $qb->where("p.DeliveryId = :dvid");
-       $qb->setParameter('dvid', $delivery);
+       $qb->setParameter('dvid', $dvyid);
           $qb->andwhere("p.RggroupId = :rggroupid");
-       $qb->setParameter('rggroupid', $group);
+       $qb->setParameter('rggroupid', $gpid);
          $qb->andwhere("p.RgsubgroupId = :rgsubgroupid");
-       $qb->setParameter('rgsubgroupid', $subgroup);
+       $qb->setParameter('rgsubgroupid', $sgpid);
        $qb->orderBy("p.RoundId", "ASC");
        $rounds =  $qb->getQuery()->getResult();
     return $rounds;
@@ -142,7 +142,8 @@ class RoundRepository  extends EntityRepository
         $sqlpd = 'select p.pollingdistrictid  from pollingdistrict  as p, seattopd as s where s.pdid =  p.pollingdistrictid and s.year = "'.$year.'" and s.district = "'.$round->getDistrict().'" ';
         if($round->getSeat())
          $sqlpd .= ' and s.seat = "'.$round->getSeat().'"';
-        //dump($sqlpd);
+        exit($sqlpd);
+
         $stmt = $conn->prepare($sqlpd);
         $stmt->execute();
         $pollingdistricts = $stmt->fetchAll();

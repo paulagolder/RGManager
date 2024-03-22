@@ -48,7 +48,7 @@
 </div>
 
      {% set geodata = seat.getGeodata_obj | json_encode | raw   %}
-     {% dump(geodata) %}
+
 <script >
   var mymap = myGoodMap("{{geodata}}");
  {% if  seat.kml %}

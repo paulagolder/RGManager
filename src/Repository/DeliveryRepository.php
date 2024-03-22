@@ -38,9 +38,11 @@ class DeliveryRepository  extends EntityRepository
   public function findCandidateDeliveryRoadgroups($delivery,$year)
   {
     $conn = $this->getEntityManager()->getConnection();
-    $sqlpd = 'select p.pdid  from pollingdistrict  as p, seattopd as s where s.pdid =  p.pdid and s.year = "'.$year.'" and s.district = "'.$delivery->getDistrictId().'" order by s.seat ';
+    $sqlpd = 'select p.pdid  from pollingdistrict  as p, seattopd as s where s.pdid =  p.pdid and s.year = "'.$year.'" and s.district = "'.$delivery->getDistrictId().'" ';
     if($delivery->getSeatIds())
       $sqlpd .= ' and s.seat = "'.$delivery->getSeatIds().'"';
+    $sqlpd .= ' order by s.seat ';
+    dump($sqlpd);
     $stmt = $conn->prepare($sqlpd);
     $stmt->execute();
     $pollingdistricts = $stmt->fetchAll();
@@ -51,6 +53,7 @@ class DeliveryRepository  extends EntityRepository
     }
     $pdlist .= '"xx"';
     $sql = 'select r.* from roadgroup as r where r.roadgroupid in (SELECT rs.roadgroupid FROM `roadgrouptostreet` as rs , street as s where rs.streetid = s.seq and  s.pdid IN('.$pdlist.')   and rs.year = "'.$year.'") and r.year = "'.$year.'"';
+       dump($sql);
     $stmt = $conn->executeQuery($sql);
 
     $roadgroups= $stmt->fetchAll();

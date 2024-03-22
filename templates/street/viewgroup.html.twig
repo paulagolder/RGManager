@@ -68,12 +68,12 @@
 
           <div class="num">{{street.households}}</div>
           <div class="num">{{street.electors}}</div>
-             {% dump(street.Geodata) %}
+
           {% if street.path %}
 
-           {% dump(street.path ) %}
+
             {% if street.path |length > 4 %}
-            {% dump((street.path | jsondecode).0) %}
+
             {% if ((street.path | jsondecode).0.steps|length) >2  %}
           <div class="num">{{((street.path | jsondecode).0.steps| length) }}</div>
              {% else %}
@@ -99,7 +99,7 @@
   <div id="goodmapid" ></div>
 </div>
   {% set sggeodata = streets[0].geodata | json_encode | raw  %}
-  {% dump(sggeodata) %}
+
 <script >
     var mymap = myGoodMap("{{sggeodata}}");
 

@@ -1,4 +1,4 @@
-{# views/seat/showone.html.twig #}
+{# views/seat/showrgs.html.twig #}
 
 {% extends 'rgmaster.html.twig' %}
 
@@ -62,9 +62,7 @@
 <div class="map" >
   <div id="goodmapid" ></div>
 </div>
-{% dump(seat) %}
      {% set geodata = seat.getGeodata_json() %}
-  {% dump(geodata) %}
 <script >
 var mymap = myGoodMap("{{geodata}}");
 var fparent = new L.FeatureGroup();

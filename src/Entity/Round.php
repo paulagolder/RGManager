@@ -301,7 +301,14 @@ class Round
 
    public function getGeodata_json()
    {
-     return  $this->Geodata;
+     $gd = $this->Geodata;
+     if($gd == null ) return $gd;
+     if(str_starts_with($gd, '"'))
+     {
+       $gd= trim($gd,'"');
+    }
+    $gd =  str_replace('\"' , '"',$gd);
+     return  $gd;
    }
 
    public function getGeodata()
@@ -323,8 +330,7 @@ class Round
    public function getGeodata_obj()
    {
      $ngeodata = new Geodata;
-
-     return  $ngeodata->loadGeodata($this->getGeodata());
+     return  $ngeodata->makeGeodata($this->getGeodata_json());
    }
 
 
@@ -335,7 +341,6 @@ class Round
      $maxhh=0;
      $name="";
      $Roadgroups = 0;
-     dump($this);
    //$roadgroups =  $this->getDoctrine()->getRepository("App:RoundtoRoadgroup")->findRoadgroups($this->RoundId);
    $name = $roadgrouplist[array_key_first($roadgrouplist)]["name"];
    foreach($roadgrouplist as $roadgroup)
@@ -368,7 +373,6 @@ class Round
      $maxhh=0;
      $name="";
      $Roadgroups = 0;
-     dump($this);
    foreach($roadgroups as $roadgroup)
    {
      $hh= $roadgroup->getHouseholds();

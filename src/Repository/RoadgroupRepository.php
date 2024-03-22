@@ -129,13 +129,9 @@ class RoadgroupRepository extends EntityRepository
         $conn = $this->getEntityManager()->getConnection();
             $sqlpd = 'select p.pollingdistrictid  from pollingdistrict  as p, seattopd as s where s.pdid =  p.pollingdistrictid and s.year = "'.$year.'" and s.district = "'.$delivery->district.'" ';
         $stmt = $conn->prepare($sqlpd);
-
         $pollingdistricts = $stmt->fetchAll();
-
-        dump($pollingdistricts);
         $pdarry =
           $sql = 'select r.* from roadgroup as r where r.roadgroupid in (SELECT rs.roadgroupid FROM `roadgrouptostreet` as rs  WHERE rs.pd IN(:pdlist)   and rs.year = "'.$year.'") and r.year = "'.$year.'"';
-
           $stmt = $conn->executeQuery(
         $sql,
         [
@@ -154,7 +150,6 @@ class RoadgroupRepository extends EntityRepository
 
      public function addStreet($astreet,$roadgroupid,$year)
      {
-     dump($astreet);
        $street= $astreet->getName();
        $streetid =$astreet->getSeq();
        $part= $astreet->getPart();
