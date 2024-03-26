@@ -23,11 +23,7 @@ use App\Entity\Geodata;
 use App\Service\MapServer;
 use App\Controller\Roadgroupcontroller;
 
-//use App\Service\PDF;
-//use Fpdf\Fpdf;
-//use Dompdf\Exception;
 
-//require('fpdf.php');
 
 class RggroupController extends AbstractController
 {
@@ -171,12 +167,14 @@ class RggroupController extends AbstractController
         return $this->redirect("/rggroup/edit/".$rgid);
       }
     }
+    $topmap = $rggroup->getKML();
 
     return $this->render('rggroup/edit.html.twig', array(
       'rgyear'=>$this->rgyear,
       'form' => $form->createView(),
       'objid'=>$rgid,
       'rggroup'=>$rggroup,
+        'topmap'=>$topmap,
       'returnlink'=>'/rggroup/problems',
       ));
   }

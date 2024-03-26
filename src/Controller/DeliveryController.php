@@ -817,7 +817,7 @@ class DeliveryController extends AbstractController
   public function SpareRoadgroups($dvyid)
   {
     $delivery = $this->getDoctrine()->getRepository("App:Delivery")->findOne($dvyid);
-    $rounds= $this->getDoctrine()->getRepository("App:Round")->findRoadgroups($delivery);
+    $rounds= $this->getDoctrine()->getRepository("App:Round")->findRounds($delivery);
    // dump($rounds);
     $usedrgs= array();
     foreach( $rounds as $around)

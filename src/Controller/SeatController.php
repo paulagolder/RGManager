@@ -195,7 +195,7 @@ class SeatController extends AbstractController
             $pds[$key]=$pd;
         }
         $sparepds = $this->getDoctrine()->getRepository("App:Pollingdistrict")->findSpares($district->getDistrictId(),$this->rgyear );
-
+dump($seat);
         return $this->render('seat/showpds.html.twig',
                              [
                              'rgyear' => $this->rgyear,

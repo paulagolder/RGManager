@@ -8,6 +8,9 @@
 {% endblock %}
 {% block js %}
  {{ parent() }}
+ <script src="{{asset('js/maps.js')}}"></script>
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+ <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
 <script>
    var popup = L.popup();
     function onMapClick(e) {
@@ -44,13 +47,20 @@
     {{ form_end(form) }}
 </div>
 <div class="button  right"> <a class="deletebutton" href ="/rggroup/delete/{{rggroup.Rggroupid}}" >{{'delete'}} </a> </div>
+
 <div class="map" >
-      <div id="rggmapid"></div>
-    </div>
+  <div id="goodmapid" ></div>
+</div>
+
          {% set jslocation = rggroup.getjson() %}
       <script  type="text/javascript" >
-       var mymap = myStMap("{{jslocation}}");
+      var mymap = myGoodMap("{{jslocation}}");
          mymap.on('click', onMapClick);
+         var path = "{{mappath}}outlines/{{topmap}}";
+{
+   var style = {"color":  "#0000FF" , "weight": 5 ,  "clickable": true ,"opacity": 0.2, "fillOpacity": 1.0};
+   makeOutlineKml(mymap, path,style,false,"All RG-Groups");
+}
       </script>
 </div>
 </div>

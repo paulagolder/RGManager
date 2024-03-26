@@ -96,15 +96,21 @@ function myGoodMap(location)
 {
   var location_dc =redecode(location);
   var mylocation = JSON.parse(location_dc);
+  if(mylocation != null)
+  {
   var lat = mylocation.midlat;
   var long = mylocation.midlong;
   var zoom = 12;
+  }
+  else
+  {
   if( (typeof lat === "undefined") || lat < 40)
   {
     long =-1.8304;
     lat = 52.6854 ;
     zoom = 12;
   }
+}
 
   if(zoom <1 ) zoom = 1;
 
@@ -126,16 +132,20 @@ function myStMap(location)
 {
   var location_dc =redecode(location);
   var mylocation = JSON.parse(location_dc);
+  if(mylocation != null)
+  {
   var lat = mylocation.midlat;
   var long = mylocation.midlong;
   var zoom = 12;
+  }else
+  {
   if( (typeof lat === "undefined") || lat < 40)
   {
     long =-1.8304;
     lat = 52.6854 ;
     zoom = 12;
   }
-
+  }
   if(zoom <1 ) zoom = 1;
 
   var mymap = L.map('stmapid').setView([ lat , long], zoom);
@@ -161,6 +171,7 @@ function setBounds2(amap, amybounds)
 
   var mybounds_dc =redecode(amybounds);
   var mybounds = JSON.parse(mybounds_dc);
+  if(mybounds == null )return;
   if(mybounds["minlat"]===null) return;
   var bounds =[];
   bounds.push([ mybounds["maxlat"], mybounds["minlong"]]);
@@ -173,6 +184,7 @@ function setBoundsGeodata(amap,geodata)
   if(geodata=="") return;
   var mybounds_dc =redecode(geodata);
   var mybounds = JSON.parse(mybounds_dc);
+    if(mybounds == null )return;
   if(mybounds["minlat"]===null) return;
   var bounds =[];
   bounds.push([ mybounds["maxlat"], mybounds["minlong"]]);
@@ -498,7 +510,7 @@ function doesFileExist(urlToFile)
     console.log("File doesn't exist");
     return false;
   } else {
-    console.log("File exists");
+   // console.log("File exists");
     return true;
   }
 }
